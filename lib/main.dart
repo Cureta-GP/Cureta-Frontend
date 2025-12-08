@@ -1,3 +1,4 @@
+import 'package:cureta/core/styling/app_themes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,13 +20,13 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'First Method',
           // You can use the library anywhere in the app even in theme
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-          ),
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          themeMode: ThemeMode.system,
           home: child,
         );
       },
-      child: const MyHomePage(title: 'First Method'),
+      child: const MyHomePage(title: 'Cureta'),
     );
   }
 }
@@ -75,7 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
         // TRY THIS: Try changing the color here to a specific color (to
         // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
         // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
