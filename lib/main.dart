@@ -1,4 +1,5 @@
 import 'package:cureta/core/styling/app_themes.dart';
+import 'package:cureta/features/authentcation/veiw/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
           home: child,
         );
       },
-      child: const MyHomePage(title: 'Cureta'),
+      child: const Signuppage(),
     );
   }
 }
