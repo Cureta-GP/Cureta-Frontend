@@ -1,5 +1,5 @@
+import 'package:cureta/core/routing/router_generation.dart';
 import 'package:cureta/core/styling/app_themes.dart';
-import 'package:cureta/features/authentcation/veiw/SignupPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -17,17 +17,20 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       // Use builder only if you need to use library outside ScreenUtilInit context
       builder: (_, child) {
-        return MaterialApp(
+        return MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'First Method',
           // You can use the library anywhere in the app even in theme
           theme: AppThemes.lightTheme,
           darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.system,
-          home: child,
+           routerConfig: RoutesGeneration.goRouter,
+
+          //home: child,
         );
       },
-      child: const Signuppage(),
+     // child: const Signuppage(),
+    
     );
   }
 }
