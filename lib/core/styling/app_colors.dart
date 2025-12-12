@@ -11,4 +11,5 @@ class AppColors {
   static const Color textSecondary = Color(0xFF757575);
   static const Color textHint = Color(0xFFBDBDBD);
   static const Color divider = Color(0xFFE0E0E0);
+  static const Color icon = Color(0xFF99A1AF);
 }

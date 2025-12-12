@@ -1,5 +1,9 @@
 import 'package:cureta/core/routing/router_generation.dart';
 import 'package:cureta/core/styling/app_themes.dart';
+<<<<<<< HEAD
+=======
+import 'package:cureta/core/config/routing/router_config.dart';
+>>>>>>> fcf8c11972848eac2dae81206b5d00a3e6e83960
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -15,15 +19,14 @@ class MyApp extends StatelessWidget {
       designSize: const Size(393, 852),
       minTextAdapt: true,
       splitScreenMode: true,
-      // Use builder only if you need to use library outside ScreenUtilInit context
+      // Use builder only if you need to use libary outside ScreenUtilInit context
       builder: (_, child) {
         return MaterialApp.router(
           debugShowCheckedModeBanner: false,
-          title: 'First Method',
-          // You can use the library anywhere in the app even in theme
           theme: AppThemes.lightTheme,
           darkTheme: AppThemes.darkTheme,
           themeMode: ThemeMode.system,
+<<<<<<< HEAD
            routerConfig: RoutesGeneration.goRouter,
 
           //home: child,
@@ -117,6 +120,11 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
+=======
+          routerConfig: AppRouter.router,
+        );
+      },
+>>>>>>> fcf8c11972848eac2dae81206b5d00a3e6e83960
     );
   }
 }
