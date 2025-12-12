@@ -1,5 +1,6 @@
 // widgets/login_link.dart
-import 'package:cureta/core/config/routing/router_config.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/config/routing/router_generation.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 

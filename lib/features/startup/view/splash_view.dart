@@ -1,5 +1,5 @@
 import 'package:cureta/core/constants/app_images.dart';
-import 'package:cureta/core/routing/app_routes.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -18,7 +18,7 @@ class _SplashViewState extends State<SplashView> {
   }
 
   _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 5), () {});
+    await Future.delayed(const Duration(seconds: 3), () {});
      GoRouter.of(context).go(AppRoutes.onboarding);
   }
 

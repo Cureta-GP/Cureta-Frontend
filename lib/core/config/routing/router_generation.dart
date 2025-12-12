@@ -1,17 +1,31 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
-import 'package:cureta/features/authentcation/veiw/SignupPage.dart';
-import 'package:cureta/features/authentcation/veiw/login.dart';
+import 'package:cureta/features/authentcation/veiw/signup_view.dart';
+import 'package:cureta/features/authentcation/veiw/login_view.dart';
+import 'package:cureta/features/startup/view/onboarding_view.dart';
+import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
-class AppRouter {
+class RoutesGeneration  {
   static final GoRouter router = GoRouter(
-    initialLocation: AppRoutes.signup,
+    initialLocation: AppRoutes.splash,
     routes: [
+       GoRoute(
+        path: AppRoutes.splash ,
+        name: AppRoutes.splash ,
+        builder: (context, state) => SplashView(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.onboarding,
+        name: AppRoutes.onboarding,
+        builder: (context, state) => const OnboardingView(),
+      ),
       // Home Page
       GoRoute(
         path: AppRoutes.signup,
         name: AppRoutes.signup,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const SignupPage(),
+          child: const SignupView(),
           state: state,
         ),
       ),
@@ -19,7 +33,7 @@ class AppRouter {
         path: AppRoutes.login,
         name: AppRoutes.login,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const LoginPage(),
+          child: const LoginView(),
           state: state,
         ),
       ),
@@ -59,8 +73,3 @@ class AppRouter {
   );
 }
 
-/// Route paths - مسارات الصفحات
-class AppRoutes {
-  static const String signup = '/signup';
-  static const String login = '/login';
-}

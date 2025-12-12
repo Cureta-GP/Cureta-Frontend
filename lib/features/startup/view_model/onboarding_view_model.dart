@@ -1,32 +1,23 @@
 import 'package:cureta/core/constants/app_images.dart';
+import 'package:cureta/features/startup/model/onboarding_model.dart';
 
-class OnboardingViewModel {
-  final String imagePath;
-  final String title;
-  final String description;
-
-  OnboardingViewModel({
-    required this.imagePath,
-    required this.title,
-    required this.description,
-  });
-}
-
-// بيانات الثلاث شاشات
 final onboardingScreens = [
-  OnboardingViewModel(
-    imagePath:AppImages.onboardingScan,
-    title: 'Welcome',
-    description: 'This is the first onboarding screen',
+  OnboardingModel(
+    imagePath: AppImages.onboardingScan,
+    title: 'Scan Prescriptions Instantly',
+    description:
+        'Use your camera to scan prescriptions and automatically extract medication information with OCR technology',
   ),
-  OnboardingViewModel(
+  OnboardingModel(
     imagePath: AppImages.onboardingReminder,
-    title: 'Explore',
-    description: 'This is the second onboarding screen',
+    title: 'Never Miss a Dose',
+    description:
+        'Get timely reminders for your medications and track your daily health journey with ease',
   ),
-  OnboardingViewModel(
+  OnboardingModel(
     imagePath: AppImages.onboardingQr,
-    title: 'Get Started',
-    description: 'This is the third onboarding screen',
+    title: 'Your Health, One QR Away',
+    description:
+        'Store your medical history digitally and generate QR codes for easy sharing with healthcare providers',
   ),
 ];
