@@ -24,7 +24,7 @@ class RoutesGeneration  {
       GoRoute(
         path: AppRoutes.signup,
         name: AppRoutes.signup,
-        pageBuilder: (context, state) => PageTransitions.fade(
+        pageBuilder: (context, state) => PageTransitions.scale(
           child: const SignupView(),
           state: state,
         ),
@@ -32,7 +32,7 @@ class RoutesGeneration  {
       GoRoute(
         path: AppRoutes.login,
         name: AppRoutes.login,
-        pageBuilder: (context, state) => PageTransitions.fade(
+        pageBuilder: (context, state) => PageTransitions.scale(
           child: const LoginView(),
           state: state,
         ),
