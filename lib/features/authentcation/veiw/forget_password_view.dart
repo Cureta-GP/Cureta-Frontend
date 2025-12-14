@@ -1,5 +1,7 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/constants/app_icons.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
+import 'package:cureta/features/authentcation/widgets/arrow_back.dart';
 import 'package:cureta/features/authentcation/widgets/header.dart';
 import 'package:cureta/features/authentcation/widgets/link.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
@@ -17,7 +19,10 @@ class ForgetPasswordView extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
+             ArrowBack(),
             Header(
               title: "Forgot Password?",
               subtitle:
@@ -35,6 +40,7 @@ class ForgetPasswordView extends StatelessWidget {
               text: 'Send Verification Code',
               prefixIcon: AppIcons.send,
               onPressed: () {
+                Nav.push(context, AppRoutes.verifyEmail);
                 // Handle send reset code action
               },
             ),

@@ -1,18 +1,21 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
+import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
 import 'package:cureta/features/authentcation/veiw/login_view.dart';
+import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
-class RoutesGeneration  {
+
+class RoutesGeneration {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
     routes: [
-       GoRoute(
-        path: AppRoutes.splash ,
-        name: AppRoutes.splash ,
+      GoRoute(
+        path: AppRoutes.splash,
+        name: AppRoutes.splash,
         builder: (context, state) => SplashView(),
       ),
 
@@ -25,60 +28,35 @@ class RoutesGeneration  {
       GoRoute(
         path: AppRoutes.signup,
         name: AppRoutes.signup,
-        pageBuilder: (context, state) => PageTransitions.scale(
-          child: const SignupView(),
-          state: state,
-        ),
+        pageBuilder: (context, state) =>
+            PageTransitions.scale(child: const SignupView(), state: state),
       ),
       GoRoute(
         path: AppRoutes.login,
         name: AppRoutes.login,
-        pageBuilder: (context, state) => PageTransitions.scale(
-          child: const LoginView(),
-          state: state,
-        ),
+        pageBuilder: (context, state) =>
+            PageTransitions.scale(child: const LoginView(), state: state),
       ),
-        GoRoute(
+      GoRoute(
         path: AppRoutes.forgetPassword,
         name: AppRoutes.forgetPassword,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child:  ForgetPasswordView(),
-          state: state,
-        ),
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: ForgetPasswordView(), state: state),
       ),
-
-      // Profile Page
-      /*GoRoute(
-        path: AppRoutes.signup,
-        name: AppRoutes.signup,
-        pageBuilder: (context, state) => PageTransitions.slideLeft(
-          child: const SignupPage(),
-          state: state,
-        ),
-      ),
-
-      // Settings Page
       GoRoute(
-        path: AppRoutes.signup,
-        name: AppRoutes.signup,
-        pageBuilder: (context, state) => PageTransitions.slideUp(
-          child: const SignupPage(),
-          state: state,
-        ),
+        path: AppRoutes.verifyEmail,
+        name: AppRoutes.verifyEmail,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: VerifyEmailView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.resetPassword,
+        name: AppRoutes.resetPassword,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: ResetPasswordView(), state: state),
       ),
 
-      // Details Page with ID parameter
-      GoRoute(
-        path: AppRoutes.signup,
-        name: AppRoutes.signup,
-        pageBuilder: (context, state) {
-          return PageTransitions.slideRight(
-            child: const SignupPage(),
-            state: state,
-          );
-        },
-      ),*/
+      
     ],
   );
 }
-
