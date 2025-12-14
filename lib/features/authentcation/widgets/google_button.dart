@@ -1,9 +1,8 @@
 // widgets/google_button.dart
+import 'package:cureta/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
-
 class GoogleButton extends StatelessWidget {
   const GoogleButton({super.key});
-
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -27,7 +26,7 @@ class GoogleButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset(
-              'assets/images/google.png',
+              AppImages.google,
               width: 30,
               height: 30,
             ),

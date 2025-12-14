@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
-class RiveAnimationManager {
+class RiveAnimationManager extends ChangeNotifier {
   Artboard? _artboard;
   late RiveAnimationController _controllerIdle;
   late RiveAnimationController _controllerHandsUp;
@@ -39,8 +39,12 @@ class RiveAnimationManager {
       final artboard = file.mainArtboard;
       artboard.addController(_controllerIdle);
       _artboard = artboard;
+
+      notifyListeners(); // Only notify listeners when artboard loads
+
+      debugPrint("✅ Rive artboard loaded successfully");
     } catch (e) {
-      debugPrint("Rive file load error: $e");
+      debugPrint("❌ Rive file load error: $e");
     }
   }
 
@@ -78,7 +82,9 @@ class RiveAnimationManager {
   void playSuccess() => _playAnimation(_controllerSuccess);
   void playFail() => _playAnimation(_controllerFail);
 
+  @override
   void dispose() {
     _removeAllControllers();
+    super.dispose();
   }
 }

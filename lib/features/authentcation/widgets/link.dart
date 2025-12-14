@@ -20,13 +20,13 @@ class Link extends StatelessWidget {
       children: [
         Text(
           text,
-          style: const TextStyle(
+          /*style: const TextStyle(
             color: Color(0xFF495565),
             fontSize: 16,
             fontFamily: 'Arimo',
             fontWeight: FontWeight.w400,
             height: 1.50,
-          ),
+          ),*/
         ),
         GestureDetector(
           onTap: onTap,

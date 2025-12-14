@@ -13,27 +13,27 @@ class LoginContainer extends StatelessWidget {
       height: 844.h,
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
-        color: Colors.white,
+        //color: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(40.r),
         ),
         shadows: [
-          BoxShadow(
+          /*BoxShadow(
             color: Color(0x3F000000),
             blurRadius: 50.r,
             offset: Offset(0, 25),
             spreadRadius: -12,
-          ),
+          ),*/
         ],
       ),
       child: Container(
         constraints: BoxConstraints(minHeight: 844.h),
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
+          /*gradient: LinearGradient(
             begin: Alignment(0.50, 0.00),
             end: Alignment(0.50, 1.00),
             colors: [Colors.white, Colors.white],
-          ),
+          ),*/
         ),
         child: child,
       ),

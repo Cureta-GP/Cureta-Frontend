@@ -10,12 +10,10 @@ class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          color: AppColors.background,
         ),
         child: Center(
           child: Container(
@@ -23,28 +21,27 @@ class SignupView extends StatelessWidget {
             height: 844.h,
             clipBehavior: Clip.antiAlias,
             decoration: ShapeDecoration(
-              color: Colors.white,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(40.r),
               ),
               shadows:  [
-                BoxShadow(
-                  color: Color(0x3F000000),
+                /*BoxShadow(
+                  //color: Color(0x3F000000),
                   blurRadius: 50.r,
                   offset: Offset(0, 25),
                   spreadRadius: -12,
-                ),
+                ),*/
               ],
             ),
             child: SingleChildScrollView(
               child: Container(
                 constraints: BoxConstraints(minHeight: 844.h),
                 decoration: const BoxDecoration(
-                  gradient: LinearGradient(
+                  /*gradient: LinearGradient(
                     begin: Alignment(0.50, 0.00),
                     end: Alignment(0.50, 1.00),
                     colors: [Colors.white, Colors.white],
-                  ),
+                  ),*/
                 ),
                 child: Column(
                   children: [
