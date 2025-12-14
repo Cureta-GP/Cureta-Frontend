@@ -13,11 +13,30 @@ class LoginHeader extends StatelessWidget {
       height: 250.h,
       width: double.infinity,
       child: riveArtboard == null
-          ? const SizedBox.shrink()
-          : Rive(
-              artboard: riveArtboard!,
-              fit: BoxFit.cover,
+          ? Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.person_outline,
+              size: 80,
+              color: Colors.blue.shade300,
             ),
+            const SizedBox(height: 8),
+            Text(
+              'Loading animation...',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+      )
+          : Rive(
+        artboard: riveArtboard!,
+        fit: BoxFit.cover,
+      ),
     );
   }
 }

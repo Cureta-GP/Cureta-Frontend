@@ -9,12 +9,11 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          color: AppColors.background,
+          //color: AppColors.background,
         ),
         child: Center(
           child: LoginContainer(

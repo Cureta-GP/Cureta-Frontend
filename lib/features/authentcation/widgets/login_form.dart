@@ -1,6 +1,6 @@
 import 'package:cureta/features/authentcation/veiw_model/rive_animation_manager.dart';
 import 'package:cureta/features/authentcation/widgets/login_fields.dart';
-import 'package:cureta/features/authentcation/widgets/login_header.dart';
+import 'package:cureta/features/authentcation/widgets/animated_login_header.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -24,7 +24,6 @@ class _LoginFormState extends State<LoginForm> {
     _animationManager.initialize();
     _setupPasswordFocusListener();
   }
-
   void _setupPasswordFocusListener() {
     _passwordFocusNode.addListener(() {
       if (_passwordFocusNode.hasFocus) {
@@ -49,7 +48,6 @@ class _LoginFormState extends State<LoginForm> {
     Future.delayed(const Duration(seconds: 1), () {
       if (_formKey.currentState!.validate()) {
         _animationManager.playSuccess();
-        // TODO: Implement actual login logic
       } else {
         _animationManager.playFail();
       }
@@ -62,7 +60,7 @@ class _LoginFormState extends State<LoginForm> {
       padding: const EdgeInsets.symmetric(horizontal: 47),
       child: Column(
         children: [
-          LoginHeader(riveArtboard: _animationManager.artboard),
+          AnimatedLoginHeader(animationManager: _animationManager),
           Form(
             key: _formKey,
             child: LoginFields(

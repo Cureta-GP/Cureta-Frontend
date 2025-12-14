@@ -16,7 +16,7 @@ class SignupHeader extends StatelessWidget {
             'Create Account',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF133A3E),
+             // color: Color(0xFF133A3E),
               fontSize: 32,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w400,
@@ -28,7 +28,7 @@ class SignupHeader extends StatelessWidget {
             'Join Cureta today',
             textAlign: TextAlign.center,
             style: TextStyle(
-              color: Color(0xFF495565),
+              //color: Color(0xFF495565),
               fontSize: 16,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w400,

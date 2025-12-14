@@ -41,7 +41,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         Text(
           widget.label,
           style: const TextStyle(
-            color: Color(0xFF354152),
+            //color: Color(0xFF354152),
             fontSize: 16,
             fontFamily: 'Arimo',
             fontWeight: FontWeight.w400,
@@ -52,7 +52,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
         TextFormField(
           controller: widget.controller,
           obscureText: widget.isPassword && _obscureText,
-          style: const TextStyle(color: Colors.black, fontFamily: 'Arimo'),
+          style: const TextStyle(
+              color: Colors.black,
+           fontFamily: 'Arimo'),
           cursorColor: Colors.black,
           keyboardType: widget.keyboardType,
           validator: widget.validator,

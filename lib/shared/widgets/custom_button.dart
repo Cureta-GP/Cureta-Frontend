@@ -22,17 +22,17 @@ class CustomButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          //backgroundColor: AppColors.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
           elevation: 0,
-          shadowColor: AppColors.primaryDark,
+          //shadowColor: AppColors.primaryDark,
         ),
         child: Text(
           text,
           style: const TextStyle(
-            color: Colors.white,
+            //color: Colors.white,
             fontSize: 16,
             fontFamily: 'Arimo',
             fontWeight: FontWeight.w400,
