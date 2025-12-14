@@ -1,5 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
+import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
 import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
@@ -34,6 +35,14 @@ class RoutesGeneration  {
         name: AppRoutes.login,
         pageBuilder: (context, state) => PageTransitions.scale(
           child: const LoginView(),
+          state: state,
+        ),
+      ),
+        GoRoute(
+        path: AppRoutes.forgetPassword,
+        name: AppRoutes.forgetPassword,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child:  ForgetPasswordView(),
           state: state,
         ),
       ),

@@ -1,4 +1,5 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/styling/app_colors.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class LoginFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextField(
           label: 'Email',
@@ -46,6 +48,21 @@ class LoginFields extends StatelessWidget {
           prefixIcon: const Icon(Icons.lock),
           focusNode: passwordFocusNode,
         ),
+        const SizedBox(height: 24),
+        GestureDetector(
+          onTap: () => Nav.push(context, AppRoutes.forgetPassword),
+          child: Text(
+            "Forgot Password?",
+            style: const TextStyle(
+              color: AppColors.primary,
+              fontSize: 16,
+              fontFamily: 'Arimo',
+              fontWeight: FontWeight.w700,
+              height: 1.50,
+            ),
+          ),
+        ),
+
         const SizedBox(height: 24),
         CustomButton(text: 'Login', onPressed: onSubmit),
         const SizedBox(height: 16),

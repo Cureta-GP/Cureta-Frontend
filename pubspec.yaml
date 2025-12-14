@@ -42,12 +42,9 @@ dependencies:
   dio: ^5.9.0
   intl: ^0.20.2
   pretty_dio_logger: ^1.4.0
-<<<<<<< HEAD
   carousel_slider: ^5.1.1
   dots_indicator: ^4.0.1
-=======
   rive: ^0.13.0
->>>>>>> 08e94eac7a81cc3a22ab4c6c84f9095fa053100d
 
 dev_dependencies:
   flutter_test:

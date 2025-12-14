@@ -1,14 +1,17 @@
 // widgets/custom_button.dart
 import 'package:flutter/material.dart';
 import 'package:cureta/core/styling/app_colors.dart';
+
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final String prefixIcon;
 
   const CustomButton({
     super.key,
     required this.text,
     required this.onPressed,
+    this.prefixIcon = '',
   });
 
   @override

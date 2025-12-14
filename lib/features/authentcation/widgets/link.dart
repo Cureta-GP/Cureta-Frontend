@@ -1,9 +1,6 @@
 // widgets/login_link.dart
-<<<<<<< HEAD:lib/features/authentcation/widgets/login_link.dart
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
-=======
->>>>>>> 08e94eac7a81cc3a22ab4c6c84f9095fa053100d:lib/features/authentcation/widgets/link.dart
 import 'package:flutter/material.dart';
 
 class Link extends StatelessWidget {
