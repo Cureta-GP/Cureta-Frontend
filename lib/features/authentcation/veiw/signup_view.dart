@@ -1,4 +1,3 @@
-import 'package:cureta/core/styling/app_colors.dart';
 import 'package:cureta/features/authentcation/widgets/signup_form.dart';
 import 'package:cureta/features/authentcation/widgets/signup_header.dart';
 import 'package:flutter/material.dart';

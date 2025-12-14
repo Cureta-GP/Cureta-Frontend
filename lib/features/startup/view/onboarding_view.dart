@@ -1,3 +1,4 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/features/startup/view_model/onboarding_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -54,7 +55,7 @@ class _OnboardingViewState extends State<OnboardingView> {
           ? TextButton(
               onPressed: () {
                 // Navigate to your next screen
-                GoRouter.of(context).go('/signup');
+                GoRouter.of(context).go(AppRoutes.signup);
               },
               child: const Text('Get Started'),
             )
