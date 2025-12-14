@@ -1,6 +1,4 @@
 // widgets/signup_form.dart
-import 'package:cureta/core/config/routing/router_generation.dart';
-import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/custom_text_field.dart';
