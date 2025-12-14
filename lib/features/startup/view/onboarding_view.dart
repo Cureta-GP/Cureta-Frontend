@@ -1,4 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/styling/app_styles.dart';
 import 'package:cureta/features/startup/view_model/onboarding_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -17,84 +19,129 @@ class _OnboardingViewState extends State<OnboardingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView.builder(
-        controller: _pageController,
-        itemCount: onboardingScreens.length,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        itemBuilder: (context, index) {
-          final screen = onboardingScreens[index];
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(screen.imagePath),
-                const SizedBox(height: 20),
-                Center(
+      body: SafeArea(
+        child: Stack(
+          children: [
+            /// Page View
+            PageView.builder(
+              controller: _pageController,
+              itemCount: onboardingScreens.length,
+              onPageChanged: (index) {
+                setState(() => _currentIndex = index);
+              },
+              itemBuilder: (context, index) {
+                final screen = onboardingScreens[index];
+                return Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ClipRRect(
+                         borderRadius: BorderRadius.circular(24),
+                        child: Image.asset(screen.imagePath)),
+                      const SizedBox(height: 24),
+                      Text(
+                        screen.title,
+                        textAlign: TextAlign.center,
+                        style: AppStyles.headingMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        screen.description,
+                        textAlign: TextAlign.center,
+                        style: AppStyles.bodyLarge,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+
+            /// Top Right Skip
+            Positioned(
+              top: 0,
+              right: 0,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: TextButton(
+                  onPressed: () {
+                    GoRouter.of(context).go(AppRoutes.signup);
+                  },
                   child: Text(
-                    screen.title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                    'Skip',
+                    style: AppStyles.bodySmall.copyWith(
+                      color: AppColors.primary,
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Text(screen.description, textAlign: TextAlign.center),
-              ],
+              ),
             ),
-          );
-        },
-      ),
-      bottomSheet: _currentIndex == onboardingScreens.length - 1
-          ? TextButton(
-              onPressed: () {
-                // Navigate to your next screen
-                GoRouter.of(context).go(AppRoutes.signup);
-              },
-              child: const Text('Get Started'),
-            )
-          : Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    _pageController.jumpToPage(onboardingScreens.length - 1);
-                  },
-                  child: const Text('Skip'),
-                ),
-                Row(
-                  children: List.generate(
-                    onboardingScreens.length,
-                    (index) => Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _currentIndex == index
-                            ? Colors.blue
-                            : Colors.grey,
+
+            /// Bottom Section (Indicators + Button)
+            Positioned(
+              bottom: 32,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  /// Indicators
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      onboardingScreens.length,
+                      (index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        width: _currentIndex == index ? 16 : 8,
+                        height: 8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: _currentIndex == index
+                              ? AppColors.primary
+                              : Colors.grey.shade300,
+                        ),
                       ),
                     ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    _pageController.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.ease,
-                    );
-                  },
-                  child: const Text('Next'),
-                ),
-              ],
+
+                  const SizedBox(height: 24),
+
+                  /// Next Button
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 28,
+                      ),
+                      onPressed: () {
+                        if (_currentIndex ==
+                            onboardingScreens.length - 1) {
+                          GoRouter.of(context)
+                              .go(AppRoutes.signup);
+                        } else {
+                          _pageController.nextPage(
+                            duration:
+                                const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
+          ],
+        ),
+      ),
     );
   }
 }
