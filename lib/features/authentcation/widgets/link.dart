@@ -1,19 +1,31 @@
 // widgets/login_link.dart
+<<<<<<< HEAD:lib/features/authentcation/widgets/login_link.dart
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
+=======
+>>>>>>> 08e94eac7a81cc3a22ab4c6c84f9095fa053100d:lib/features/authentcation/widgets/link.dart
 import 'package:flutter/material.dart';
 
-class LoginLink extends StatelessWidget {
-  const LoginLink({super.key});
+class Link extends StatelessWidget {
+  final String text;
+  final String actionText;
+  final VoidCallback? onTap;
+
+  const Link({
+    super.key,
+    required this.text,
+    required this.actionText,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Text(
-          'Already have an account? ',
-          style: TextStyle(
+        Text(
+          text,
+          style: const TextStyle(
             color: Color(0xFF495565),
             fontSize: 16,
             fontFamily: 'Arimo',
@@ -22,12 +34,10 @@ class LoginLink extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            Nav.push(context, AppRoutes.login);
-          },
-          child: const Text(
-            'Login',
-            style: TextStyle(
+          onTap: onTap,
+          child: Text(
+            actionText,
+            style: const TextStyle(
               color: Color(0xFF00A1A9),
               fontSize: 16,
               fontFamily: 'Arimo',

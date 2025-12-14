@@ -1,14 +1,17 @@
 // widgets/signup_form.dart
+<<<<<<< HEAD
+=======
+import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/utils/navigation_helper.dart';
+>>>>>>> 08e94eac7a81cc3a22ab4c6c84f9095fa053100d
 import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/custom_text_field.dart';
 import '../../../shared/widgets/custom_button.dart';
 import 'google_button.dart';
-import 'login_link.dart';
-
+import 'link.dart';
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
-
   @override
   State<SignupForm> createState() => _SignupFormState();
 }
@@ -30,9 +33,7 @@ class _SignupFormState extends State<SignupForm> {
 
   void _handleSubmit() {
     if (_formKey.currentState!.validate()) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Creating account...')));
+      Nav.push(context, AppRoutes.login);
     }
   }
 
@@ -82,7 +83,7 @@ class _SignupFormState extends State<SignupForm> {
             const SizedBox(height: 16),
             const GoogleButton(),
             const SizedBox(height: 24),
-            const LoginLink(),
+            Link(text: 'Already have an account? ', actionText: 'Login', onTap:() => Nav.push(context, AppRoutes.login)),
           ],
         ),
       ),

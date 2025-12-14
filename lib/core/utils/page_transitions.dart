@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class PageTransitions {
-  static const Duration _defaultDuration = Duration(milliseconds: 500);
+  static const Duration _defaultDuration = Duration(milliseconds: 1000);
   static const Curve _defaultCurve = Curves.easeInOut;
 
   /// No animation
