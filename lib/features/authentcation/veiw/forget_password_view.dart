@@ -16,41 +16,45 @@ class ForgetPasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-             ArrowBack(),
-            Header(
-              title: "Forgot Password?",
-              subtitle:
-                  "Don't worry! Enter your email address and we'll send you a code to reset your password.",
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+            
+              children: [
+                ArrowBack(),
+                Header(
+                  title: "Forgot Password?",
+                  subtitle:
+                      "Don't worry! Enter your email address and we'll send you a code to reset your password.",
+                ),
+                CustomTextField(
+                  label: 'Email',
+                  hint: 'Enter your email',
+                  prefixIcon: const Icon(Icons.email),
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  text: 'Send Verification Code',
+                  prefixIcon: AppIcons.send,
+                  onPressed: () {
+                    Nav.push(context, AppRoutes.verifyEmail);
+                    // Handle send reset code action
+                  },
+                ),
+                SizedBox(height: 29.h),
+                Link(
+                  text: "Remember your password?",
+                  actionText: "  Back to Login",
+                  onTap: () => Nav.back(context),
+                ),
+              ],
             ),
-            CustomTextField(
-              label: 'Email',
-              hint: 'Enter your email',
-              prefixIcon: const Icon(Icons.email),
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: 'Send Verification Code',
-              prefixIcon: AppIcons.send,
-              onPressed: () {
-                Nav.push(context, AppRoutes.verifyEmail);
-                // Handle send reset code action
-              },
-            ),
-            SizedBox(height: 29.h),
-            Link(
-              text: "Remember your password?",
-              actionText: "  Back to Login",
-              onTap: () => Nav.back(context),
-            ),
-          ],
+          ),
         ),
       ),
     );
