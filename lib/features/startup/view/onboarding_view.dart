@@ -16,6 +16,7 @@ class OnboardingView extends StatefulWidget {
 class _OnboardingViewState extends State<OnboardingView> {
   final PageController _pageController = PageController();
   int _currentIndex = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,9 +38,8 @@ class _OnboardingViewState extends State<OnboardingView> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: Image.asset(screen.imagePath),
-                      ),
+                         borderRadius: BorderRadius.circular(24),
+                        child: Image.asset(screen.imagePath)),
                       const SizedBox(height: 24),
                       Text(
                         screen.title,
@@ -63,10 +63,8 @@ class _OnboardingViewState extends State<OnboardingView> {
               top: 0,
               right: 0,
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 child: TextButton(
                   onPressed: () {
                     GoRouter.of(context).go(AppRoutes.signup);
@@ -80,44 +78,23 @@ class _OnboardingViewState extends State<OnboardingView> {
                 ),
               ),
             ),
-          ],
-        ),
-      ),
-      bottomSheet: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.all(16.0),
-        child: _currentIndex == onboardingScreens.length - 1
-            ? SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    GoRouter.of(context).go(AppRoutes.signup);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  child: Text(
-                    AppLocalizations.getStarted,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                ),
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Placeholder for alignment
-                  const SizedBox(width: 60),
 
+            /// Bottom Section (Indicators + Button)
+            Positioned(
+              bottom: 32,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  /// Indicators
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       onboardingScreens.length,
-                      (index) => Container(
+                      (index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
                         margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentIndex == index ? 24 : 8,
+                        width: _currentIndex == index ? 16 : 8,
                         height: 8,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
@@ -129,23 +106,42 @@ class _OnboardingViewState extends State<OnboardingView> {
                     ),
                   ),
 
-                  TextButton(
-                    onPressed: () {
-                      _pageController.nextPage(
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                    },
-                    child: Text(
-                      AppLocalizations.next,
-                      style: const TextStyle(
-                        color: AppColors.primary,
-                        fontWeight: FontWeight.bold,
+                  const SizedBox(height: 24),
+
+                  /// Next Button
+                  Container(
+                    width: 72,
+                    height: 72,
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      icon: const Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 28,
                       ),
+                      onPressed: () {
+                        if (_currentIndex ==
+                            onboardingScreens.length - 1) {
+                          GoRouter.of(context)
+                              .go(AppRoutes.signup);
+                        } else {
+                          _pageController.nextPage(
+                            duration:
+                                const Duration(milliseconds: 300),
+                            curve: Curves.easeInOut,
+                          );
+                        }
+                      },
                     ),
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
       ),
     );
   }
