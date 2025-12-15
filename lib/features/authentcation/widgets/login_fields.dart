@@ -1,4 +1,5 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/styling/app_colors.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/utils/validators.dart';
@@ -30,8 +31,8 @@ class LoginFields extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CustomTextField(
-          label: 'Email',
-          hint: 'Enter your email',
+          label: AppLocalizations.emailLabel,
+          hint: AppLocalizations.emailHint,
           controller: emailController,
           keyboardType: TextInputType.emailAddress,
           validator: (value) => Validators.email(value),
@@ -40,8 +41,8 @@ class LoginFields extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         CustomTextField(
-          label: 'Password',
-          hint: 'Enter your password',
+          label: AppLocalizations.passwordLabel,
+          hint: AppLocalizations.passwordHint,
           controller: passwordController,
           isPassword: true,
           validator: (value) => Validators.password(value),
@@ -52,7 +53,7 @@ class LoginFields extends StatelessWidget {
         GestureDetector(
           onTap: () => Nav.push(context, AppRoutes.forgetPassword),
           child: Text(
-            "Forgot Password?",
+            AppLocalizations.forgotPassword,
             style: const TextStyle(
               color: AppColors.primary,
               fontSize: 16,
@@ -64,13 +65,13 @@ class LoginFields extends StatelessWidget {
         ),
 
         const SizedBox(height: 24),
-        CustomButton(text: 'Login', onPressed: onSubmit),
+        CustomButton(text: AppLocalizations.loginButton, onPressed: onSubmit),
         const SizedBox(height: 16),
         const GoogleButton(),
         const SizedBox(height: 24),
         Link(
-          text: "Don't have an account? ",
-          actionText: "Sign Up",
+          text: AppLocalizations.noAccount,
+          actionText: AppLocalizations.signupLink,
           onTap: () => Nav.push(context, AppRoutes.signup),
         ),
       ],

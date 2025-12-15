@@ -1,5 +1,6 @@
 // widgets/signup_form.dart
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import '../../../shared/widgets/custom_text_field.dart';
 import '../../../shared/widgets/custom_button.dart';
 import 'google_button.dart';
 import 'link.dart';
+
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
   @override
@@ -43,16 +45,16 @@ class _SignupFormState extends State<SignupForm> {
         child: Column(
           children: [
             CustomTextField(
-              label: 'Full Name',
-              hint: 'Enter your full name',
+              label: AppLocalizations.nameLabel,
+              hint: AppLocalizations.nameHint,
               controller: _nameController,
               validator: (value) => Validators.fullName(value),
               prefixIcon: const Icon(Icons.person),
             ),
             const SizedBox(height: 20),
             CustomTextField(
-              label: 'Email',
-              hint: 'Enter your email',
+              label: AppLocalizations.signupEmailLabel,
+              hint: AppLocalizations.signupEmailHint,
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               validator: (value) => Validators.email(value),
@@ -60,8 +62,8 @@ class _SignupFormState extends State<SignupForm> {
             ),
             const SizedBox(height: 20),
             CustomTextField(
-              label: 'Password',
-              hint: 'Create a password',
+              label: AppLocalizations.signupPasswordLabel,
+              hint: AppLocalizations.signupPasswordHint,
               controller: _passwordController,
               isPassword: true,
               validator: (value) => Validators.password(value),
@@ -69,18 +71,25 @@ class _SignupFormState extends State<SignupForm> {
             ),
             const SizedBox(height: 20),
             CustomTextField(
-              label: 'Phone Number (Optional)',
-              hint: 'Enter your phone number',
+              label: AppLocalizations.phoneLabel,
+              hint: AppLocalizations.phoneHint,
               controller: _addressController,
               prefixIcon: const Icon(Icons.phone),
               keyboardType: TextInputType.phone,
             ),
             const SizedBox(height: 24),
-            CustomButton(text: 'Create Account', onPressed: _handleSubmit),
+            CustomButton(
+              text: AppLocalizations.signupButton,
+              onPressed: _handleSubmit,
+            ),
             const SizedBox(height: 16),
             const GoogleButton(),
             const SizedBox(height: 24),
-            Link(text: 'Already have an account? ', actionText: 'Login', onTap:() => Nav.push(context, AppRoutes.login)),
+            Link(
+              text: AppLocalizations.haveAccount,
+              actionText: AppLocalizations.loginLink,
+              onTap: () => Nav.push(context, AppRoutes.login),
+            ),
           ],
         ),
       ),

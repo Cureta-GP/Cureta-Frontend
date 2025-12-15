@@ -1,3 +1,4 @@
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,29 +15,23 @@ class LoginHeader extends StatelessWidget {
       width: double.infinity,
       child: riveArtboard == null
           ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.person_outline,
-              size: 80,
-              color: Colors.blue.shade300,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Loading animation...',
-              style: TextStyle(
-                color: Colors.grey.shade600,
-                fontSize: 14,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.person_outline,
+                    size: 80,
+                    color: Colors.blue.shade300,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    AppLocalizations.loadingAnimation,
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      )
-          : Rive(
-        artboard: riveArtboard!,
-        fit: BoxFit.cover,
-      ),
+            )
+          : Rive(artboard: riveArtboard!, fit: BoxFit.cover),
     );
   }
 }

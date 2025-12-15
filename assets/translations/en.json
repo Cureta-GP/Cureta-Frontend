@@ -1,0 +1,74 @@
+{
+  "app": {
+    "name": "Cureta"
+  },
+  "auth": {
+    "login": {
+      "title": "Welcome Back",
+      "email_label": "Email",
+      "email_hint": "Enter your email",
+      "password_label": "Password",
+      "password_hint": "Enter your password",
+      "forgot_password": "Forgot Password?",
+      "login_button": "Login",
+      "no_account": "Don't have an account? ",
+      "signup_link": "Sign Up",
+      "loading_animation": "Loading animation..."
+    },
+    "signup": {
+      "title": "Create Account",
+      "subtitle": "Join Cureta today",
+      "name_label": "Full Name",
+      "name_hint": "Enter your full name",
+      "email_label": "Email",
+      "email_hint": "Enter your email",
+      "password_label": "Password",
+      "password_hint": "Create a password",
+      "phone_label": "Phone Number (Optional)",
+      "phone_hint": "Enter your phone number",
+      "signup_button": "Create Account",
+      "have_account": "Already have an account? ",
+      "login_link": "Login"
+    },
+    "forgot_password": {
+      "title": "Forgot Password?",
+      "subtitle": "Don't worry! Enter your email address and we'll send you a code to reset your password.",
+      "email_label": "Email",
+      "email_hint": "Enter your email",
+      "send_button": "Send Verification Code",
+      "remember_password": "Remember your password?",
+      "back_to_login": "  Back to Login"
+    },
+    "google": {
+      "continue": "Continue with Google"
+    }
+  },
+  "onboarding": {
+    "screen1": {
+      "title": "Scan Prescriptions Instantly",
+      "description": "Use your camera to scan prescriptions and automatically extract medication information with OCR technology"
+    },
+    "screen2": {
+      "title": "Never Miss a Dose",
+      "description": "Get timely reminders for your medications and track your daily health journey with ease"
+    },
+    "screen3": {
+      "title": "Your Health, One QR Away",
+      "description": "Store your medical history digitally and generate QR codes for easy sharing with healthcare providers"
+    },
+    "get_started": "Get Started",
+    "skip": "Skip",
+    "next": "Next"
+  },
+  "validation": {
+    "email_required": "Email is required",
+    "email_invalid": "Please enter a valid email",
+    "password_required": "Password is required",
+    "password_min_length": "Password must be at least 6 characters",
+    "password_max_length": "Password must be less than 50 characters",
+    "name_required": "Full name is required",
+    "name_min_length": "Full name must be at least 2 characters",
+    "phone_invalid": "Please enter a valid phone number",
+    "field_required": "{field} is required"
+  }
+}

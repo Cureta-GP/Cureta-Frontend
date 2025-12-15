@@ -1,4 +1,5 @@
 import 'package:cureta/core/constants/app_icons.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/features/authentcation/widgets/header.dart';
 import 'package:cureta/features/authentcation/widgets/link.dart';
@@ -19,20 +20,19 @@ class ForgetPasswordView extends StatelessWidget {
         child: Column(
           children: [
             Header(
-              title: "Forgot Password?",
-              subtitle:
-                  "Don't worry! Enter your email address and we'll send you a code to reset your password.",
+              title: AppLocalizations.forgotPasswordTitle,
+              subtitle: AppLocalizations.forgotPasswordSubtitle,
             ),
             CustomTextField(
-              label: 'Email',
-              hint: 'Enter your email',
+              label: AppLocalizations.forgotPasswordEmailLabel,
+              hint: AppLocalizations.forgotPasswordEmailHint,
               prefixIcon: const Icon(Icons.email),
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
             ),
             const SizedBox(height: 20),
             CustomButton(
-              text: 'Send Verification Code',
+              text: AppLocalizations.sendButton,
               prefixIcon: AppIcons.send,
               onPressed: () {
                 // Handle send reset code action
@@ -40,8 +40,8 @@ class ForgetPasswordView extends StatelessWidget {
             ),
             SizedBox(height: 29.h),
             Link(
-              text: "Remember your password?",
-              actionText: "  Back to Login",
+              text: AppLocalizations.rememberPassword,
+              actionText: AppLocalizations.backToLogin,
               onTap: () => Nav.back(context),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/startup/view_model/onboarding_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +58,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 // Navigate to your next screen
                 GoRouter.of(context).go(AppRoutes.signup);
               },
-              child: const Text('Get Started'),
+              child: Text(AppLocalizations.getStarted),
             )
           : Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -66,7 +67,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                   onPressed: () {
                     _pageController.jumpToPage(onboardingScreens.length - 1);
                   },
-                  child: const Text('Skip'),
+                  child: Text(AppLocalizations.skip),
                 ),
                 Row(
                   children: List.generate(
@@ -91,7 +92,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                       curve: Curves.ease,
                     );
                   },
-                  child: const Text('Next'),
+                  child: Text(AppLocalizations.next),
                 ),
               ],
             ),

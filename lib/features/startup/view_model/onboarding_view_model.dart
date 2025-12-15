@@ -1,23 +1,21 @@
 import 'package:cureta/core/constants/app_images.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/startup/model/onboarding_model.dart';
 
-final onboardingScreens = [
+List<OnboardingModel> get onboardingScreens => [
   OnboardingModel(
     imagePath: AppImages.onboardingScan,
-    title: 'Scan Prescriptions Instantly',
-    description:
-        'Use your camera to scan prescriptions and automatically extract medication information with OCR technology',
+    title: AppLocalizations.onboardingScreen1Title,
+    description: AppLocalizations.onboardingScreen1Description,
   ),
   OnboardingModel(
     imagePath: AppImages.onboardingReminder,
-    title: 'Never Miss a Dose',
-    description:
-        'Get timely reminders for your medications and track your daily health journey with ease',
+    title: AppLocalizations.onboardingScreen2Title,
+    description: AppLocalizations.onboardingScreen2Description,
   ),
   OnboardingModel(
     imagePath: AppImages.onboardingQr,
-    title: 'Your Health, One QR Away',
-    description:
-        'Store your medical history digitally and generate QR codes for easy sharing with healthcare providers',
+    title: AppLocalizations.onboardingScreen3Title,
+    description: AppLocalizations.onboardingScreen3Description,
   ),
 ];

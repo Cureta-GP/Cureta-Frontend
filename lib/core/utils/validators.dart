@@ -1,10 +1,11 @@
 // utils/validators.dart
+import 'package:cureta/core/localization/app_localizations.dart';
 
 class Validators {
   // Validate required field
   static String? required(String? value, String fieldName) {
     if (value == null || value.trim().isEmpty) {
-      return '$fieldName is required';
+      return AppLocalizations.fieldRequired(fieldName);
     }
     return null;
   }
@@ -12,15 +13,15 @@ class Validators {
   // Validate email
   static String? email(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Email is required';
+      return AppLocalizations.emailRequired;
     }
-    
+
     final emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
-    
+
     if (!emailRegex.hasMatch(value)) {
-      return 'Please enter a valid email';
+      return AppLocalizations.emailInvalid;
     }
     return null;
   }
@@ -28,30 +29,30 @@ class Validators {
   // Validate password
   static String? password(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return AppLocalizations.passwordRequired;
     }
-    
+
     if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+      return AppLocalizations.passwordMinLength;
     }
-    
+
     if (value.length > 50) {
-      return 'Password must be less than 50 characters';
+      return AppLocalizations.passwordMaxLength;
     }
-    
+
     return null;
   }
 
   // Validate full name
   static String? fullName(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Full name is required';
+      return AppLocalizations.nameRequired;
     }
-    
+
     if (value.trim().length < 2) {
-      return 'Full name must be at least 2 characters';
+      return AppLocalizations.nameMinLength;
     }
-    
+
     return null;
   }
 
@@ -60,13 +61,13 @@ class Validators {
     if (value == null || value.isEmpty) {
       return null; // Optional field
     }
-    
+
     final phoneRegex = RegExp(r'^\+?[\d\s-()]+$');
-    
+
     if (!phoneRegex.hasMatch(value)) {
-      return 'Please enter a valid phone number';
+      return AppLocalizations.phoneInvalid;
     }
-    
+
     return null;
   }
 }

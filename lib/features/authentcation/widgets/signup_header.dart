@@ -1,4 +1,5 @@
 // widgets/signup_header.dart
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SignupHeader extends StatelessWidget {
@@ -12,11 +13,11 @@ class SignupHeader extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            'Create Account',
+          Text(
+            AppLocalizations.signupTitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
-             // color: Color(0xFF133A3E),
+            style: const TextStyle(
+              // color: Color(0xFF133A3E),
               fontSize: 32,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w400,
@@ -24,10 +25,10 @@ class SignupHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Join Cureta today',
+          Text(
+            AppLocalizations.signupSubtitle,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               //color: Color(0xFF495565),
               fontSize: 16,
               fontFamily: 'Arimo',
