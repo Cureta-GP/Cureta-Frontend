@@ -18,42 +18,44 @@ class ResetPasswordView extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-          children: [
-             ArrowBack(),
-            Header(
-              title: "Reset Password",
-              subtitle:
-                  "Create a new strong password for your account",
-            ),
-            CustomTextField(
-              label: 'New Password',
-              hint: 'Enter your password',
-              prefixIcon:const Icon(Icons.lock),
-              controller: _newPasswordController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            SizedBox(height:30.h),
-             CustomTextField(
-              label: 'Confirm Password',
-              hint: 'Enter your password',
-              prefixIcon: const Icon(Icons.lock),
-              controller: _confirmPasswordController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: 'Reset Password',
-            
-              onPressed: () {
+        child: SingleChildScrollView(
+          child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+          
+            children: [
+               ArrowBack(),
+              Header(
+                title: "Reset Password",
+                subtitle:
+                    "Create a new strong password for your account",
+              ),
+              CustomTextField(
+                label: 'New Password',
+                hint: 'Enter your password',
+                prefixIcon:const Icon(Icons.lock),
+                controller: _newPasswordController,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              SizedBox(height:30.h),
+               CustomTextField(
+                label: 'Confirm Password',
+                hint: 'Enter your password',
+                prefixIcon: const Icon(Icons.lock),
+                controller: _confirmPasswordController,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 20),
+              CustomButton(
+                text: 'Reset Password',
               
-                // Handle send reset code action
-              },
-            ),
-           
-          ],
+                onPressed: () {
+                
+                  // Handle send reset code action
+                },
+              ),
+             
+            ],
+          ),
         ),
       ),
     );

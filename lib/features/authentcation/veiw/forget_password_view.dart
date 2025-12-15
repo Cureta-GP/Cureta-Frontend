@@ -17,36 +17,41 @@ class ForgetPasswordView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          children: [
-            Header(
-              title: AppLocalizations.forgotPasswordTitle,
-              subtitle: AppLocalizations.forgotPasswordSubtitle,
-            ),
-            CustomTextField(
-              label: AppLocalizations.forgotPasswordEmailLabel,
-              hint: AppLocalizations.forgotPasswordEmailHint,
-              prefixIcon: const Icon(Icons.email),
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
-            ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: AppLocalizations.sendButton,
-              prefixIcon: AppIcons.send,
-              onPressed: () {
-                // Handle send reset code action
-              },
-            ),
-            SizedBox(height: 29.h),
-            Link(
-              text: AppLocalizations.rememberPassword,
-              actionText: AppLocalizations.backToLogin,
-              onTap: () => Nav.back(context),
-            ),
-          ],
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+               ArrowBack(),
+              Header(
+                title: AppLocalizations.forgotPasswordTitle,
+                subtitle: AppLocalizations.forgotPasswordSubtitle,
+              ),
+              CustomTextField(
+                label: AppLocalizations.forgotPasswordEmailLabel,
+                hint: AppLocalizations.forgotPasswordEmailHint,
+                prefixIcon: const Icon(Icons.email),
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+              ),
+              const SizedBox(height: 20),
+              CustomButton(
+                text: AppLocalizations.sendButton,
+                prefixIcon: AppIcons.send,
+                onPressed: () {
+                  Nav.push(context, AppRoutes.verifyEmail);
+                  // Handle send reset code action
+                },
+              ),
+              SizedBox(height: 29.h),
+              Link(
+                text: AppLocalizations.rememberPassword,
+                actionText: AppLocalizations.backToLogin,
+                onTap: () => Nav.back(context),
+              ),
+            ],
+          ),
         ),
       ),
     );
