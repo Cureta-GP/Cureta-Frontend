@@ -74,6 +74,28 @@ class AppLocalizations {
   static String get nameMinLength => 'validation.name_min_length'.tr();
   static String get phoneInvalid => 'validation.phone_invalid'.tr();
 
+  // Reset Password
+  static String get resetPasswordTitle => 'auth.reset_password.title'.tr();
+  static String get resetPasswordSubtitle =>
+      'auth.reset_password.subtitle'.tr();
+  static String get newPasswordLabel =>
+      'auth.reset_password.new_password_label'.tr();
+  static String get newPasswordHint =>
+      'auth.reset_password.new_password_hint'.tr();
+  static String get confirmPasswordLabel =>
+      'auth.reset_password.confirm_password_label'.tr();
+  static String get confirmPasswordHint =>
+      'auth.reset_password.confirm_password_hint'.tr();
+  static String get resetPasswordButton =>
+      'auth.reset_password.reset_button'.tr();
+
+  // Email Verification
+  static String get verifyEmailTitle => 'auth.verify_email.title'.tr();
+  static String get verifyEmailSubtitle => 'auth.verify_email.subtitle'.tr();
+  static String get verifyEmailSent => 'auth.verify_email.sent'.tr();
+  static String get verifyButton => 'auth.verify_email.verify_button'.tr();
+  static String get otpError => 'auth.verify_email.otp_error'.tr();
+
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
 

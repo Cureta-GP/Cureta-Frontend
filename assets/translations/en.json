@@ -41,6 +41,22 @@
     },
     "google": {
       "continue": "Continue with Google"
+    },
+    "reset_password": {
+      "title": "Reset Password",
+      "subtitle": "Create a new strong password for your account",
+      "new_password_label": "New Password",
+      "new_password_hint": "Enter your password",
+      "confirm_password_label": "Confirm Password",
+      "confirm_password_hint": "Enter your password",
+      "reset_button": "Reset Password"
+    },
+    "verify_email": {
+      "title": "Verify Your Email",
+      "subtitle": "We've sent a 6-digit verification code to",
+      "sent": "elbannabosina@gmail.com",
+      "verify_button": "Verify & Continue",
+      "otp_error": "Please enter the full code"
     }
   },
   "onboarding": {

@@ -1,4 +1,5 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/styling/app_colors.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/features/authentcation/widgets/arrow_back.dart';
@@ -38,9 +39,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
   void _verifyCode() {
     if (otp.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter the full code")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(AppLocalizations.otpError)));
       return;
     }
 
@@ -50,59 +51,56 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
   @override
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: SafeArea(
-      child: Padding(
-        padding: EdgeInsets.all(24.w),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ArrowBack(),
-              const Header(
-                title: "Verify Your Email",
-                subtitle: "We've sent a 6-digit verification code to",
-              ),
-              SizedBox(
-                width: 342.w,
-                child: Text(
-                  'elbannabosina@gmail.com',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 16,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(24.w),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ArrowBack(),
+                Header(
+                  title: AppLocalizations.verifyEmailTitle,
+                  subtitle: AppLocalizations.verifyEmailSubtitle,
+                ),
+                SizedBox(
+                  width: 342.w,
+                  child: Text(
+                    AppLocalizations.verifyEmailSent,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: AppColors.primary, fontSize: 16),
                   ),
                 ),
-              ),
-              SizedBox(height: 32.h),
-          
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(6, (index) {
-                  return OtpBox(
-                    controller: _controllers[index],
-                    focusNode: _focusNodes[index],
-                    nextFocus: index < 5 ? _focusNodes[index + 1] : null,
-                    previousFocus: index > 0 ? _focusNodes[index - 1] : null,
-                  );
-                }),
-              ),
-          
-              SizedBox(height: 40.h),
-          
-              CustomButton(
-                text: 'Verify & Continue',
-                onPressed: () async {
-                  if (otp.length < 6) return;
-                  await Nav.push(context, AppRoutes.resetPassword);
-                },
-              ),
-            ],
+                SizedBox(height: 32.h),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(6, (index) {
+                    return OtpBox(
+                      controller: _controllers[index],
+                      focusNode: _focusNodes[index],
+                      nextFocus: index < 5 ? _focusNodes[index + 1] : null,
+                      previousFocus: index > 0 ? _focusNodes[index - 1] : null,
+                    );
+                  }),
+                ),
+
+                SizedBox(height: 40.h),
+
+                CustomButton(
+                  text: AppLocalizations.verifyButton,
+                  onPressed: () async {
+                    if (otp.length < 6) return;
+                    await Nav.push(context, AppRoutes.resetPassword);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 }

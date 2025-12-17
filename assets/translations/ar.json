@@ -41,6 +41,22 @@
         },
         "google": {
             "continue": "المتابعة باستخدام جوجل"
+        },
+        "reset_password": {
+            "title": "إعادة تعيين كلمة المرور",
+            "subtitle": "قم بإنشاء كلمة مرور قوية جديدة لحسابك",
+            "new_password_label": "كلمة المرور الجديدة",
+            "new_password_hint": "أدخل كلمة المرور",
+            "confirm_password_label": "تأكيد كلمة المرور",
+            "confirm_password_hint": "أدخل كلمة المرور",
+            "reset_button": "إعادة تعيين كلمة المرور"
+        },
+        "verify_email": {
+            "title": "التحقق من بريدك الإلكتروني",
+            "subtitle": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
+            "sent": "elbannabosina@gmail.com",
+            "verify_button": "تحقق ومتابعة",
+            "otp_error": "الرجاء إدخال الرمز كاملاً"
         }
     },
     "onboarding": {
