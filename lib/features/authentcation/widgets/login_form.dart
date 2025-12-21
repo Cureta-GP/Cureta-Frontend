@@ -63,6 +63,7 @@ class _LoginFormState extends State<LoginForm> {
           AnimatedLoginHeader(animationManager: _animationManager),
           Form(
             key: _formKey,
+            autovalidateMode: AutovalidateMode.disabled,
             child: LoginFields(
               emailController: _emailController,
               passwordController: _passwordController,

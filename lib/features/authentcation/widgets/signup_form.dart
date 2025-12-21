@@ -42,6 +42,7 @@ class _SignupFormState extends State<SignupForm> {
       padding: const EdgeInsets.symmetric(horizontal: 47),
       child: Form(
         key: _formKey,
+        autovalidateMode: AutovalidateMode.disabled,
         child: Column(
           children: [
             CustomTextField(
