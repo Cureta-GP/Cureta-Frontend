@@ -5,17 +5,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'app_exceptions.dart';
 
-/// معالج الأخطاء - تحويل + عرض
 class ErrorHandler {
   /// تحويل أي خطأ إلى AppException
   static AppException handle(dynamic error) {
     if (error is AppException) return error;
     if (error is SocketException) return AppException.network();
-
-    if (error is DioException) {
-      return _handleDio(error);
-    }
-
+    if (error is DioException) return _handleDio(error);
     return AppException.server();
   }
 
@@ -32,54 +27,57 @@ class ErrorHandler {
       return AppException.network();
     }
 
-    // Response errors
     final status = error.response?.statusCode;
     final data = error.response?.data;
-    final msg = data is Map ? data['message'] : null;
-    final code = data is Map ? data['code'] : null;
 
-    // Backend error codes
+    // ========== غيّر هنا حسب الباك إند ==========
+    final msg = data is Map ? data['message'] : null;
+    final code = data is Map ? data['code']?.toString() : null;
+    final fields = data is Map && data['errors'] is Map
+        ? Map<String, String>.from(data['errors'])
+        : null;
+    // ============================================
+
+    // Error code mapping
     if (code != null) {
-      return _mapCode(code, msg);
+      switch (code.toUpperCase()) {
+        case 'UNAUTHORIZED':
+        case 'INVALID_CREDENTIALS':
+          return AppException.unauthorized();
+        case 'ACCOUNT_SUSPENDED':
+          return AppException.suspended();
+        case 'EMAIL_ALREADY_EXISTS':
+          return AppException.emailExists();
+        case 'WEAK_PASSWORD':
+          return AppException.weakPassword();
+        case 'INVALID_EMAIL':
+          return AppException.invalidEmail();
+        case 'VALIDATION_ERROR':
+          return AppException.validation(msg: msg, fields: fields);
+        case 'NOT_FOUND':
+          return AppException.notFound();
+        // أضف codes جديدة هنا ↓
+      }
     }
 
     // HTTP status codes
     switch (status) {
+      case 400:
+      case 422:
+        return AppException.validation(msg: msg, fields: fields);
       case 401:
         return AppException.unauthorized();
+      case 403:
+        return AppException.suspended();
       case 404:
         return AppException.notFound();
-      case 422:
-        return AppException.validation(
-          fields: data is Map && data['errors'] is Map
-              ? Map<String, String>.from(data['errors'])
-              : null,
-        );
       default:
         return AppException.server(msg);
     }
   }
 
-  static AppException _mapCode(String code, String? msg) {
-    switch (code) {
-      case 'ACCOUNT_SUSPENDED':
-        return AppException.suspended();
-      case 'EMAIL_ALREADY_EXISTS':
-        return AppException.emailExists();
-      case 'WEAK_PASSWORD':
-        return AppException.weakPassword();
-      case 'INVALID_EMAIL':
-        return AppException.invalidEmail();
-      case 'INVALID_CREDENTIALS':
-        return AppException.unauthorized();
-      // أضف error codes جديدة هنا
-      default:
-        return AppException.server(msg);
-    }
-  }
-
-  /// عرض الخطأ - يرجع fieldErrors للـ inline
-  static Map<String, String>? show(
+  /// عرض الخطأ
+  static void show(
     BuildContext context,
     AppException error, {
     VoidCallback? onRetry,
@@ -92,7 +90,7 @@ class ErrorHandler {
             behavior: SnackBarBehavior.floating,
           ),
         );
-        return null;
+        break;
 
       case ErrorType.dialog:
         showDialog(
@@ -116,13 +114,12 @@ class ErrorHandler {
             ],
           ),
         );
-        return null;
-
-      case ErrorType.inline:
-        return error.fieldErrors ?? {'general': error.message};
+        break;
 
       case ErrorType.fullScreen:
-        return null; // UI handles with AppErrorWidget
+      case ErrorType.inline:
+        // UI handles these
+        break;
     }
   }
 }
