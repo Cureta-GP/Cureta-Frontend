@@ -1,6 +1,5 @@
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OtpBox extends StatelessWidget {
   final TextEditingController controller;
@@ -9,6 +8,7 @@ class OtpBox extends StatelessWidget {
   final FocusNode? previousFocus;
 
   const OtpBox({
+    super.key,
     required this.controller,
     required this.focusNode,
     this.nextFocus,
@@ -17,9 +17,13 @@ class OtpBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final radius = context.radius;
+    final colors = context.colors;
+
     return SizedBox(
-      width: 48.w,
-      height: 56.h,
+      width: spacing.xxl + spacing.md,
+      height: spacing.xxl + spacing.lg,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
@@ -30,18 +34,15 @@ class OtpBox extends StatelessWidget {
         decoration: InputDecoration(
           counterText: "",
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
+            borderRadius: BorderRadius.circular(radius.md),
             borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.r),
-            borderSide: BorderSide(
-              color: AppColors.primary, 
-              width: 2,
-            ),
+            borderRadius: BorderRadius.circular(radius.md),
+            borderSide: BorderSide(color: colors.primary, width: 2),
           ),
         ),
-        cursorColor: AppColors.primary,
+        cursorColor: colors.primary,
 
         onChanged: (value) {
           if (value.isNotEmpty && nextFocus != null) {

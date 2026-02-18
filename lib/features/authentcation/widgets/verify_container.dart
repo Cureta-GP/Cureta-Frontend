@@ -1,6 +1,5 @@
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VerifyContainer extends StatelessWidget {
   final TextEditingController controller;
@@ -16,8 +15,10 @@ class VerifyContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+
     return SizedBox(
-      width: 48.w,
+      width: spacing.xxl + spacing.md,
       child: TextField(
         controller: controller,
         focusNode: focusNode,

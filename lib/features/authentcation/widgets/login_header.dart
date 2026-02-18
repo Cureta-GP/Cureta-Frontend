@@ -1,7 +1,7 @@
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:rive/rive.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginHeader extends StatelessWidget {
   final Artboard? riveArtboard;
@@ -10,8 +10,16 @@ class LoginHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final typography = context.typography;
+    final colors = context.colors;
+    final headerHeight = (MediaQuery.sizeOf(context).height * 0.3).clamp(
+      220.0,
+      320.0,
+    );
+
     return SizedBox(
-      height: 250.h,
+      height: headerHeight,
       width: double.infinity,
       child: riveArtboard == null
           ? Center(
@@ -20,13 +28,15 @@ class LoginHeader extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.person_outline,
-                    size: 80,
-                    color: Colors.blue.shade300,
+                    size: spacing.xxl + spacing.xl,
+                    color: colors.primary.withValues(alpha: 0.75),
                   ),
-                  const SizedBox(height: 8),
+                  SizedBox(height: spacing.xs),
                   Text(
                     AppLocalizations.loadingAnimation,
-                    style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
+                    style: typography.label.copyWith(
+                      color: colors.textSecondary,
+                    ),
                   ),
                 ],
               ),

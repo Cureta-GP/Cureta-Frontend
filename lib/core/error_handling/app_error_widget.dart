@@ -1,5 +1,6 @@
 // core/error_handling/app_error_widget.dart
 
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'app_exceptions.dart';
 
@@ -12,38 +13,51 @@ class AppErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final radius = context.radius;
+    final typography = context.typography;
+    final colors = context.colors;
+    final scheme = Theme.of(context).colorScheme;
+
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(spacing.xxl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              height: 120,
-              width: 120,
+              height: spacing.xxl * 4,
+              width: spacing.xxl * 4,
               decoration: BoxDecoration(
-                color: Colors.red.shade50,
-                shape: BoxShape.circle,
+                color: scheme.errorContainer,
+                borderRadius: BorderRadius.circular(radius.full),
               ),
-              child: Icon(_getIcon(), size: 60, color: Colors.red.shade300),
+              child: Icon(
+                _getIcon(),
+                size: spacing.xxl * 2,
+                color: scheme.error,
+              ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: spacing.xxl),
             Text(
               error.message,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              style: typography.title.copyWith(
+                color: colors.textPrimary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: spacing.xxl),
             if (onRetry != null)
               ElevatedButton(
                 onPressed: onRetry,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 32,
-                    vertical: 12,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: spacing.xxl,
+                    vertical: spacing.md,
                   ),
                 ),
-                child: const Text('إعادة المحاولة'),
+                child: Text('إعادة المحاولة', style: typography.button),
               ),
           ],
         ),

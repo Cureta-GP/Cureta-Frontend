@@ -1,7 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
-import 'package:cureta/core/styling/app_colors.dart';
-import 'package:cureta/core/styling/app_styles.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/startup/view_model/onboarding_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +18,11 @@ class _OnboardingViewState extends State<OnboardingView> {
 
   @override
   Widget build(BuildContext context) {
+    final styles = context.typography;
+    final spacing = context.spacing;
+    final radius = context.radius;
+    final colors = context.colors;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -33,24 +37,25 @@ class _OnboardingViewState extends State<OnboardingView> {
               itemBuilder: (context, index) {
                 final screen = onboardingScreens[index];
                 return Padding(
-                  padding: const EdgeInsets.all(24),
+                  padding: EdgeInsets.all(spacing.xxl),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ClipRRect(
-                         borderRadius: BorderRadius.circular(24),
-                        child: Image.asset(screen.imagePath)),
-                      const SizedBox(height: 24),
+                        borderRadius: BorderRadius.circular(radius.xl),
+                        child: Image.asset(screen.imagePath),
+                      ),
+                      SizedBox(height: spacing.xxl),
                       Text(
                         screen.title,
                         textAlign: TextAlign.center,
-                        style: AppStyles.headingMedium,
+                        style: styles.title,
                       ),
-                      const SizedBox(height: 12),
+                      SizedBox(height: spacing.md),
                       Text(
                         screen.description,
                         textAlign: TextAlign.center,
-                        style: AppStyles.bodyLarge,
+                        style: styles.body,
                       ),
                     ],
                   ),
@@ -63,17 +68,17 @@ class _OnboardingViewState extends State<OnboardingView> {
               top: 0,
               right: 0,
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: EdgeInsets.symmetric(
+                  horizontal: spacing.lg,
+                  vertical: spacing.md,
+                ),
                 child: TextButton(
                   onPressed: () {
                     GoRouter.of(context).go(AppRoutes.signup);
                   },
                   child: Text(
                     AppLocalizations.skip,
-                    style: AppStyles.bodySmall.copyWith(
-                      color: AppColors.primary,
-                    ),
+                    style: styles.label.copyWith(color: colors.primary),
                   ),
                 ),
               ),
@@ -81,7 +86,7 @@ class _OnboardingViewState extends State<OnboardingView> {
 
             /// Bottom Section (Indicators + Button)
             Positioned(
-              bottom: 32,
+              bottom: spacing.xxl,
               left: 0,
               right: 0,
               child: Column(
@@ -93,44 +98,43 @@ class _OnboardingViewState extends State<OnboardingView> {
                       onboardingScreens.length,
                       (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 250),
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        width: _currentIndex == index ? 16 : 8,
-                        height: 8,
+                        margin: EdgeInsets.symmetric(
+                          horizontal: spacing.xs / 2,
+                        ),
+                        width: _currentIndex == index ? spacing.lg : spacing.xs,
+                        height: spacing.xs,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(radius.sm),
                           color: _currentIndex == index
-                              ? AppColors.primary
-                              : Colors.grey.shade300,
+                              ? colors.primary
+                              : colors.divider,
                         ),
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 24),
+                  SizedBox(height: spacing.xxl),
 
                   /// Next Button
                   Container(
-                    width: 72,
-                    height: 72,
-                    decoration: const BoxDecoration(
-                      color: AppColors.primary,
+                    width: spacing.xxl + spacing.xl,
+                    height: spacing.xxl + spacing.xl,
+                    decoration: BoxDecoration(
+                      color: colors.primary,
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.arrow_forward,
-                        color: Colors.white,
-                        size: 28,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: spacing.xl,
                       ),
                       onPressed: () {
-                        if (_currentIndex ==
-                            onboardingScreens.length - 1) {
-                          GoRouter.of(context)
-                              .go(AppRoutes.signup);
+                        if (_currentIndex == onboardingScreens.length - 1) {
+                          GoRouter.of(context).go(AppRoutes.signup);
                         } else {
                           _pageController.nextPage(
-                            duration:
-                                const Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut,
                           );
                         }

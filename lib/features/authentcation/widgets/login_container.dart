@@ -1,5 +1,5 @@
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class LoginContainer extends StatelessWidget {
   final Widget child;
@@ -8,26 +8,27 @@ class LoginContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final radius = context.radius;
+
     return Container(
-      width: 390.w,
-      height: 844.h,
+      width: double.infinity,
       clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
         //color: Colors.white,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(40.r),
+          borderRadius: BorderRadius.circular(radius.xl * 2),
         ),
         shadows: [
           /*BoxShadow(
             color: Color(0x3F000000),
-            blurRadius: 50.r,
+            blurRadius: 50,
             offset: Offset(0, 25),
             spreadRadius: -12,
           ),*/
         ],
       ),
       child: Container(
-        constraints: BoxConstraints(minHeight: 844.h),
+        constraints: const BoxConstraints(minHeight: 0),
         decoration: const BoxDecoration(
           /*gradient: LinearGradient(
             begin: Alignment(0.50, 0.00),

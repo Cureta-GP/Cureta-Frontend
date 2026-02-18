@@ -1,6 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,10 @@ class LoginFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final colors = context.colors;
+    final typography = context.typography;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -39,7 +43,7 @@ class LoginFields extends StatelessWidget {
           prefixIcon: const Icon(Icons.email),
           onChanged: onEmailChanged,
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: spacing.xl),
         CustomTextField(
           label: AppLocalizations.passwordLabel,
           hint: AppLocalizations.passwordHint,
@@ -49,26 +53,24 @@ class LoginFields extends StatelessWidget {
           prefixIcon: const Icon(Icons.lock),
           focusNode: passwordFocusNode,
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: spacing.xxl),
         GestureDetector(
           onTap: () => Nav.push(context, AppRoutes.forgetPassword),
           child: Text(
             AppLocalizations.forgotPassword,
-            style: const TextStyle(
-              color: AppColors.primary,
-              fontSize: 16,
+            style: typography.body.copyWith(
+              color: colors.primary,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w700,
-              height: 1.50,
             ),
           ),
         ),
 
-        const SizedBox(height: 24),
+        SizedBox(height: spacing.xxl),
         CustomButton(text: AppLocalizations.loginButton, onPressed: onSubmit),
-        const SizedBox(height: 16),
+        SizedBox(height: spacing.lg),
         const GoogleButton(),
-        const SizedBox(height: 24),
+        SizedBox(height: spacing.xxl),
         Link(
           text: AppLocalizations.noAccount,
           actionText: AppLocalizations.signupLink,

@@ -1,6 +1,7 @@
 // widgets/signup_form.dart
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,10 @@ class _SignupFormState extends State<SignupForm> {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 47),
+      padding: EdgeInsets.symmetric(horizontal: spacing.xxl + spacing.lg),
       child: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.disabled,
@@ -52,7 +55,7 @@ class _SignupFormState extends State<SignupForm> {
               validator: (value) => Validators.fullName(value),
               prefixIcon: const Icon(Icons.person),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: spacing.xl),
             CustomTextField(
               label: AppLocalizations.signupEmailLabel,
               hint: AppLocalizations.signupEmailHint,
@@ -61,7 +64,7 @@ class _SignupFormState extends State<SignupForm> {
               validator: (value) => Validators.email(value),
               prefixIcon: const Icon(Icons.email),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: spacing.xl),
             CustomTextField(
               label: AppLocalizations.signupPasswordLabel,
               hint: AppLocalizations.signupPasswordHint,
@@ -70,7 +73,7 @@ class _SignupFormState extends State<SignupForm> {
               validator: (value) => Validators.password(value),
               prefixIcon: const Icon(Icons.lock),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: spacing.xl),
             CustomTextField(
               label: AppLocalizations.phoneLabel,
               hint: AppLocalizations.phoneHint,
@@ -78,14 +81,14 @@ class _SignupFormState extends State<SignupForm> {
               prefixIcon: const Icon(Icons.phone),
               keyboardType: TextInputType.phone,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: spacing.xxl),
             CustomButton(
               text: AppLocalizations.signupButton,
               onPressed: _handleSubmit,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: spacing.lg),
             const GoogleButton(),
-            const SizedBox(height: 24),
+            SizedBox(height: spacing.xxl),
             Link(
               text: AppLocalizations.haveAccount,
               actionText: AppLocalizations.loginLink,

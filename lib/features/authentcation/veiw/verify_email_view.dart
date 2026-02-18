@@ -1,13 +1,12 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/features/authentcation/widgets/arrow_back.dart';
 import 'package:cureta/features/authentcation/widgets/header.dart';
 import 'package:cureta/features/authentcation/widgets/otp_box.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const VerifyEmailView({super.key});
@@ -50,12 +49,15 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final colors = context.colors;
+    final typography = context.typography;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(24.w),
+          padding: EdgeInsets.all(spacing.xl),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,14 +68,14 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   subtitle: AppLocalizations.verifyEmailSubtitle,
                 ),
                 SizedBox(
-                  width: 342.w,
+                  width: double.infinity,
                   child: Text(
                     AppLocalizations.verifyEmailSent,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: AppColors.primary, fontSize: 16),
+                    style: typography.body.copyWith(color: colors.primary),
                   ),
                 ),
-                SizedBox(height: 32.h),
+                SizedBox(height: spacing.xxl),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -87,7 +89,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   }),
                 ),
 
-                SizedBox(height: 40.h),
+                SizedBox(height: spacing.xxl + spacing.sm),
 
                 CustomButton(
                   text: AppLocalizations.verifyButton,

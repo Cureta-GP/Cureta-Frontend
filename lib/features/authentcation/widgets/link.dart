@@ -1,6 +1,5 @@
 // widgets/login_link.dart
-import 'package:cureta/core/config/routing/app_routes.dart';
-import 'package:cureta/core/utils/navigation_helper.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class Link extends StatelessWidget {
@@ -17,29 +16,28 @@ class Link extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final typography = context.typography;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
           text,
-          /*style: const TextStyle(
-            color: Color(0xFF495565),
-            fontSize: 16,
+          style: typography.body.copyWith(
+            color: colors.textSecondary,
             fontFamily: 'Arimo',
             fontWeight: FontWeight.w400,
-            height: 1.50,
-          ),*/
+          ),
         ),
         GestureDetector(
           onTap: onTap,
           child: Text(
             actionText,
-            style: const TextStyle(
-              color: Color(0xFF00A1A9),
-              fontSize: 16,
+            style: typography.body.copyWith(
+              color: colors.primary,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w700,
-              height: 1.50,
             ),
           ),
         ),

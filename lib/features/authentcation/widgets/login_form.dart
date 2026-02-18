@@ -1,6 +1,7 @@
 import 'package:cureta/features/authentcation/veiw_model/rive_animation_manager.dart';
 import 'package:cureta/features/authentcation/widgets/login_fields.dart';
 import 'package:cureta/features/authentcation/widgets/animated_login_header.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
@@ -24,6 +25,7 @@ class _LoginFormState extends State<LoginForm> {
     _animationManager.initialize();
     _setupPasswordFocusListener();
   }
+
   void _setupPasswordFocusListener() {
     _passwordFocusNode.addListener(() {
       if (_passwordFocusNode.hasFocus) {
@@ -56,8 +58,10 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 47),
+      padding: EdgeInsets.symmetric(horizontal: spacing.xxl + spacing.lg),
       child: Column(
         children: [
           AnimatedLoginHeader(animationManager: _animationManager),

@@ -1,6 +1,7 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/constants/app_icons.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/features/authentcation/widgets/arrow_back.dart';
 import 'package:cureta/features/authentcation/widgets/header.dart';
@@ -8,7 +9,6 @@ import 'package:cureta/features/authentcation/widgets/link.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:cureta/shared/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ForgetPasswordView extends StatelessWidget {
   final _emailController = TextEditingController();
@@ -16,14 +16,16 @@ class ForgetPasswordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: EdgeInsets.all(spacing.xl),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               ArrowBack(),
+              ArrowBack(),
               Header(
                 title: AppLocalizations.forgotPasswordTitle,
                 subtitle: AppLocalizations.forgotPasswordSubtitle,
@@ -35,7 +37,7 @@ class ForgetPasswordView extends StatelessWidget {
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: spacing.xl),
               CustomButton(
                 text: AppLocalizations.sendButton,
                 prefixIcon: AppIcons.send,
@@ -44,7 +46,7 @@ class ForgetPasswordView extends StatelessWidget {
                   // Handle send reset code action
                 },
               ),
-              SizedBox(height: 29.h),
+              SizedBox(height: spacing.xxl),
               Link(
                 text: AppLocalizations.rememberPassword,
                 actionText: AppLocalizations.backToLogin,

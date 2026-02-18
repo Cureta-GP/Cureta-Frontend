@@ -1,5 +1,5 @@
 // widgets/custom_text_field.dart
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
@@ -35,57 +35,60 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final styles = context.typography;
+    final spacing = context.spacing;
+    final radius = context.radius;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
-            //color: Color(0xFF354152),
-            fontSize: 16,
+          style: styles.label.copyWith(
+            color: colors.textPrimary,
             fontFamily: 'Arimo',
             fontWeight: FontWeight.w400,
-            height: 1.50,
           ),
         ),
-        const SizedBox(height: 12),
+        SizedBox(height: spacing.md),
         TextFormField(
           controller: widget.controller,
           obscureText: widget.isPassword && _obscureText,
-          style: const TextStyle(
-              color: Colors.black,
-           fontFamily: 'Arimo'),
-          cursorColor: Colors.black,
+          style: styles.body.copyWith(
+            color: colors.textPrimary,
+            fontFamily: 'Arimo',
+          ),
+          cursorColor: colors.textPrimary,
           keyboardType: widget.keyboardType,
           validator: widget.validator,
           onChanged: widget.onChanged,
           focusNode: widget.focusNode,
           decoration: InputDecoration(
-            errorStyle: const TextStyle(color: AppColors.error),
+            errorStyle: TextStyle(color: colors.error),
             hintText: widget.hint,
-            hintStyle: const TextStyle(
-              color: Color(0x7F0A0A0A),
-              fontSize: 16,
+            hintStyle: styles.body.copyWith(
+              color: colors.textHint,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w400,
             ),
             prefixIcon: widget.prefixIcon,
-            prefixIconColor: AppColors.icon,
+            prefixIconColor: colors.icon,
             filled: true,
-            fillColor: const Color(0xFFEDF7F8),
+            fillColor: colors.secondary,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(radius.md),
               borderSide: BorderSide.none,
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: spacing.lg,
+              vertical: spacing.lg,
             ),
             suffixIcon: widget.isPassword
                 ? IconButton(
                     icon: Icon(
                       _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: const Color(0xFF354152),
+                      color: colors.textSecondary,
                     ),
                     onPressed: () {
                       setState(() {

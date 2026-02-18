@@ -1,5 +1,6 @@
 // widgets/signup_header.dart
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class SignupHeader extends StatelessWidget {
@@ -7,33 +8,33 @@ class SignupHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final typography = context.typography;
+    final colors = context.colors;
+
     return Container(
-      width: 390,
-      padding: const EdgeInsets.only(top: 64, bottom: 24),
+      width: double.infinity,
+      padding: EdgeInsets.only(top: spacing.xxl * 2, bottom: spacing.xl),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
             AppLocalizations.signupTitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              // color: Color(0xFF133A3E),
-              fontSize: 32,
+            style: typography.hero.copyWith(
+              //color: colors.primaryDark,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w400,
-              height: 1.03,
             ),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: spacing.md),
           Text(
             AppLocalizations.signupSubtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              //color: Color(0xFF495565),
-              fontSize: 16,
+            style: typography.body.copyWith(
+              color: colors.textSecondary,
               fontFamily: 'Arimo',
               fontWeight: FontWeight.w400,
-              height: 1.50,
             ),
           ),
         ],

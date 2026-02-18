@@ -1,10 +1,10 @@
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/authentcation/widgets/arrow_back.dart';
 import 'package:cureta/features/authentcation/widgets/header.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:cureta/shared/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ResetPasswordView extends StatelessWidget {
   final _newPasswordController = TextEditingController();
@@ -13,9 +13,11 @@ class ResetPasswordView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: EdgeInsets.all(spacing.xl),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,7 +35,7 @@ class ResetPasswordView extends StatelessWidget {
                 controller: _newPasswordController,
                 keyboardType: TextInputType.emailAddress,
               ),
-              SizedBox(height: 30.h),
+              SizedBox(height: spacing.xxl),
               CustomTextField(
                 label: AppLocalizations.confirmPasswordLabel,
                 hint: AppLocalizations.confirmPasswordHint,
@@ -41,7 +43,7 @@ class ResetPasswordView extends StatelessWidget {
                 controller: _confirmPasswordController,
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: spacing.xl),
               CustomButton(
                 text: AppLocalizations.resetPasswordButton,
 

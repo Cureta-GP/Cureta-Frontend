@@ -1,32 +1,33 @@
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/authentcation/widgets/signup_form.dart';
 import 'package:cureta/features/authentcation/widgets/signup_header.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SignupView extends StatelessWidget {
   const SignupView({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+    final radius = context.radius;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-        ),
+        decoration: const BoxDecoration(),
         child: Center(
           child: Container(
-            width: 390.w,
-            height: 844.h,
+            width: double.infinity,
             clipBehavior: Clip.antiAlias,
             decoration: ShapeDecoration(
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(40.r),
+                borderRadius: BorderRadius.circular(radius.xl * 2),
               ),
-              shadows:  [
+              shadows: [
                 /*BoxShadow(
                   //color: Color(0x3F000000),
-                  blurRadius: 50.r,
+                  blurRadius: 50,
                   offset: Offset(0, 25),
                   spreadRadius: -12,
                 ),*/
@@ -34,7 +35,7 @@ class SignupView extends StatelessWidget {
             ),
             child: SingleChildScrollView(
               child: Container(
-                constraints: BoxConstraints(minHeight: 844.h),
+                constraints: const BoxConstraints(minHeight: 0),
                 decoration: const BoxDecoration(
                   /*gradient: LinearGradient(
                     begin: Alignment(0.50, 0.00),
@@ -44,10 +45,10 @@ class SignupView extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                     SignupHeader(),
-                     SizedBox(height: 24.h),
-                     SignupForm(),
-                     SizedBox(height: 40.h),
+                    const SignupHeader(),
+                    SizedBox(height: spacing.xl),
+                    const SignupForm(),
+                    SizedBox(height: spacing.xxl + spacing.sm),
                   ],
                 ),
               ),

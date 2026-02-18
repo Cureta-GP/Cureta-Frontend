@@ -1,5 +1,6 @@
 import 'package:cureta/features/authentcation/widgets/login_form.dart';
 import 'package:cureta/features/authentcation/widgets/login_container.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatelessWidget {
@@ -7,6 +8,8 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final spacing = context.spacing;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -19,9 +22,9 @@ class LoginView extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const SizedBox(height: 24),
+                  SizedBox(height: spacing.xxl),
                   const LoginForm(),
-                  const SizedBox(height: 40),
+                  SizedBox(height: spacing.xxl + spacing.sm),
                 ],
               ),
             ),

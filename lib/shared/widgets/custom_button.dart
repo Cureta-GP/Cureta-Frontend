@@ -1,6 +1,6 @@
 // widgets/custom_button.dart
 import 'package:flutter/material.dart';
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 
 class CustomButton extends StatelessWidget {
   final String text;
@@ -16,24 +16,28 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final spacing = context.spacing;
+    final radius = context.radius;
+    final typography = context.typography;
+
     return SizedBox(
       width: double.infinity,
-      height: 56,
+      height: spacing.xxl + spacing.lg,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          //backgroundColor: AppColors.primary,
+          backgroundColor: colors.primary,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(radius.md),
           ),
           elevation: 0,
-          //shadowColor: AppColors.primaryDark,
         ),
         child: Text(
           text,
-          style: const TextStyle(
-            //color: Colors.white,
-            fontSize: 16,
+          style: typography.button.copyWith(
+            color: Colors.white,
             fontFamily: 'Arimo',
             fontWeight: FontWeight.w400,
           ),

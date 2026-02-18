@@ -1,7 +1,6 @@
 // widgets/signup_header.dart
-import 'package:cureta/core/styling/app_colors.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class Header extends StatelessWidget {
   final String title;
@@ -10,37 +9,35 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+    final spacing = context.spacing;
+    final typography = context.typography;
+
     return Center(
       child: Container(
-        width: 390,
-        padding: const EdgeInsets.only(top: 64, bottom: 24),
+        width: double.infinity,
+        padding: EdgeInsets.only(top: spacing.xxl, bottom: spacing.xl),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               title,
-              // textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: AppColors.primaryDark,
-                fontSize: 32,
+              style: typography.hero.copyWith(
+                color: colors.primaryDark,
                 fontFamily: 'Arimo',
                 fontWeight: FontWeight.w400,
-                height: 1.03,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: spacing.md),
             SizedBox(
-              width: 300.w,
+              width: double.infinity,
               child: Text(
                 subtitle,
-                // textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 16,
+                style: typography.body.copyWith(
+                  color: colors.textSecondary,
                   fontFamily: 'Arimo',
                   fontWeight: FontWeight.w400,
-                  height: 1.50,
                 ),
               ),
             ),
