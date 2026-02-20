@@ -16,7 +16,6 @@ class OnboardingIndicator extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
     final colors = context.colors;
-
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(

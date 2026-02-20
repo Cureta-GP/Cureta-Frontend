@@ -92,6 +92,17 @@
         "skip": "تخطي",
         "next": "التالي"
     },
+    "medical_records": {
+        "add_record": {
+            "cancel": "إلغاء",
+            "step_1_label": "الخطوة 1 من 5",
+            "progress_20": "20% مكتمل",
+            "condition_question": "ما هو المرض أو الحالة؟",
+            "type_here_hint": "اكتب هنا...",
+            "condition_example": "مثل: السكري، الحساسية، ارتفاع ضغط الدم",
+            "next": "التالي"
+        }
+    },
     "validation": {
         "email_required": "البريد الإلكتروني مطلوب",
         "email_invalid": "الرجاء إدخال بريد إلكتروني صحيح",

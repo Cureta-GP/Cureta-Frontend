@@ -14,6 +14,13 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.textHint,
     required this.divider,
     required this.icon,
+    required this.medicalRecordBackground,
+    required this.medicalRecordHeading,
+    required this.medicalRecordMuted,
+    required this.medicalRecordProgressText,
+    required this.medicalRecordProgressTrack,
+    required this.medicalRecordInputHint,
+    required this.medicalRecordInputBorder,
   });
 
   final Color primary;
@@ -27,6 +34,13 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color textHint;
   final Color divider;
   final Color icon;
+  final Color medicalRecordBackground;
+  final Color medicalRecordHeading;
+  final Color medicalRecordMuted;
+  final Color medicalRecordProgressText;
+  final Color medicalRecordProgressTrack;
+  final Color medicalRecordInputHint;
+  final Color medicalRecordInputBorder;
 
   static const light = AppColors(
     primary: Color(0xFF00A1A9),
@@ -40,6 +54,13 @@ class AppColors extends ThemeExtension<AppColors> {
     textHint: Color(0xFFBDBDBD),
     divider: Color(0xFFE0E0E0),
     icon: Color(0xFF99A1AF),
+    medicalRecordBackground: Color(0xFFF5F8F8),
+    medicalRecordHeading: Color(0xFF111827),
+    medicalRecordMuted: Color(0xFF6B7280),
+    medicalRecordProgressText: Color(0xFF9CA3AF),
+    medicalRecordProgressTrack: Color(0xFFE5E7EB),
+    medicalRecordInputHint: Color(0xFF888B93),
+    medicalRecordInputBorder: Color(0xFFF2F2F2),
   );
 
   static const dark = AppColors(
@@ -54,6 +75,13 @@ class AppColors extends ThemeExtension<AppColors> {
     textHint: Color(0xFF90A4AE),
     divider: Color(0xFF37474F),
     icon: Color(0xFFB0BEC5),
+    medicalRecordBackground: Color(0xFF133A3E),
+    medicalRecordHeading: Color(0xFFF5F5F5),
+    medicalRecordMuted: Color(0xFFB0BEC5),
+    medicalRecordProgressText: Color(0xFF90A4AE),
+    medicalRecordProgressTrack: Color(0xFF37474F),
+    medicalRecordInputHint: Color(0xFF90A4AE),
+    medicalRecordInputBorder: Color(0xFF37474F),
   );
 
   static AppColors fromBrightness(Brightness brightness) {
@@ -73,6 +101,13 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? textHint,
     Color? divider,
     Color? icon,
+    Color? medicalRecordBackground,
+    Color? medicalRecordHeading,
+    Color? medicalRecordMuted,
+    Color? medicalRecordProgressText,
+    Color? medicalRecordProgressTrack,
+    Color? medicalRecordInputHint,
+    Color? medicalRecordInputBorder,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -86,6 +121,18 @@ class AppColors extends ThemeExtension<AppColors> {
       textHint: textHint ?? this.textHint,
       divider: divider ?? this.divider,
       icon: icon ?? this.icon,
+      medicalRecordBackground:
+          medicalRecordBackground ?? this.medicalRecordBackground,
+      medicalRecordHeading: medicalRecordHeading ?? this.medicalRecordHeading,
+      medicalRecordMuted: medicalRecordMuted ?? this.medicalRecordMuted,
+      medicalRecordProgressText:
+          medicalRecordProgressText ?? this.medicalRecordProgressText,
+      medicalRecordProgressTrack:
+          medicalRecordProgressTrack ?? this.medicalRecordProgressTrack,
+      medicalRecordInputHint:
+          medicalRecordInputHint ?? this.medicalRecordInputHint,
+      medicalRecordInputBorder:
+          medicalRecordInputBorder ?? this.medicalRecordInputBorder,
     );
   }
 
@@ -104,6 +151,41 @@ class AppColors extends ThemeExtension<AppColors> {
       textHint: Color.lerp(textHint, other.textHint, t)!,
       divider: Color.lerp(divider, other.divider, t)!,
       icon: Color.lerp(icon, other.icon, t)!,
+      medicalRecordBackground: Color.lerp(
+        medicalRecordBackground,
+        other.medicalRecordBackground,
+        t,
+      )!,
+      medicalRecordHeading: Color.lerp(
+        medicalRecordHeading,
+        other.medicalRecordHeading,
+        t,
+      )!,
+      medicalRecordMuted: Color.lerp(
+        medicalRecordMuted,
+        other.medicalRecordMuted,
+        t,
+      )!,
+      medicalRecordProgressText: Color.lerp(
+        medicalRecordProgressText,
+        other.medicalRecordProgressText,
+        t,
+      )!,
+      medicalRecordProgressTrack: Color.lerp(
+        medicalRecordProgressTrack,
+        other.medicalRecordProgressTrack,
+        t,
+      )!,
+      medicalRecordInputHint: Color.lerp(
+        medicalRecordInputHint,
+        other.medicalRecordInputHint,
+        t,
+      )!,
+      medicalRecordInputBorder: Color.lerp(
+        medicalRecordInputBorder,
+        other.medicalRecordInputBorder,
+        t,
+      )!,
     );
   }
 }

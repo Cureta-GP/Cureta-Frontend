@@ -92,6 +92,17 @@
     "skip": "Skip",
     "next": "Next"
   },
+  "medical_records": {
+    "add_record": {
+      "cancel": "Cancel",
+      "step_1_label": "Step 1 of 5",
+      "progress_20": "20% completed",
+      "condition_question": "What is the disease or condition?",
+      "type_here_hint": "Type here...",
+      "condition_example": "e.g. Diabetes, Allergy, High blood pressure",
+      "next": "Next"
+    }
+  },
   "validation": {
     "email_required": "Email is required",
     "email_invalid": "Please enter a valid email",
