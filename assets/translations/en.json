@@ -96,11 +96,21 @@
     "add_record": {
       "cancel": "Cancel",
       "step_1_label": "Step 1 of 5",
+      "step_2_label": "Step 2 of 5",
       "progress_20": "20% completed",
+      "progress_40": "40% completed",
+      "basic_information_title": "Basic Information",
       "condition_question": "What is the disease or condition?",
       "type_here_hint": "Type here...",
       "condition_example": "e.g. Diabetes, Allergy, High blood pressure",
-      "next": "Next"
+      "first_symptoms_question": "When did you first notice symptoms?",
+      "select_date": "Select Date",
+      "ongoing_question": "Is this condition currently ongoing?",
+      "yes": "Yes",
+      "no": "No",
+      "next": "Next",
+      "next_step": "Next Step",
+      "skip_for_now": "Skip for now"
     }
   },
   "validation": {

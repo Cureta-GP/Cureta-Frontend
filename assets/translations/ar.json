@@ -96,11 +96,21 @@
         "add_record": {
             "cancel": "إلغاء",
             "step_1_label": "الخطوة 1 من 5",
+            "step_2_label": "الخطوة 2 من 5",
             "progress_20": "20% مكتمل",
+            "progress_40": "40% مكتمل",
+            "basic_information_title": "معلومات أساسية",
             "condition_question": "ما هو المرض أو الحالة؟",
             "type_here_hint": "اكتب هنا...",
             "condition_example": "مثل: السكري، الحساسية، ارتفاع ضغط الدم",
-            "next": "التالي"
+            "first_symptoms_question": "متى لاحظت الأعراض لأول مرة؟",
+            "select_date": "اختر التاريخ",
+            "ongoing_question": "هل هذه الحالة مستمرة حاليًا؟",
+            "yes": "نعم",
+            "no": "لا",
+            "next": "التالي",
+            "next_step": "الخطوة التالية",
+            "skip_for_now": "تخطي الآن"
         }
     },
     "validation": {

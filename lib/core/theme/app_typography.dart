@@ -15,6 +15,11 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medicalRecordProgress,
     required this.medicalRecordHelper,
     required this.medicalRecordCancel,
+    required this.medicalRecordScreenTitle,
+    required this.medicalRecordCardTitle,
+    required this.medicalRecordPickerLabel,
+    required this.medicalRecordChoice,
+    required this.medicalRecordSkip,
   });
 
   final TextStyle hero;
@@ -29,6 +34,11 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medicalRecordProgress;
   final TextStyle medicalRecordHelper;
   final TextStyle medicalRecordCancel;
+  final TextStyle medicalRecordScreenTitle;
+  final TextStyle medicalRecordCardTitle;
+  final TextStyle medicalRecordPickerLabel;
+  final TextStyle medicalRecordChoice;
+  final TextStyle medicalRecordSkip;
 
   static const mobile = AppTypography(
     hero: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -43,6 +53,20 @@ class AppTypography extends ThemeExtension<AppTypography> {
     medicalRecordProgress: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
     medicalRecordHelper: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
     medicalRecordCancel: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+    medicalRecordScreenTitle: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordCardTitle: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordPickerLabel: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+    ),
+    medicalRecordChoice: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+    medicalRecordSkip: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
   );
 
   static const tablet = AppTypography(
@@ -58,6 +82,20 @@ class AppTypography extends ThemeExtension<AppTypography> {
     medicalRecordProgress: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
     medicalRecordHelper: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
     medicalRecordCancel: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+    medicalRecordScreenTitle: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordCardTitle: TextStyle(
+      fontSize: 28,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordPickerLabel: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w500,
+    ),
+    medicalRecordChoice: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+    medicalRecordSkip: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
   );
 
   static const desktop = AppTypography(
@@ -73,6 +111,20 @@ class AppTypography extends ThemeExtension<AppTypography> {
     medicalRecordProgress: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
     medicalRecordHelper: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
     medicalRecordCancel: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+    medicalRecordScreenTitle: TextStyle(
+      fontSize: 24,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordCardTitle: TextStyle(
+      fontSize: 32,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordPickerLabel: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w500,
+    ),
+    medicalRecordChoice: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+    medicalRecordSkip: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
   );
 
   @override
@@ -89,6 +141,11 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medicalRecordProgress,
     TextStyle? medicalRecordHelper,
     TextStyle? medicalRecordCancel,
+    TextStyle? medicalRecordScreenTitle,
+    TextStyle? medicalRecordCardTitle,
+    TextStyle? medicalRecordPickerLabel,
+    TextStyle? medicalRecordChoice,
+    TextStyle? medicalRecordSkip,
   }) {
     return AppTypography(
       hero: hero ?? this.hero,
@@ -105,6 +162,14 @@ class AppTypography extends ThemeExtension<AppTypography> {
           medicalRecordProgress ?? this.medicalRecordProgress,
       medicalRecordHelper: medicalRecordHelper ?? this.medicalRecordHelper,
       medicalRecordCancel: medicalRecordCancel ?? this.medicalRecordCancel,
+      medicalRecordScreenTitle:
+          medicalRecordScreenTitle ?? this.medicalRecordScreenTitle,
+      medicalRecordCardTitle:
+          medicalRecordCardTitle ?? this.medicalRecordCardTitle,
+      medicalRecordPickerLabel:
+          medicalRecordPickerLabel ?? this.medicalRecordPickerLabel,
+      medicalRecordChoice: medicalRecordChoice ?? this.medicalRecordChoice,
+      medicalRecordSkip: medicalRecordSkip ?? this.medicalRecordSkip,
     );
   }
 
@@ -150,6 +215,31 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medicalRecordCancel: TextStyle.lerp(
         medicalRecordCancel,
         other.medicalRecordCancel,
+        t,
+      )!,
+      medicalRecordScreenTitle: TextStyle.lerp(
+        medicalRecordScreenTitle,
+        other.medicalRecordScreenTitle,
+        t,
+      )!,
+      medicalRecordCardTitle: TextStyle.lerp(
+        medicalRecordCardTitle,
+        other.medicalRecordCardTitle,
+        t,
+      )!,
+      medicalRecordPickerLabel: TextStyle.lerp(
+        medicalRecordPickerLabel,
+        other.medicalRecordPickerLabel,
+        t,
+      )!,
+      medicalRecordChoice: TextStyle.lerp(
+        medicalRecordChoice,
+        other.medicalRecordChoice,
+        t,
+      )!,
+      medicalRecordSkip: TextStyle.lerp(
+        medicalRecordSkip,
+        other.medicalRecordSkip,
         t,
       )!,
     );

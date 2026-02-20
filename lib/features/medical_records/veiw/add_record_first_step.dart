@@ -1,9 +1,12 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_condition_section.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_next_button.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddRecordFirstStep extends StatefulWidget {
   const AddRecordFirstStep({
@@ -32,33 +35,47 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
 
   void _handleNext() {
     widget.onNext?.call(_conditionController.text.trim());
+    GoRouter.of(context).pushNamed(AppRoutes.medicalRecords_step_two);
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final spacing = context.spacing;
+    final horizontalPadding = spacing.xl;
 
     return Scaffold(
       backgroundColor: colors.medicalRecordBackground,
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPadding,
+            spacing.md,
+            horizontalPadding,
+            spacing.lg,
+          ),
+          child: AddRecordNextButton(onPressed: _handleNext),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
             AddRecordTopBar(onBack: widget.onBack, onCancel: widget.onCancel),
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: spacing.xl),
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const AddRecordStepProgress(progress: 0.2),
+                    AddRecordStepProgress(
+                      stepLabel: AppLocalizations.addRecordStepLabel,
+                      progressLabel: AppLocalizations.addRecordProgressLabel,
+                      progress: 0.2,
+                    ),
                     SizedBox(height: spacing.xxl),
                     AddRecordConditionSection(controller: _conditionController),
-                    const Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: spacing.lg),
-                      child: AddRecordNextButton(onPressed: _handleNext),
-                    ),
+                    SizedBox(height: spacing.xl),
                   ],
                 ),
               ),

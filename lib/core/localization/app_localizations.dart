@@ -127,6 +127,24 @@ class AppLocalizations {
   static String get addRecordConditionExample =>
       'medical_records.add_record.condition_example'.tr();
   static String get addRecordNext => 'medical_records.add_record.next'.tr();
+  static String get addRecordBasicInfoTitle =>
+      'medical_records.add_record.basic_information_title'.tr();
+  static String get addRecordStep2Label =>
+      'medical_records.add_record.step_2_label'.tr();
+  static String get addRecordProgress40 =>
+      'medical_records.add_record.progress_40'.tr();
+  static String get addRecordFirstSymptomsQuestion =>
+      'medical_records.add_record.first_symptoms_question'.tr();
+  static String get addRecordSelectDate =>
+      'medical_records.add_record.select_date'.tr();
+  static String get addRecordOngoingQuestion =>
+      'medical_records.add_record.ongoing_question'.tr();
+  static String get addRecordYes => 'medical_records.add_record.yes'.tr();
+  static String get addRecordNo => 'medical_records.add_record.no'.tr();
+  static String get addRecordNextStep =>
+      'medical_records.add_record.next_step'.tr();
+  static String get addRecordSkipForNow =>
+      'medical_records.add_record.skip_for_now'.tr();
 
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});

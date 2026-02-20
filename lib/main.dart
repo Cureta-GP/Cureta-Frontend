@@ -26,16 +26,19 @@ class MyApp extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final screenWidth = constraints.maxWidth;
+        final screenHeight = constraints.maxHeight;
         final deviceType = _deviceTypeFromWidth(screenWidth);
         final lightTheme = AppThemeFactory.create(
           brightness: Brightness.light,
           device: deviceType,
           screenWidth: screenWidth,
+          screenHeight: screenHeight,
         );
         final darkTheme = AppThemeFactory.create(
           brightness: Brightness.dark,
           device: deviceType,
           screenWidth: screenWidth,
+          screenHeight: screenHeight,
         );
 
         return MaterialApp.router(

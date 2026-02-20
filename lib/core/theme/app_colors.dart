@@ -21,6 +21,11 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.medicalRecordProgressTrack,
     required this.medicalRecordInputHint,
     required this.medicalRecordInputBorder,
+    required this.medicalRecordCard,
+    required this.medicalRecordAccentSoft,
+    required this.medicalRecordStrongText,
+    required this.medicalRecordSecondaryStrong,
+    required this.medicalRecordOptionBorder,
   });
 
   final Color primary;
@@ -41,6 +46,11 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color medicalRecordProgressTrack;
   final Color medicalRecordInputHint;
   final Color medicalRecordInputBorder;
+  final Color medicalRecordCard;
+  final Color medicalRecordAccentSoft;
+  final Color medicalRecordStrongText;
+  final Color medicalRecordSecondaryStrong;
+  final Color medicalRecordOptionBorder;
 
   static const light = AppColors(
     primary: Color(0xFF00A1A9),
@@ -61,6 +71,11 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordProgressTrack: Color(0xFFE5E7EB),
     medicalRecordInputHint: Color(0xFF888B93),
     medicalRecordInputBorder: Color(0xFFF2F2F2),
+    medicalRecordCard: Color(0xFFFFFFFF),
+    medicalRecordAccentSoft: Color(0xFFE5F5F6),
+    medicalRecordStrongText: Color(0xFF0C1B1D),
+    medicalRecordSecondaryStrong: Color(0xFF4A686A),
+    medicalRecordOptionBorder: Color(0xFFF3F4F6),
   );
 
   static const dark = AppColors(
@@ -82,6 +97,11 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordProgressTrack: Color(0xFF37474F),
     medicalRecordInputHint: Color(0xFF90A4AE),
     medicalRecordInputBorder: Color(0xFF37474F),
+    medicalRecordCard: Color(0xFF1C2328),
+    medicalRecordAccentSoft: Color(0xFF2A3D40),
+    medicalRecordStrongText: Color(0xFFF5F5F5),
+    medicalRecordSecondaryStrong: Color(0xFFB0BEC5),
+    medicalRecordOptionBorder: Color(0xFF37474F),
   );
 
   static AppColors fromBrightness(Brightness brightness) {
@@ -108,6 +128,11 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? medicalRecordProgressTrack,
     Color? medicalRecordInputHint,
     Color? medicalRecordInputBorder,
+    Color? medicalRecordCard,
+    Color? medicalRecordAccentSoft,
+    Color? medicalRecordStrongText,
+    Color? medicalRecordSecondaryStrong,
+    Color? medicalRecordOptionBorder,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -133,6 +158,15 @@ class AppColors extends ThemeExtension<AppColors> {
           medicalRecordInputHint ?? this.medicalRecordInputHint,
       medicalRecordInputBorder:
           medicalRecordInputBorder ?? this.medicalRecordInputBorder,
+      medicalRecordCard: medicalRecordCard ?? this.medicalRecordCard,
+      medicalRecordAccentSoft:
+          medicalRecordAccentSoft ?? this.medicalRecordAccentSoft,
+      medicalRecordStrongText:
+          medicalRecordStrongText ?? this.medicalRecordStrongText,
+      medicalRecordSecondaryStrong:
+          medicalRecordSecondaryStrong ?? this.medicalRecordSecondaryStrong,
+      medicalRecordOptionBorder:
+          medicalRecordOptionBorder ?? this.medicalRecordOptionBorder,
     );
   }
 
@@ -184,6 +218,31 @@ class AppColors extends ThemeExtension<AppColors> {
       medicalRecordInputBorder: Color.lerp(
         medicalRecordInputBorder,
         other.medicalRecordInputBorder,
+        t,
+      )!,
+      medicalRecordCard: Color.lerp(
+        medicalRecordCard,
+        other.medicalRecordCard,
+        t,
+      )!,
+      medicalRecordAccentSoft: Color.lerp(
+        medicalRecordAccentSoft,
+        other.medicalRecordAccentSoft,
+        t,
+      )!,
+      medicalRecordStrongText: Color.lerp(
+        medicalRecordStrongText,
+        other.medicalRecordStrongText,
+        t,
+      )!,
+      medicalRecordSecondaryStrong: Color.lerp(
+        medicalRecordSecondaryStrong,
+        other.medicalRecordSecondaryStrong,
+        t,
+      )!,
+      medicalRecordOptionBorder: Color.lerp(
+        medicalRecordOptionBorder,
+        other.medicalRecordOptionBorder,
         t,
       )!,
     );
