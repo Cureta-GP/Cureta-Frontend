@@ -26,6 +26,12 @@ class _LoginFormState extends State<LoginForm> {
     _setupPasswordFocusListener();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _animationManager.updateDirection(Directionality.of(context));
+  }
+
   void _setupPasswordFocusListener() {
     _passwordFocusNode.addListener(() {
       if (_passwordFocusNode.hasFocus) {

@@ -15,6 +15,7 @@ class RiveAnimationManager extends ChangeNotifier {
 
   bool _isLookingLeft = false;
   bool _isLookingRight = false;
+  bool _isRtl = false;
 
   Artboard? get artboard => _artboard;
 
@@ -48,6 +49,10 @@ class RiveAnimationManager extends ChangeNotifier {
     }
   }
 
+  void updateDirection(TextDirection direction) {
+    _isRtl = direction == TextDirection.rtl;
+  }
+
   void _removeAllControllers() {
     _artboard?.removeController(_controllerIdle);
     _artboard?.removeController(_controllerHandsUp);
@@ -66,11 +71,16 @@ class RiveAnimationManager extends ChangeNotifier {
   }
 
   void handleEmailChange(String value) {
-    if (value.isNotEmpty && value.length < 16 && !_isLookingLeft) {
+    if (value.isEmpty) return;
+
+    final shouldLookLeft = _isRtl ? value.length > 16 : value.length < 16;
+    final shouldLookRight = _isRtl ? value.length < 16 : value.length > 16;
+
+    if (shouldLookLeft && !_isLookingLeft) {
       _playAnimation(_controllerLookLeft);
       _isLookingLeft = true;
       _isLookingRight = false;
-    } else if (value.isNotEmpty && value.length > 16 && !_isLookingRight) {
+    } else if (shouldLookRight && !_isLookingRight) {
       _playAnimation(_controllerLookRight);
       _isLookingLeft = false;
       _isLookingRight = true;

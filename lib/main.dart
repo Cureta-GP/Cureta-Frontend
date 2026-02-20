@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
           routerConfig: RoutesGeneration.router,
           themeAnimationDuration: const Duration(milliseconds: 300),
           themeAnimationCurve: Curves.easeInOut,
-
           // Localization configuration
           localizationsDelegates: context.localizationDelegates,
           supportedLocales: context.supportedLocales,

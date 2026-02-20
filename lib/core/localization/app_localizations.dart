@@ -54,16 +54,34 @@ class AppLocalizations {
   static String get onboardingScreen1Title => 'onboarding.screen1.title'.tr();
   static String get onboardingScreen1Description =>
       'onboarding.screen1.description'.tr();
+
   static String get onboardingScreen2Title => 'onboarding.screen2.title'.tr();
   static String get onboardingScreen2Description =>
       'onboarding.screen2.description'.tr();
+
   static String get onboardingScreen3Title => 'onboarding.screen3.title'.tr();
   static String get onboardingScreen3Description =>
       'onboarding.screen3.description'.tr();
+
+  static String get onboardingScreen4Title => 'onboarding.screen4.title'.tr();
+  static String get onboardingScreen4Description =>
+      'onboarding.screen4.description'.tr();
+
+  static String get onboardingScreen5Title => 'onboarding.screen5.title'.tr();
+  static String get onboardingScreen5Description =>
+      'onboarding.screen5.description'.tr();
+
+  static String get onboardingScreen6Title => 'onboarding.screen6.title'.tr();
+  static String get onboardingScreen6Description =>
+      'onboarding.screen6.description'.tr();
+
+  static String get onboardingScreen7Title => 'onboarding.screen7.title'.tr();
+  static String get onboardingScreen7Description =>
+      'onboarding.screen7.description'.tr();
+
   static String get getStarted => 'onboarding.get_started'.tr();
   static String get skip => 'onboarding.skip'.tr();
   static String get next => 'onboarding.next'.tr();
-
   // Validation
   static String get emailRequired => 'validation.email_required'.tr();
   static String get emailInvalid => 'validation.email_invalid'.tr();
@@ -95,6 +113,20 @@ class AppLocalizations {
   static String get verifyEmailSent => 'auth.verify_email.sent'.tr();
   static String get verifyButton => 'auth.verify_email.verify_button'.tr();
   static String get otpError => 'auth.verify_email.otp_error'.tr();
+
+  // Medical Records - Add Record Step 1
+  static String get addRecordCancel => 'medical_records.add_record.cancel'.tr();
+  static String get addRecordStepLabel =>
+      'medical_records.add_record.step_1_label'.tr();
+  static String get addRecordProgressLabel =>
+      'medical_records.add_record.progress_20'.tr();
+  static String get addRecordConditionQuestion =>
+      'medical_records.add_record.condition_question'.tr();
+  static String get addRecordTypeHint =>
+      'medical_records.add_record.type_here_hint'.tr();
+  static String get addRecordConditionExample =>
+      'medical_records.add_record.condition_example'.tr();
+  static String get addRecordNext => 'medical_records.add_record.next'.tr();
 
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});

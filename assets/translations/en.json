@@ -61,20 +61,47 @@
   },
   "onboarding": {
     "screen1": {
-      "title": "Scan Prescriptions Instantly",
-      "description": "Use your camera to scan prescriptions and automatically extract medication information with OCR technology"
+      "title": "Your health, all in one place",
+      "description": "Store your medical records, medicine reminders, and family profiles easily in Cureta."
     },
     "screen2": {
-      "title": "Never Miss a Dose",
-      "description": "Get timely reminders for your medications and track your daily health journey with ease"
+      "title": "Keep your medical history safe",
+      "description": "Save your diseases, notes, prescriptions, tests, and scans in one place."
     },
     "screen3": {
-      "title": "Your Health, One QR Away",
-      "description": "Store your medical history digitally and generate QR codes for easy sharing with healthcare providers"
+      "title": "Never Miss Your Medicine",
+      "description": "Get simple reminder at the right time"
+    },
+    "screen4": {
+      "title": "Instant Medication Setup",
+      "description": "Scan your prescription to automatically set up medicine alerts and track your treatment."
+    },
+    "screen5": {
+      "title": "Share your health info safely",
+      "description": "Create a QR code and choose what medical data to share."
+    },
+    "screen6": {
+      "title": "Care for your family",
+      "description": "Add profiles for your family members and switch between them easily."
+    },
+    "screen7": {
+      "title": "Your personal health assistant",
+      "description": "Ask questions and get instant, reliable health advice personalized just for you."
     },
     "get_started": "Get Started",
     "skip": "Skip",
     "next": "Next"
+  },
+  "medical_records": {
+    "add_record": {
+      "cancel": "Cancel",
+      "step_1_label": "Step 1 of 5",
+      "progress_20": "20% completed",
+      "condition_question": "What is the disease or condition?",
+      "type_here_hint": "Type here...",
+      "condition_example": "e.g. Diabetes, Allergy, High blood pressure",
+      "next": "Next"
+    }
   },
   "validation": {
     "email_required": "Email is required",
