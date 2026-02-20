@@ -1,10 +1,16 @@
-import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordStepProgress extends StatelessWidget {
-  const AddRecordStepProgress({super.key, this.progress = 0.2});
+  const AddRecordStepProgress({
+    super.key,
+    required this.stepLabel,
+    required this.progressLabel,
+    required this.progress,
+  });
 
+  final String stepLabel;
+  final String progressLabel;
   final double progress;
 
   @override
@@ -17,16 +23,23 @@ class AddRecordStepProgress extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              AppLocalizations.addRecordStepLabel,
-              style: typography.medicalRecordStep.copyWith(
-                color: colors.primary,
+            Expanded(
+              child: Text(
+                stepLabel,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: typography.medicalRecordStep.copyWith(
+                  color: colors.primary,
+                ),
               ),
             ),
+            SizedBox(width: spacing.sm),
             Text(
-              AppLocalizations.addRecordProgressLabel,
+              progressLabel,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.end,
               style: typography.medicalRecordProgress.copyWith(
                 color: colors.medicalRecordProgressText,
               ),

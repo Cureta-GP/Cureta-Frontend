@@ -12,22 +12,38 @@ class AddRecordNextButton extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
     final typography = context.typography;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return SizedBox(
       width: double.infinity,
       height: 56,
-      child: ElevatedButton.icon(
+      child: ElevatedButton(
         onPressed: onPressed,
-        icon: const Icon(Icons.arrow_forward, size: 20),
-        label: Text(
-          AppLocalizations.addRecordNext,
-          style: typography.medicalRecordButton,
-        ),
         style: ElevatedButton.styleFrom(
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(radius.full),
           ),
           padding: EdgeInsets.symmetric(vertical: spacing.lg),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              AppLocalizations.addRecordNext,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: typography.medicalRecordButton.copyWith(
+                color: Colors.white,
+              ),
+            ),
+            SizedBox(width: spacing.xs),
+            Icon(
+              isRtl ? Icons.arrow_back : Icons.arrow_forward,
+              size: 20,
+              color: Colors.white,
+            ),
+          ],
         ),
       ),
     );

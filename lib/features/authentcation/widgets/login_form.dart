@@ -1,8 +1,10 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/features/authentcation/veiw_model/rive_animation_manager.dart';
 import 'package:cureta/features/authentcation/widgets/login_fields.dart';
 import 'package:cureta/features/authentcation/widgets/animated_login_header.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -56,6 +58,7 @@ class _LoginFormState extends State<LoginForm> {
     Future.delayed(const Duration(seconds: 1), () {
       if (_formKey.currentState!.validate()) {
         _animationManager.playSuccess();
+        GoRouter.of(context).go(AppRoutes.medicalRecords_step_one);
       } else {
         _animationManager.playFail();
       }
