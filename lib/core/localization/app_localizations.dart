@@ -50,20 +50,31 @@ class AppLocalizations {
   // Auth - Google
   static String get continueWithGoogle => 'auth.google.continue'.tr();
 
-  // Onboarding
+ // Onboarding
   static String get onboardingScreen1Title => 'onboarding.screen1.title'.tr();
-  static String get onboardingScreen1Description =>
-      'onboarding.screen1.description'.tr();
+  static String get onboardingScreen1Description => 'onboarding.screen1.description'.tr();
+
   static String get onboardingScreen2Title => 'onboarding.screen2.title'.tr();
-  static String get onboardingScreen2Description =>
-      'onboarding.screen2.description'.tr();
+  static String get onboardingScreen2Description => 'onboarding.screen2.description'.tr();
+
   static String get onboardingScreen3Title => 'onboarding.screen3.title'.tr();
-  static String get onboardingScreen3Description =>
-      'onboarding.screen3.description'.tr();
+  static String get onboardingScreen3Description => 'onboarding.screen3.description'.tr();
+
+  static String get onboardingScreen4Title => 'onboarding.screen4.title'.tr();
+  static String get onboardingScreen4Description => 'onboarding.screen4.description'.tr();
+
+  static String get onboardingScreen5Title => 'onboarding.screen5.title'.tr();
+  static String get onboardingScreen5Description => 'onboarding.screen5.description'.tr();
+
+  static String get onboardingScreen6Title => 'onboarding.screen6.title'.tr();
+  static String get onboardingScreen6Description => 'onboarding.screen6.description'.tr();
+
+  static String get onboardingScreen7Title => 'onboarding.screen7.title'.tr();
+  static String get onboardingScreen7Description => 'onboarding.screen7.description'.tr();
+
   static String get getStarted => 'onboarding.get_started'.tr();
   static String get skip => 'onboarding.skip'.tr();
   static String get next => 'onboarding.next'.tr();
-
   // Validation
   static String get emailRequired => 'validation.email_required'.tr();
   static String get emailInvalid => 'validation.email_invalid'.tr();
