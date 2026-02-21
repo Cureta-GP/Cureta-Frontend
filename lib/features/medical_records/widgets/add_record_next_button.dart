@@ -16,34 +16,40 @@ class AddRecordNextButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 56,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.full),
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: 56),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius.full),
+            ),
+            padding: EdgeInsets.symmetric(vertical: spacing.md),
           ),
-          padding: EdgeInsets.symmetric(vertical: spacing.lg),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              AppLocalizations.addRecordNext,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: typography.medicalRecordButton.copyWith(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Flexible(
+                child: Text(
+                  AppLocalizations.addRecordNext,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: false,
+                  style: typography.medicalRecordButton.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              SizedBox(width: spacing.xs),
+              Icon(
+                isRtl ? Icons.arrow_back : Icons.arrow_forward,
+                size: 20,
                 color: Colors.white,
               ),
-            ),
-            SizedBox(width: spacing.xs),
-            Icon(
-              isRtl ? Icons.arrow_back : Icons.arrow_forward,
-              size: 20,
-              color: Colors.white,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

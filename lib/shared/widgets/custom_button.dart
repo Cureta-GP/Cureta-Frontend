@@ -23,23 +23,29 @@ class CustomButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: spacing.xxl + spacing.lg,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: colors.primary,
-          foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.md),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: spacing.xxl + spacing.lg),
+        child: ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: colors.primary,
+            foregroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius.md),
+            ),
+            elevation: 0,
+            padding: EdgeInsets.symmetric(vertical: spacing.md),
           ),
-          elevation: 0,
-        ),
-        child: Text(
-          text,
-          style: typography.button.copyWith(
-            color: Colors.white,
-            fontFamily: 'Arimo',
-            fontWeight: FontWeight.w400,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: typography.button.copyWith(
+              color: Colors.white,
+              fontFamily: 'Arimo',
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
       ),

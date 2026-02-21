@@ -19,10 +19,12 @@ class Link extends StatelessWidget {
     final colors = context.colors;
     final typography = context.typography;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
         Text(
+          softWrap: true,
           text,
           style: typography.body.copyWith(
             color: colors.textSecondary,
@@ -33,6 +35,7 @@ class Link extends StatelessWidget {
         GestureDetector(
           onTap: onTap,
           child: Text(
+            softWrap: true,
             actionText,
             style: typography.body.copyWith(
               color: colors.primary,

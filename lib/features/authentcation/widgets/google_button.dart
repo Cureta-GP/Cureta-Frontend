@@ -16,35 +16,46 @@ class GoogleButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: spacing.xxl + spacing.xl,
-      child: OutlinedButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-          side: BorderSide(width: 2, color: colors.divider),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius.md),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: spacing.xxl + spacing.xl),
+        child: OutlinedButton(
+          onPressed: () {},
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(width: 2, color: colors.divider),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(radius.md),
+            ),
+            backgroundColor: colors.background,
+            padding: EdgeInsets.symmetric(
+              horizontal: spacing.lg,
+              vertical: spacing.md,
+            ),
           ),
-          backgroundColor: colors.background,
-          padding: EdgeInsets.symmetric(horizontal: spacing.lg),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              AppImages.google,
-              width: spacing.xxl,
-              height: spacing.xxl,
-            ),
-            SizedBox(width: spacing.md),
-            Text(
-              AppLocalizations.continueWithGoogle,
-              style: typography.body.copyWith(
-                color: colors.textPrimary,
-                fontFamily: 'Arimo',
-                fontWeight: FontWeight.w400,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                AppImages.google,
+                width: spacing.xxl,
+                height: spacing.xxl,
               ),
-            ),
-          ],
+              SizedBox(width: spacing.md),
+              Flexible(
+                child: Text(
+                  AppLocalizations.continueWithGoogle,
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: typography.body.copyWith(
+                    color: colors.textPrimary,
+                    fontFamily: 'Arimo',
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
