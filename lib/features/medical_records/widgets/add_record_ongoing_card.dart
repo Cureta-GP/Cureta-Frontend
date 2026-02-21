@@ -100,7 +100,8 @@ class _ChoiceButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(radius.md),
       onTap: onTap,
       child: Container(
-        height: 56,
+        constraints: const BoxConstraints(minHeight: 56),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: selected ? colors.primary : colors.medicalRecordBackground,
@@ -112,6 +113,9 @@ class _ChoiceButton extends StatelessWidget {
         ),
         child: Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          softWrap: false,
           style: typography.medicalRecordChoice.copyWith(
             color: selected ? Colors.white : colors.medicalRecordStrongText,
           ),

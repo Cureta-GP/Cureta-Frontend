@@ -20,7 +20,8 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
+  static const double _minTextScaleFactor = 0.8;
+  static const double _maxTextScaleFactor = 1.5;
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -40,19 +41,22 @@ class MyApp extends StatelessWidget {
           screenWidth: screenWidth,
           screenHeight: screenHeight,
         );
-
-        return MaterialApp.router(
-          debugShowCheckedModeBanner: false,
-          theme: lightTheme,
-          darkTheme: darkTheme,
-          themeMode: ThemeMode.system,
-          routerConfig: RoutesGeneration.router,
-          themeAnimationDuration: const Duration(milliseconds: 300),
-          themeAnimationCurve: Curves.easeInOut,
-          // Localization configuration
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
+        return MediaQuery.withClampedTextScaling(
+          minScaleFactor: _minTextScaleFactor,
+          maxScaleFactor: _maxTextScaleFactor,
+          child: MaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme,
+            darkTheme: darkTheme,
+            themeMode: ThemeMode.system,
+            routerConfig: RoutesGeneration.router,
+            themeAnimationDuration: const Duration(milliseconds: 300),
+            themeAnimationCurve: Curves.easeInOut,
+            // Localization configuration
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+          ),
         );
       },
     );

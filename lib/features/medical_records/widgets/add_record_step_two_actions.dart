@@ -19,22 +19,29 @@ class AddRecordStepTwoActions extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        SizedBox(
-          height: 56,
+        ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: 56),
           child: ElevatedButton(
             onPressed: onNext,
             style: ElevatedButton.styleFrom(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(radius.md),
               ),
+              padding: EdgeInsets.symmetric(vertical: spacing.md),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  AppLocalizations.addRecordNextStep,
-                  style: typography.medicalRecordButton.copyWith(
-                    color: Colors.white,
+                Flexible(
+                  child: Text(
+                    AppLocalizations.addRecordNextStep,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    style: typography.medicalRecordButton.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 SizedBox(width: spacing.xs),
