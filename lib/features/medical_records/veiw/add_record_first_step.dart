@@ -35,7 +35,7 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
 
   void _handleNext() {
     widget.onNext?.call(_conditionController.text.trim());
-    GoRouter.of(context).pushNamed(AppRoutes.medicalRecords_step_two);
+    GoRouter.of(context).pushNamed(AppRoutes.medicalRecordsStepTwo);
   }
 
   @override

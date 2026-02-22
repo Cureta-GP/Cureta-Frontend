@@ -27,11 +27,13 @@ class CustomNextButton extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onPressed,
           style: ElevatedButton.styleFrom(
+            backgroundColor: context.colors.primary,
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(radius.full),
             ),
             padding: EdgeInsets.symmetric(vertical: spacing.md),
+            elevation: 0,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,

@@ -58,7 +58,7 @@ class _LoginFormState extends State<LoginForm> {
     Future.delayed(const Duration(seconds: 1), () {
       if (_formKey.currentState!.validate()) {
         _animationManager.playSuccess();
-        GoRouter.of(context).go(AppRoutes.medicalRecords_step_one);
+        GoRouter.of(context).go(AppRoutes.medicalRecordsStepOne);
       } else {
         _animationManager.playFail();
       }
