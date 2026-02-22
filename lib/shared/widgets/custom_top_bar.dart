@@ -1,12 +1,19 @@
-import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
-class AddRecordTopBar extends StatelessWidget {
-  const AddRecordTopBar({super.key, this.onBack, this.onCancel});
+class CustomTopBar extends StatelessWidget {
+  const CustomTopBar({
+    super.key,
+    this.onBack,
+    this.onAction,
+    this.actionLabel,
+    this.actionStyle,
+  });
 
   final VoidCallback? onBack;
-  final VoidCallback? onCancel;
+  final VoidCallback? onAction;
+  final String? actionLabel;
+  final TextStyle? actionStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +22,9 @@ class AddRecordTopBar extends StatelessWidget {
     final typography = context.typography;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(
-        spacing.lg,
-        spacing.lg,
-        spacing.lg,
-        spacing.lg,
+      padding: EdgeInsets.symmetric(
+        horizontal: spacing.lg,
+        vertical: spacing.lg,
       ),
       child: Row(
         children: [
@@ -32,15 +37,17 @@ class AddRecordTopBar extends StatelessWidget {
             icon: Icon(Icons.arrow_back_ios_new, color: colors.icon, size: 22),
           ),
           const Spacer(),
-          TextButton(
-            onPressed: onCancel ?? () => Navigator.of(context).maybePop(),
-            child: Text(
-              AppLocalizations.addRecordCancel,
-              style: typography.medicalRecordCancel.copyWith(
-                color: colors.medicalRecordMuted,
+          if (actionLabel != null)
+            TextButton(
+              onPressed: onAction ?? () => Navigator.of(context).maybePop(),
+              child: Text(
+                actionLabel!,
+                style: actionStyle ??
+                    typography.medicalRecordCancel.copyWith(
+                      color: colors.medicalRecordMuted,
+                    ),
               ),
             ),
-          ),
         ],
       ),
     );
