@@ -146,8 +146,10 @@ class AppLocalizations {
   static String get addRecordSkipForNow =>
       'medical_records.add_record.skip_for_now'.tr();
 
+
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
+// Family profiles
 
   // Helper methods
   static bool isRTL(BuildContext context) {
