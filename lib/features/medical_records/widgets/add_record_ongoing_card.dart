@@ -1,5 +1,6 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_choice_button.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordOngoingCard extends StatelessWidget {
@@ -57,7 +58,7 @@ class AddRecordOngoingCard extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: _ChoiceButton(
+                child: AddRecordChoiceButton(
                   label: AppLocalizations.addRecordYes,
                   selected: isOngoing,
                   onTap: () => onChanged(true),
@@ -65,7 +66,7 @@ class AddRecordOngoingCard extends StatelessWidget {
               ),
               SizedBox(width: spacing.md),
               Expanded(
-                child: _ChoiceButton(
+                child: AddRecordChoiceButton(
                   label: AppLocalizations.addRecordNo,
                   selected: !isOngoing,
                   onTap: () => onChanged(false),
@@ -74,52 +75,6 @@ class AddRecordOngoingCard extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _ChoiceButton extends StatelessWidget {
-  const _ChoiceButton({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final radius = context.radius;
-    final typography = context.typography;
-
-    return InkWell(
-      borderRadius: BorderRadius.circular(radius.md),
-      onTap: onTap,
-      child: Container(
-        constraints: const BoxConstraints(minHeight: 56),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: selected ? colors.primary : colors.medicalRecordBackground,
-          borderRadius: BorderRadius.circular(radius.md),
-          border: Border.all(
-            color: selected ? colors.primary : colors.medicalRecordOptionBorder,
-            width: 1.6,
-          ),
-        ),
-        child: Text(
-          label,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          softWrap: false,
-          style: typography.medicalRecordChoice.copyWith(
-            color: selected ? Colors.white : colors.medicalRecordStrongText,
-          ),
-        ),
       ),
     );
   }
