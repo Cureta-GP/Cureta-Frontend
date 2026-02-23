@@ -37,7 +37,7 @@ class AddRecordStepProgress extends StatelessWidget {
             SizedBox(width: spacing.sm),
             Text(
               progressLabel,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,
               style: typography.medicalRecordProgress.copyWith(
