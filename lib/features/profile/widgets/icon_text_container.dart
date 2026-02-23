@@ -1,3 +1,4 @@
+import 'package:cureta/core/theme/app_spacing.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
@@ -24,17 +25,23 @@ class IconTextContainer extends StatelessWidget {
 
     return GestureDetector(
       onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.4,
+        height: MediaQuery.of(context).size.width * 0.4,
+        //duration: const Duration(milliseconds: 200),
         padding: EdgeInsets.symmetric(
           vertical: spacing.lg,
           horizontal: spacing.sm,
         ),
         decoration: BoxDecoration(
-          color: isSelected ? colors.medicalRecordAccentSoft : colors.medicalRecordCard,
+          color: isSelected
+              ? colors.medicalRecordAccentSoft
+              : colors.medicalRecordBackground,
           borderRadius: BorderRadius.circular(radius.md),
           border: Border.all(
-            color: isSelected ? colors.primary : colors.medicalRecordOptionBorder,
+            color: isSelected
+                ? colors.primary
+                : colors.medicalRecordOptionBorder,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
@@ -43,7 +50,7 @@ class IconTextContainer extends StatelessWidget {
                     color: colors.primary.withOpacity(0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ]
               : null,
         ),
@@ -53,8 +60,8 @@ class IconTextContainer extends StatelessWidget {
           children: [
             Image.asset(
               iconPath,
-              height: 42,
-              width: 42,
+              height: spacing.md * 2,
+              width: spacing.md * 2,
               fit: BoxFit.contain,
               color: isSelected ? colors.primary : colors.icon,
             ),

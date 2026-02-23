@@ -1,3 +1,5 @@
+import 'package:cureta/core/constants/app_icons.dart';
+import 'package:cureta/features/profile/widgets/icon_text_container.dart';
 import 'package:flutter/material.dart';
 
 class GenderSelectionStep extends StatelessWidget {
@@ -5,12 +7,16 @@ class GenderSelectionStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-       
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        
-        ListTile(title: const Text("Male"), leading: Radio<int>(value: 1, groupValue: 1, onChanged: (v) {})),
-        ListTile(title: const Text("Female"), leading: Radio<int>(value: 2, groupValue: 1, onChanged: (v) {})),
+        IconTextContainer(
+          label: 'Male', iconPath: AppIcons.male, onTap: () {}),
+        IconTextContainer(
+          label: 'Female',
+          iconPath: AppIcons.female,
+          onTap: () {},
+        ),
       ],
     );
   }

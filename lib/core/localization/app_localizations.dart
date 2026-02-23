@@ -146,10 +146,24 @@ class AppLocalizations {
   static String get addRecordSkipForNow =>
       'medical_records.add_record.skip_for_now'.tr();
 
-
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
-// Family profiles
+  // Family profiles
+  static String get profilesRelationTitle =>
+      'profiles.steps.relation.title'.tr();
+  static String get profilesRelationSubtitle =>
+      'profiles.steps.relation.subtitle'.tr();
+  static String get profilesRelationSon => 'profiles.steps.relation.son'.tr();
+  static String get profilesRelationDaughter =>
+      'profiles.steps.relation.daughter'.tr();
+  static String get profilesRelationMother =>
+      'profiles.steps.relation.mother'.tr();
+  static String get profilesRelationFather =>
+      'profiles.steps.relation.father'.tr();
+  static String get profilesRelationSpouse =>
+      'profiles.steps.relation.spouse'.tr();
+  static String get profilesRelationOther =>
+      'profiles.steps.relation.other'.tr();
 
   // Helper methods
   static bool isRTL(BuildContext context) {

@@ -163,7 +163,8 @@
         "subtitle": "This helps us provide more personalized health insights and emergency support.",
         "footer_note": "Don't worry! You can update this later in the profile"
       }
-    },
+    }
+  },
     "validation": {
       "email_required": "Email is required",
       "email_invalid": "Please enter a valid email",
@@ -175,5 +176,5 @@
       "phone_invalid": "Please enter a valid phone number",
       "field_required": "{field} is required"
     }
-  }
+  
 }
