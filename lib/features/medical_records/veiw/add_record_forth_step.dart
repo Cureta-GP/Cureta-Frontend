@@ -1,6 +1,8 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_four_body.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddRecordForthStep extends StatelessWidget {
   const AddRecordForthStep({
@@ -20,6 +22,14 @@ class AddRecordForthStep extends StatelessWidget {
   final VoidCallback? onLabTestTap;
   final VoidCallback? onScanTap;
 
+  void _handleContinue(BuildContext context) {
+    if (onContinue != null) {
+      onContinue!.call();
+      return;
+    }
+    GoRouter.of(context).pushNamed(AppRoutes.addRecordStepFive);
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -28,7 +38,7 @@ class AddRecordForthStep extends StatelessWidget {
       body: SafeArea(
         child: AddRecordStepFourBody(
           onBack: onBack,
-          onContinue: onContinue,
+          onContinue: () => _handleContinue(context),
           onSkip: onSkip,
           onPrescriptionTap: onPrescriptionTap,
           onLabTestTap: onLabTestTap,

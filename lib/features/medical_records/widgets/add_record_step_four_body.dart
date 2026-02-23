@@ -83,7 +83,7 @@ class AddRecordStepFourBody extends StatelessWidget {
                 onSkip: onSkip,
                 nextLabel: AppLocalizations.addRecordContinue,
               ),
-              SizedBox(height: spacing.xl),
+              //SizedBox(height: spacing.xl),
             ],
           ),
         ),

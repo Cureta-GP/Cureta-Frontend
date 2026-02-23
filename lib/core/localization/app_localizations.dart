@@ -131,12 +131,20 @@ class AppLocalizations {
       'medical_records.add_record.basic_information_title'.tr();
   static String get addRecordStep2Label =>
       'medical_records.add_record.step_2_label'.tr();
+  static String get addRecordStep3Label =>
+      'medical_records.add_record.step_3_label'.tr();
   static String get addRecordStep4Label =>
       'medical_records.add_record.step_4_label'.tr();
+  static String get addRecordStep5Label =>
+      'medical_records.add_record.step_5_label'.tr();
   static String get addRecordProgress40 =>
       'medical_records.add_record.progress_40'.tr();
+  static String get addRecordProgress60 =>
+      'medical_records.add_record.progress_60'.tr();
   static String get addRecordProgress80 =>
       'medical_records.add_record.progress_80'.tr();
+  static String get addRecordProgress100 =>
+      'medical_records.add_record.progress_100'.tr();
   static String get addRecordFirstSymptomsQuestion =>
       'medical_records.add_record.first_symptoms_question'.tr();
   static String get addRecordSelectDate =>
@@ -167,8 +175,34 @@ class AppLocalizations {
       'medical_records.add_record.scan_title'.tr();
   static String get addRecordScanDescription =>
       'medical_records.add_record.scan_description'.tr();
+  static String get addRecordAdditionalNotesTitle =>
+      'medical_records.add_record.additional_notes_title'.tr();
+  static String get addRecordAdditionalNotesDescription =>
+      'medical_records.add_record.additional_notes_description'.tr();
+  static String get addRecordOptionalNotesHint =>
+      'medical_records.add_record.optional_notes_hint'.tr();
   static String get addRecordDataSecureNote =>
       'medical_records.add_record.data_secure_note'.tr();
+  static String get addRecordReviewDetailsTitle =>
+      'medical_records.add_record.review_details_title'.tr();
+  static String get addRecordReviewQuestion =>
+      'medical_records.add_record.review_question'.tr();
+  static String get addRecordReviewDescription =>
+      'medical_records.add_record.review_description'.tr();
+  static String get addRecordReviewCondition =>
+      'medical_records.add_record.review_condition'.tr();
+  static String get addRecordReviewStartedOn =>
+      'medical_records.add_record.review_started_on'.tr();
+  static String get addRecordReviewDocuments =>
+      'medical_records.add_record.review_documents'.tr();
+  static String addRecordReviewReports(int count) =>
+      'medical_records.add_record.review_reports'.tr(
+        namedArgs: {'count': '$count'},
+      );
+  static String get addRecordReviewDocumentsAttached =>
+      'medical_records.add_record.review_documents_attached'.tr();
+  static String get addRecordSaveRecord =>
+      'medical_records.add_record.save_record'.tr();
   static String get addRecordContinue =>
       'medical_records.add_record.continue'.tr();
 
