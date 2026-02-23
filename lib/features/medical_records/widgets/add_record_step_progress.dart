@@ -27,7 +27,7 @@ class AddRecordStepProgress extends StatelessWidget {
             Expanded(
               child: Text(
                 stepLabel,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: typography.medicalRecordStep.copyWith(
                   color: colors.primary,

@@ -52,7 +52,7 @@ class AddRecordDateCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   AppLocalizations.addRecordFirstSymptomsQuestion,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: typography.medicalRecordCardTitle.copyWith(
                     color: colors.medicalRecordStrongText,

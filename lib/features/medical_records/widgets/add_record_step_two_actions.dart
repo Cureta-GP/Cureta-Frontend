@@ -36,7 +36,7 @@ class AddRecordStepTwoActions extends StatelessWidget {
                 Flexible(
                   child: Text(
                     AppLocalizations.addRecordNextStep,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     softWrap: false,
                     style: typography.medicalRecordButton.copyWith(
