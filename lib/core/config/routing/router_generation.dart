@@ -7,6 +7,7 @@ import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
+import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
@@ -60,18 +61,27 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.medicalRecords_step_one,
         name: AppRoutes.medicalRecords_step_one,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddRecordFirstStep (), state: state),
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordFirstStep(),
+          state: state,
+        ),
       ),
       GoRoute(
         path: AppRoutes.medicalRecords_step_two,
         name: AppRoutes.medicalRecords_step_two,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddMedicalRecordSeconedStep(), state: state),
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddMedicalRecordSeconedStep(),
+          state: state,
+        ),
       ),
-      
-
-      
+      GoRoute(
+        path: AppRoutes.medicalRecords_step_three,
+        name: AppRoutes.medicalRecords_step_three,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordForthStep(),
+          state: state,
+        ),
+      ),
     ],
   );
 }

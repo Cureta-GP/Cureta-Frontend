@@ -3,14 +3,22 @@ import 'package:cureta/features/medical_records/widgets/add_record_step_two_acti
 import 'package:flutter/material.dart';
 
 class AddRecordStepTwoBottomBar extends StatelessWidget {
-  const AddRecordStepTwoBottomBar({super.key, this.onNext, this.onSkip});
+  const AddRecordStepTwoBottomBar({
+    super.key,
+    this.onNext,
+    this.onSkip,
+    this.nextLabel,
+  });
 
   final VoidCallback? onNext;
   final VoidCallback? onSkip;
+  final String? nextLabel;
 
   @override
   Widget build(BuildContext context) {
     final spacing = context.spacing;
+    final effectiveOnNext = onNext ?? () {};
+    final effectiveOnSkip = onSkip ?? () {};
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -19,7 +27,11 @@ class AddRecordStepTwoBottomBar extends StatelessWidget {
         spacing.lg,
         spacing.lg,
       ),
-      child: AddRecordStepTwoActions(onNext: onNext, onSkip: onSkip),
+      child: AddRecordStepTwoActions(
+        onNext: effectiveOnNext,
+        onSkip: effectiveOnSkip,
+        nextLabel: nextLabel,
+      ),
     );
   }
 }

@@ -1,7 +1,9 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_body.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddMedicalRecordSeconedStep extends StatefulWidget {
   const AddMedicalRecordSeconedStep({
@@ -45,6 +47,7 @@ class _AddMedicalRecordSeconedStepState
 
   void _handleNext() {
     widget.onNext?.call(_firstSymptomsDate, _isOngoing);
+    GoRouter.of(context).pushNamed(AppRoutes.medicalRecords_step_three);
   }
 
   @override

@@ -26,6 +26,14 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.medicalRecordStrongText,
     required this.medicalRecordSecondaryStrong,
     required this.medicalRecordOptionBorder,
+    required this.medicalRecordUploadCardBorder,
+    required this.medicalRecordUploadPrescriptionBg,
+    required this.medicalRecordUploadPrescriptionIcon,
+    required this.medicalRecordUploadLabBg,
+    required this.medicalRecordUploadLabIcon,
+    required this.medicalRecordUploadScanBg,
+    required this.medicalRecordUploadScanIcon,
+    required this.medicalRecordUploadAddButtonBg,
   });
 
   final Color primary;
@@ -51,6 +59,14 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color medicalRecordStrongText;
   final Color medicalRecordSecondaryStrong;
   final Color medicalRecordOptionBorder;
+  final Color medicalRecordUploadCardBorder;
+  final Color medicalRecordUploadPrescriptionBg;
+  final Color medicalRecordUploadPrescriptionIcon;
+  final Color medicalRecordUploadLabBg;
+  final Color medicalRecordUploadLabIcon;
+  final Color medicalRecordUploadScanBg;
+  final Color medicalRecordUploadScanIcon;
+  final Color medicalRecordUploadAddButtonBg;
 
   static const light = AppColors(
     primary: Color(0xFF00A1A9),
@@ -76,6 +92,14 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordStrongText: Color(0xFF0C1B1D),
     medicalRecordSecondaryStrong: Color(0xFF4A686A),
     medicalRecordOptionBorder: Color(0xFFF3F4F6),
+    medicalRecordUploadCardBorder: Color(0xFFE5E7EB),
+    medicalRecordUploadPrescriptionBg: Color(0xFFE7FBFD),
+    medicalRecordUploadPrescriptionIcon: Color(0xFF13DDEC),
+    medicalRecordUploadLabBg: Color(0xFFFFF7ED),
+    medicalRecordUploadLabIcon: Color(0xFFF97316),
+    medicalRecordUploadScanBg: Color(0xFFEFF6FF),
+    medicalRecordUploadScanIcon: Color(0xFF3B82F6),
+    medicalRecordUploadAddButtonBg: Color(0xFFF3F4F6),
   );
 
   static const dark = AppColors(
@@ -102,6 +126,14 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordStrongText: Color(0xFFF5F5F5),
     medicalRecordSecondaryStrong: Color(0xFFB0BEC5),
     medicalRecordOptionBorder: Color(0xFF37474F),
+    medicalRecordUploadCardBorder: Color(0xFF37474F),
+    medicalRecordUploadPrescriptionBg: Color(0xFF2A3D40),
+    medicalRecordUploadPrescriptionIcon: Color(0xFF4DDDE7),
+    medicalRecordUploadLabBg: Color(0xFF3D3127),
+    medicalRecordUploadLabIcon: Color(0xFFF9A15B),
+    medicalRecordUploadScanBg: Color(0xFF223244),
+    medicalRecordUploadScanIcon: Color(0xFF70A8F8),
+    medicalRecordUploadAddButtonBg: Color(0xFF2A3238),
   );
 
   static AppColors fromBrightness(Brightness brightness) {
@@ -133,6 +165,14 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? medicalRecordStrongText,
     Color? medicalRecordSecondaryStrong,
     Color? medicalRecordOptionBorder,
+    Color? medicalRecordUploadCardBorder,
+    Color? medicalRecordUploadPrescriptionBg,
+    Color? medicalRecordUploadPrescriptionIcon,
+    Color? medicalRecordUploadLabBg,
+    Color? medicalRecordUploadLabIcon,
+    Color? medicalRecordUploadScanBg,
+    Color? medicalRecordUploadScanIcon,
+    Color? medicalRecordUploadAddButtonBg,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -167,6 +207,24 @@ class AppColors extends ThemeExtension<AppColors> {
           medicalRecordSecondaryStrong ?? this.medicalRecordSecondaryStrong,
       medicalRecordOptionBorder:
           medicalRecordOptionBorder ?? this.medicalRecordOptionBorder,
+      medicalRecordUploadCardBorder:
+          medicalRecordUploadCardBorder ?? this.medicalRecordUploadCardBorder,
+      medicalRecordUploadPrescriptionBg:
+          medicalRecordUploadPrescriptionBg ??
+          this.medicalRecordUploadPrescriptionBg,
+      medicalRecordUploadPrescriptionIcon:
+          medicalRecordUploadPrescriptionIcon ??
+          this.medicalRecordUploadPrescriptionIcon,
+      medicalRecordUploadLabBg:
+          medicalRecordUploadLabBg ?? this.medicalRecordUploadLabBg,
+      medicalRecordUploadLabIcon:
+          medicalRecordUploadLabIcon ?? this.medicalRecordUploadLabIcon,
+      medicalRecordUploadScanBg:
+          medicalRecordUploadScanBg ?? this.medicalRecordUploadScanBg,
+      medicalRecordUploadScanIcon:
+          medicalRecordUploadScanIcon ?? this.medicalRecordUploadScanIcon,
+      medicalRecordUploadAddButtonBg:
+          medicalRecordUploadAddButtonBg ?? this.medicalRecordUploadAddButtonBg,
     );
   }
 
@@ -243,6 +301,46 @@ class AppColors extends ThemeExtension<AppColors> {
       medicalRecordOptionBorder: Color.lerp(
         medicalRecordOptionBorder,
         other.medicalRecordOptionBorder,
+        t,
+      )!,
+      medicalRecordUploadCardBorder: Color.lerp(
+        medicalRecordUploadCardBorder,
+        other.medicalRecordUploadCardBorder,
+        t,
+      )!,
+      medicalRecordUploadPrescriptionBg: Color.lerp(
+        medicalRecordUploadPrescriptionBg,
+        other.medicalRecordUploadPrescriptionBg,
+        t,
+      )!,
+      medicalRecordUploadPrescriptionIcon: Color.lerp(
+        medicalRecordUploadPrescriptionIcon,
+        other.medicalRecordUploadPrescriptionIcon,
+        t,
+      )!,
+      medicalRecordUploadLabBg: Color.lerp(
+        medicalRecordUploadLabBg,
+        other.medicalRecordUploadLabBg,
+        t,
+      )!,
+      medicalRecordUploadLabIcon: Color.lerp(
+        medicalRecordUploadLabIcon,
+        other.medicalRecordUploadLabIcon,
+        t,
+      )!,
+      medicalRecordUploadScanBg: Color.lerp(
+        medicalRecordUploadScanBg,
+        other.medicalRecordUploadScanBg,
+        t,
+      )!,
+      medicalRecordUploadScanIcon: Color.lerp(
+        medicalRecordUploadScanIcon,
+        other.medicalRecordUploadScanIcon,
+        t,
+      )!,
+      medicalRecordUploadAddButtonBg: Color.lerp(
+        medicalRecordUploadAddButtonBg,
+        other.medicalRecordUploadAddButtonBg,
         t,
       )!,
     );

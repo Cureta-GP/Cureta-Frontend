@@ -3,9 +3,10 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordNextButton extends StatelessWidget {
-  const AddRecordNextButton({super.key, this.onPressed});
+  const AddRecordNextButton({super.key, this.onPressed, this.label});
 
   final VoidCallback? onPressed;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,7 @@ class AddRecordNextButton extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  AppLocalizations.addRecordNext,
+                  label ?? AppLocalizations.addRecordNext,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: false,

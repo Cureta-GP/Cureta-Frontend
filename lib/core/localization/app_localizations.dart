@@ -131,8 +131,12 @@ class AppLocalizations {
       'medical_records.add_record.basic_information_title'.tr();
   static String get addRecordStep2Label =>
       'medical_records.add_record.step_2_label'.tr();
+  static String get addRecordStep4Label =>
+      'medical_records.add_record.step_4_label'.tr();
   static String get addRecordProgress40 =>
       'medical_records.add_record.progress_40'.tr();
+  static String get addRecordProgress80 =>
+      'medical_records.add_record.progress_80'.tr();
   static String get addRecordFirstSymptomsQuestion =>
       'medical_records.add_record.first_symptoms_question'.tr();
   static String get addRecordSelectDate =>
@@ -145,6 +149,28 @@ class AppLocalizations {
       'medical_records.add_record.next_step'.tr();
   static String get addRecordSkipForNow =>
       'medical_records.add_record.skip_for_now'.tr();
+  static String get addRecordOptional =>
+      'medical_records.add_record.optional'.tr();
+  static String get addRecordRelatedFilesTitle =>
+      'medical_records.add_record.related_files_title'.tr();
+  static String get addRecordRelatedFilesDescription =>
+      'medical_records.add_record.related_files_description'.tr();
+  static String get addRecordPrescriptionTitle =>
+      'medical_records.add_record.prescription_title'.tr();
+  static String get addRecordPrescriptionDescription =>
+      'medical_records.add_record.prescription_description'.tr();
+  static String get addRecordLabTestTitle =>
+      'medical_records.add_record.lab_test_title'.tr();
+  static String get addRecordLabTestDescription =>
+      'medical_records.add_record.lab_test_description'.tr();
+  static String get addRecordScanTitle =>
+      'medical_records.add_record.scan_title'.tr();
+  static String get addRecordScanDescription =>
+      'medical_records.add_record.scan_description'.tr();
+  static String get addRecordDataSecureNote =>
+      'medical_records.add_record.data_secure_note'.tr();
+  static String get addRecordContinue =>
+      'medical_records.add_record.continue'.tr();
 
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});

@@ -20,6 +20,12 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medicalRecordPickerLabel,
     required this.medicalRecordChoice,
     required this.medicalRecordSkip,
+    required this.medicalRecordOptional,
+    required this.medicalRecordUploadTitle,
+    required this.medicalRecordUploadDescription,
+    required this.medicalRecordUploadCardTitle,
+    required this.medicalRecordUploadCardDescription,
+    required this.medicalRecordSecureNote,
   });
 
   final TextStyle hero;
@@ -39,6 +45,12 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medicalRecordPickerLabel;
   final TextStyle medicalRecordChoice;
   final TextStyle medicalRecordSkip;
+  final TextStyle medicalRecordOptional;
+  final TextStyle medicalRecordUploadTitle;
+  final TextStyle medicalRecordUploadDescription;
+  final TextStyle medicalRecordUploadCardTitle;
+  final TextStyle medicalRecordUploadCardDescription;
+  final TextStyle medicalRecordSecureNote;
 
   static const mobile = AppTypography(
     hero: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -67,6 +79,27 @@ class AppTypography extends ThemeExtension<AppTypography> {
     ),
     medicalRecordChoice: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
     medicalRecordSkip: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+    medicalRecordOptional: TextStyle(fontSize: 24, fontWeight: FontWeight.w400),
+    medicalRecordUploadTitle: TextStyle(
+      fontSize: 30,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordUploadDescription: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordUploadCardTitle: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordUploadCardDescription: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordSecureNote: TextStyle(
+      fontSize: 12,
+      fontWeight: FontWeight.w400,
+    ),
   );
 
   static const tablet = AppTypography(
@@ -96,6 +129,27 @@ class AppTypography extends ThemeExtension<AppTypography> {
     ),
     medicalRecordChoice: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
     medicalRecordSkip: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+    medicalRecordOptional: TextStyle(fontSize: 26, fontWeight: FontWeight.w400),
+    medicalRecordUploadTitle: TextStyle(
+      fontSize: 34,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordUploadDescription: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordUploadCardTitle: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordUploadCardDescription: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordSecureNote: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+    ),
   );
 
   static const desktop = AppTypography(
@@ -125,6 +179,27 @@ class AppTypography extends ThemeExtension<AppTypography> {
     ),
     medicalRecordChoice: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
     medicalRecordSkip: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+    medicalRecordOptional: TextStyle(fontSize: 28, fontWeight: FontWeight.w400),
+    medicalRecordUploadTitle: TextStyle(
+      fontSize: 38,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordUploadDescription: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordUploadCardTitle: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w700,
+    ),
+    medicalRecordUploadCardDescription: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordSecureNote: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w400,
+    ),
   );
 
   @override
@@ -146,6 +221,12 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medicalRecordPickerLabel,
     TextStyle? medicalRecordChoice,
     TextStyle? medicalRecordSkip,
+    TextStyle? medicalRecordOptional,
+    TextStyle? medicalRecordUploadTitle,
+    TextStyle? medicalRecordUploadDescription,
+    TextStyle? medicalRecordUploadCardTitle,
+    TextStyle? medicalRecordUploadCardDescription,
+    TextStyle? medicalRecordSecureNote,
   }) {
     return AppTypography(
       hero: hero ?? this.hero,
@@ -170,6 +251,19 @@ class AppTypography extends ThemeExtension<AppTypography> {
           medicalRecordPickerLabel ?? this.medicalRecordPickerLabel,
       medicalRecordChoice: medicalRecordChoice ?? this.medicalRecordChoice,
       medicalRecordSkip: medicalRecordSkip ?? this.medicalRecordSkip,
+      medicalRecordOptional:
+          medicalRecordOptional ?? this.medicalRecordOptional,
+      medicalRecordUploadTitle:
+          medicalRecordUploadTitle ?? this.medicalRecordUploadTitle,
+      medicalRecordUploadDescription:
+          medicalRecordUploadDescription ?? this.medicalRecordUploadDescription,
+      medicalRecordUploadCardTitle:
+          medicalRecordUploadCardTitle ?? this.medicalRecordUploadCardTitle,
+      medicalRecordUploadCardDescription:
+          medicalRecordUploadCardDescription ??
+          this.medicalRecordUploadCardDescription,
+      medicalRecordSecureNote:
+          medicalRecordSecureNote ?? this.medicalRecordSecureNote,
     );
   }
 
@@ -240,6 +334,36 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medicalRecordSkip: TextStyle.lerp(
         medicalRecordSkip,
         other.medicalRecordSkip,
+        t,
+      )!,
+      medicalRecordOptional: TextStyle.lerp(
+        medicalRecordOptional,
+        other.medicalRecordOptional,
+        t,
+      )!,
+      medicalRecordUploadTitle: TextStyle.lerp(
+        medicalRecordUploadTitle,
+        other.medicalRecordUploadTitle,
+        t,
+      )!,
+      medicalRecordUploadDescription: TextStyle.lerp(
+        medicalRecordUploadDescription,
+        other.medicalRecordUploadDescription,
+        t,
+      )!,
+      medicalRecordUploadCardTitle: TextStyle.lerp(
+        medicalRecordUploadCardTitle,
+        other.medicalRecordUploadCardTitle,
+        t,
+      )!,
+      medicalRecordUploadCardDescription: TextStyle.lerp(
+        medicalRecordUploadCardDescription,
+        other.medicalRecordUploadCardDescription,
+        t,
+      )!,
+      medicalRecordSecureNote: TextStyle.lerp(
+        medicalRecordSecureNote,
+        other.medicalRecordSecureNote,
         t,
       )!,
     );
