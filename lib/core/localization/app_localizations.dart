@@ -149,6 +149,25 @@ class AppLocalizations {
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
   // Family profiles
+  static String get profilesAddProfile => 'profiles.common.add_profile'.tr();
+  static String get profilesNextStep => 'profiles.common.next_step'.tr();
+  static String get profilesContinue => 'profiles.common.continue'.tr();
+  static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
+  static String profilesStepIndicator(int current, int total) =>
+      'profiles.common.step_indicator'.tr(
+        args: [current.toString(), total.toString()],
+      );
+
+  static String get profilesNameTitle => 'profiles.steps.name.title'.tr();
+  static String get profilesNameSubtitle => 'profiles.steps.name.subtitle'.tr();
+  static String get profilesNameHint => 'profiles.steps.name.hint'.tr();
+
+  static String get profilesGenderTitle => 'profiles.steps.gender.title'.tr();
+  static String get profilesGenderSubtitle =>
+      'profiles.steps.gender.subtitle'.tr();
+  static String get profilesGenderMale => 'profiles.steps.gender.male'.tr();
+  static String get profilesGenderFemale => 'profiles.steps.gender.female'.tr();
+
   static String get profilesRelationTitle =>
       'profiles.steps.relation.title'.tr();
   static String get profilesRelationSubtitle =>
@@ -164,6 +183,21 @@ class AppLocalizations {
       'profiles.steps.relation.spouse'.tr();
   static String get profilesRelationOther =>
       'profiles.steps.relation.other'.tr();
+
+  static String get profilesAgeTitle => 'profiles.steps.age.title'.tr();
+  static String get profilesAgeSubtitle => 'profiles.steps.age.subtitle'.tr();
+
+  static String get profilesBloodTypeTitle =>
+      'profiles.steps.blood_type.title'.tr();
+  static String get profilesBloodTypeSubtitle =>
+      'profiles.steps.blood_type.subtitle'.tr();
+  static String get profilesBloodTypeFooter =>
+      'profiles.steps.blood_type.footer_note'.tr();
+
+  static String get profilesMedicalConditionsTitle =>
+      'profiles.steps.medical_conditions.title'.tr();
+  static String get profilesMedicalConditionsSubtitle =>
+      'profiles.steps.medical_conditions.subtitle'.tr();
 
   // Helper methods
   static bool isRTL(BuildContext context) {

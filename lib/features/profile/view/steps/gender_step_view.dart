@@ -1,4 +1,5 @@
 import 'package:cureta/core/constants/app_icons.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/widgets/icon_text_container.dart';
 import 'package:flutter/material.dart';
 
@@ -11,9 +12,12 @@ class GenderSelectionStep extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         IconTextContainer(
-          label: 'Male', iconPath: AppIcons.male, onTap: () {}),
+          label: AppLocalizations.profilesGenderMale,
+          iconPath: AppIcons.male,
+          onTap: () {},
+        ),
         IconTextContainer(
-          label: 'Female',
+          label: AppLocalizations.profilesGenderFemale,
           iconPath: AppIcons.female,
           onTap: () {},
         ),

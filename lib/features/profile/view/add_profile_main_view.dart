@@ -1,3 +1,6 @@
+import 'package:cureta/features/profile/view/steps/age_step_view.dart';
+import 'package:cureta/features/profile/view/steps/blood_type_step_view.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/shared/widgets/progress_step_layout.dart';
 import 'package:cureta/features/profile/view/steps/name_step_view.dart';
 import 'package:cureta/features/profile/view/steps/gender_step_view.dart';
@@ -18,34 +21,34 @@ class _AddProfileMainState extends State<AddProfileMain> {
   final int _totalSteps = 7;
 
   // 2. الداتا المتغيرة لكل صفحة (العنوان والوصف)
-  final List<Map<String, String>> _stepsContent = [
+  List<Map<String, String>> get _stepsContent => [
     {
-      "title": "What is the full name?",
-      "subtitle": "We'll use this to personalize the health dashboard."
+      "title": AppLocalizations.profilesNameTitle,
+      "subtitle": AppLocalizations.profilesNameSubtitle,
     },
     {
-      "title": "What is the gender?",
-      "subtitle": "This helps us provide relevant health insights."
+      "title": AppLocalizations.profilesGenderTitle,
+      "subtitle": AppLocalizations.profilesGenderSubtitle,
     },
     {
-      "title": "How are they related to you?",
-      "subtitle": "Select your relationship to this person."
+      "title": AppLocalizations.profilesRelationTitle,
+      "subtitle": AppLocalizations.profilesRelationSubtitle,
     },
     {
-      "title": "How old are they?",
-      "subtitle": "Enter the age to help us calculate metrics."
+      "title": AppLocalizations.profilesAgeTitle,
+      "subtitle": AppLocalizations.profilesAgeSubtitle,
     },
     {
-      "title": "What is their blood type?",
-      "subtitle": "Knowing the blood type is crucial for emergencies."
+      "title": AppLocalizations.profilesBloodTypeTitle,
+      "subtitle": AppLocalizations.profilesBloodTypeSubtitle,
     },
     {
-      "title": "Any chronic diseases?",
-      "subtitle": "Select any existing health conditions."
+      "title": AppLocalizations.profilesMedicalConditionsTitle,
+      "subtitle": AppLocalizations.profilesMedicalConditionsSubtitle,
     },
     {
-      "title": "Any allergies?",
-      "subtitle": "Tell us about any known allergies."
+      "title": AppLocalizations.profilesMedicalConditionsTitle,
+      "subtitle": AppLocalizations.profilesMedicalConditionsSubtitle,
     },
   ];
 
@@ -62,12 +65,14 @@ class _AddProfileMainState extends State<AddProfileMain> {
 
   @override
   Widget build(BuildContext context) {
-
     return ProgressStepLayout(
-      appBarTitle: "Add Profile",
+      appBarTitle: AppLocalizations.profilesAddProfile,
       title: _stepsContent[_currentPage]["title"]!,
       subtitle: _stepsContent[_currentPage]["subtitle"],
-      stepLabel: "Step ${_currentPage + 1} of $_totalSteps",
+      stepLabel: AppLocalizations.profilesStepIndicator(
+        _currentPage + 1,
+        _totalSteps,
+      ),
       progressLabel: "${((_currentPage + 1) / _totalSteps * 100).toInt()}%",
       progress: (_currentPage + 1) / _totalSteps,
       child: SizedBox(
@@ -82,9 +87,8 @@ class _AddProfileMainState extends State<AddProfileMain> {
             NameInputStep(),
             GenderSelectionStep(),
             RelationSelectionStep(),
-            // Add more steps as needed
-            Center(child: Text("Step 4")),
-            Center(child: Text("Step 5")),
+            AgeStep(),
+            BloodTypeStep(),
             Center(child: Text("Step 6")),
             Center(child: Text("Step 7")),
           ],

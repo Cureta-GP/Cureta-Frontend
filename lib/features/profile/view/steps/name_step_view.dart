@@ -1,3 +1,4 @@
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class NameInputStep extends StatelessWidget {
@@ -5,10 +6,10 @@ class NameInputStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const TextField(
+    return TextField(
       decoration: InputDecoration(
-        hintText: "Enter full name",
-        border: OutlineInputBorder(),
+        hintText: AppLocalizations.profilesNameHint,
+        border: const OutlineInputBorder(),
       ),
     );
   }
