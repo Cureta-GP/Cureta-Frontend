@@ -8,8 +8,11 @@ class AppRoutes {
   static const String resetPassword = '/reset-password';
   // ignore: constant_identifier_names
   static const String medicalRecords_step_one = '/medical-records-step-one';
+  // ignore: constant_identifier_names
   static const String medicalRecords_step_two = '/medical-records-step-two';
+  // ignore: constant_identifier_names
   static const String medicalRecords_step_three = '/medical-records-step-three';
   static const String addRecordStepFour = '/medical-records-step-four';
   static const String addRecordStepFive = '/medical-records-step-five';
+  static const String userRecords = '/user-records';  
 }

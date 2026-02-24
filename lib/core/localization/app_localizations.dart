@@ -206,6 +206,47 @@ class AppLocalizations {
   static String get addRecordContinue =>
       'medical_records.add_record.continue'.tr();
 
+  // Medical Records - List Screen
+  static String get recordsListTitle => 'medical_records.list.title'.tr();
+  static String get recordsListSearchHint =>
+      'medical_records.list.search_hint'.tr();
+  static String get recordsListFilterAll =>
+      'medical_records.list.filter_all'.tr();
+  static String get recordsListFilterOngoing =>
+      'medical_records.list.filter_ongoing'.tr();
+  static String get recordsListFilterPast =>
+      'medical_records.list.filter_past'.tr();
+  static String get recordsListFilterRecent =>
+      'medical_records.list.filter_recent'.tr();
+  static String get recordsListStatusOngoing =>
+      'medical_records.list.status_ongoing'.tr();
+  static String get recordsListStatusPast =>
+      'medical_records.list.status_past'.tr();
+  static String get recordsListType2Diabetes =>
+      'medical_records.list.record_type2diabetes'.tr();
+  static String get recordsListType2DiabetesMeta =>
+      'medical_records.list.record_type2diabetes_meta'.tr();
+  static String get recordsListAcuteBronchitis =>
+      'medical_records.list.record_acute_bronchitis'.tr();
+  static String get recordsListAcuteBronchitisMeta =>
+      'medical_records.list.record_acute_bronchitis_meta'.tr();
+  static String get recordsListHypertension =>
+      'medical_records.list.record_hypertension'.tr();
+  static String get recordsListHypertensionMeta =>
+      'medical_records.list.record_hypertension_meta'.tr();
+  static String get recordsListSeasonalAllergies =>
+      'medical_records.list.record_seasonal_allergies'.tr();
+  static String get recordsListSeasonalAllergiesMeta =>
+      'medical_records.list.record_seasonal_allergies_meta'.tr();
+  static String get recordsListNavHome => 'medical_records.list.nav_home'.tr();
+  static String get recordsListNavMeds => 'medical_records.list.nav_meds'.tr();
+  static String get recordsListNavScanRx =>
+      'medical_records.list.nav_scan_rx'.tr();
+  static String get recordsListNavRecords =>
+      'medical_records.list.nav_records'.tr();
+  static String get recordsListNavProfile =>
+      'medical_records.list.nav_profile'.tr();
+
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
 

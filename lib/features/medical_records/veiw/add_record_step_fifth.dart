@@ -1,3 +1,4 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_review_documents_tile.dart';
@@ -6,6 +7,7 @@ import 'package:cureta/features/medical_records/widgets/add_record_screen_header
 import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddRecordStepFifth extends StatelessWidget {
   const AddRecordStepFifth({
@@ -31,12 +33,10 @@ class AddRecordStepFifth extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
     final typography = context.typography;
-
     final startedDate = startedOn ?? DateTime(2023, 8, 12);
     final startedDateLabel = MaterialLocalizations.of(
       context,
     ).formatMediumDate(startedDate);
-
     return Scaffold(
       backgroundColor: colors.medicalRecordBackground,
       body: SafeArea(
@@ -104,9 +104,9 @@ class AddRecordStepFifth extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: spacing.xl),
+                   SizedBox(height: spacing.xl),
                   AddRecordStepTwoBottomBar(
-                    onNext: onSave,
+                    onNext: onSave ?? () => GoRouter.of( context,).pushNamed(AppRoutes.userRecords),
                     onSkip: onCancel,
                     nextLabel: AppLocalizations.addRecordSaveRecord,
                   ),

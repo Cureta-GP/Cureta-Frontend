@@ -93,6 +93,29 @@
     "next": "Next"
   },
   "medical_records": {
+    "list": {
+      "title": "My Medical Records",
+      "search_hint": "Search by disease name",
+      "filter_all": "All",
+      "filter_ongoing": "Ongoing",
+      "filter_past": "Past",
+      "filter_recent": "Recent",
+      "status_ongoing": "Ongoing",
+      "status_past": "Past",
+      "record_type2diabetes": "Type 2 Diabetes",
+      "record_type2diabetes_meta": "Diagnosed Jan 12, 2020",
+      "record_acute_bronchitis": "Acute Bronchitis",
+      "record_acute_bronchitis_meta": "Mar 05, 2023 - Mar 20, 2023",
+      "record_hypertension": "Hypertension",
+      "record_hypertension_meta": "Recorded since 2018",
+      "record_seasonal_allergies": "Seasonal Allergies",
+      "record_seasonal_allergies_meta": "Spring 2022",
+      "nav_home": "Home",
+      "nav_meds": "Meds",
+      "nav_scan_rx": "Scan Rx",
+      "nav_records": "Records",
+      "nav_profile": "Profile"
+    },
     "add_record": {
       "cancel": "Cancel",
       "step_1_label": "Step 1 of 5",

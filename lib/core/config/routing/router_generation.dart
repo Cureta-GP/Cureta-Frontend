@@ -5,6 +5,7 @@ import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
 import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
+import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
@@ -97,6 +98,14 @@ class RoutesGeneration {
         name: AppRoutes.addRecordStepFive,
         pageBuilder: (context, state) => PageTransitions.fade(
           child: const AddRecordStepFifth(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.userRecords,
+        name: AppRoutes.userRecords,
+        pageBuilder: (context, state) => PageTransitions.scale(
+          child: const UserRecordsView(),
           state: state,
         ),
       ),

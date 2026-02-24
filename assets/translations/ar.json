@@ -93,6 +93,29 @@
         "next": "التالي"
     },
     "medical_records": {
+        "list": {
+            "title": "سجلاتي الطبية",
+            "search_hint": "ابحث باسم المرض",
+            "filter_all": "الكل",
+            "filter_ongoing": "مستمر",
+            "filter_past": "سابق",
+            "filter_recent": "حديث",
+            "status_ongoing": "مستمر",
+            "status_past": "سابق",
+            "record_type2diabetes": "السكري من النوع الثاني",
+            "record_type2diabetes_meta": "تم التشخيص في 12 يناير 2020",
+            "record_acute_bronchitis": "التهاب الشعب الهوائية الحاد",
+            "record_acute_bronchitis_meta": "05 مارس 2023 - 20 مارس 2023",
+            "record_hypertension": "ارتفاع ضغط الدم",
+            "record_hypertension_meta": "مسجل منذ 2018",
+            "record_seasonal_allergies": "حساسية موسمية",
+            "record_seasonal_allergies_meta": "ربيع 2022",
+            "nav_home": "الرئيسية",
+            "nav_meds": "الأدوية",
+            "nav_scan_rx": "مسح الروشتة",
+            "nav_records": "السجلات",
+            "nav_profile": "الملف الشخصي"
+        },
         "add_record": {
             "cancel": "إلغاء",
             "step_1_label": "الخطوة 1 من 5",
