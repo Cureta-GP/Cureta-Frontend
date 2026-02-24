@@ -14,5 +14,6 @@ class AppRoutes {
   static const String medicalRecords_step_three = '/medical-records-step-three';
   static const String addRecordStepFour = '/medical-records-step-four';
   static const String addRecordStepFive = '/medical-records-step-five';
-  static const String userRecords = '/user-records';  
+  static const String userRecords = '/user-records'; 
+  static const String recordDetails = '/record-details'; 
 }

@@ -34,6 +34,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.medicalRecordUploadScanBg,
     required this.medicalRecordUploadScanIcon,
     required this.medicalRecordUploadAddButtonBg,
+    required this.medicalRecordDetailPdfBg,
+    required this.medicalRecordDetailPdfIcon,
+    required this.medicalRecordDetailDanger,
   });
 
   final Color primary;
@@ -67,6 +70,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color medicalRecordUploadScanBg;
   final Color medicalRecordUploadScanIcon;
   final Color medicalRecordUploadAddButtonBg;
+  final Color medicalRecordDetailPdfBg;
+  final Color medicalRecordDetailPdfIcon;
+  final Color medicalRecordDetailDanger;
 
   static const light = AppColors(
     primary: Color(0xFF00A1A9),
@@ -100,6 +106,9 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordUploadScanBg: Color(0xFFEFF6FF),
     medicalRecordUploadScanIcon: Color(0xFF3B82F6),
     medicalRecordUploadAddButtonBg: Color(0xFFF3F4F6),
+    medicalRecordDetailPdfBg: Color(0xFFFEF2F2),
+    medicalRecordDetailPdfIcon: Color(0xFFEF4444),
+    medicalRecordDetailDanger: Color(0xFFEF4444),
   );
 
   static const dark = AppColors(
@@ -134,6 +143,9 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordUploadScanBg: Color(0xFF223244),
     medicalRecordUploadScanIcon: Color(0xFF70A8F8),
     medicalRecordUploadAddButtonBg: Color(0xFF2A3238),
+    medicalRecordDetailPdfBg: Color(0xFF3D2727),
+    medicalRecordDetailPdfIcon: Color(0xFFF87171),
+    medicalRecordDetailDanger: Color(0xFFF87171),
   );
 
   static AppColors fromBrightness(Brightness brightness) {
@@ -173,6 +185,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? medicalRecordUploadScanBg,
     Color? medicalRecordUploadScanIcon,
     Color? medicalRecordUploadAddButtonBg,
+    Color? medicalRecordDetailPdfBg,
+    Color? medicalRecordDetailPdfIcon,
+    Color? medicalRecordDetailDanger,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -225,6 +240,12 @@ class AppColors extends ThemeExtension<AppColors> {
           medicalRecordUploadScanIcon ?? this.medicalRecordUploadScanIcon,
       medicalRecordUploadAddButtonBg:
           medicalRecordUploadAddButtonBg ?? this.medicalRecordUploadAddButtonBg,
+      medicalRecordDetailPdfBg:
+          medicalRecordDetailPdfBg ?? this.medicalRecordDetailPdfBg,
+      medicalRecordDetailPdfIcon:
+          medicalRecordDetailPdfIcon ?? this.medicalRecordDetailPdfIcon,
+      medicalRecordDetailDanger:
+          medicalRecordDetailDanger ?? this.medicalRecordDetailDanger,
     );
   }
 
@@ -341,6 +362,21 @@ class AppColors extends ThemeExtension<AppColors> {
       medicalRecordUploadAddButtonBg: Color.lerp(
         medicalRecordUploadAddButtonBg,
         other.medicalRecordUploadAddButtonBg,
+        t,
+      )!,
+      medicalRecordDetailPdfBg: Color.lerp(
+        medicalRecordDetailPdfBg,
+        other.medicalRecordDetailPdfBg,
+        t,
+      )!,
+      medicalRecordDetailPdfIcon: Color.lerp(
+        medicalRecordDetailPdfIcon,
+        other.medicalRecordDetailPdfIcon,
+        t,
+      )!,
+      medicalRecordDetailDanger: Color.lerp(
+        medicalRecordDetailDanger,
+        other.medicalRecordDetailDanger,
         t,
       )!,
     );

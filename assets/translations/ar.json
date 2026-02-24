@@ -163,6 +163,16 @@
             "next": "التالي",
             "next_step": "الخطوة التالية",
             "skip_for_now": "تخطي الآن"
+        },
+        "details": {
+            "title": "تفاصيل السجل",
+            "status_ongoing": "مستمر",
+            "diagnosed_on": "تاريخ التشخيص",
+            "notes_title": "ملاحظات",
+            "documents_title": "المستندات والملفات",
+            "view_all": "عرض الكل",
+            "edit_record": "تعديل السجل",
+            "delete_record": "حذف السجل"
         }
     },
     "validation": {

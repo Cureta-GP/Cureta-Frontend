@@ -163,6 +163,16 @@
       "next": "Next",
       "next_step": "Next Step",
       "skip_for_now": "Skip for now"
+    },
+    "details": {
+      "title": "Record Details",
+      "status_ongoing": "Ongoing",
+      "diagnosed_on": "Diagnosed on",
+      "notes_title": "Notes",
+      "documents_title": "Documents & Files",
+      "view_all": "View All",
+      "edit_record": "Edit Record",
+      "delete_record": "Delete Record"
     }
   },
   "validation": {

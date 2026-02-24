@@ -26,6 +26,10 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medicalRecordUploadCardTitle,
     required this.medicalRecordUploadCardDescription,
     required this.medicalRecordSecureNote,
+    required this.medicalRecordDetailHero,
+    required this.medicalRecordDetailLabel,
+    required this.medicalRecordDetailBody,
+    required this.medicalRecordDetailDeleteBtn,
   });
 
   final TextStyle hero;
@@ -51,6 +55,10 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medicalRecordUploadCardTitle;
   final TextStyle medicalRecordUploadCardDescription;
   final TextStyle medicalRecordSecureNote;
+  final TextStyle medicalRecordDetailHero;
+  final TextStyle medicalRecordDetailLabel;
+  final TextStyle medicalRecordDetailBody;
+  final TextStyle medicalRecordDetailDeleteBtn;
 
   static const mobile = AppTypography(
     hero: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -99,6 +107,22 @@ class AppTypography extends ThemeExtension<AppTypography> {
     medicalRecordSecureNote: TextStyle(
       fontSize: 12,
       fontWeight: FontWeight.w400,
+    ),
+    medicalRecordDetailHero: TextStyle(
+      fontSize: 40,
+      fontWeight: FontWeight.w800,
+    ),
+    medicalRecordDetailLabel: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    ),
+    medicalRecordDetailBody: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordDetailDeleteBtn: TextStyle(
+      fontSize: 17,
+      fontWeight: FontWeight.w700,
     ),
   );
 
@@ -150,6 +174,22 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 14,
       fontWeight: FontWeight.w400,
     ),
+    medicalRecordDetailHero: TextStyle(
+      fontSize: 44,
+      fontWeight: FontWeight.w800,
+    ),
+    medicalRecordDetailLabel: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+    ),
+    medicalRecordDetailBody: TextStyle(
+      fontSize: 20,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordDetailDeleteBtn: TextStyle(
+      fontSize: 19,
+      fontWeight: FontWeight.w700,
+    ),
   );
 
   static const desktop = AppTypography(
@@ -200,6 +240,22 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 16,
       fontWeight: FontWeight.w400,
     ),
+    medicalRecordDetailHero: TextStyle(
+      fontSize: 48,
+      fontWeight: FontWeight.w800,
+    ),
+    medicalRecordDetailLabel: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+    ),
+    medicalRecordDetailBody: TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w400,
+    ),
+    medicalRecordDetailDeleteBtn: TextStyle(
+      fontSize: 21,
+      fontWeight: FontWeight.w700,
+    ),
   );
 
   @override
@@ -227,6 +283,10 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medicalRecordUploadCardTitle,
     TextStyle? medicalRecordUploadCardDescription,
     TextStyle? medicalRecordSecureNote,
+    TextStyle? medicalRecordDetailHero,
+    TextStyle? medicalRecordDetailLabel,
+    TextStyle? medicalRecordDetailBody,
+    TextStyle? medicalRecordDetailDeleteBtn,
   }) {
     return AppTypography(
       hero: hero ?? this.hero,
@@ -264,6 +324,14 @@ class AppTypography extends ThemeExtension<AppTypography> {
           this.medicalRecordUploadCardDescription,
       medicalRecordSecureNote:
           medicalRecordSecureNote ?? this.medicalRecordSecureNote,
+      medicalRecordDetailHero:
+          medicalRecordDetailHero ?? this.medicalRecordDetailHero,
+      medicalRecordDetailLabel:
+          medicalRecordDetailLabel ?? this.medicalRecordDetailLabel,
+      medicalRecordDetailBody:
+          medicalRecordDetailBody ?? this.medicalRecordDetailBody,
+      medicalRecordDetailDeleteBtn:
+          medicalRecordDetailDeleteBtn ?? this.medicalRecordDetailDeleteBtn,
     );
   }
 
@@ -364,6 +432,26 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medicalRecordSecureNote: TextStyle.lerp(
         medicalRecordSecureNote,
         other.medicalRecordSecureNote,
+        t,
+      )!,
+      medicalRecordDetailHero: TextStyle.lerp(
+        medicalRecordDetailHero,
+        other.medicalRecordDetailHero,
+        t,
+      )!,
+      medicalRecordDetailLabel: TextStyle.lerp(
+        medicalRecordDetailLabel,
+        other.medicalRecordDetailLabel,
+        t,
+      )!,
+      medicalRecordDetailBody: TextStyle.lerp(
+        medicalRecordDetailBody,
+        other.medicalRecordDetailBody,
+        t,
+      )!,
+      medicalRecordDetailDeleteBtn: TextStyle.lerp(
+        medicalRecordDetailDeleteBtn,
+        other.medicalRecordDetailDeleteBtn,
         t,
       )!,
     );

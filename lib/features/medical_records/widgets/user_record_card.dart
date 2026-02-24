@@ -1,7 +1,10 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/user_record_action_button.dart';
 import 'package:cureta/features/medical_records/widgets/user_record_status_pill.dart';
 import 'package:flutter/material.dart';
+import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
+import 'package:go_router/go_router.dart';
 
 class UserRecordCard extends StatelessWidget {
   const UserRecordCard({
@@ -30,7 +33,34 @@ class UserRecordCard extends StatelessWidget {
     final bg = isOngoing ? colors.medicalRecordCard : colors.surface;
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => GoRouter.of(context).pushNamed(
+        AppRoutes.recordDetails,
+        extra: {
+          'conditionName': title,
+          'isOngoing': isOngoing,
+          'diagnosedDate': meta,
+          'notes':
+              "This is a note for hypertension and it is long to test the overflow",
+          'files': <RecordFile>[
+            RecordFile(
+              name: "Blood_Test_Oct24.pdf",
+              meta: "PDF • 2.4 MB",
+              icon: Icons.picture_as_pdf,
+              iconBgColor: colors.medicalRecordDetailPdfBg,
+              iconColor: colors.medicalRecordDetailPdfIcon,
+              fileType: "pdf",
+            ),
+            RecordFile(
+              name: "Prescription_Slip.jpg",
+              meta: "Image • 1.1 MB",
+              icon: Icons.image,
+              iconBgColor: colors.medicalRecordUploadScanBg,
+              iconColor: colors.medicalRecordUploadScanIcon,
+              fileType: "image",
+            ),
+          ],
+        },
+      ),
       child: Container(
         padding: EdgeInsets.all(spacing.lg),
         decoration: BoxDecoration(
@@ -77,9 +107,8 @@ class UserRecordCard extends StatelessWidget {
                     meta,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: typography.medicalRecordUploadCardDescription.copyWith(
-                      color: colors.medicalRecordMuted,
-                    ),
+                    style: typography.medicalRecordUploadCardDescription
+                        .copyWith(color: colors.medicalRecordMuted),
                   ),
                 ),
               ],

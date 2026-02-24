@@ -12,6 +12,7 @@ class AddRecordNextButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final spacing = context.spacing;
     final radius = context.radius;
+    final colors = context.colors;
     final typography = context.typography;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
@@ -20,9 +21,12 @@ class AddRecordNextButton extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 56),
         child: ElevatedButton(
-          onPressed: onPressed,
+          onPressed: onPressed ?? () {},
           style: ElevatedButton.styleFrom(
+            backgroundColor: colors.primary,
+            disabledBackgroundColor: colors.primary,
             foregroundColor: Colors.white,
+            disabledForegroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(radius.full),
             ),

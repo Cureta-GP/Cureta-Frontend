@@ -11,6 +11,8 @@ import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
+import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
+import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
@@ -104,10 +106,29 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.userRecords,
         name: AppRoutes.userRecords,
-        pageBuilder: (context, state) => PageTransitions.scale(
-          child: const UserRecordsView(),
-          state: state,
-        ),
+        pageBuilder: (context, state) =>
+            PageTransitions.scale(child: const UserRecordsView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.recordDetails,
+        name: AppRoutes.recordDetails,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>? ?? {};
+          final rawFiles = data['files'];
+          final files = rawFiles is List
+              ? rawFiles.whereType<RecordFile>().toList()
+              : <RecordFile>[];
+          return PageTransitions.scale(
+            child: RecordDetailsView(
+              conditionName: data['conditionName'] ?? '',
+              isOngoing: data['isOngoing'] ?? false,
+              diagnosedDate: data['diagnosedDate'] ?? '',
+              notes: data['notes'] ?? '',
+              files: files,
+            ),
+            state: state,
+          );
+        },
       ),
     ],
   );

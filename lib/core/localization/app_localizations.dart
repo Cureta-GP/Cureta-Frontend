@@ -247,6 +247,23 @@ class AppLocalizations {
   static String get recordsListNavProfile =>
       'medical_records.list.nav_profile'.tr();
 
+  // Medical Records - Record Details Screen
+  static String get recordDetailsTitle => 'medical_records.details.title'.tr();
+  static String get recordDetailsStatusOngoing =>
+      'medical_records.details.status_ongoing'.tr();
+  static String get recordDetailsDiagnosedOn =>
+      'medical_records.details.diagnosed_on'.tr();
+  static String get recordDetailsNotesTitle =>
+      'medical_records.details.notes_title'.tr();
+  static String get recordDetailsDocumentsTitle =>
+      'medical_records.details.documents_title'.tr();
+  static String get recordDetailsViewAll =>
+      'medical_records.details.view_all'.tr();
+  static String get recordDetailsEditRecord =>
+      'medical_records.details.edit_record'.tr();
+  static String get recordDetailsDeleteRecord =>
+      'medical_records.details.delete_record'.tr();
+
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
 

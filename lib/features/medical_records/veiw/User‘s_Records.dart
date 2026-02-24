@@ -7,10 +7,8 @@ import 'package:cureta/features/medical_records/widgets/user_records_bottom_navi
 import 'package:cureta/features/medical_records/widgets/user_record_card.dart';
 import 'package:cureta/features/medical_records/widgets/user_records_top_section.dart';
 import 'package:flutter/material.dart';
-
 class UserRecordsView extends StatefulWidget {
   const UserRecordsView({super.key});
-
   @override
   State<UserRecordsView> createState() => _UserRecordsViewState();
 }
