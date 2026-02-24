@@ -45,7 +45,6 @@ class _AgeStepState extends State<AgeStep> {
       child: Column(
         children: [
           DateSelectionCard(
-            title: AppLocalizations.profilesAgeTitle,
             hintText: AppLocalizations.addRecordSelectDate,
             selectedDate: _selectedDate,
             onTap: () => _selectDate(context),

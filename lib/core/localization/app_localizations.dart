@@ -194,16 +194,57 @@ class AppLocalizations {
   static String get profilesBloodTypeFooter =>
       'profiles.steps.blood_type.footer_note'.tr();
 
-  static String get profilesMedicalConditionsTitle =>
-      'profiles.steps.medical_conditions.title'.tr();
+  static String get profilesMedicalConditionsChronicTitle =>
+      'profiles.steps.medical_conditions_chronic.title'.tr();
+
+  static String get profilesMedicalConditionsAllergiesTitle =>
+      'profiles.steps.medical_conditions_allergies.title'.tr();
+
+  static String get profilesMedicalConditionsChronicSubtitle =>
+      'profiles.steps.medical_conditions_chronic.subtitle'.tr();
+
+  static String get profilesMedicalConditionsAllergiesSubtitle =>
+      'profiles.steps.medical_conditions_allergies.subtitle'.tr();
+
   static String get profilesMedicalConditionsSubtitle =>
       'profiles.steps.medical_conditions.subtitle'.tr();
+
+  static String get profilesMedicalConditionsDiabetes =>
+      'profiles.steps.medical_conditions.diabetes'.tr();
+  static String get profilesMedicalConditionsHypertension =>
+      'profiles.steps.medical_conditions.hypertension'.tr();
+  static String get profilesMedicalConditionsHeartDisease =>
+      'profiles.steps.medical_conditions.heart_disease'.tr();
+  static String get profilesMedicalConditionsAsthma =>
+      'profiles.steps.medical_conditions.asthma'.tr();
+  static String get profilesMedicalConditionsThyroid =>
+      'profiles.steps.medical_conditions.thyroid'.tr();
+  static String get profilesMedicalConditionsArthritis =>
+      'profiles.steps.medical_conditions.arthritis'.tr();
+  static String get profilesMedicalConditionsFood =>
+      'profiles.steps.medical_conditions.food'.tr();
+  static String get profilesMedicalConditionsDairy =>
+      'profiles.steps.medical_conditions.dairy'.tr();
+  static String get profilesMedicalConditionsDrug =>
+      'profiles.steps.medical_conditions.drug'.tr();
+  static String get profilesMedicalConditionsRespiratory =>
+      'profiles.steps.medical_conditions.respiratory'.tr();
+  static String get profilesMedicalConditionsSkin =>
+      'profiles.steps.medical_conditions.skin'.tr();
+  static String get profilesMedicalConditionsInsect =>
+      'profiles.steps.medical_conditions.insect'.tr();
+  static String get profilesMedicalConditionsPet =>
+      'profiles.steps.medical_conditions.pet'.tr();
+  static String get profilesMedicalConditionsNoAllergy =>
+      'profiles.steps.medical_conditions.no_allergy'.tr();
+  static String get profilesMedicalConditionsOther =>
+      'profiles.steps.medical_conditions.other'.tr();
 
   // Helper methods
   static bool isRTL(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
 
-  static Locale get currentLocale =>
-      EasyLocalization.of(BuildContext as BuildContext)!.locale;
+  static Locale currentLocale(BuildContext context) =>
+      EasyLocalization.of(context)!.locale;
 }

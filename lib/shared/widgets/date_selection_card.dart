@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class DateSelectionCard extends StatelessWidget {
   const DateSelectionCard({
     super.key,
-    required this.title,
+    this.title,
     required this.hintText,
     required this.selectedDate,
     required this.onTap,
@@ -12,7 +12,7 @@ class DateSelectionCard extends StatelessWidget {
     this.pickerIcon = Icons.event,
   });
 
-  final String title;
+  final String? title;
   final String hintText;
   final DateTime? selectedDate;
   final VoidCallback onTap;
@@ -39,32 +39,34 @@ class DateSelectionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: colors.medicalRecordAccentSoft,
-                  borderRadius: BorderRadius.circular(radius.md),
+          if (title != null) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 48,
+                  height: 48,
+                  decoration: BoxDecoration(
+                    color: colors.medicalRecordAccentSoft,
+                    borderRadius: BorderRadius.circular(radius.md),
+                  ),
+                  child: Icon(icon, color: colors.primary, size: 24),
                 ),
-                child: Icon(icon, color: colors.primary, size: 24),
-              ),
-              SizedBox(width: spacing.lg),
-              Expanded(
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: typography.medicalRecordCardTitle.copyWith(
-                    color: colors.medicalRecordStrongText,
+                SizedBox(width: spacing.lg),
+                Expanded(
+                  child: Text(
+                    title!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: typography.medicalRecordCardTitle.copyWith(
+                      color: colors.medicalRecordStrongText,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          SizedBox(height: spacing.lg),
+              ],
+            ),
+            SizedBox(height: spacing.lg),
+          ],
           InkWell(
             borderRadius: BorderRadius.circular(radius.md),
             onTap: onTap,

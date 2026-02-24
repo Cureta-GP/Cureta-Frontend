@@ -149,14 +149,32 @@
         "title": "What is the age?",
         "subtitle": "This helps us tailor the plan to the specific life stage."
       },
+      "medical_conditions_allergies": {
+        "title": "Are there any allergies?",
+        "subtitle": "Select all that apply. This helps personalize health insights."
+      },
+      "medical_conditions_chronic": {
+        "title": "Are there any chronic diseases?",
+        "subtitle": "Select all that apply. This helps personalize health insights."
+      },
       "medical_conditions": {
         "title": "Are there any chronic diseases or allergies?",
         "subtitle": "Select all that apply. This helps personalize health insights.",
         "diabetes": "Diabetes",
-        "asthma": "Asthma",
+        "hypertension": "Hypertension",
         "heart_disease": "Heart Disease",
+        "asthma": "Asthma",
+        "thyroid": "Thyroid Disorders",
+        "arthritis": "Arthritis",
+        "food": "Food Allergy",
+        "dairy": "Dairy Allergy",
+        "drug": "Drug Allergy",
+        "respiratory": "Respiratory Allergy",
+        "skin": "Skin Allergy",
+        "insect": "Insect Stings",
+        "pet": "Pet Allergy",
         "no_allergy": "No Allergy",
-        "something_else": "Something else?"
+        "other": "Other"
       },
       "blood_type": {
         "title": "What is the blood type?",
@@ -165,16 +183,15 @@
       }
     }
   },
-    "validation": {
-      "email_required": "Email is required",
-      "email_invalid": "Please enter a valid email",
-      "password_required": "Password is required",
-      "password_min_length": "Password must be at least 6 characters",
-      "password_max_length": "Password must be less than 50 characters",
-      "name_required": "Full name is required",
-      "name_min_length": "Full name must be at least 2 characters",
-      "phone_invalid": "Please enter a valid phone number",
-      "field_required": "{field} is required"
-    }
-  
+  "validation": {
+    "email_required": "Email is required",
+    "email_invalid": "Please enter a valid email",
+    "password_required": "Password is required",
+    "password_min_length": "Password must be at least 6 characters",
+    "password_max_length": "Password must be less than 50 characters",
+    "name_required": "Full name is required",
+    "name_min_length": "Full name must be at least 2 characters",
+    "phone_invalid": "Please enter a valid phone number",
+    "field_required": "{field} is required"
+  }
 }

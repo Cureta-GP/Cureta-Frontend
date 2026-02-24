@@ -1,6 +1,7 @@
 import 'package:cureta/features/profile/view/steps/age_step_view.dart';
 import 'package:cureta/features/profile/view/steps/blood_type_step_view.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/features/profile/view/steps/medical_conditions_step_view.dart';
 import 'package:cureta/shared/widgets/progress_step_layout.dart';
 import 'package:cureta/features/profile/view/steps/name_step_view.dart';
 import 'package:cureta/features/profile/view/steps/gender_step_view.dart';
@@ -15,12 +16,10 @@ class AddProfileMain extends StatefulWidget {
 }
 
 class _AddProfileMainState extends State<AddProfileMain> {
-  // 1. التحكم في الصفحات
   final PageController _pageController = PageController();
   int _currentPage = 0;
   final int _totalSteps = 7;
 
-  // 2. الداتا المتغيرة لكل صفحة (العنوان والوصف)
   List<Map<String, String>> get _stepsContent => [
     {
       "title": AppLocalizations.profilesNameTitle,
@@ -43,12 +42,12 @@ class _AddProfileMainState extends State<AddProfileMain> {
       "subtitle": AppLocalizations.profilesBloodTypeSubtitle,
     },
     {
-      "title": AppLocalizations.profilesMedicalConditionsTitle,
-      "subtitle": AppLocalizations.profilesMedicalConditionsSubtitle,
+      "title": AppLocalizations.profilesMedicalConditionsChronicTitle,
+      "subtitle": AppLocalizations.profilesMedicalConditionsChronicSubtitle,
     },
     {
-      "title": AppLocalizations.profilesMedicalConditionsTitle,
-      "subtitle": AppLocalizations.profilesMedicalConditionsSubtitle,
+      "title": AppLocalizations.profilesMedicalConditionsAllergiesTitle,
+      "subtitle": AppLocalizations.profilesMedicalConditionsAllergiesSubtitle,
     },
   ];
 
@@ -58,9 +57,7 @@ class _AddProfileMainState extends State<AddProfileMain> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-    } else {
-      // هنا لما يخلص الـ 7 خطوات (مثلاً يروح للـ Home)
-    }
+    } else {}
   }
 
   @override
@@ -76,7 +73,7 @@ class _AddProfileMainState extends State<AddProfileMain> {
       progressLabel: "${((_currentPage + 1) / _totalSteps * 100).toInt()}%",
       progress: (_currentPage + 1) / _totalSteps,
       child: SizedBox(
-        height: 300, // Fixed height for demo/placeholder
+        height: 300,
         child: PageView(
           controller: _pageController,
           physics: const NeverScrollableScrollPhysics(),
@@ -89,8 +86,8 @@ class _AddProfileMainState extends State<AddProfileMain> {
             RelationSelectionStep(),
             AgeStep(),
             BloodTypeStep(),
-            Center(child: Text("Step 6")),
-            Center(child: Text("Step 7")),
+            MedicalConditionsStep(type: MedicalConditionType.chronic),
+            MedicalConditionsStep(type: MedicalConditionType.allergy),
           ],
         ),
       ),
