@@ -6,12 +6,16 @@ class CustomScreenHeader extends StatelessWidget {
     super.key,
     required this.title,
     this.onBack,
+    this.onAction,
+    this.actionLabel,
     this.titleStyle,
     this.iconColor,
   });
 
   final String title;
   final VoidCallback? onBack;
+  final VoidCallback? onAction;
+  final String? actionLabel;
   final TextStyle? titleStyle;
   final Color? iconColor;
 
@@ -50,11 +54,23 @@ class CustomScreenHeader extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: titleStyle ??
                   typography.medicalRecordScreenTitle.copyWith(
-                    color: colors.medicalRecordStrongText,
+                    color: colors.medicalRecordHeading,
                   ),
             ),
           ),
-          const SizedBox(width: 48), // Spacer for symmetry
+          if (actionLabel != null)
+            TextButton(
+              onPressed: onAction,
+              child: Text(
+                actionLabel!,
+                style: typography.body.copyWith(
+                  color: colors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )
+          else
+            const SizedBox(width: 48), // Spacer for symmetry
         ],
       ),
     );

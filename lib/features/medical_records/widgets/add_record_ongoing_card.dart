@@ -45,7 +45,7 @@ class AddRecordOngoingCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   AppLocalizations.addRecordOngoingQuestion,
-                  maxLines: 1,
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: typography.medicalRecordCardTitle.copyWith(
                     color: colors.medicalRecordStrongText,

@@ -45,3 +45,4 @@ app.*.map.json
 /android/app/release
 /solved_questions.json
 /records.html
+/scripts/analyze_devtools_snapshot.ps1

@@ -1,57 +1,31 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordStepTwoActions extends StatelessWidget {
-  const AddRecordStepTwoActions({super.key, this.onNext, this.onSkip});
-
+  const AddRecordStepTwoActions({
+    super.key,
+    this.onNext,
+    this.onSkip,
+    this.nextLabel,
+  });
   final VoidCallback? onNext;
   final VoidCallback? onSkip;
+  final String? nextLabel;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final spacing = context.spacing;
-    final radius = context.radius;
     final typography = context.typography;
-    final isRtl = Directionality.of(context) == TextDirection.rtl;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(minHeight: 56),
-          child: ElevatedButton(
-            onPressed: onNext,
-            style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(radius.md),
-              ),
-              padding: EdgeInsets.symmetric(vertical: spacing.md),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Text(
-                    AppLocalizations.addRecordNextStep,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    softWrap: false,
-                    style: typography.medicalRecordButton.copyWith(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                SizedBox(width: spacing.xs),
-                Icon(
-                  isRtl ? Icons.arrow_back : Icons.arrow_forward,
-                  color: Colors.white,
-                ),
-              ],
-            ),
-          ),
+        AddRecordNextButton(
+          onPressed: onNext,
+          label: nextLabel ?? AppLocalizations.addRecordNextStep,
         ),
         SizedBox(height: spacing.md),
         Align(

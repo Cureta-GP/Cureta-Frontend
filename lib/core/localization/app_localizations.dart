@@ -131,8 +131,20 @@ class AppLocalizations {
       'medical_records.add_record.basic_information_title'.tr();
   static String get addRecordStep2Label =>
       'medical_records.add_record.step_2_label'.tr();
+  static String get addRecordStep3Label =>
+      'medical_records.add_record.step_3_label'.tr();
+  static String get addRecordStep4Label =>
+      'medical_records.add_record.step_4_label'.tr();
+  static String get addRecordStep5Label =>
+      'medical_records.add_record.step_5_label'.tr();
   static String get addRecordProgress40 =>
       'medical_records.add_record.progress_40'.tr();
+  static String get addRecordProgress60 =>
+      'medical_records.add_record.progress_60'.tr();
+  static String get addRecordProgress80 =>
+      'medical_records.add_record.progress_80'.tr();
+  static String get addRecordProgress100 =>
+      'medical_records.add_record.progress_100'.tr();
   static String get addRecordFirstSymptomsQuestion =>
       'medical_records.add_record.first_symptoms_question'.tr();
   static String get addRecordSelectDate =>
@@ -145,15 +157,212 @@ class AppLocalizations {
       'medical_records.add_record.next_step'.tr();
   static String get addRecordSkipForNow =>
       'medical_records.add_record.skip_for_now'.tr();
+  static String get addRecordOptional =>
+      'medical_records.add_record.optional'.tr();
+  static String get addRecordRelatedFilesTitle =>
+      'medical_records.add_record.related_files_title'.tr();
+  static String get addRecordRelatedFilesDescription =>
+      'medical_records.add_record.related_files_description'.tr();
+  static String get addRecordPrescriptionTitle =>
+      'medical_records.add_record.prescription_title'.tr();
+  static String get addRecordPrescriptionDescription =>
+      'medical_records.add_record.prescription_description'.tr();
+  static String get addRecordLabTestTitle =>
+      'medical_records.add_record.lab_test_title'.tr();
+  static String get addRecordLabTestDescription =>
+      'medical_records.add_record.lab_test_description'.tr();
+  static String get addRecordScanTitle =>
+      'medical_records.add_record.scan_title'.tr();
+  static String get addRecordScanDescription =>
+      'medical_records.add_record.scan_description'.tr();
+  static String get addRecordAdditionalNotesTitle =>
+      'medical_records.add_record.additional_notes_title'.tr();
+  static String get addRecordAdditionalNotesDescription =>
+      'medical_records.add_record.additional_notes_description'.tr();
+  static String get addRecordOptionalNotesHint =>
+      'medical_records.add_record.optional_notes_hint'.tr();
+  static String get addRecordDataSecureNote =>
+      'medical_records.add_record.data_secure_note'.tr();
+  static String get addRecordReviewDetailsTitle =>
+      'medical_records.add_record.review_details_title'.tr();
+  static String get addRecordReviewQuestion =>
+      'medical_records.add_record.review_question'.tr();
+  static String get addRecordReviewDescription =>
+      'medical_records.add_record.review_description'.tr();
+  static String get addRecordReviewCondition =>
+      'medical_records.add_record.review_condition'.tr();
+  static String get addRecordReviewStartedOn =>
+      'medical_records.add_record.review_started_on'.tr();
+  static String get addRecordReviewDocuments =>
+      'medical_records.add_record.review_documents'.tr();
+  static String addRecordReviewReports(int count) =>
+      'medical_records.add_record.review_reports'.tr(
+        namedArgs: {'count': '$count'},
+      );
+  static String get addRecordReviewDocumentsAttached =>
+      'medical_records.add_record.review_documents_attached'.tr();
+  static String get addRecordSaveRecord =>
+      'medical_records.add_record.save_record'.tr();
+  static String get addRecordContinue =>
+      'medical_records.add_record.continue'.tr();
+
+  // Medical Records - List Screen
+  static String get recordsListTitle => 'medical_records.list.title'.tr();
+  static String get recordsListSearchHint =>
+      'medical_records.list.search_hint'.tr();
+  static String get recordsListFilterAll =>
+      'medical_records.list.filter_all'.tr();
+  static String get recordsListFilterOngoing =>
+      'medical_records.list.filter_ongoing'.tr();
+  static String get recordsListFilterPast =>
+      'medical_records.list.filter_past'.tr();
+  static String get recordsListFilterRecent =>
+      'medical_records.list.filter_recent'.tr();
+  static String get recordsListStatusOngoing =>
+      'medical_records.list.status_ongoing'.tr();
+  static String get recordsListStatusPast =>
+      'medical_records.list.status_past'.tr();
+  static String get recordsListType2Diabetes =>
+      'medical_records.list.record_type2diabetes'.tr();
+  static String get recordsListType2DiabetesMeta =>
+      'medical_records.list.record_type2diabetes_meta'.tr();
+  static String get recordsListAcuteBronchitis =>
+      'medical_records.list.record_acute_bronchitis'.tr();
+  static String get recordsListAcuteBronchitisMeta =>
+      'medical_records.list.record_acute_bronchitis_meta'.tr();
+  static String get recordsListHypertension =>
+      'medical_records.list.record_hypertension'.tr();
+  static String get recordsListHypertensionMeta =>
+      'medical_records.list.record_hypertension_meta'.tr();
+  static String get recordsListSeasonalAllergies =>
+      'medical_records.list.record_seasonal_allergies'.tr();
+  static String get recordsListSeasonalAllergiesMeta =>
+      'medical_records.list.record_seasonal_allergies_meta'.tr();
+  static String get recordsListNavHome => 'medical_records.list.nav_home'.tr();
+  static String get recordsListNavMeds => 'medical_records.list.nav_meds'.tr();
+  static String get recordsListNavScanRx =>
+      'medical_records.list.nav_scan_rx'.tr();
+  static String get recordsListNavRecords =>
+      'medical_records.list.nav_records'.tr();
+  static String get recordsListNavProfile =>
+      'medical_records.list.nav_profile'.tr();
+
+  // Medical Records - Record Details Screen
+  static String get recordDetailsTitle => 'medical_records.details.title'.tr();
+  static String get recordDetailsStatusOngoing =>
+      'medical_records.details.status_ongoing'.tr();
+  static String get recordDetailsDiagnosedOn =>
+      'medical_records.details.diagnosed_on'.tr();
+  static String get recordDetailsNotesTitle =>
+      'medical_records.details.notes_title'.tr();
+  static String get recordDetailsDocumentsTitle =>
+      'medical_records.details.documents_title'.tr();
+  static String get recordDetailsViewAll =>
+      'medical_records.details.view_all'.tr();
+  static String get recordDetailsEditRecord =>
+      'medical_records.details.edit_record'.tr();
+  static String get recordDetailsDeleteRecord =>
+      'medical_records.details.delete_record'.tr();
 
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
+  // Family profiles
+  static String get profilesAddProfile => 'profiles.common.add_profile'.tr();
+  static String get profilesNextStep => 'profiles.common.next_step'.tr();
+  static String get profilesContinue => 'profiles.common.continue'.tr();
+  static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
+  static String profilesStepIndicator(int current, int total) =>
+      'profiles.common.step_indicator'.tr(
+        args: [current.toString(), total.toString()],
+      );
+
+  static String get profilesNameTitle => 'profiles.steps.name.title'.tr();
+  static String get profilesNameSubtitle => 'profiles.steps.name.subtitle'.tr();
+  static String get profilesNameHint => 'profiles.steps.name.hint'.tr();
+
+  static String get profilesGenderTitle => 'profiles.steps.gender.title'.tr();
+  static String get profilesGenderSubtitle =>
+      'profiles.steps.gender.subtitle'.tr();
+  static String get profilesGenderMale => 'profiles.steps.gender.male'.tr();
+  static String get profilesGenderFemale => 'profiles.steps.gender.female'.tr();
+
+  static String get profilesRelationTitle =>
+      'profiles.steps.relation.title'.tr();
+  static String get profilesRelationSubtitle =>
+      'profiles.steps.relation.subtitle'.tr();
+  static String get profilesRelationSon => 'profiles.steps.relation.son'.tr();
+  static String get profilesRelationDaughter =>
+      'profiles.steps.relation.daughter'.tr();
+  static String get profilesRelationMother =>
+      'profiles.steps.relation.mother'.tr();
+  static String get profilesRelationFather =>
+      'profiles.steps.relation.father'.tr();
+  static String get profilesRelationSpouse =>
+      'profiles.steps.relation.spouse'.tr();
+  static String get profilesRelationOther =>
+      'profiles.steps.relation.other'.tr();
+
+  static String get profilesAgeTitle => 'profiles.steps.age.title'.tr();
+  static String get profilesAgeSubtitle => 'profiles.steps.age.subtitle'.tr();
+
+  static String get profilesBloodTypeTitle =>
+      'profiles.steps.blood_type.title'.tr();
+  static String get profilesBloodTypeSubtitle =>
+      'profiles.steps.blood_type.subtitle'.tr();
+  static String get profilesBloodTypeFooter =>
+      'profiles.steps.blood_type.footer_note'.tr();
+
+  static String get profilesMedicalConditionsChronicTitle =>
+      'profiles.steps.medical_conditions_chronic.title'.tr();
+
+  static String get profilesMedicalConditionsAllergiesTitle =>
+      'profiles.steps.medical_conditions_allergies.title'.tr();
+
+  static String get profilesMedicalConditionsChronicSubtitle =>
+      'profiles.steps.medical_conditions_chronic.subtitle'.tr();
+
+  static String get profilesMedicalConditionsAllergiesSubtitle =>
+      'profiles.steps.medical_conditions_allergies.subtitle'.tr();
+
+  static String get profilesMedicalConditionsSubtitle =>
+      'profiles.steps.medical_conditions.subtitle'.tr();
+
+  static String get profilesMedicalConditionsDiabetes =>
+      'profiles.steps.medical_conditions.diabetes'.tr();
+  static String get profilesMedicalConditionsHypertension =>
+      'profiles.steps.medical_conditions.hypertension'.tr();
+  static String get profilesMedicalConditionsHeartDisease =>
+      'profiles.steps.medical_conditions.heart_disease'.tr();
+  static String get profilesMedicalConditionsAsthma =>
+      'profiles.steps.medical_conditions.asthma'.tr();
+  static String get profilesMedicalConditionsThyroid =>
+      'profiles.steps.medical_conditions.thyroid'.tr();
+  static String get profilesMedicalConditionsArthritis =>
+      'profiles.steps.medical_conditions.arthritis'.tr();
+  static String get profilesMedicalConditionsFood =>
+      'profiles.steps.medical_conditions.food'.tr();
+  static String get profilesMedicalConditionsDairy =>
+      'profiles.steps.medical_conditions.dairy'.tr();
+  static String get profilesMedicalConditionsDrug =>
+      'profiles.steps.medical_conditions.drug'.tr();
+  static String get profilesMedicalConditionsRespiratory =>
+      'profiles.steps.medical_conditions.respiratory'.tr();
+  static String get profilesMedicalConditionsSkin =>
+      'profiles.steps.medical_conditions.skin'.tr();
+  static String get profilesMedicalConditionsInsect =>
+      'profiles.steps.medical_conditions.insect'.tr();
+  static String get profilesMedicalConditionsPet =>
+      'profiles.steps.medical_conditions.pet'.tr();
+  static String get profilesMedicalConditionsNoAllergy =>
+      'profiles.steps.medical_conditions.no_allergy'.tr();
+  static String get profilesMedicalConditionsOther =>
+      'profiles.steps.medical_conditions.other'.tr();
 
   // Helper methods
   static bool isRTL(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
 
-  static Locale get currentLocale =>
-      EasyLocalization.of(BuildContext as BuildContext)!.locale;
+  static Locale currentLocale(BuildContext context) =>
+      EasyLocalization.of(context)!.locale;
 }

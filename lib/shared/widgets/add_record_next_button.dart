@@ -1,22 +1,18 @@
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
-class CustomNextButton extends StatelessWidget {
-  const CustomNextButton({
-    super.key,
-    required this.label,
-    this.onPressed,
-    this.textStyle,
-  });
+class AddRecordNextButton extends StatelessWidget {
+  const AddRecordNextButton({super.key, this.onPressed, this.label});
 
-  final String label;
   final VoidCallback? onPressed;
-  final TextStyle? textStyle;
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
     final spacing = context.spacing;
     final radius = context.radius;
+    final colors = context.colors;
     final typography = context.typography;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
 
@@ -25,9 +21,12 @@ class CustomNextButton extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 56),
         child: ElevatedButton(
-          onPressed: onPressed,
+          onPressed: onPressed ?? () {},
           style: ElevatedButton.styleFrom(
+            backgroundColor: colors.primary,
+            disabledBackgroundColor: colors.primary,
             foregroundColor: Colors.white,
+            disabledForegroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(radius.full),
             ),
@@ -39,14 +38,13 @@ class CustomNextButton extends StatelessWidget {
             children: [
               Flexible(
                 child: Text(
-                  label,
+                  label ?? AppLocalizations.addRecordNext,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   softWrap: false,
-                  style: textStyle ??
-                      typography.medicalRecordButton.copyWith(
-                        color: Colors.white,
-                      ),
+                  style: typography.medicalRecordButton.copyWith(
+                    color: Colors.white,
+                  ),
                 ),
               ),
               SizedBox(width: spacing.xs),
