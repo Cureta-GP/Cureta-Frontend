@@ -67,36 +67,24 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.medicalRecordsStepOne,
         name: AppRoutes.medicalRecordsStepOne,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddRecordFirstStep (), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.medicalRecordsStepTwo,
-        name: AppRoutes.medicalRecordsStepTwo,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddMedicalRecordSeconedStep(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.addProfile,
-        name: AppRoutes.addProfile,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddProfileMain(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.medicalRecords_step_one,
-        name: AppRoutes.medicalRecords_step_one,
         pageBuilder: (context, state) => PageTransitions.fade(
           child: const AddRecordFirstStep(),
           state: state,
         ),
       ),
       GoRoute(
-        path: AppRoutes.medicalRecords_step_two,
-        name: AppRoutes.medicalRecords_step_two,
+        path: AppRoutes.medicalRecordsStepTwo,
+        name: AppRoutes.medicalRecordsStepTwo,
         pageBuilder: (context, state) => PageTransitions.fade(
           child: const AddMedicalRecordSeconedStep(),
           state: state,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.addProfile,
+        name: AppRoutes.addProfile,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const AddProfileMain(), state: state),
       ),
       GoRoute(
         path: AppRoutes.medicalRecords_step_three,
