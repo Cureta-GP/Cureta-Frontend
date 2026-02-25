@@ -21,7 +21,7 @@ class _SplashViewState extends State<SplashView> {
   Future<void> _navigateToHome() async {
     await Future.delayed(const Duration(seconds: 3), () {});
     if (!mounted) return;
-    GoRouter.of(context).go(AppRoutes.addProfile);
+    GoRouter.of(context).go(AppRoutes.onboarding);
   }
 
   @override

@@ -7,6 +7,8 @@ import 'package:cureta/features/profile/view/steps/name_step_view.dart';
 import 'package:cureta/features/profile/view/steps/gender_step_view.dart';
 import 'package:cureta/features/profile/view/steps/relation_step_view.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
 
 class AddProfileMain extends StatefulWidget {
   const AddProfileMain({super.key});
@@ -57,7 +59,9 @@ class _AddProfileMainState extends State<AddProfileMain> {
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
-    } else {}
+    } else {
+      GoRouter.of(context).go(AppRoutes.medicalRecordsStepOne);
+    }
   }
 
   @override
@@ -72,6 +76,18 @@ class _AddProfileMainState extends State<AddProfileMain> {
       ),
       progressLabel: "${((_currentPage + 1) / _totalSteps * 100).toInt()}%",
       progress: (_currentPage + 1) / _totalSteps,
+      onNext: _onNext,
+      onSkip: () {},
+      onBack: () {
+        if (_currentPage > 0) {
+          _pageController.previousPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        } else {
+          Navigator.maybePop(context);
+        }
+      },
       child: SizedBox(
         height: 300,
         child: PageView(
@@ -91,18 +107,6 @@ class _AddProfileMainState extends State<AddProfileMain> {
           ],
         ),
       ),
-      onNext: _onNext,
-      onSkip: () {},
-      onBack: () {
-        if (_currentPage > 0) {
-          _pageController.previousPage(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        } else {
-          Navigator.maybePop(context);
-        }
-      },
     );
   }
 }

@@ -22,7 +22,7 @@ class OnboardingSkipButton extends StatelessWidget {
         ),
         child: TextButton(
           onPressed: () {
-            GoRouter.of(context).go(AppRoutes.signup);
+            GoRouter.of(context).go(AppRoutes.login);
           },
           child: Text(
             AppLocalizations.skip,
