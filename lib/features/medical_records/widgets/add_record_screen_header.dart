@@ -38,7 +38,7 @@ class AddRecordScreenHeader extends StatelessWidget {
             child: Text(
               title,
               textAlign: TextAlign.center,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: typography.medicalRecordScreenTitle.copyWith(
                 color: colors.medicalRecordStrongText,

@@ -19,12 +19,9 @@ class AppThemeFactory {
     final appColors = AppColors.fromBrightness(brightness);
     final spacing = _fluidSpacingFor(screenWidth);
     final radius = _fluidRadiusFor(screenWidth);
-    final typographyReferenceWidth = screenWidth < screenHeight
-        ? screenWidth
-        : screenHeight;
     final typography = _fluidTypographyFor(
       device: device,
-      screenWidth: typographyReferenceWidth,
+      screenWidth: screenWidth,
     );
     const durations = AppDurations.standard;
 

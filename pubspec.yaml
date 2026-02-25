@@ -44,6 +44,7 @@ dependencies:
   carousel_slider: ^5.1.1
   dots_indicator: ^4.0.1
   rive: ^0.13.0
+  animated_bottom_navigation_bar: ^1.4.0
 
 dev_dependencies:
   flutter_test:

@@ -35,7 +35,7 @@ class StepProgressIndicator extends StatelessWidget {
             Expanded(
               child: Text(
                 stepLabel,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: stepTextStyle ??
                     typography.medicalRecordStep.copyWith(
@@ -46,7 +46,7 @@ class StepProgressIndicator extends StatelessWidget {
             SizedBox(width: spacing.sm),
             Text(
               progressLabel,
-              maxLines: 1,
+              maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,
               style: progressTextStyle ??

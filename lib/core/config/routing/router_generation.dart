@@ -5,9 +5,15 @@ import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
 import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
+import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
+import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
+import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
+import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
+import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
+import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
@@ -76,9 +82,73 @@ class RoutesGeneration {
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: const AddProfileMain(), state: state),
       ),
-      
-
-      
+      GoRoute(
+        path: AppRoutes.medicalRecords_step_one,
+        name: AppRoutes.medicalRecords_step_one,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordFirstStep(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.medicalRecords_step_two,
+        name: AppRoutes.medicalRecords_step_two,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddMedicalRecordSeconedStep(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.medicalRecords_step_three,
+        name: AppRoutes.medicalRecords_step_three,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordThirdStep(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.addRecordStepFour,
+        name: AppRoutes.addRecordStepFour,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordForthStep(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.addRecordStepFive,
+        name: AppRoutes.addRecordStepFive,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordStepFifth(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.userRecords,
+        name: AppRoutes.userRecords,
+        pageBuilder: (context, state) =>
+            PageTransitions.scale(child: const UserRecordsView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.recordDetails,
+        name: AppRoutes.recordDetails,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>? ?? {};
+          final rawFiles = data['files'];
+          final files = rawFiles is List
+              ? rawFiles.whereType<RecordFile>().toList()
+              : <RecordFile>[];
+          return PageTransitions.scale(
+            child: RecordDetailsView(
+              conditionName: data['conditionName'] ?? '',
+              isOngoing: data['isOngoing'] ?? false,
+              diagnosedDate: data['diagnosedDate'] ?? '',
+              notes: data['notes'] ?? '',
+              files: files,
+            ),
+            state: state,
+          );
+        },
+      ),
     ],
   );
 }

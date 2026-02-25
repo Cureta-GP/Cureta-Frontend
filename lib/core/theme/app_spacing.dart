@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 @immutable
 class AppSpacing extends ThemeExtension<AppSpacing> {
   const AppSpacing({
+    required this.hairline,
     required this.xs,
     required this.sm,
     required this.md,
@@ -11,6 +12,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
     required this.xxl,
   });
 
+  final double hairline;
   final double xs;
   final double sm;
   final double md;
@@ -19,6 +21,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
   final double xxl;
 
   static const mobile = AppSpacing(
+    hairline: 1,
     xs: 8,
     sm: 10,
     md: 12,
@@ -28,6 +31,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
   );
 
   static const tablet = AppSpacing(
+    hairline: 1.2,
     xs: 10,
     sm: 12,
     md: 16,
@@ -37,6 +41,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
   );
 
   static const desktop = AppSpacing(
+    hairline: 1.4,
     xs: 12,
     sm: 14,
     md: 18,
@@ -47,6 +52,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
 
   @override
   AppSpacing copyWith({
+    double? hairline,
     double? xs,
     double? sm,
     double? md,
@@ -55,6 +61,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
     double? xxl,
   }) {
     return AppSpacing(
+      hairline: hairline ?? this.hairline,
       xs: xs ?? this.xs,
       sm: sm ?? this.sm,
       md: md ?? this.md,
@@ -68,6 +75,7 @@ class AppSpacing extends ThemeExtension<AppSpacing> {
   AppSpacing lerp(ThemeExtension<AppSpacing>? other, double t) {
     if (other is! AppSpacing) return this;
     return AppSpacing(
+      hairline: hairline + (other.hairline - hairline) * t,
       xs: xs + (other.xs - xs) * t,
       sm: sm + (other.sm - sm) * t,
       md: md + (other.md - md) * t,
