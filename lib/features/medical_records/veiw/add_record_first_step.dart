@@ -2,7 +2,7 @@ import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_condition_section.dart';
-import 'package:cureta/shared/widgets/custom_next_button.dart';
+import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:cureta/shared/widgets/step_progress_indicator.dart';
 import 'package:cureta/shared/widgets/custom_top_bar.dart';
 import 'package:flutter/material.dart';
@@ -55,10 +55,7 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
             horizontalPadding,
             spacing.lg,
           ),
-          child: CustomNextButton(
-            label: AppLocalizations.addRecordNext,
-            onPressed: _handleNext,
-          ),
+          child: AddRecordNextButton(onPressed: _handleNext),
         ),
       ),
       body: SafeArea(

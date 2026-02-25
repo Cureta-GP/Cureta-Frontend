@@ -3,8 +3,8 @@ import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_notes_card.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
+import 'package:cureta/shared/widgets/add_record_step_progress.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

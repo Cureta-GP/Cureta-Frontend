@@ -1,5 +1,5 @@
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/shared/widgets/custom_next_button.dart';
+import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:cureta/shared/widgets/custom_screen_header.dart';
 import 'package:cureta/shared/widgets/step_progress_indicator.dart';
 import 'package:flutter/material.dart';
@@ -91,7 +91,7 @@ class ProgressStepLayout extends StatelessWidget {
               padding: EdgeInsets.all(spacing.lg),
               child: Column(
                 children: [
-                  CustomNextButton(
+                  AddRecordNextButton(
                     label: buttonLabel,
                     onPressed: onNext,
                   ),

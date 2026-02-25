@@ -2,10 +2,10 @@ import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_secure_note.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_upload_category_tile.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_upload_section_header.dart';
+import 'package:cureta/shared/widgets/add_record_step_progress.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordStepFourBody extends StatelessWidget {
