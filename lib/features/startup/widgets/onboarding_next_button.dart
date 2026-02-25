@@ -24,10 +24,7 @@ class OnboardingNextButton extends StatelessWidget {
     return Container(
       width: spacing.xxl + spacing.xl,
       height: spacing.xxl + spacing.xl,
-      decoration: BoxDecoration(
-        color: colors.primary,
-        shape: BoxShape.circle,
-      ),
+      decoration: BoxDecoration(color: colors.primary, shape: BoxShape.circle),
       child: IconButton(
         icon: Icon(
           AppLocalizations.isRTL(context)
@@ -38,7 +35,7 @@ class OnboardingNextButton extends StatelessWidget {
         ),
         onPressed: () {
           if (currentIndex == totalScreens - 1) {
-            GoRouter.of(context).go(AppRoutes.signup);
+            GoRouter.of(context).go(AppRoutes.login);
           } else {
             pageController.nextPage(
               duration: const Duration(milliseconds: 300),
