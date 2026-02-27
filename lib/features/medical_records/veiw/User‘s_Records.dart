@@ -7,6 +7,7 @@ import 'package:cureta/features/medical_records/widgets/user_records_bottom_navi
 import 'package:cureta/features/medical_records/widgets/user_record_card.dart';
 import 'package:cureta/features/medical_records/widgets/user_records_top_section.dart';
 import 'package:flutter/material.dart';
+
 class UserRecordsView extends StatefulWidget {
   const UserRecordsView({super.key});
   @override
@@ -43,25 +44,7 @@ class _UserRecordsViewState extends State<UserRecordsView> {
     );
     return Scaffold(
       backgroundColor: colors.medicalRecordBackground,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: colors.primary,
-        child: Icon(
-          Icons.document_scanner,
-          size: spacing.xl + spacing.xs,
-          color: Colors.white,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: UserRecordsBottomNavigation(
-        homeLabel: AppLocalizations.recordsListNavHome,
-        medsLabel: AppLocalizations.recordsListNavMeds,
-        scanRxLabel: AppLocalizations.recordsListNavScanRx,
-        recordsLabel: AppLocalizations.recordsListNavRecords,
-        profileLabel: AppLocalizations.recordsListNavProfile,
-        currentIndex: _currentNavIndex,
-        onItemSelected: (index) => setState(() => _currentNavIndex = index),
-      ),
+    
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.zero,

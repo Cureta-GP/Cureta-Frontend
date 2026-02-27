@@ -255,5 +255,22 @@
     "name_min_length": "Full name must be at least 2 characters",
     "phone_invalid": "Please enter a valid phone number",
     "field_required": "{field} is required"
+  },
+  "home": {
+    "welcome_back": "Welcome Back",
+    "add_record": "Add Record",
+    "add_alert": "Add Alert",
+    "my_qr_code": "My QR Code",
+    "upcoming_meds": "Upcoming Meds",
+    "see_all": "See All",
+    "recent_activity": "Recent Activity",
+    "added_yesterday": "Added Yesterday",
+    "added_days_ago": "Added {days} days ago",
+    "amoxicillin": "Amoxicillin",
+    "amoxicillin_note": "500mg • After meal",
+    "vitamin_d": "Vitamin D",
+    "vitamin_d_note": "1 Tablet",
+    "blood_test_results": "Blood Test Results",
+    "vaccination_record": "Vaccination Record"
   }
 }

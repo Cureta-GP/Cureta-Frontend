@@ -255,5 +255,22 @@
         "name_min_length": "يجب أن يكون الاسم الكامل حرفين على الأقل",
         "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
         "field_required": "{field} مطلوب"
+    },
+    "home": {
+        "welcome_back": "مرحباً بعودتك",
+        "add_record": "إضافة سجل",
+        "add_alert": "إضافة تنبيه",
+        "my_qr_code": "رمز QR الخاص بي",
+        "upcoming_meds": "الأدوية القادمة",
+        "see_all": "عرض الكل",
+        "recent_activity": "النشاط الأخير",
+        "added_yesterday": "أضيف يوم أمس",
+        "added_days_ago": "أضيف منذ {days} أيام",
+        "amoxicillin": "أموكسيسيلين",
+        "amoxicillin_note": "500 ملغ • بعد الوجبة",
+        "vitamin_d": "فيتامين د",
+        "vitamin_d_note": "قرص واحد",
+        "blood_test_results": "نتائج فحص الدم",
+        "vaccination_record": "سجل التطعيم"
     }
 }
