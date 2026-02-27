@@ -20,4 +20,10 @@ class AppRoutes {
   static const String addRecordStepFive = '/medical-records-step-five';
   static const String userRecords = '/user-records';
   static const String recordDetails = '/record-details';
+  // main
+  static const String mainNavigation = '/main-navigation';
+  //home
+  static const String home = '/home';
+  //meds
+   static const String medicines = '/medicines';
 }

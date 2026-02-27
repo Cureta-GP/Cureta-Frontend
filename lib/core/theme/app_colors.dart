@@ -37,6 +37,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.medicalRecordDetailPdfBg,
     required this.medicalRecordDetailPdfIcon,
     required this.medicalRecordDetailDanger,
+    required this.homeBotBg,
+    required this.homeActivityBlue,
+    required this.homeActivityPurple,
   });
 
   final Color primary;
@@ -73,6 +76,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color medicalRecordDetailPdfBg;
   final Color medicalRecordDetailPdfIcon;
   final Color medicalRecordDetailDanger;
+  final Color homeBotBg;
+  final Color homeActivityBlue;
+  final Color homeActivityPurple;
 
   static const light = AppColors(
     primary: Color(0xFF00A1A9),
@@ -109,6 +115,9 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordDetailPdfBg: Color(0xFFFEF2F2),
     medicalRecordDetailPdfIcon: Color(0xFFEF4444),
     medicalRecordDetailDanger: Color(0xFFEF4444),
+    homeBotBg: Color(0xFF00A1A9),
+    homeActivityBlue: Color(0xFFEFF6FF),
+    homeActivityPurple: Color(0xFFF5F3FF),
   );
 
   static const dark = AppColors(
@@ -146,6 +155,9 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordDetailPdfBg: Color(0xFF3D2727),
     medicalRecordDetailPdfIcon: Color(0xFFF87171),
     medicalRecordDetailDanger: Color(0xFFF87171),
+    homeBotBg: Color(0xFF00A1A9),
+    homeActivityBlue: Color(0xFF1E293B),
+    homeActivityPurple: Color(0xFF2E1065),
   );
 
   static AppColors fromBrightness(Brightness brightness) {
@@ -188,6 +200,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? medicalRecordDetailPdfBg,
     Color? medicalRecordDetailPdfIcon,
     Color? medicalRecordDetailDanger,
+    Color? homeBotBg,
+    Color? homeActivityBlue,
+    Color? homeActivityPurple,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -246,6 +261,9 @@ class AppColors extends ThemeExtension<AppColors> {
           medicalRecordDetailPdfIcon ?? this.medicalRecordDetailPdfIcon,
       medicalRecordDetailDanger:
           medicalRecordDetailDanger ?? this.medicalRecordDetailDanger,
+      homeBotBg: homeBotBg ?? this.homeBotBg,
+      homeActivityBlue: homeActivityBlue ?? this.homeActivityBlue,
+      homeActivityPurple: homeActivityPurple ?? this.homeActivityPurple,
     );
   }
 
@@ -377,6 +395,17 @@ class AppColors extends ThemeExtension<AppColors> {
       medicalRecordDetailDanger: Color.lerp(
         medicalRecordDetailDanger,
         other.medicalRecordDetailDanger,
+        t,
+      )!,
+      homeBotBg: Color.lerp(homeBotBg, other.homeBotBg, t)!,
+      homeActivityBlue: Color.lerp(
+        homeActivityBlue,
+        other.homeActivityBlue,
+        t,
+      )!,
+      homeActivityPurple: Color.lerp(
+        homeActivityPurple,
+        other.homeActivityPurple,
         t,
       )!,
     );

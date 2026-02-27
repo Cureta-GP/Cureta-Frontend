@@ -365,4 +365,22 @@ class AppLocalizations {
 
   static Locale currentLocale(BuildContext context) =>
       EasyLocalization.of(context)!.locale;
+
+  // Home
+  static String get homeWelcomeBack => 'home.welcome_back'.tr();
+  static String get homeAddRecord => 'home.add_record'.tr();
+  static String get homeAddAlert => 'home.add_alert'.tr();
+  static String get homeMyQrCode => 'home.my_qr_code'.tr();
+  static String get homeUpcomingMeds => 'home.upcoming_meds'.tr();
+  static String get homeSeeAll => 'home.see_all'.tr();
+  static String get homeRecentActivity => 'home.recent_activity'.tr();
+  static String get homeAddedYesterday => 'home.added_yesterday'.tr();
+  static String homeAddedDaysAgo(int days) =>
+      'home.added_days_ago'.tr(namedArgs: {'days': days.toString()});
+  static String get homeAmoxicillin => 'home.amoxicillin'.tr();
+  static String get homeAmoxicillinNote => 'home.amoxicillin_note'.tr();
+  static String get homeVitaminD => 'home.vitamin_d'.tr();
+  static String get homeVitaminDNote => 'home.vitamin_d_note'.tr();
+  static String get homeBloodTestResults => 'home.blood_test_results'.tr();
+  static String get homeVaccinationRecord => 'home.vaccination_record'.tr();
 }
