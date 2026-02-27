@@ -76,20 +76,6 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color medicalRecordDetailPdfBg;
   final Color medicalRecordDetailPdfIcon;
   final Color medicalRecordDetailDanger;
-
-  static const Color _lightBackground = Color(0xFFFFFFFF);
-  static const Color _lightProgressTrack = Color(0xFFE5E7EB);
-  static const Color _lightNeutralBorder = Color(0xFFF3F4F6);
-  static const Color _lightDanger = Color(0xFFEF4444);
-
-  static const Color _darkBackground = Color(0xFF133A3E);
-  static const Color _darkSurface = Color(0xFF1C2328);
-  static const Color _darkHeading = Color(0xFFF5F5F5);
-  static const Color _darkMuted = Color(0xFFB0BEC5);
-  static const Color _darkHint = Color(0xFF90A4AE);
-  static const Color _darkDivider = Color(0xFF37474F);
-  static const Color _darkAccentSoft = Color(0xFF2A3D40);
-  static const Color _darkDanger = Color(0xFFF87171);
   final Color homeBotBg;
   final Color homeActivityBlue;
   final Color homeActivityPurple;
@@ -98,7 +84,7 @@ class AppColors extends ThemeExtension<AppColors> {
     primary: Color(0xFF00A1A9),
     primaryDark: Color(0xFF133A3E),
     secondary: Color(0xFFEDF7F8),
-    background: _lightBackground,
+    background: Color(0xFFFFFFFF),
     surface: Color(0xFFFAFAFA),
     error: Color(0xFFB00020),
     textPrimary: Color(0xFF212121),
@@ -110,25 +96,25 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordHeading: Color(0xFF111827),
     medicalRecordMuted: Color(0xFF6B7280),
     medicalRecordProgressText: Color(0xFF9CA3AF),
-    medicalRecordProgressTrack: _lightProgressTrack,
+    medicalRecordProgressTrack: Color(0xFFE5E7EB),
     medicalRecordInputHint: Color(0xFF888B93),
     medicalRecordInputBorder: Color(0xFFF2F2F2),
-    medicalRecordCard: _lightBackground,
+    medicalRecordCard: Color(0xFFFFFFFF),
     medicalRecordAccentSoft: Color(0xFFE5F5F6),
     medicalRecordStrongText: Color(0xFF0C1B1D),
     medicalRecordSecondaryStrong: Color(0xFF4A686A),
-    medicalRecordOptionBorder: _lightNeutralBorder,
-    medicalRecordUploadCardBorder: _lightProgressTrack,
+    medicalRecordOptionBorder: Color(0xFFF3F4F6),
+    medicalRecordUploadCardBorder: Color(0xFFE5E7EB),
     medicalRecordUploadPrescriptionBg: Color(0xFFE7FBFD),
     medicalRecordUploadPrescriptionIcon: Color(0xFF13DDEC),
     medicalRecordUploadLabBg: Color(0xFFFFF7ED),
     medicalRecordUploadLabIcon: Color(0xFFF97316),
     medicalRecordUploadScanBg: Color(0xFFEFF6FF),
     medicalRecordUploadScanIcon: Color(0xFF3B82F6),
-    medicalRecordUploadAddButtonBg: _lightNeutralBorder,
+    medicalRecordUploadAddButtonBg: Color(0xFFF3F4F6),
     medicalRecordDetailPdfBg: Color(0xFFFEF2F2),
-    medicalRecordDetailPdfIcon: _lightDanger,
-    medicalRecordDetailDanger: _lightDanger,
+    medicalRecordDetailPdfIcon: Color(0xFFEF4444),
+    medicalRecordDetailDanger: Color(0xFFEF4444),
     homeBotBg: Color(0xFF00A1A9),
     homeActivityBlue: Color(0xFFEFF6FF),
     homeActivityPurple: Color(0xFFF5F3FF),
@@ -138,28 +124,28 @@ class AppColors extends ThemeExtension<AppColors> {
     primary: Color(0xFF00A1A9),
     primaryDark: Color(0xFF133A3E),
     secondary: Color(0xFF1D2B2D),
-    background: _darkBackground,
-    surface: _darkSurface,
+    background: Color(0xFF133A3E),
+    surface: Color(0xFF1C2328),
     error: Color(0xFFCF6679),
-    textPrimary: _darkHeading,
-    textSecondary: _darkMuted,
-    textHint: _darkHint,
-    divider: _darkDivider,
-    icon: _darkMuted,
-    medicalRecordBackground: _darkBackground,
-    medicalRecordHeading: _darkHeading,
-    medicalRecordMuted: _darkMuted,
-    medicalRecordProgressText: _darkHint,
-    medicalRecordProgressTrack: _darkDivider,
-    medicalRecordInputHint: _darkHint,
-    medicalRecordInputBorder: _darkDivider,
-    medicalRecordCard: _darkSurface,
-    medicalRecordAccentSoft: _darkAccentSoft,
-    medicalRecordStrongText: _darkHeading,
-    medicalRecordSecondaryStrong: _darkMuted,
-    medicalRecordOptionBorder: _darkDivider,
-    medicalRecordUploadCardBorder: _darkDivider,
-    medicalRecordUploadPrescriptionBg: _darkAccentSoft,
+    textPrimary: Color(0xFFF5F5F5),
+    textSecondary: Color(0xFFB0BEC5),
+    textHint: Color(0xFF90A4AE),
+    divider: Color(0xFF37474F),
+    icon: Color(0xFFB0BEC5),
+    medicalRecordBackground: Color(0xFF133A3E),
+    medicalRecordHeading: Color(0xFFF5F5F5),
+    medicalRecordMuted: Color(0xFFB0BEC5),
+    medicalRecordProgressText: Color(0xFF90A4AE),
+    medicalRecordProgressTrack: Color(0xFF37474F),
+    medicalRecordInputHint: Color(0xFF90A4AE),
+    medicalRecordInputBorder: Color(0xFF37474F),
+    medicalRecordCard: Color(0xFF1C2328),
+    medicalRecordAccentSoft: Color(0xFF2A3D40),
+    medicalRecordStrongText: Color(0xFFF5F5F5),
+    medicalRecordSecondaryStrong: Color(0xFFB0BEC5),
+    medicalRecordOptionBorder: Color(0xFF37474F),
+    medicalRecordUploadCardBorder: Color(0xFF37474F),
+    medicalRecordUploadPrescriptionBg: Color(0xFF2A3D40),
     medicalRecordUploadPrescriptionIcon: Color(0xFF4DDDE7),
     medicalRecordUploadLabBg: Color(0xFF3D3127),
     medicalRecordUploadLabIcon: Color(0xFFF9A15B),
@@ -167,8 +153,8 @@ class AppColors extends ThemeExtension<AppColors> {
     medicalRecordUploadScanIcon: Color(0xFF70A8F8),
     medicalRecordUploadAddButtonBg: Color(0xFF2A3238),
     medicalRecordDetailPdfBg: Color(0xFF3D2727),
-    medicalRecordDetailPdfIcon: _darkDanger,
-    medicalRecordDetailDanger: _darkDanger,
+    medicalRecordDetailPdfIcon: Color(0xFFF87171),
+    medicalRecordDetailDanger: Color(0xFFF87171),
     homeBotBg: Color(0xFF00A1A9),
     homeActivityBlue: Color(0xFF1E293B),
     homeActivityPurple: Color(0xFF2E1065),
