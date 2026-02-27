@@ -30,6 +30,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medicalRecordDetailLabel,
     required this.medicalRecordDetailBody,
     required this.medicalRecordDetailDeleteBtn,
+    required this.homeWelcomeBack,
+    required this.homeUserName,
+    required this.homeSectionTitle,
+    required this.homeSeeAll,
+    required this.homeQuickActionLabel,
+    required this.homeMedName,
+    required this.homeMedNote,
+    required this.homeMedTime,
+    required this.homeActivityName,
+    required this.homeActivityDate,
   });
 
   final TextStyle hero;
@@ -59,6 +69,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medicalRecordDetailLabel;
   final TextStyle medicalRecordDetailBody;
   final TextStyle medicalRecordDetailDeleteBtn;
+  final TextStyle homeWelcomeBack;
+  final TextStyle homeUserName;
+  final TextStyle homeSectionTitle;
+  final TextStyle homeSeeAll;
+  final TextStyle homeQuickActionLabel;
+  final TextStyle homeMedName;
+  final TextStyle homeMedNote;
+  final TextStyle homeMedTime;
+  final TextStyle homeActivityName;
+  final TextStyle homeActivityDate;
 
   static const mobile = AppTypography(
     hero: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -124,6 +144,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 17,
       fontWeight: FontWeight.w700,
     ),
+    homeWelcomeBack: TextStyle(fontSize: 13, fontWeight: FontWeight.w400),
+    homeUserName: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    homeSectionTitle: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    homeSeeAll: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+    homeQuickActionLabel: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+    homeMedName: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+    homeMedNote: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+    homeMedTime: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+    homeActivityName: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+    homeActivityDate: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
   );
 
   static const tablet = AppTypography(
@@ -190,6 +220,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 19,
       fontWeight: FontWeight.w700,
     ),
+    homeWelcomeBack: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+    homeUserName: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+    homeSectionTitle: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    homeSeeAll: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    homeQuickActionLabel: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+    homeMedName: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    homeMedNote: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+    homeMedTime: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+    homeActivityName: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    homeActivityDate: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
   );
 
   static const desktop = AppTypography(
@@ -256,6 +296,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 21,
       fontWeight: FontWeight.w700,
     ),
+    homeWelcomeBack: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+    homeUserName: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+    homeSectionTitle: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+    homeSeeAll: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+    homeQuickActionLabel: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    homeMedName: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    homeMedNote: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+    homeMedTime: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+    homeActivityName: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    homeActivityDate: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
   );
 
   @override
@@ -287,6 +337,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medicalRecordDetailLabel,
     TextStyle? medicalRecordDetailBody,
     TextStyle? medicalRecordDetailDeleteBtn,
+    TextStyle? homeWelcomeBack,
+    TextStyle? homeUserName,
+    TextStyle? homeSectionTitle,
+    TextStyle? homeSeeAll,
+    TextStyle? homeQuickActionLabel,
+    TextStyle? homeMedName,
+    TextStyle? homeMedNote,
+    TextStyle? homeMedTime,
+    TextStyle? homeActivityName,
+    TextStyle? homeActivityDate,
   }) {
     return AppTypography(
       hero: hero ?? this.hero,
@@ -332,6 +392,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
           medicalRecordDetailBody ?? this.medicalRecordDetailBody,
       medicalRecordDetailDeleteBtn:
           medicalRecordDetailDeleteBtn ?? this.medicalRecordDetailDeleteBtn,
+      homeWelcomeBack: homeWelcomeBack ?? this.homeWelcomeBack,
+      homeUserName: homeUserName ?? this.homeUserName,
+      homeSectionTitle: homeSectionTitle ?? this.homeSectionTitle,
+      homeSeeAll: homeSeeAll ?? this.homeSeeAll,
+      homeQuickActionLabel: homeQuickActionLabel ?? this.homeQuickActionLabel,
+      homeMedName: homeMedName ?? this.homeMedName,
+      homeMedNote: homeMedNote ?? this.homeMedNote,
+      homeMedTime: homeMedTime ?? this.homeMedTime,
+      homeActivityName: homeActivityName ?? this.homeActivityName,
+      homeActivityDate: homeActivityDate ?? this.homeActivityDate,
     );
   }
 
@@ -452,6 +522,36 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medicalRecordDetailDeleteBtn: TextStyle.lerp(
         medicalRecordDetailDeleteBtn,
         other.medicalRecordDetailDeleteBtn,
+        t,
+      )!,
+      homeWelcomeBack: TextStyle.lerp(
+        homeWelcomeBack,
+        other.homeWelcomeBack,
+        t,
+      )!,
+      homeUserName: TextStyle.lerp(homeUserName, other.homeUserName, t)!,
+      homeSectionTitle: TextStyle.lerp(
+        homeSectionTitle,
+        other.homeSectionTitle,
+        t,
+      )!,
+      homeSeeAll: TextStyle.lerp(homeSeeAll, other.homeSeeAll, t)!,
+      homeQuickActionLabel: TextStyle.lerp(
+        homeQuickActionLabel,
+        other.homeQuickActionLabel,
+        t,
+      )!,
+      homeMedName: TextStyle.lerp(homeMedName, other.homeMedName, t)!,
+      homeMedNote: TextStyle.lerp(homeMedNote, other.homeMedNote, t)!,
+      homeMedTime: TextStyle.lerp(homeMedTime, other.homeMedTime, t)!,
+      homeActivityName: TextStyle.lerp(
+        homeActivityName,
+        other.homeActivityName,
+        t,
+      )!,
+      homeActivityDate: TextStyle.lerp(
+        homeActivityDate,
+        other.homeActivityDate,
         t,
       )!,
     );

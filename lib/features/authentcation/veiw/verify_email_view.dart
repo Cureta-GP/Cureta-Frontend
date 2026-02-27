@@ -36,6 +36,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     super.dispose();
   }
 
+  // ignore: unused_element
   void _verifyCode() {
     if (otp.length < 6) {
       ScaffoldMessenger.of(

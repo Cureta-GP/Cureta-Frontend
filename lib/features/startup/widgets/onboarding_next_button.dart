@@ -28,8 +28,8 @@ class OnboardingNextButton extends StatelessWidget {
       child: IconButton(
         icon: Icon(
           AppLocalizations.isRTL(context)
-              ? Icons.arrow_forward
-              : Icons.arrow_back,
+              ? Icons.arrow_back
+              : Icons.arrow_forward,
           color: Theme.of(context).colorScheme.onPrimary,
           size: spacing.xl,
         ),
