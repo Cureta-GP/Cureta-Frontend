@@ -2,8 +2,8 @@ import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_date_card.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_ongoing_card.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
+import 'package:cureta/shared/widgets/custom_screen_header.dart';
+import 'package:cureta/shared/widgets/step_progress_indicator.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordStepTwoBody extends StatelessWidget {
@@ -28,7 +28,7 @@ class AddRecordStepTwoBody extends StatelessWidget {
 
     return Column(
       children: [
-        AddRecordScreenHeader(
+        CustomScreenHeader(
           title: AppLocalizations.addRecordBasicInfoTitle,
           onBack: onBack,
         ),
@@ -36,7 +36,7 @@ class AddRecordStepTwoBody extends StatelessWidget {
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: spacing.lg),
             children: [
-              AddRecordStepProgress(
+              StepProgressIndicator(
                 stepLabel: AppLocalizations.addRecordStep2Label,
                 progressLabel: AppLocalizations.addRecordProgress40,
                 progress: 0.4,

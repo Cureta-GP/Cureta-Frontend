@@ -1,11 +1,13 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/medical_records/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_uploaded_files_section.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_secure_note.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_upload_category_tile.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_upload_section_header.dart';
+import 'package:cureta/shared/widgets/add_record_step_progress.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordStepFourBody extends StatelessWidget {
@@ -17,6 +19,8 @@ class AddRecordStepFourBody extends StatelessWidget {
     this.onPrescriptionTap,
     this.onLabTestTap,
     this.onScanTap,
+    this.onViewFile,
+    this.onDeleteFile,
   });
 
   final VoidCallback? onBack;
@@ -25,6 +29,16 @@ class AddRecordStepFourBody extends StatelessWidget {
   final VoidCallback? onPrescriptionTap;
   final VoidCallback? onLabTestTap;
   final VoidCallback? onScanTap;
+  final void Function(
+    AddRecordUploadCategory category,
+    AddRecordUploadedFile file,
+  )?
+  onViewFile;
+  final void Function(
+    AddRecordUploadCategory category,
+    AddRecordUploadedFile file,
+  )?
+  onDeleteFile;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +71,11 @@ class AddRecordStepFourBody extends StatelessWidget {
                 description: AppLocalizations.addRecordPrescriptionDescription,
                 onTap: onPrescriptionTap,
               ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.prescription,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
               SizedBox(height: spacing.md),
               AddRecordUploadCategoryTile(
                 icon: Icons.science_outlined,
@@ -66,6 +85,11 @@ class AddRecordStepFourBody extends StatelessWidget {
                 description: AppLocalizations.addRecordLabTestDescription,
                 onTap: onLabTestTap,
               ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.labTest,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
               SizedBox(height: spacing.md),
               AddRecordUploadCategoryTile(
                 icon: Icons.image_search_outlined,
@@ -74,6 +98,11 @@ class AddRecordStepFourBody extends StatelessWidget {
                 title: AppLocalizations.addRecordScanTitle,
                 description: AppLocalizations.addRecordScanDescription,
                 onTap: onScanTap,
+              ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.scan,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
               ),
               SizedBox(height: spacing.xxl),
               const AddRecordSecureNote(),

@@ -1,12 +1,16 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
+import 'package:cureta/features/Meds/view/medicines_main_view.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
 import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
+import 'package:cureta/features/home/view/home_view.dart';
+import 'package:cureta/features/home/view/main_navigation_views.dart';
 import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
+import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
@@ -64,20 +68,32 @@ class RoutesGeneration {
             PageTransitions.fade(child: ResetPasswordView(), state: state),
       ),
       GoRoute(
-        path: AppRoutes.medicalRecords_step_one,
-        name: AppRoutes.medicalRecords_step_one,
+        path: AppRoutes.medicalRecordsStepOne,
+        name: AppRoutes.medicalRecordsStepOne,
         pageBuilder: (context, state) => PageTransitions.fade(
           child: const AddRecordFirstStep(),
           state: state,
         ),
       ),
       GoRoute(
-        path: AppRoutes.medicalRecords_step_two,
-        name: AppRoutes.medicalRecords_step_two,
+        path: AppRoutes.medicalRecordsStepTwo,
+        name: AppRoutes.medicalRecordsStepTwo,
         pageBuilder: (context, state) => PageTransitions.fade(
           child: const AddMedicalRecordSeconedStep(),
           state: state,
         ),
+      ),
+      GoRoute(
+        path: AppRoutes.home,
+        name: AppRoutes.home,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const HomeView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.addProfile,
+        name: AppRoutes.addProfile,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const AddProfileMain(), state: state),
       ),
       GoRoute(
         path: AppRoutes.medicalRecords_step_three,
@@ -108,6 +124,22 @@ class RoutesGeneration {
         name: AppRoutes.userRecords,
         pageBuilder: (context, state) =>
             PageTransitions.scale(child: const UserRecordsView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.medicines,
+        name: AppRoutes.medicines,
+        pageBuilder: (context, state) => PageTransitions.scale(
+          child: const MedicinesMainView(),
+          state: state,
+        ),
+      ),
+       GoRoute(
+        path: AppRoutes.mainNavigation,
+        name: AppRoutes.mainNavigation,
+        pageBuilder: (context, state) => PageTransitions.scale(
+          child: const MainNavigationScreen(),
+          state: state,
+        ),
       ),
       GoRoute(
         path: AppRoutes.recordDetails,

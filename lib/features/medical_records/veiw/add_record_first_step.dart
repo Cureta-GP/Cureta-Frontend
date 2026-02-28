@@ -2,9 +2,9 @@ import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_condition_section.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_next_button.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_step_progress.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_top_bar.dart';
+import 'package:cureta/shared/widgets/add_record_next_button.dart';
+import 'package:cureta/shared/widgets/step_progress_indicator.dart';
+import 'package:cureta/shared/widgets/custom_top_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -35,7 +35,7 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
 
   void _handleNext() {
     widget.onNext?.call(_conditionController.text.trim());
-    GoRouter.of(context).pushNamed(AppRoutes.medicalRecords_step_two);
+    GoRouter.of(context).pushNamed(AppRoutes.medicalRecordsStepTwo);
   }
 
   @override
@@ -61,14 +61,18 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
       body: SafeArea(
         child: Column(
           children: [
-            AddRecordTopBar(onBack: widget.onBack, onCancel: widget.onCancel),
+            CustomTopBar(
+              onBack: widget.onBack,
+              onAction: widget.onCancel,
+              actionLabel: AppLocalizations.addRecordCancel,
+            ),
             Expanded(
               child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AddRecordStepProgress(
+                    StepProgressIndicator(
                       stepLabel: AppLocalizations.addRecordStepLabel,
                       progressLabel: AppLocalizations.addRecordProgressLabel,
                       progress: 0.2,

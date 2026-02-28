@@ -175,6 +175,76 @@
       "delete_record": "Delete Record"
     }
   },
+  "profiles": {
+    "common": {
+      "add_profile": "Add Profile",
+      "next_step": "Next Step",
+      "continue": "Continue",
+      "skip_for_now": "Skip for now",
+      "step_indicator": "Step {} of 7",
+      "review_profile": "Review Profile"
+    },
+    "steps": {
+      "name": {
+        "title": "What is the full name?",
+        "subtitle": "We'll use this to personalize the health dashboard.",
+        "hint": "Enter full name"
+      },
+      "gender": {
+        "title": "What is the gender?",
+        "subtitle": "This helps us provide relevant health insights.",
+        "male": "Male",
+        "female": "Female",
+        "prefer_not_to_say": "Prefer not to say"
+      },
+      "relation": {
+        "title": "How are they related to you?",
+        "subtitle": "Select your relationship to this person.",
+        "son": "Son",
+        "daughter": "Daughter",
+        "mother": "Mother",
+        "father": "Father",
+        "spouse": "Spouse",
+        "other": "Other"
+      },
+      "age": {
+        "title": "What is the age?",
+        "subtitle": "This helps us tailor the plan to the specific life stage."
+      },
+      "medical_conditions_allergies": {
+        "title": "Are there any allergies?",
+        "subtitle": "Select all that apply. This helps personalize health insights."
+      },
+      "medical_conditions_chronic": {
+        "title": "Are there any chronic diseases?",
+        "subtitle": "Select all that apply. This helps personalize health insights."
+      },
+      "medical_conditions": {
+        "title": "Are there any chronic diseases or allergies?",
+        "subtitle": "Select all that apply. This helps personalize health insights.",
+        "diabetes": "Diabetes",
+        "hypertension": "Hypertension",
+        "heart_disease": "Heart Disease",
+        "asthma": "Asthma",
+        "thyroid": "Thyroid Disorders",
+        "arthritis": "Arthritis",
+        "food": "Food Allergy",
+        "dairy": "Dairy Allergy",
+        "drug": "Drug Allergy",
+        "respiratory": "Respiratory Allergy",
+        "skin": "Skin Allergy",
+        "insect": "Insect Stings",
+        "pet": "Pet Allergy",
+        "no_allergy": "No Allergy",
+        "other": "Other"
+      },
+      "blood_type": {
+        "title": "What is the blood type?",
+        "subtitle": "This helps us provide more personalized health insights and emergency support.",
+        "footer_note": "Don't worry! You can update this later in the profile"
+      }
+    }
+  },
   "validation": {
     "email_required": "Email is required",
     "email_invalid": "Please enter a valid email",
@@ -185,5 +255,22 @@
     "name_min_length": "Full name must be at least 2 characters",
     "phone_invalid": "Please enter a valid phone number",
     "field_required": "{field} is required"
+  },
+  "home": {
+    "welcome_back": "Welcome Back",
+    "add_record": "Add Record",
+    "add_alert": "Add Alert",
+    "my_qr_code": "My QR Code",
+    "upcoming_meds": "Upcoming Meds",
+    "see_all": "See All",
+    "recent_activity": "Recent Activity",
+    "added_yesterday": "Added Yesterday",
+    "added_days_ago": "Added {days} days ago",
+    "amoxicillin": "Amoxicillin",
+    "amoxicillin_note": "500mg • After meal",
+    "vitamin_d": "Vitamin D",
+    "vitamin_d_note": "1 Tablet",
+    "blood_test_results": "Blood Test Results",
+    "vaccination_record": "Vaccination Record"
   }
 }

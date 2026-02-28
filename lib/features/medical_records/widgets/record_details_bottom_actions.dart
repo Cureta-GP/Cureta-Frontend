@@ -1,6 +1,6 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/widgets/add_record_next_button.dart';
+import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:flutter/material.dart';
 
 /// Bottom action buttons for the record detail screen:

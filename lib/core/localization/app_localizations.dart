@@ -266,12 +266,121 @@ class AppLocalizations {
 
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});
+  // Family profiles
+  static String get profilesAddProfile => 'profiles.common.add_profile'.tr();
+  static String get profilesNextStep => 'profiles.common.next_step'.tr();
+  static String get profilesContinue => 'profiles.common.continue'.tr();
+  static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
+  static String profilesStepIndicator(int current, int total) =>
+      'profiles.common.step_indicator'.tr(
+        args: [current.toString(), total.toString()],
+      );
+
+  static String get profilesNameTitle => 'profiles.steps.name.title'.tr();
+  static String get profilesNameSubtitle => 'profiles.steps.name.subtitle'.tr();
+  static String get profilesNameHint => 'profiles.steps.name.hint'.tr();
+
+  static String get profilesGenderTitle => 'profiles.steps.gender.title'.tr();
+  static String get profilesGenderSubtitle =>
+      'profiles.steps.gender.subtitle'.tr();
+  static String get profilesGenderMale => 'profiles.steps.gender.male'.tr();
+  static String get profilesGenderFemale => 'profiles.steps.gender.female'.tr();
+
+  static String get profilesRelationTitle =>
+      'profiles.steps.relation.title'.tr();
+  static String get profilesRelationSubtitle =>
+      'profiles.steps.relation.subtitle'.tr();
+  static String get profilesRelationSon => 'profiles.steps.relation.son'.tr();
+  static String get profilesRelationDaughter =>
+      'profiles.steps.relation.daughter'.tr();
+  static String get profilesRelationMother =>
+      'profiles.steps.relation.mother'.tr();
+  static String get profilesRelationFather =>
+      'profiles.steps.relation.father'.tr();
+  static String get profilesRelationSpouse =>
+      'profiles.steps.relation.spouse'.tr();
+  static String get profilesRelationOther =>
+      'profiles.steps.relation.other'.tr();
+
+  static String get profilesAgeTitle => 'profiles.steps.age.title'.tr();
+  static String get profilesAgeSubtitle => 'profiles.steps.age.subtitle'.tr();
+
+  static String get profilesBloodTypeTitle =>
+      'profiles.steps.blood_type.title'.tr();
+  static String get profilesBloodTypeSubtitle =>
+      'profiles.steps.blood_type.subtitle'.tr();
+  static String get profilesBloodTypeFooter =>
+      'profiles.steps.blood_type.footer_note'.tr();
+
+  static String get profilesMedicalConditionsChronicTitle =>
+      'profiles.steps.medical_conditions_chronic.title'.tr();
+
+  static String get profilesMedicalConditionsAllergiesTitle =>
+      'profiles.steps.medical_conditions_allergies.title'.tr();
+
+  static String get profilesMedicalConditionsChronicSubtitle =>
+      'profiles.steps.medical_conditions_chronic.subtitle'.tr();
+
+  static String get profilesMedicalConditionsAllergiesSubtitle =>
+      'profiles.steps.medical_conditions_allergies.subtitle'.tr();
+
+  static String get profilesMedicalConditionsSubtitle =>
+      'profiles.steps.medical_conditions.subtitle'.tr();
+
+  static String get profilesMedicalConditionsDiabetes =>
+      'profiles.steps.medical_conditions.diabetes'.tr();
+  static String get profilesMedicalConditionsHypertension =>
+      'profiles.steps.medical_conditions.hypertension'.tr();
+  static String get profilesMedicalConditionsHeartDisease =>
+      'profiles.steps.medical_conditions.heart_disease'.tr();
+  static String get profilesMedicalConditionsAsthma =>
+      'profiles.steps.medical_conditions.asthma'.tr();
+  static String get profilesMedicalConditionsThyroid =>
+      'profiles.steps.medical_conditions.thyroid'.tr();
+  static String get profilesMedicalConditionsArthritis =>
+      'profiles.steps.medical_conditions.arthritis'.tr();
+  static String get profilesMedicalConditionsFood =>
+      'profiles.steps.medical_conditions.food'.tr();
+  static String get profilesMedicalConditionsDairy =>
+      'profiles.steps.medical_conditions.dairy'.tr();
+  static String get profilesMedicalConditionsDrug =>
+      'profiles.steps.medical_conditions.drug'.tr();
+  static String get profilesMedicalConditionsRespiratory =>
+      'profiles.steps.medical_conditions.respiratory'.tr();
+  static String get profilesMedicalConditionsSkin =>
+      'profiles.steps.medical_conditions.skin'.tr();
+  static String get profilesMedicalConditionsInsect =>
+      'profiles.steps.medical_conditions.insect'.tr();
+  static String get profilesMedicalConditionsPet =>
+      'profiles.steps.medical_conditions.pet'.tr();
+  static String get profilesMedicalConditionsNoAllergy =>
+      'profiles.steps.medical_conditions.no_allergy'.tr();
+  static String get profilesMedicalConditionsOther =>
+      'profiles.steps.medical_conditions.other'.tr();
 
   // Helper methods
   static bool isRTL(BuildContext context) {
     return context.locale.languageCode == 'ar';
   }
 
-  static Locale get currentLocale =>
-      EasyLocalization.of(BuildContext as BuildContext)!.locale;
+  static Locale currentLocale(BuildContext context) =>
+      EasyLocalization.of(context)!.locale;
+
+  // Home
+  static String get homeWelcomeBack => 'home.welcome_back'.tr();
+  static String get homeAddRecord => 'home.add_record'.tr();
+  static String get homeAddAlert => 'home.add_alert'.tr();
+  static String get homeMyQrCode => 'home.my_qr_code'.tr();
+  static String get homeUpcomingMeds => 'home.upcoming_meds'.tr();
+  static String get homeSeeAll => 'home.see_all'.tr();
+  static String get homeRecentActivity => 'home.recent_activity'.tr();
+  static String get homeAddedYesterday => 'home.added_yesterday'.tr();
+  static String homeAddedDaysAgo(int days) =>
+      'home.added_days_ago'.tr(namedArgs: {'days': days.toString()});
+  static String get homeAmoxicillin => 'home.amoxicillin'.tr();
+  static String get homeAmoxicillinNote => 'home.amoxicillin_note'.tr();
+  static String get homeVitaminD => 'home.vitamin_d'.tr();
+  static String get homeVitaminDNote => 'home.vitamin_d_note'.tr();
+  static String get homeBloodTestResults => 'home.blood_test_results'.tr();
+  static String get homeVaccinationRecord => 'home.vaccination_record'.tr();
 }

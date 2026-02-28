@@ -1,7 +1,6 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
-
 class AddRecordDateCard extends StatelessWidget {
   const AddRecordDateCard({
     super.key,
@@ -11,7 +10,6 @@ class AddRecordDateCard extends StatelessWidget {
 
   final DateTime? selectedDate;
   final VoidCallback onTap;
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -22,7 +20,6 @@ class AddRecordDateCard extends StatelessWidget {
     final dateLabel = selectedDate == null
         ? AppLocalizations.addRecordSelectDate
         : MaterialLocalizations.of(context).formatMediumDate(selectedDate!);
-
     return Container(
       padding: EdgeInsets.all(spacing.xl),
       decoration: BoxDecoration(
