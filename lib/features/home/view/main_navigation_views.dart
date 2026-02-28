@@ -2,8 +2,10 @@ import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/Meds/view/medicines_main_view.dart';
 import 'package:cureta/features/home/view/home_view.dart';
+import 'package:cureta/features/home/widgets/top_header.dart';
 import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
 import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
+import 'package:cureta/features/profile/view/all_profies_view.dart';
 import 'package:flutter/material.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -21,7 +23,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const MedicinesMainView(),
     // Container(), // Placeholder for Scan Rx
     const UserRecordsView(),
-    Container(), // Placeholder for Profile
+    const AllProfiesView(), // Placeholder for Profile
   ];
 
   void _onItemTapped(int index) {
@@ -35,6 +37,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final colors = context.colors;
     final spacing = context.spacing;
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: colors.background, 
+        scrolledUnderElevation: 0, 
+        elevation: 0,
+        title: const TopHeader(),
+      ),
       body: IndexedStack(index: _selectedIndex, children: _screens),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},

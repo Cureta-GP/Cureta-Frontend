@@ -22,8 +22,7 @@ class HomeView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: spacing.md),
-              const HomeHeader(),
+             
               SizedBox(height: spacing.lg),
               const QuickActionsGrid(),
               SizedBox(height: spacing.xl),
