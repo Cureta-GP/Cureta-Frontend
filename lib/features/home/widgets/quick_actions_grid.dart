@@ -1,3 +1,5 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
@@ -20,7 +22,9 @@ class QuickActionsGrid extends StatelessWidget {
         _QuickActionCard(
           icon: Icons.add_box_outlined,
           label: AppLocalizations.homeAddRecord,
-          onTap: () {},
+          onTap: () {
+            Nav.pushNamed(context, AppRoutes.medicalRecordsStepOne);
+          },
         ),
         _QuickActionCard(
           icon: Icons.notifications_none_outlined,
