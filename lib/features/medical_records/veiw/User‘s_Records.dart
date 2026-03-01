@@ -62,7 +62,7 @@ class _UserRecordsViewState extends State<UserRecordsView> {
                   child: Text(
                     AppLocalizations.recordsListTitle,
                     style: context.typography.medicalRecordHelper.copyWith(
-                      color: colors.medicalRecordMuted,
+                      color: colors.textSecondary,
                     ),
                   ),
                 ),

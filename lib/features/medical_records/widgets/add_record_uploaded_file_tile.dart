@@ -38,18 +38,18 @@ class AddRecordUploadedFileTile extends StatelessWidget {
 
     final icon = file.isPdf ? Icons.picture_as_pdf : Icons.image_outlined;
     final iconBg = file.isPdf
-        ? colors.medicalRecordDetailPdfBg
-        : colors.medicalRecordUploadScanBg;
+        ? colors.error.withOpacity(0.1)
+        : colors.accentBlue;
     final iconColor = file.isPdf
-        ? colors.medicalRecordDetailPdfIcon
-        : colors.medicalRecordUploadScanIcon;
+        ? colors.error
+        : const Color(0xFF3B82F6);
 
     return Container(
       padding: EdgeInsets.all(spacing.lg),
       decoration: BoxDecoration(
-        color: colors.medicalRecordCard,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(radius.xxl),
-        border: Border.all(color: colors.medicalRecordOptionBorder),
+        border: Border.all(color: colors.divider),
       ),
       child: Row(
         children: [
@@ -73,7 +73,7 @@ class AddRecordUploadedFileTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: typography.medicalRecordUploadCardTitle.copyWith(
-                    color: colors.medicalRecordStrongText,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: spacing.xs),
@@ -82,7 +82,7 @@ class AddRecordUploadedFileTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: typography.medicalRecordDetailLabel.copyWith(
-                    color: colors.medicalRecordMuted,
+                    color: colors.textSecondary,
                   ),
                 ),
               ],
@@ -96,10 +96,7 @@ class AddRecordUploadedFileTile extends StatelessWidget {
           ),
           IconButton(
             onPressed: onDelete,
-            icon: Icon(
-              Icons.delete_outline,
-              color: colors.medicalRecordDetailDanger,
-            ),
+            icon: Icon(Icons.delete_outline, color: colors.error),
             tooltip: 'Delete file',
           ),
         ],

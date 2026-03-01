@@ -26,13 +26,13 @@ class UserRecordsSearchBar extends StatelessWidget {
           child: Container(
             height: fieldHeight,
             decoration: BoxDecoration(
-              color: colors.medicalRecordCard,
+              color: colors.surface,
               borderRadius: BorderRadius.circular(radius.lg),
             ),
             child: TextField(
               controller: controller,
               style: typography.medicalRecordInput.copyWith(
-                color: colors.medicalRecordStrongText,
+                color: colors.textPrimary,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -43,7 +43,7 @@ class UserRecordsSearchBar extends StatelessWidget {
                 prefixIcon: Icon(Icons.search, size: 20, color: colors.primary),
                 hintText: hint,
                 hintStyle: typography.medicalRecordHelper.copyWith(
-                  color: colors.medicalRecordMuted,
+                  color: colors.textSecondary,
                 ),
               ),
             ),
@@ -54,7 +54,7 @@ class UserRecordsSearchBar extends StatelessWidget {
           width: fieldHeight,
           height: fieldHeight,
           decoration: BoxDecoration(
-            color: colors.medicalRecordCard,
+            color: colors.surface,
             borderRadius: BorderRadius.circular(radius.lg),
           ),
           child: IconButton(

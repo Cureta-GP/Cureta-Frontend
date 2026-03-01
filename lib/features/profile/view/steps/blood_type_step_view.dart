@@ -58,9 +58,7 @@ class _BloodTypeStepState extends State<BloodTypeStep> {
               color: isSelected ? colors.primary : colors.background,
               borderRadius: BorderRadius.circular(radius.md),
               border: Border.all(
-                color: isSelected
-                    ? colors.primary
-                    : colors.medicalRecordOptionBorder,
+                color: isSelected ? colors.primary : colors.divider,
                 width: 1,
               ),
             ),

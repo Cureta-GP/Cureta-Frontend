@@ -38,15 +38,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final spacing = context.spacing;
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: colors.background, 
-        scrolledUnderElevation: 0, 
+        backgroundColor: colors.background,
+        scrolledUnderElevation: 0,
         elevation: 0,
         title: const TopHeader(),
       ),
       body: IndexedStack(index: _selectedIndex, children: _screens),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: colors.homeBotBg,
+        backgroundColor: colors.primary,
         child: const Icon(Icons.document_scanner, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

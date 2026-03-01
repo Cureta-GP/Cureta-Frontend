@@ -40,7 +40,7 @@ class AddRecordStepTwoActions extends StatelessWidget {
             child: Text(
               AppLocalizations.addRecordSkipForNow,
               style: typography.medicalRecordSkip.copyWith(
-                color: colors.medicalRecordSecondaryStrong,
+                color: colors.textSecondary,
               ),
             ),
           ),

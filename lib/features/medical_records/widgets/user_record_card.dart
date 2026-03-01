@@ -30,7 +30,7 @@ class UserRecordCard extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
     final typography = context.typography;
-    final bg = isOngoing ? colors.medicalRecordCard : colors.surface;
+    final bg = isOngoing ? colors.surface : colors.surface;
 
     return GestureDetector(
       onTap: () => GoRouter.of(context).pushNamed(
@@ -46,16 +46,16 @@ class UserRecordCard extends StatelessWidget {
               name: "Blood_Test_Oct24.pdf",
               meta: "PDF • 2.4 MB",
               icon: Icons.picture_as_pdf,
-              iconBgColor: colors.medicalRecordDetailPdfBg,
-              iconColor: colors.medicalRecordDetailPdfIcon,
+              iconBgColor: colors.error.withOpacity(0.1),
+              iconColor: colors.error,
               fileType: "pdf",
             ),
             RecordFile(
               name: "Prescription_Slip.jpg",
               meta: "Image • 1.1 MB",
               icon: Icons.image,
-              iconBgColor: colors.medicalRecordUploadScanBg,
-              iconColor: colors.medicalRecordUploadScanIcon,
+              iconBgColor: colors.accentBlue,
+              iconColor: Color(0xFF3B82F6),
               fileType: "image",
             ),
           ],
@@ -84,8 +84,8 @@ class UserRecordCard extends StatelessWidget {
                         title,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: typography.medicalRecordCardTitle.copyWith(
-                          color: colors.medicalRecordStrongText,
+                        style: typography.surfaceTitle.copyWith(
+                          color: colors.textPrimary,
                         ),
                       ),
                     ],
@@ -100,7 +100,7 @@ class UserRecordCard extends StatelessWidget {
             SizedBox(height: spacing.md),
             Row(
               children: [
-                Icon(metaIcon, size: 16, color: colors.medicalRecordMuted),
+                Icon(metaIcon, size: 16, color: colors.textSecondary),
                 SizedBox(width: spacing.xs),
                 Expanded(
                   child: Text(
@@ -108,7 +108,7 @@ class UserRecordCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.medicalRecordUploadCardDescription
-                        .copyWith(color: colors.medicalRecordMuted),
+                        .copyWith(color: colors.textSecondary),
                   ),
                 ),
               ],

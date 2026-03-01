@@ -60,7 +60,7 @@ class AddRecordStepFifth extends StatelessWidget {
                     AppLocalizations.addRecordReviewQuestion,
                     textAlign: TextAlign.center,
                     style: typography.medicalRecordQuestion.copyWith(
-                      color: colors.medicalRecordStrongText,
+                      color: colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: spacing.sm),
@@ -68,14 +68,14 @@ class AddRecordStepFifth extends StatelessWidget {
                     AppLocalizations.addRecordReviewDescription,
                     textAlign: TextAlign.center,
                     style: typography.medicalRecordHelper.copyWith(
-                      color: colors.medicalRecordMuted,
+                      color: colors.textSecondary,
                     ),
                   ),
                   SizedBox(height: spacing.xl),
                   Container(
                     padding: EdgeInsets.all(spacing.xl),
                     decoration: BoxDecoration(
-                      color: colors.medicalRecordCard,
+                      color: colors.surface,
                       borderRadius: BorderRadius.circular(radius.xxl),
                     ),
                     child: Column(
@@ -94,7 +94,7 @@ class AddRecordStepFifth extends StatelessWidget {
                         Text(
                           AppLocalizations.addRecordReviewDocuments,
                           style: typography.medicalRecordHelper.copyWith(
-                            color: colors.medicalRecordProgressText,
+                            color: colors.textSecondary,
                           ),
                         ),
                         SizedBox(height: spacing.sm),

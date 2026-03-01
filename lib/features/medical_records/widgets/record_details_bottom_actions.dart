@@ -31,15 +31,11 @@ class RecordDetailsBottomActions extends StatelessWidget {
           // Delete Record
           TextButton.icon(
             onPressed: onDelete,
-            icon: Icon(
-              Icons.delete,
-              size: 20,
-              color: colors.medicalRecordDetailDanger,
-            ),
+            icon: Icon(Icons.delete, size: 20, color: colors.error),
             label: Text(
               AppLocalizations.recordDetailsDeleteRecord,
               style: typography.medicalRecordDetailDeleteBtn.copyWith(
-                color: colors.medicalRecordDetailDanger,
+                color: colors.error,
               ),
             ),
           ),

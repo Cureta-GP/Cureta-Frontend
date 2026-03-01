@@ -21,7 +21,7 @@ class RecordDetailsNotesCard extends StatelessWidget {
         Text(
           AppLocalizations.recordDetailsNotesTitle,
           style: typography.medicalRecordScreenTitle.copyWith(
-            color: colors.medicalRecordStrongText,
+            color: colors.textPrimary,
           ),
         ),
         SizedBox(height: spacing.md),
@@ -29,11 +29,8 @@ class RecordDetailsNotesCard extends StatelessWidget {
           width: double.infinity,
           padding: EdgeInsets.all(spacing.xl),
           decoration: BoxDecoration(
-            color: colors.medicalRecordCard,
-            border: Border.all(
-              width: 0.8,
-              color: colors.medicalRecordOptionBorder,
-            ),
+            color: colors.surface,
+            border: Border.all(width: 0.8, color: colors.divider),
             borderRadius: BorderRadius.circular(radius.xxl),
           ),
           child: Text(

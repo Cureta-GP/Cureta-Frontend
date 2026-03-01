@@ -137,9 +137,7 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
                         : colors.background,
                     borderRadius: BorderRadius.circular(radius.md),
                     border: Border.all(
-                      color: isSelected
-                          ? colors.primary
-                          : colors.medicalRecordOptionBorder,
+                      color: isSelected ? colors.primary : colors.divider,
                       width: 1.5,
                     ),
                   ),

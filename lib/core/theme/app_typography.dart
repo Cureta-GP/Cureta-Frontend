@@ -16,7 +16,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medicalRecordHelper,
     required this.medicalRecordCancel,
     required this.medicalRecordScreenTitle,
-    required this.medicalRecordCardTitle,
+    required this.surfaceTitle,
     required this.medicalRecordPickerLabel,
     required this.medicalRecordChoice,
     required this.medicalRecordSkip,
@@ -55,7 +55,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medicalRecordHelper;
   final TextStyle medicalRecordCancel;
   final TextStyle medicalRecordScreenTitle;
-  final TextStyle medicalRecordCardTitle;
+  final TextStyle surfaceTitle;
   final TextStyle medicalRecordPickerLabel;
   final TextStyle medicalRecordChoice;
   final TextStyle medicalRecordSkip;
@@ -97,10 +97,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 20,
       fontWeight: FontWeight.w700,
     ),
-    medicalRecordCardTitle: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.w700,
-    ),
+    surfaceTitle: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
     medicalRecordPickerLabel: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w500,
@@ -173,10 +170,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 22,
       fontWeight: FontWeight.w700,
     ),
-    medicalRecordCardTitle: TextStyle(
-      fontSize: 30,
-      fontWeight: FontWeight.w700,
-    ),
+    surfaceTitle: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
     medicalRecordPickerLabel: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,
@@ -249,10 +243,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 24,
       fontWeight: FontWeight.w700,
     ),
-    medicalRecordCardTitle: TextStyle(
-      fontSize: 34,
-      fontWeight: FontWeight.w700,
-    ),
+    surfaceTitle: TextStyle(fontSize: 34, fontWeight: FontWeight.w700),
     medicalRecordPickerLabel: TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.w500,
@@ -323,7 +314,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medicalRecordHelper,
     TextStyle? medicalRecordCancel,
     TextStyle? medicalRecordScreenTitle,
-    TextStyle? medicalRecordCardTitle,
+    TextStyle? surfaceTitle,
     TextStyle? medicalRecordPickerLabel,
     TextStyle? medicalRecordChoice,
     TextStyle? medicalRecordSkip,
@@ -365,8 +356,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medicalRecordCancel: medicalRecordCancel ?? this.medicalRecordCancel,
       medicalRecordScreenTitle:
           medicalRecordScreenTitle ?? this.medicalRecordScreenTitle,
-      medicalRecordCardTitle:
-          medicalRecordCardTitle ?? this.medicalRecordCardTitle,
+      surfaceTitle: surfaceTitle ?? this.surfaceTitle,
       medicalRecordPickerLabel:
           medicalRecordPickerLabel ?? this.medicalRecordPickerLabel,
       medicalRecordChoice: medicalRecordChoice ?? this.medicalRecordChoice,
@@ -454,11 +444,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
         other.medicalRecordScreenTitle,
         t,
       )!,
-      medicalRecordCardTitle: TextStyle.lerp(
-        medicalRecordCardTitle,
-        other.medicalRecordCardTitle,
-        t,
-      )!,
+      surfaceTitle: TextStyle.lerp(surfaceTitle, other.surfaceTitle, t)!,
       medicalRecordPickerLabel: TextStyle.lerp(
         medicalRecordPickerLabel,
         other.medicalRecordPickerLabel,

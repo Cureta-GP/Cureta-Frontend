@@ -42,7 +42,7 @@ class CustomScreenHeader extends StatelessWidget {
             ),
             icon: Icon(
               Icons.arrow_back,
-              color: iconColor ?? colors.medicalRecordStrongText,
+              color: iconColor ?? colors.textPrimary,
               size: 28,
             ),
           ),
@@ -52,9 +52,10 @@ class CustomScreenHeader extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: titleStyle ??
+              style:
+                  titleStyle ??
                   typography.medicalRecordScreenTitle.copyWith(
-                    color: colors.medicalRecordHeading,
+                    color: colors.textPrimary,
                   ),
             ),
           ),

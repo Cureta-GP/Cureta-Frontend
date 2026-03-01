@@ -37,7 +37,8 @@ class StepProgressIndicator extends StatelessWidget {
                 stepLabel,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: stepTextStyle ??
+                style:
+                    stepTextStyle ??
                     typography.medicalRecordStep.copyWith(
                       color: colors.primary,
                     ),
@@ -49,9 +50,10 @@ class StepProgressIndicator extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,
-              style: progressTextStyle ??
+              style:
+                  progressTextStyle ??
                   typography.medicalRecordProgress.copyWith(
-                    color: colors.medicalRecordProgressText,
+                    color: colors.textSecondary,
                   ),
             ),
           ],
@@ -66,7 +68,7 @@ class StepProgressIndicator extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(
                 activeColor ?? colors.primary,
               ),
-              backgroundColor: trackColor ?? colors.medicalRecordProgressTrack,
+              backgroundColor: trackColor ?? colors.divider,
             ),
           ),
         ),

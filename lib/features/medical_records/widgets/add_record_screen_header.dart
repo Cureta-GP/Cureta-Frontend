@@ -28,11 +28,7 @@ class AddRecordScreenHeader extends StatelessWidget {
               minimumSize: const Size(48, 48),
               shape: const CircleBorder(),
             ),
-            icon: Icon(
-              Icons.arrow_back,
-              color: colors.medicalRecordStrongText,
-              size: 28,
-            ),
+            icon: Icon(Icons.arrow_back, color: colors.textPrimary, size: 28),
           ),
           Expanded(
             child: Text(
@@ -41,7 +37,7 @@ class AddRecordScreenHeader extends StatelessWidget {
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               style: typography.medicalRecordScreenTitle.copyWith(
-                color: colors.medicalRecordStrongText,
+                color: colors.textPrimary,
               ),
             ),
           ),

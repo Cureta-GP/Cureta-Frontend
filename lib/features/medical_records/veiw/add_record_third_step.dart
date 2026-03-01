@@ -66,14 +66,14 @@ class _AddRecordThirdStepState extends State<AddRecordThirdStep> {
                   Text(
                     AppLocalizations.addRecordAdditionalNotesTitle,
                     style: typography.medicalRecordQuestion.copyWith(
-                      color: colors.medicalRecordStrongText,
+                      color: colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: spacing.sm),
                   Text(
                     AppLocalizations.addRecordAdditionalNotesDescription,
                     style: typography.medicalRecordHelper.copyWith(
-                      color: colors.medicalRecordMuted,
+                      color: colors.textSecondary,
                     ),
                   ),
                   SizedBox(height: spacing.xl),

@@ -24,7 +24,7 @@ class AddRecordDateCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(spacing.xl),
       decoration: BoxDecoration(
-        color: colors.medicalRecordCard,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(radius.xl),
       ),
       child: Column(
@@ -37,7 +37,7 @@ class AddRecordDateCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: colors.medicalRecordAccentSoft,
+                  color: colors.accentCyan,
                   borderRadius: BorderRadius.circular(radius.md),
                 ),
                 child: Icon(
@@ -52,8 +52,8 @@ class AddRecordDateCard extends StatelessWidget {
                   AppLocalizations.addRecordFirstSymptomsQuestion,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: typography.medicalRecordCardTitle.copyWith(
-                    color: colors.medicalRecordStrongText,
+                  style: typography.surfaceTitle.copyWith(
+                    color: colors.textPrimary,
                   ),
                 ),
               ),
@@ -71,10 +71,7 @@ class AddRecordDateCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colors.background,
                 borderRadius: BorderRadius.circular(radius.md),
-                border: Border.all(
-                  color: colors.medicalRecordInputBorder,
-                  width: 1.6,
-                ),
+                border: Border.all(color: colors.divider, width: 1.6),
               ),
               child: Row(
                 children: [
@@ -87,14 +84,14 @@ class AddRecordDateCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: typography.medicalRecordPickerLabel.copyWith(
                         color: selectedDate == null
-                            ? colors.medicalRecordInputHint
-                            : colors.medicalRecordStrongText,
+                            ? colors.textHint
+                            : colors.textPrimary,
                       ),
                     ),
                   ),
                   Icon(
                     Icons.expand_more,
-                    color: colors.medicalRecordSecondaryStrong,
+                    color: colors.textSecondary,
                     size: 24,
                   ),
                 ],

@@ -23,7 +23,7 @@ class AddRecordOngoingCard extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(spacing.xl),
       decoration: BoxDecoration(
-        color: colors.medicalRecordCard,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(radius.xl),
       ),
       child: Column(
@@ -36,7 +36,7 @@ class AddRecordOngoingCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: colors.medicalRecordAccentSoft,
+                  color: colors.accentCyan,
                   borderRadius: BorderRadius.circular(radius.md),
                 ),
                 child: Icon(Icons.schedule, color: colors.primary, size: 24),
@@ -47,8 +47,8 @@ class AddRecordOngoingCard extends StatelessWidget {
                   AppLocalizations.addRecordOngoingQuestion,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: typography.medicalRecordCardTitle.copyWith(
-                    color: colors.medicalRecordStrongText,
+                  style: typography.surfaceTitle.copyWith(
+                    color: colors.textPrimary,
                   ),
                 ),
               ),

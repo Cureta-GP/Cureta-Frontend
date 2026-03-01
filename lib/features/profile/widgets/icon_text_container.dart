@@ -33,14 +33,10 @@ class IconTextContainer extends StatelessWidget {
           horizontal: spacing.sm,
         ),
         decoration: BoxDecoration(
-          color: isSelected
-              ? colors.medicalRecordAccentSoft
-              : colors.background,
+          color: isSelected ? colors.accentCyan : colors.background,
           borderRadius: BorderRadius.circular(radius.md),
           border: Border.all(
-            color: isSelected
-                ? colors.primary
-                : colors.medicalRecordOptionBorder,
+            color: isSelected ? colors.primary : colors.divider,
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected

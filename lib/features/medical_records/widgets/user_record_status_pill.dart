@@ -18,7 +18,7 @@ class UserRecordStatusPill extends StatelessWidget {
     final radius = context.radius;
     final typography = context.typography;
 
-    final bg = isOngoing ? colors.medicalRecordAccentSoft : colors.divider;
+    final bg = isOngoing ? colors.accentCyan : colors.divider;
     final fg = isOngoing ? colors.primary : colors.textSecondary;
 
     return Container(

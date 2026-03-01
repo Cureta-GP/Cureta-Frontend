@@ -14,34 +14,10 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.textHint,
     required this.divider,
     required this.icon,
-    required this.medicalRecordHeading,
-    required this.medicalRecordMuted,
-    required this.medicalRecordProgressText,
-    required this.medicalRecordProgressTrack,
-    required this.medicalRecordInputHint,
-    required this.medicalRecordInputBorder,
-    required this.medicalRecordCard,
-    required this.medicalRecordAccentSoft,
-    required this.medicalRecordStrongText,
-    required this.medicalRecordSecondaryStrong,
-    required this.medicalRecordOptionBorder,
-    required this.medicalRecordUploadCardBorder,
-    required this.medicalRecordUploadPrescriptionBg,
-    required this.medicalRecordUploadPrescriptionIcon,
-    required this.medicalRecordUploadLabBg,
-    required this.medicalRecordUploadLabIcon,
-    required this.medicalRecordUploadScanBg,
-    required this.medicalRecordUploadScanIcon,
-    required this.medicalRecordUploadAddButtonBg,
-    required this.medicalRecordDetailPdfBg,
-    required this.medicalRecordDetailPdfIcon,
-    required this.medicalRecordDetailDanger,
-    required this.homeBotBg,
-    required this.homeActivityBlue,
-    required this.homeActivityPurple,
-    required this.blueAccent,
-    required this.orangeAccent,
-    required this.cyanAccent,
+    required this.accentCyan,
+    required this.accentOrange,
+    required this.accentBlue,
+    required this.accentPurple,
   });
 
   final Color primary;
@@ -55,145 +31,53 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color textHint;
   final Color divider;
   final Color icon;
-  final Color medicalRecordHeading;
-  final Color medicalRecordMuted;
-  final Color medicalRecordProgressText;
-  final Color medicalRecordProgressTrack;
-  final Color medicalRecordInputHint;
-  final Color medicalRecordInputBorder;
-  final Color medicalRecordCard;
-  final Color medicalRecordAccentSoft;
-  final Color medicalRecordStrongText;
-  final Color medicalRecordSecondaryStrong;
-  final Color medicalRecordOptionBorder;
-  final Color medicalRecordUploadCardBorder;
-  final Color medicalRecordUploadPrescriptionBg;
-  final Color medicalRecordUploadPrescriptionIcon;
-  final Color medicalRecordUploadLabBg;
-  final Color medicalRecordUploadLabIcon;
-  final Color medicalRecordUploadScanBg;
-  final Color medicalRecordUploadScanIcon;
-  final Color medicalRecordUploadAddButtonBg;
-  final Color medicalRecordDetailPdfBg;
-  final Color medicalRecordDetailPdfIcon;
-  final Color medicalRecordDetailDanger;
+  final Color accentCyan;
+  final Color accentOrange;
+  final Color accentBlue;
+  final Color accentPurple;
 
-  static const Color _lightBackground = Color(0xFFFFFFFF);
-  static const Color _lightProgressTrack = Color(0xFFE5E7EB);
-  static const Color _lightNeutralBorder = Color(0xFFF3F4F6);
-  static const Color _lightDanger = Color(0xFFEF4444);
-
-  static const Color _darkBackground = Color(0xFF133A3E);
-  static const Color _darkSurface = Color(0xFF1C2328);
-  static const Color _darkHeading = Color(0xFFF5F5F5);
-  static const Color _darkMuted = Color(0xFFB0BEC5);
-  static const Color _darkHint = Color(0xFF90A4AE);
-  static const Color _darkDivider = Color(0xFF37474F);
-  static const Color _darkAccentSoft = Color(0xFF2A3D40);
-  static const Color _darkDanger = Color(0xFFF87171);
-  final Color homeBotBg;
-  final Color homeActivityBlue;
-  final Color homeActivityPurple;
-
-  /// #E0E7FF
-  final Color blueAccent;
-
-  /// #FFEDD5
-  final Color orangeAccent;
-
-  /// #E0F1F3
-  final Color cyanAccent;
-
-  static const light = AppColors(
-    primary: Color(0xFF00A1A9),
-    primaryDark: Color(0xFF133A3E),
-    secondary: Color(0xFFEDF7F8),
-    background: _lightBackground,
-    surface: Color(0xFFFAFAFA),
-    error: Color(0xFFB00020),
-    textPrimary: Color(0xFF212121),
-    textSecondary: Color(0xFF757575),
-    textHint: Color(0xFFBDBDBD),
-    divider: Color(0xFFE0E0E0),
-    icon: Color(0xFF99A1AF),
-
-    medicalRecordHeading: Color(0xFF111827),
-    medicalRecordMuted: Color(0xFF6B7280),
-    medicalRecordProgressText: Color(0xFF9CA3AF),
-    medicalRecordProgressTrack: _lightProgressTrack,
-    medicalRecordInputHint: Color(0xFF888B93),
-    medicalRecordInputBorder: Color(0xFFF2F2F2),
-    medicalRecordCard: _lightBackground,
-    medicalRecordAccentSoft: Color(0xFFE5F5F6),
-    medicalRecordStrongText: Color(0xFF0C1B1D),
-    medicalRecordSecondaryStrong: Color(0xFF4A686A),
-    medicalRecordOptionBorder: _lightNeutralBorder,
-    medicalRecordUploadCardBorder: _lightProgressTrack,
-    medicalRecordUploadPrescriptionBg: Color(0xFFE7FBFD),
-    medicalRecordUploadPrescriptionIcon: Color(0xFF13DDEC),
-    medicalRecordUploadLabBg: Color(0xFFFFF7ED),
-    medicalRecordUploadLabIcon: Color(0xFFF97316),
-    medicalRecordUploadScanBg: Color(0xFFEFF6FF),
-    medicalRecordUploadScanIcon: Color(0xFF3B82F6),
-    medicalRecordUploadAddButtonBg: _lightNeutralBorder,
-    medicalRecordDetailPdfBg: Color(0xFFFEF2F2),
-    medicalRecordDetailPdfIcon: _lightDanger,
-    medicalRecordDetailDanger: _lightDanger,
-    homeBotBg: Color(0xFF00A1A9),
-    homeActivityBlue: Color(0xFFEFF6FF),
-    homeActivityPurple: Color(0xFFF5F3FF),
-    blueAccent: Color(0xFFE0E7FF),
-    orangeAccent: Color(0xFFFFEDD5),
-    cyanAccent: Color(0xFFE0F1F3),
+  // --- Light Theme Setup ---
+  static final light = AppColors(
+    primary: const Color(0xFF00A1A9),
+    primaryDark: const Color(0xFF133A3E),
+    secondary: const Color(0xFFEDF7F8),
+    background: Colors.white,
+    surface: const Color(0xFFFAFAFA),
+    error: const Color(0xFFB00020),
+    textPrimary: const Color(0xFF212121),
+    textSecondary: const Color(0xFF757575),
+    textHint: const Color(0xFFBDBDBD),
+    divider: const Color(0xFFE0E0E0),
+    icon: const Color(0xFF99A1AF),
+    accentCyan: const Color(0xFFE0F1F3),
+    accentOrange: const Color(0xFFFFEDD5),
+    accentBlue: const Color(0xFFE0E7FF),
+    accentPurple: const Color(0xFFF5F3FF),
   );
 
-  static const dark = AppColors(
-    primary: Color(0xFF00A1A9),
-    primaryDark: Color(0xFF133A3E),
-    secondary: Color(0xFF1D2B2D),
-    background: _darkBackground,
-    surface: _darkSurface,
-    error: Color(0xFFCF6679),
-    textPrimary: _darkHeading,
-    textSecondary: _darkMuted,
-    textHint: _darkHint,
-    divider: _darkDivider,
-    icon: _darkMuted,
-
-    medicalRecordHeading: _darkHeading,
-    medicalRecordMuted: _darkMuted,
-    medicalRecordProgressText: _darkHint,
-    medicalRecordProgressTrack: _darkDivider,
-    medicalRecordInputHint: _darkHint,
-    medicalRecordInputBorder: _darkDivider,
-    medicalRecordCard: _darkSurface,
-    medicalRecordAccentSoft: _darkAccentSoft,
-    medicalRecordStrongText: _darkHeading,
-    medicalRecordSecondaryStrong: _darkMuted,
-    medicalRecordOptionBorder: _darkDivider,
-    medicalRecordUploadCardBorder: _darkDivider,
-    medicalRecordUploadPrescriptionBg: _darkAccentSoft,
-    medicalRecordUploadPrescriptionIcon: Color(0xFF4DDDE7),
-    medicalRecordUploadLabBg: Color(0xFF3D3127),
-    medicalRecordUploadLabIcon: Color(0xFFF9A15B),
-    medicalRecordUploadScanBg: Color(0xFF223244),
-    medicalRecordUploadScanIcon: Color(0xFF70A8F8),
-    medicalRecordUploadAddButtonBg: Color(0xFF2A3238),
-    medicalRecordDetailPdfBg: Color(0xFF3D2727),
-    medicalRecordDetailPdfIcon: _darkDanger,
-    medicalRecordDetailDanger: _darkDanger,
-    homeBotBg: Color(0xFF00A1A9),
-    homeActivityBlue: Color(0xFF1E293B),
-    homeActivityPurple: Color(0xFF2E1065),
-    blueAccent: Color(0xFFE0E7FF),
-    orangeAccent: Color(0xFFFFEDD5),
-    cyanAccent: Color(0xFFE0F1F3),
+  // --- Dark Theme Setup ---
+  static final dark = AppColors(
+    primary: const Color(0xFF00A1A9),
+    primaryDark: const Color(0xFF133A3E),
+    secondary: const Color(0xFF1D2B2D),
+    background: const Color(0xFF133A3E),
+    surface: const Color(0xFF1C2328),
+    error: const Color(0xFFCF6679),
+    textPrimary: const Color(0xFFF5F5F5),
+    textSecondary: const Color(0xFFB0BEC5),
+    textHint: const Color(0xFF90A4AE),
+    divider: const Color(0xFF37474F),
+    icon: const Color(0xFFB0BEC5),
+    accentCyan: const Color(0xFF2A3D40),
+    accentOrange: const Color(0xFF3D3127),
+    accentBlue: const Color(0xFF223244),
+    accentPurple: const Color(0xFF2E1065),
   );
 
-  static AppColors fromBrightness(Brightness brightness) {
-    return brightness == Brightness.dark ? dark : light;
-  }
+  static AppColors fromBrightness(Brightness brightness) =>
+      brightness == Brightness.dark ? dark : light;
 
+ 
   @override
   AppColors copyWith({
     Color? primary,
@@ -207,35 +91,10 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? textHint,
     Color? divider,
     Color? icon,
-
-    Color? medicalRecordHeading,
-    Color? medicalRecordMuted,
-    Color? medicalRecordProgressText,
-    Color? medicalRecordProgressTrack,
-    Color? medicalRecordInputHint,
-    Color? medicalRecordInputBorder,
-    Color? medicalRecordCard,
-    Color? medicalRecordAccentSoft,
-    Color? medicalRecordStrongText,
-    Color? medicalRecordSecondaryStrong,
-    Color? medicalRecordOptionBorder,
-    Color? medicalRecordUploadCardBorder,
-    Color? medicalRecordUploadPrescriptionBg,
-    Color? medicalRecordUploadPrescriptionIcon,
-    Color? medicalRecordUploadLabBg,
-    Color? medicalRecordUploadLabIcon,
-    Color? medicalRecordUploadScanBg,
-    Color? medicalRecordUploadScanIcon,
-    Color? medicalRecordUploadAddButtonBg,
-    Color? medicalRecordDetailPdfBg,
-    Color? medicalRecordDetailPdfIcon,
-    Color? medicalRecordDetailDanger,
-    Color? homeBotBg,
-    Color? homeActivityBlue,
-    Color? homeActivityPurple,
-    Color? blueAccent,
-    Color? orangeAccent,
-    Color? cyanAccent,
+    Color? accentCyan,
+    Color? accentOrange,
+    Color? accentBlue,
+    Color? accentPurple,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -249,56 +108,10 @@ class AppColors extends ThemeExtension<AppColors> {
       textHint: textHint ?? this.textHint,
       divider: divider ?? this.divider,
       icon: icon ?? this.icon,
-
-      medicalRecordHeading: medicalRecordHeading ?? this.medicalRecordHeading,
-      medicalRecordMuted: medicalRecordMuted ?? this.medicalRecordMuted,
-      medicalRecordProgressText:
-          medicalRecordProgressText ?? this.medicalRecordProgressText,
-      medicalRecordProgressTrack:
-          medicalRecordProgressTrack ?? this.medicalRecordProgressTrack,
-      medicalRecordInputHint:
-          medicalRecordInputHint ?? this.medicalRecordInputHint,
-      medicalRecordInputBorder:
-          medicalRecordInputBorder ?? this.medicalRecordInputBorder,
-      medicalRecordCard: medicalRecordCard ?? this.medicalRecordCard,
-      medicalRecordAccentSoft:
-          medicalRecordAccentSoft ?? this.medicalRecordAccentSoft,
-      medicalRecordStrongText:
-          medicalRecordStrongText ?? this.medicalRecordStrongText,
-      medicalRecordSecondaryStrong:
-          medicalRecordSecondaryStrong ?? this.medicalRecordSecondaryStrong,
-      medicalRecordOptionBorder:
-          medicalRecordOptionBorder ?? this.medicalRecordOptionBorder,
-      medicalRecordUploadCardBorder:
-          medicalRecordUploadCardBorder ?? this.medicalRecordUploadCardBorder,
-      medicalRecordUploadPrescriptionBg:
-          medicalRecordUploadPrescriptionBg ??
-          this.medicalRecordUploadPrescriptionBg,
-      medicalRecordUploadPrescriptionIcon:
-          medicalRecordUploadPrescriptionIcon ??
-          this.medicalRecordUploadPrescriptionIcon,
-      medicalRecordUploadLabBg:
-          medicalRecordUploadLabBg ?? this.medicalRecordUploadLabBg,
-      medicalRecordUploadLabIcon:
-          medicalRecordUploadLabIcon ?? this.medicalRecordUploadLabIcon,
-      medicalRecordUploadScanBg:
-          medicalRecordUploadScanBg ?? this.medicalRecordUploadScanBg,
-      medicalRecordUploadScanIcon:
-          medicalRecordUploadScanIcon ?? this.medicalRecordUploadScanIcon,
-      medicalRecordUploadAddButtonBg:
-          medicalRecordUploadAddButtonBg ?? this.medicalRecordUploadAddButtonBg,
-      medicalRecordDetailPdfBg:
-          medicalRecordDetailPdfBg ?? this.medicalRecordDetailPdfBg,
-      medicalRecordDetailPdfIcon:
-          medicalRecordDetailPdfIcon ?? this.medicalRecordDetailPdfIcon,
-      medicalRecordDetailDanger:
-          medicalRecordDetailDanger ?? this.medicalRecordDetailDanger,
-      homeBotBg: homeBotBg ?? this.homeBotBg,
-      homeActivityBlue: homeActivityBlue ?? this.homeActivityBlue,
-      homeActivityPurple: homeActivityPurple ?? this.homeActivityPurple,
-      blueAccent: blueAccent ?? this.blueAccent,
-      orangeAccent: orangeAccent ?? this.orangeAccent,
-      cyanAccent: cyanAccent ?? this.cyanAccent,
+      accentCyan: accentCyan ?? this.accentCyan,
+      accentOrange: accentOrange ?? this.accentOrange,
+      accentBlue: accentBlue ?? this.accentBlue,
+      accentPurple: accentPurple ?? this.accentPurple,
     );
   }
 
@@ -317,131 +130,10 @@ class AppColors extends ThemeExtension<AppColors> {
       textHint: Color.lerp(textHint, other.textHint, t)!,
       divider: Color.lerp(divider, other.divider, t)!,
       icon: Color.lerp(icon, other.icon, t)!,
-
-      medicalRecordHeading: Color.lerp(
-        medicalRecordHeading,
-        other.medicalRecordHeading,
-        t,
-      )!,
-      medicalRecordMuted: Color.lerp(
-        medicalRecordMuted,
-        other.medicalRecordMuted,
-        t,
-      )!,
-      medicalRecordProgressText: Color.lerp(
-        medicalRecordProgressText,
-        other.medicalRecordProgressText,
-        t,
-      )!,
-      medicalRecordProgressTrack: Color.lerp(
-        medicalRecordProgressTrack,
-        other.medicalRecordProgressTrack,
-        t,
-      )!,
-      medicalRecordInputHint: Color.lerp(
-        medicalRecordInputHint,
-        other.medicalRecordInputHint,
-        t,
-      )!,
-      medicalRecordInputBorder: Color.lerp(
-        medicalRecordInputBorder,
-        other.medicalRecordInputBorder,
-        t,
-      )!,
-      medicalRecordCard: Color.lerp(
-        medicalRecordCard,
-        other.medicalRecordCard,
-        t,
-      )!,
-      medicalRecordAccentSoft: Color.lerp(
-        medicalRecordAccentSoft,
-        other.medicalRecordAccentSoft,
-        t,
-      )!,
-      medicalRecordStrongText: Color.lerp(
-        medicalRecordStrongText,
-        other.medicalRecordStrongText,
-        t,
-      )!,
-      medicalRecordSecondaryStrong: Color.lerp(
-        medicalRecordSecondaryStrong,
-        other.medicalRecordSecondaryStrong,
-        t,
-      )!,
-      medicalRecordOptionBorder: Color.lerp(
-        medicalRecordOptionBorder,
-        other.medicalRecordOptionBorder,
-        t,
-      )!,
-      medicalRecordUploadCardBorder: Color.lerp(
-        medicalRecordUploadCardBorder,
-        other.medicalRecordUploadCardBorder,
-        t,
-      )!,
-      medicalRecordUploadPrescriptionBg: Color.lerp(
-        medicalRecordUploadPrescriptionBg,
-        other.medicalRecordUploadPrescriptionBg,
-        t,
-      )!,
-      medicalRecordUploadPrescriptionIcon: Color.lerp(
-        medicalRecordUploadPrescriptionIcon,
-        other.medicalRecordUploadPrescriptionIcon,
-        t,
-      )!,
-      medicalRecordUploadLabBg: Color.lerp(
-        medicalRecordUploadLabBg,
-        other.medicalRecordUploadLabBg,
-        t,
-      )!,
-      medicalRecordUploadLabIcon: Color.lerp(
-        medicalRecordUploadLabIcon,
-        other.medicalRecordUploadLabIcon,
-        t,
-      )!,
-      medicalRecordUploadScanBg: Color.lerp(
-        medicalRecordUploadScanBg,
-        other.medicalRecordUploadScanBg,
-        t,
-      )!,
-      medicalRecordUploadScanIcon: Color.lerp(
-        medicalRecordUploadScanIcon,
-        other.medicalRecordUploadScanIcon,
-        t,
-      )!,
-      medicalRecordUploadAddButtonBg: Color.lerp(
-        medicalRecordUploadAddButtonBg,
-        other.medicalRecordUploadAddButtonBg,
-        t,
-      )!,
-      medicalRecordDetailPdfBg: Color.lerp(
-        medicalRecordDetailPdfBg,
-        other.medicalRecordDetailPdfBg,
-        t,
-      )!,
-      medicalRecordDetailPdfIcon: Color.lerp(
-        medicalRecordDetailPdfIcon,
-        other.medicalRecordDetailPdfIcon,
-        t,
-      )!,
-      medicalRecordDetailDanger: Color.lerp(
-        medicalRecordDetailDanger,
-        other.medicalRecordDetailDanger,
-        t,
-      )!,
-      homeBotBg: Color.lerp(homeBotBg, other.homeBotBg, t)!,
-      homeActivityBlue: Color.lerp(
-        homeActivityBlue,
-        other.homeActivityBlue,
-        t,
-      )!,
-      homeActivityPurple: Color.lerp(
-        homeActivityPurple,
-        other.homeActivityPurple,
-        t,
-      )!,
-      blueAccent: Color.lerp(blueAccent, other.blueAccent, t)!,
-      orangeAccent: Color.lerp(orangeAccent, other.orangeAccent, t)!,
-      cyanAccent: Color.lerp(cyanAccent, other.cyanAccent, t)!,
+      accentCyan: Color.lerp(accentCyan, other.accentCyan, t)!,
+      accentOrange: Color.lerp(accentOrange, other.accentOrange, t)!,
+      accentBlue: Color.lerp(accentBlue, other.accentBlue, t)!,
+      accentPurple: Color.lerp(accentPurple, other.accentPurple, t)!,
     );
   }
 }

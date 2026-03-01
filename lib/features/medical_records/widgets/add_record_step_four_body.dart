@@ -65,8 +65,8 @@ class AddRecordStepFourBody extends StatelessWidget {
               SizedBox(height: spacing.xxl),
               AddRecordUploadCategoryTile(
                 icon: Icons.receipt_long,
-                iconBackgroundColor: colors.medicalRecordUploadPrescriptionBg,
-                iconColor: colors.medicalRecordUploadPrescriptionIcon,
+                iconBackgroundColor: colors.accentCyan,
+                iconColor: colors.primary,
                 title: AppLocalizations.addRecordPrescriptionTitle,
                 description: AppLocalizations.addRecordPrescriptionDescription,
                 onTap: onPrescriptionTap,
@@ -79,8 +79,8 @@ class AddRecordStepFourBody extends StatelessWidget {
               SizedBox(height: spacing.md),
               AddRecordUploadCategoryTile(
                 icon: Icons.science_outlined,
-                iconBackgroundColor: colors.medicalRecordUploadLabBg,
-                iconColor: colors.medicalRecordUploadLabIcon,
+                iconBackgroundColor: colors.accentOrange,
+                iconColor: const Color(0xFFF97316),
                 title: AppLocalizations.addRecordLabTestTitle,
                 description: AppLocalizations.addRecordLabTestDescription,
                 onTap: onLabTestTap,
@@ -93,8 +93,8 @@ class AddRecordStepFourBody extends StatelessWidget {
               SizedBox(height: spacing.md),
               AddRecordUploadCategoryTile(
                 icon: Icons.image_search_outlined,
-                iconBackgroundColor: colors.medicalRecordUploadScanBg,
-                iconColor: colors.medicalRecordUploadScanIcon,
+                iconBackgroundColor: colors.accentBlue,
+                iconColor: const Color(0xFF3B82F6),
                 title: AppLocalizations.addRecordScanTitle,
                 description: AppLocalizations.addRecordScanDescription,
                 onTap: onScanTap,

@@ -30,7 +30,7 @@ class AddRecordChoiceButton extends StatelessWidget {
           color: selected ? colors.primary : colors.background,
           borderRadius: BorderRadius.circular(radius.md),
           border: Border.all(
-            color: selected ? colors.primary : colors.medicalRecordOptionBorder,
+            color: selected ? colors.primary : colors.divider,
             width: 1.6,
           ),
         ),
@@ -40,7 +40,7 @@ class AddRecordChoiceButton extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           softWrap: false,
           style: typography.medicalRecordChoice.copyWith(
-            color: selected ? Colors.white : colors.medicalRecordStrongText,
+            color: selected ? Colors.white : colors.textPrimary,
           ),
         ),
       ),
