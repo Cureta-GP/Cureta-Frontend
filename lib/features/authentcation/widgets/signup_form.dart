@@ -42,7 +42,7 @@ class _SignupFormState extends State<SignupForm> {
     final spacing = context.spacing;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.xxl + spacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: spacing.xl),
       child: Form(
         key: _formKey,
         autovalidateMode: AutovalidateMode.disabled,

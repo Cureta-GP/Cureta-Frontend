@@ -70,7 +70,7 @@ class _LoginFormState extends State<LoginForm> {
     final spacing = context.spacing;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.xxl + spacing.lg),
+      padding: EdgeInsets.symmetric(horizontal: spacing.xl ),
       child: Column(
         children: [
           AnimatedLoginHeader(animationManager: _animationManager),
