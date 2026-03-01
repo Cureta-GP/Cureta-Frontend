@@ -43,8 +43,8 @@ class _UserRecordsViewState extends State<UserRecordsView> {
       query: _searchController.text,
     );
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
-    
+      backgroundColor: colors.background,
+
       body: SafeArea(
         child: ListView(
           padding: EdgeInsets.zero,

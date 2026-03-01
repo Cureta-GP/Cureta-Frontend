@@ -92,7 +92,7 @@ class _AddRecordForthStepState extends State<AddRecordForthStep> {
       create: (_) => AddRecordStepFourCubit(),
       child: Builder(
         builder: (scopedContext) => Scaffold(
-          backgroundColor: colors.medicalRecordBackground,
+          backgroundColor: colors.background,
           body: SafeArea(
             child: AddRecordStepFourBody(
               onBack: widget.onBack,

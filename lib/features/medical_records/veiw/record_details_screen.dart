@@ -42,9 +42,9 @@ class RecordDetailsView extends StatelessWidget {
     final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: colors.medicalRecordBackground,
+        backgroundColor: colors.background,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(

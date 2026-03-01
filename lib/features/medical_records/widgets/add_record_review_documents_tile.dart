@@ -17,7 +17,7 @@ class AddRecordReviewDocumentsTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(spacing.lg),
       decoration: BoxDecoration(
-        color: colors.medicalRecordBackground,
+        color: colors.background,
         borderRadius: BorderRadius.circular(radius.xl),
       ),
       child: Row(

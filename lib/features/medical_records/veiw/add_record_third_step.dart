@@ -45,7 +45,7 @@ class _AddRecordThirdStepState extends State<AddRecordThirdStep> {
     final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           children: [

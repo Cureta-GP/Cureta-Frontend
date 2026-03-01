@@ -27,7 +27,7 @@ class AddRecordChoiceButton extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: selected ? colors.primary : colors.medicalRecordBackground,
+          color: selected ? colors.primary : colors.background,
           borderRadius: BorderRadius.circular(radius.md),
           border: Border.all(
             color: selected ? colors.primary : colors.medicalRecordOptionBorder,

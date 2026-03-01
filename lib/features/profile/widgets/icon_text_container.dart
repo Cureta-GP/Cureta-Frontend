@@ -35,7 +35,7 @@ class IconTextContainer extends StatelessWidget {
         decoration: BoxDecoration(
           color: isSelected
               ? colors.medicalRecordAccentSoft
-              : colors.medicalRecordBackground,
+              : colors.background,
           borderRadius: BorderRadius.circular(radius.md),
           border: Border.all(
             color: isSelected

@@ -45,7 +45,7 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
     final horizontalPadding = spacing.xl;
 
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       bottomNavigationBar: SafeArea(
         top: false,
         child: Padding(

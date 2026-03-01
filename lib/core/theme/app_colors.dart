@@ -14,7 +14,6 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.textHint,
     required this.divider,
     required this.icon,
-    required this.medicalRecordBackground,
     required this.medicalRecordHeading,
     required this.medicalRecordMuted,
     required this.medicalRecordProgressText,
@@ -40,6 +39,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.homeBotBg,
     required this.homeActivityBlue,
     required this.homeActivityPurple,
+    required this.blueAccent,
+    required this.orangeAccent,
+    required this.cyanAccent,
   });
 
   final Color primary;
@@ -53,7 +55,6 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color textHint;
   final Color divider;
   final Color icon;
-  final Color medicalRecordBackground;
   final Color medicalRecordHeading;
   final Color medicalRecordMuted;
   final Color medicalRecordProgressText;
@@ -94,6 +95,15 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color homeActivityBlue;
   final Color homeActivityPurple;
 
+  /// #E0E7FF
+  final Color blueAccent;
+
+  /// #FFEDD5
+  final Color orangeAccent;
+
+  /// #E0F1F3
+  final Color cyanAccent;
+
   static const light = AppColors(
     primary: Color(0xFF00A1A9),
     primaryDark: Color(0xFF133A3E),
@@ -106,7 +116,7 @@ class AppColors extends ThemeExtension<AppColors> {
     textHint: Color(0xFFBDBDBD),
     divider: Color(0xFFE0E0E0),
     icon: Color(0xFF99A1AF),
-    medicalRecordBackground: Color(0xFFF5F8F8),
+
     medicalRecordHeading: Color(0xFF111827),
     medicalRecordMuted: Color(0xFF6B7280),
     medicalRecordProgressText: Color(0xFF9CA3AF),
@@ -132,6 +142,9 @@ class AppColors extends ThemeExtension<AppColors> {
     homeBotBg: Color(0xFF00A1A9),
     homeActivityBlue: Color(0xFFEFF6FF),
     homeActivityPurple: Color(0xFFF5F3FF),
+    blueAccent: Color(0xFFE0E7FF),
+    orangeAccent: Color(0xFFFFEDD5),
+    cyanAccent: Color(0xFFE0F1F3),
   );
 
   static const dark = AppColors(
@@ -146,7 +159,7 @@ class AppColors extends ThemeExtension<AppColors> {
     textHint: _darkHint,
     divider: _darkDivider,
     icon: _darkMuted,
-    medicalRecordBackground: _darkBackground,
+
     medicalRecordHeading: _darkHeading,
     medicalRecordMuted: _darkMuted,
     medicalRecordProgressText: _darkHint,
@@ -172,6 +185,9 @@ class AppColors extends ThemeExtension<AppColors> {
     homeBotBg: Color(0xFF00A1A9),
     homeActivityBlue: Color(0xFF1E293B),
     homeActivityPurple: Color(0xFF2E1065),
+    blueAccent: Color(0xFFE0E7FF),
+    orangeAccent: Color(0xFFFFEDD5),
+    cyanAccent: Color(0xFFE0F1F3),
   );
 
   static AppColors fromBrightness(Brightness brightness) {
@@ -191,7 +207,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? textHint,
     Color? divider,
     Color? icon,
-    Color? medicalRecordBackground,
+
     Color? medicalRecordHeading,
     Color? medicalRecordMuted,
     Color? medicalRecordProgressText,
@@ -217,6 +233,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? homeBotBg,
     Color? homeActivityBlue,
     Color? homeActivityPurple,
+    Color? blueAccent,
+    Color? orangeAccent,
+    Color? cyanAccent,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -230,8 +249,7 @@ class AppColors extends ThemeExtension<AppColors> {
       textHint: textHint ?? this.textHint,
       divider: divider ?? this.divider,
       icon: icon ?? this.icon,
-      medicalRecordBackground:
-          medicalRecordBackground ?? this.medicalRecordBackground,
+
       medicalRecordHeading: medicalRecordHeading ?? this.medicalRecordHeading,
       medicalRecordMuted: medicalRecordMuted ?? this.medicalRecordMuted,
       medicalRecordProgressText:
@@ -278,6 +296,9 @@ class AppColors extends ThemeExtension<AppColors> {
       homeBotBg: homeBotBg ?? this.homeBotBg,
       homeActivityBlue: homeActivityBlue ?? this.homeActivityBlue,
       homeActivityPurple: homeActivityPurple ?? this.homeActivityPurple,
+      blueAccent: blueAccent ?? this.blueAccent,
+      orangeAccent: orangeAccent ?? this.orangeAccent,
+      cyanAccent: cyanAccent ?? this.cyanAccent,
     );
   }
 
@@ -296,11 +317,7 @@ class AppColors extends ThemeExtension<AppColors> {
       textHint: Color.lerp(textHint, other.textHint, t)!,
       divider: Color.lerp(divider, other.divider, t)!,
       icon: Color.lerp(icon, other.icon, t)!,
-      medicalRecordBackground: Color.lerp(
-        medicalRecordBackground,
-        other.medicalRecordBackground,
-        t,
-      )!,
+
       medicalRecordHeading: Color.lerp(
         medicalRecordHeading,
         other.medicalRecordHeading,
@@ -422,6 +439,9 @@ class AppColors extends ThemeExtension<AppColors> {
         other.homeActivityPurple,
         t,
       )!,
+      blueAccent: Color.lerp(blueAccent, other.blueAccent, t)!,
+      orangeAccent: Color.lerp(orangeAccent, other.orangeAccent, t)!,
+      cyanAccent: Color.lerp(cyanAccent, other.cyanAccent, t)!,
     );
   }
 }

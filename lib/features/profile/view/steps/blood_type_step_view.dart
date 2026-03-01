@@ -55,9 +55,7 @@ class _BloodTypeStepState extends State<BloodTypeStep> {
           },
           child: Container(
             decoration: BoxDecoration(
-              color: isSelected
-                  ? colors.primary
-                  : colors.medicalRecordBackground,
+              color: isSelected ? colors.primary : colors.background,
               borderRadius: BorderRadius.circular(radius.md),
               border: Border.all(
                 color: isSelected

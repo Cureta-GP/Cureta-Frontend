@@ -134,7 +134,7 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? colors.primary.withOpacity(0.1)
-                        : colors.medicalRecordBackground,
+                        : colors.background,
                     borderRadius: BorderRadius.circular(radius.md),
                     border: Border.all(
                       color: isSelected

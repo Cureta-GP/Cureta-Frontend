@@ -76,7 +76,7 @@ class DateSelectionCard extends StatelessWidget {
                 vertical: spacing.md,
               ),
               decoration: BoxDecoration(
-                color: colors.medicalRecordBackground,
+                color: colors.background,
                 borderRadius: BorderRadius.circular(radius.md),
                 border: Border.all(
                   color: colors.medicalRecordInputBorder,

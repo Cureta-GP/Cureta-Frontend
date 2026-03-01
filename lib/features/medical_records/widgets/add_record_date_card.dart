@@ -1,6 +1,7 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+
 class AddRecordDateCard extends StatelessWidget {
   const AddRecordDateCard({
     super.key,
@@ -68,7 +69,7 @@ class AddRecordDateCard extends StatelessWidget {
                 vertical: spacing.md,
               ),
               decoration: BoxDecoration(
-                color: colors.medicalRecordBackground,
+                color: colors.background,
                 borderRadius: BorderRadius.circular(radius.md),
                 border: Border.all(
                   color: colors.medicalRecordInputBorder,

@@ -38,7 +38,7 @@ class AddRecordStepFifth extends StatelessWidget {
       context,
     ).formatMediumDate(startedDate);
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -104,9 +104,13 @@ class AddRecordStepFifth extends StatelessWidget {
                       ],
                     ),
                   ),
-                   SizedBox(height: spacing.xl),
+                  SizedBox(height: spacing.xl),
                   AddRecordStepTwoBottomBar(
-                    onNext: onSave ?? () => GoRouter.of( context,).pushNamed(AppRoutes.userRecords),
+                    onNext:
+                        onSave ??
+                        () => GoRouter.of(
+                          context,
+                        ).pushNamed(AppRoutes.userRecords),
                     onSkip: onCancel,
                     nextLabel: AppLocalizations.addRecordSaveRecord,
                   ),

@@ -54,7 +54,7 @@ class _AddMedicalRecordSeconedStepState
   Widget build(BuildContext context) {
     final colors = context.colors;
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           children: [
