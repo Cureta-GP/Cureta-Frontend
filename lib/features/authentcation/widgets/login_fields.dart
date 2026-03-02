@@ -14,7 +14,8 @@ class LoginFields extends StatelessWidget {
   final TextEditingController passwordController;
   final FocusNode passwordFocusNode;
   final Function(String) onEmailChanged;
-  final VoidCallback onSubmit;
+  final VoidCallback? onSubmit;
+  final bool isLoading;
 
   const LoginFields({
     super.key,
@@ -22,7 +23,8 @@ class LoginFields extends StatelessWidget {
     required this.passwordController,
     required this.passwordFocusNode,
     required this.onEmailChanged,
-    required this.onSubmit,
+    this.onSubmit,
+    this.isLoading = false,
   });
 
   @override
@@ -67,7 +69,11 @@ class LoginFields extends StatelessWidget {
         ),
 
         SizedBox(height: spacing.xxl),
-        CustomButton(text: AppLocalizations.loginButton, onPressed: onSubmit),
+        CustomButton(
+          text: AppLocalizations.loginButton,
+          onPressed: onSubmit ?? () {},
+          isLoading: isLoading,
+        ),
         SizedBox(height: spacing.lg),
         const GoogleButton(),
         SizedBox(height: spacing.xxl),

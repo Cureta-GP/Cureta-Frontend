@@ -118,7 +118,12 @@ class ErrorHandler {
 
       case ErrorType.fullScreen:
       case ErrorType.inline:
-        // UI handles these
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.message),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         break;
     }
   }

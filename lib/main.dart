@@ -1,4 +1,6 @@
+import 'package:cureta/core/Services/dio_helper.dart';
 import 'package:cureta/core/config/routing/router_generation.dart';
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/theme/app_theme_factory.dart';
 import 'package:cureta/core/theme/breakpoints.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +9,8 @@ import 'package:flutter/material.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
-
+  setup();
+  DioHelper.init();
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],

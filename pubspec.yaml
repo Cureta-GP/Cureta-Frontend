@@ -48,6 +48,8 @@ dependencies:
   animated_bottom_navigation_bar: ^1.4.0
   file_picker: ^10.3.2
   open_filex: ^4.7.0
+  get_it: ^9.2.1
+  equatable: ^2.0.8
 
 dev_dependencies:
   flutter_test:
