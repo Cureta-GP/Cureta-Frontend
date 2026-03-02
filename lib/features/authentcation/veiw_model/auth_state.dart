@@ -30,7 +30,8 @@ class AuthSuccess extends AuthState {
 
 class AuthError extends AuthState {
   final String message;
-  const AuthError(this.message);
+  final AppException? exception;
+  const AuthError(this.message, {this.exception});
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [message, exception];
 }

@@ -1,5 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/error_handling/error_handler.dart';
+import 'package:cureta/features/authentcation/veiw_model/auth_state.dart';
 import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
 import 'package:cureta/features/authentcation/veiw_model/rive_animation_manager.dart';
 import 'package:cureta/features/authentcation/widgets/login_fields.dart';
@@ -73,6 +74,7 @@ class _LoginFormState extends State<LoginForm> {
     final spacing = context.spacing;
 
     return BlocListener<AuthCubit, AuthState>(
+      listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,
       listener: (context, state) {
         if (state is AuthSuccess) {
           // Play success animation and navigate
@@ -94,31 +96,27 @@ class _LoginFormState extends State<LoginForm> {
           }
         }
       },
-      child: BlocBuilder<AuthCubit, AuthState>(
-        builder: (context, state) {
-          final isLoading = state is AuthLoading;
-
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: spacing.xl),
-            child: Column(
-              children: [
-                AnimatedLoginHeader(animationManager: _animationManager),
-                Form(
-                  key: _formKey,
-                  autovalidateMode: AutovalidateMode.disabled,
-                  child: LoginFields(
-                    emailController: _emailController,
-                    passwordController: _passwordController,
-                    passwordFocusNode: _passwordFocusNode,
-                    onEmailChanged: _animationManager.handleEmailChange,
-                    onSubmit: _handleSubmit,
-                    isLoading: isLoading,
-                  ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: spacing.xl),
+        child: Column(
+          children: [
+            AnimatedLoginHeader(animationManager: _animationManager),
+            Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.disabled,
+              child: LoginFields(
+                emailController: _emailController,
+                passwordController: _passwordController,
+                passwordFocusNode: _passwordFocusNode,
+                onEmailChanged: _animationManager.handleEmailChange,
+                onSubmit: _handleSubmit,
+                isLoading: context.select<AuthCubit, bool>(
+                  (cubit) => cubit.state is AuthLoading,
                 ),
-              ],
+              ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }

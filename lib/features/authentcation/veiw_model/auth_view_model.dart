@@ -1,62 +1,25 @@
+import 'package:cureta/features/authentcation/veiw_model/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
-import 'package:cureta/core/Services/GetItServices.dart';
 import '../data/repo/auth_repository.dart';
-import '../data/models/user_model.dart';
 
 // ──────────────────────────────────────────
 //  AUTH STATES
 // ──────────────────────────────────────────
-abstract class AuthState {
-  const AuthState();
-}
-
-class AuthInitial extends AuthState {
-  const AuthInitial();
-}
-
-class AuthLoading extends AuthState {
-  const AuthLoading();
-}
-
-class AuthSuccess extends AuthState {
-  final UserModel user;
-  const AuthSuccess(this.user);
-}
-
-class AuthError extends AuthState {
-  final String message;
-  final AppException? exception;
-
-  const AuthError(this.message, {this.exception});
-}
 
 // ──────────────────────────────────────────
 //  AUTH CUBIT
 // ──────────────────────────────────────────
 class AuthCubit extends Cubit<AuthState> {
-  final AuthRepository _authRepository = getIt.get<AuthRepository>();
+  final AuthRepository _authRepository;
 
-  AuthCubit() : super(const AuthInitial());
-
-  // ──── Getters for convenience ────
-  bool get isLoading => state is AuthLoading;
-  UserModel? get user =>
-      state is AuthSuccess ? (state as AuthSuccess).user : null;
-  String? get errorMessage =>
-      state is AuthError ? (state as AuthError).message : null;
-  bool get isSuccess => state is AuthSuccess;
+  AuthCubit(this._authRepository) : super(const AuthInitial());
 
   // ──── Clear error ────
   void clearError() {
     if (state is AuthError) {
       emit(const AuthInitial());
     }
-  }
-
-  // ──── Reset state ────
-  void _reset() {
-    // Keep the current user if needed, but reset to initial for new actions
   }
 
   // ──────────────────────────────────────

@@ -1,0 +1,204 @@
+# Auth Best Practices & Rebuild Prevention
+
+After auditing the entire authentication feature, I found **6 concrete issues** that cause unnecessary widget rebuilds and violate Flutter/Bloc best practices. Here's a summary and the proposed fix for each.
+
+---
+
+## Problems Found
+
+| # | Issue | Impact |
+|---|-------|--------|
+| 1 | `BlocBuilder` wraps the **entire** form tree — every state change (Loading → Success → Error) rebuilds all text fields, buttons, header, animations | **Unnecessary rebuilds** |
+| 2 | No `buildWhen` / `listenWhen` on Bloc widgets | Listener fires even when state class hasn't changed; Builder rebuilds for side-effect-only states |
+| 3 | [UserModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/models/user_model.dart#1-34) doesn't extend `Equatable` | Bloc can't compare two [AuthSuccess(sameUser)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_state.dart#24-30) states → always emits even if data is identical |
+| 4 | [AuthCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart#15-93) resolves [AuthRepository](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/repo/auth_repository.dart#9-99) via `getIt` **inside the class body** instead of constructor injection | Un-testable, Service Locator anti-pattern |
+| 5 | Unused [_reset()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart#36-39) method + dead [UserModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/models/user_model.dart#1-34) import in cubit | Dead code |
+| 6 | [LoginView](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw/login_view.dart#8-41) / [SignupView](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw/signup_view.dart#8-66) create [AuthCubit()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart#15-93) inline — cubit silently depends on `getIt` being initialized | Hidden coupling |
+
+---
+
+## Proposed Changes
+
+### Models
+
+#### [MODIFY] [user_model.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/models/user_model.dart)
+
+Add `Equatable` so Bloc can properly compare states containing [UserModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/models/user_model.dart#1-34):
+
+```diff
++import 'package:equatable/equatable.dart';
++
+-class UserModel {
++class UserModel extends Equatable {
+   ...
++  @override
++  List<Object?> get props => [id, username, email, phone, token];
+ }
+```
+
+---
+
+### ViewModel (Cubit)
+
+#### [MODIFY] [auth_view_model.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart)
+
+1. **Constructor-inject** [AuthRepository](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/repo/auth_repository.dart#9-99) (proper DI, testable).
+2. **Remove** unused [_reset()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart#36-39) method and dead [UserModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/models/user_model.dart#1-34) import.
+3. Remove the convenience getters that encourage [is](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/rive_animation_manager.dart#96-100) checks outside `BlocBuilder`.
+
+```diff
+ class AuthCubit extends Cubit<AuthState> {
+-  final AuthRepository _authRepository = getIt.get<AuthRepository>();
+-  AuthCubit() : super(const AuthInitial());
++  final AuthRepository _authRepository;
++  AuthCubit(this._authRepository) : super(const AuthInitial());
+ 
+-  // ──── Getters for convenience ────
+-  bool get isLoading => state is AuthLoading;
+-  UserModel? get user => ...
+-  String? get errorMessage => ...
+-  bool get isSuccess => state is AuthSuccess;
+-
+-  // ──── Reset state ────
+-  void _reset() { ... }
+```
+
+---
+
+### DI Registration
+
+#### [MODIFY] [GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart)
+
+Register [AuthCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart#15-93) as a **factory** (new instance per screen) so views don't need to `new` it themselves:
+
+```diff
++  // 🧠 Cubits (factory = new instance per screen)
++  getIt.registerFactory<AuthCubit>(
++    () => AuthCubit(getIt.get<AuthRepository>()),
++  );
+```
+
+---
+
+### Views
+
+#### [MODIFY] [login_view.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw/login_view.dart)
+
+Use `getIt<AuthCubit>()` so the cubit is always properly wired:
+
+```diff
+-  create: (_) => AuthCubit(),
++  create: (_) => getIt<AuthCubit>(),
+```
+
+#### [MODIFY] [signup_view.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw/signup_view.dart)
+
+Same change:
+
+```diff
+-  create: (_) => AuthCubit(),
++  create: (_) => getIt<AuthCubit>(),
+```
+
+---
+
+### Widgets — Preventing Unnecessary Rebuilds
+
+#### [MODIFY] [login_form.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/widgets/login_form.dart)
+
+The `BlocBuilder` currently wraps the **entire** Column (animation header + form + fields + button). Only the button's `isLoading` actually depends on state. Fix:
+
+```diff
+   BlocListener<AuthCubit, AuthState>(
++    listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,
+     listener: (context, state) { ... },
+-    child: BlocBuilder<AuthCubit, AuthState>(
+-      builder: (context, state) {
+-        final isLoading = state is AuthLoading;
+-        return Padding(
+-          ...
+-          child: Column(
+-            children: [
+-              AnimatedLoginHeader(...),  // ← rebuilt for no reason
+-              Form(...),                // ← rebuilt for no reason
+-            ],
+-          ),
+-        );
+-      },
+-    ),
++    child: Padding(
++      padding: EdgeInsets.symmetric(horizontal: spacing.xl),
++      child: Column(
++        children: [
++          AnimatedLoginHeader(animationManager: _animationManager),
++          Form(
++            key: _formKey,
++            autovalidateMode: AutovalidateMode.disabled,
++            child: LoginFields(
++              emailController: _emailController,
++              passwordController: _passwordController,
++              passwordFocusNode: _passwordFocusNode,
++              onEmailChanged: _animationManager.handleEmailChange,
++              onSubmit: _handleSubmit,
++              isLoading: context.select<AuthCubit, bool>(
++                (cubit) => cubit.state is AuthLoading,
++              ),
++            ),
++          ),
++        ],
++      ),
++    ),
+```
+
+> **Key change**: Replace the full `BlocBuilder` with a surgical `context.select` that only rebuilds the [LoginFields](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/widgets/login_fields.dart#12-89) widget when `isLoading` changes — the animation header and form structure no longer rebuild.
+
+#### [MODIFY] [signup_form.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/widgets/signup_form.dart)
+
+Same pattern — remove the `BlocBuilder` wrapping the entire form and use `context.select` for `isLoading` on just the button:
+
+```diff
+   BlocListener<AuthCubit, AuthState>(
++    listenWhen: (prev, curr) => prev.runtimeType != curr.runtimeType,
+     listener: (context, state) { ... },
+-    child: BlocBuilder<AuthCubit, AuthState>(
+-      builder: (context, state) {
+-        final isLoading = state is AuthLoading;
+-        return Padding( ... entire form tree ... );
+-      },
+-    ),
++    child: Padding(
++      padding: EdgeInsets.symmetric(horizontal: spacing.xl),
++      child: Form(
++        key: _formKey,
++        autovalidateMode: AutovalidateMode.disabled,
++        child: Column(
++          children: [
++            ... all text fields (no longer rebuilt on state change) ...
++            CustomButton(
++              text: AppLocalizations.signupButton,
++              onPressed: _handleSubmit,
++              isLoading: context.select<AuthCubit, bool>(
++                (cubit) => cubit.state is AuthLoading,
++              ),
++            ),
++            ... rest of static widgets ...
++          ],
++        ),
++      ),
++    ),
+```
+
+---
+
+## Verification Plan
+
+### Automated
+1. **Static analysis**: `flutter analyze` — should report 0 issues
+2. **Build check**: `flutter build apk --debug` — should complete cleanly
+
+### Manual (by you)
+1. Open login screen → confirm animations, fields, and button render
+2. Submit with empty fields → validation errors show, no crash
+3. Submit with wrong credentials → error snackbar/dialog appears, form fields are **not** rebuilt (no visible flicker of text fields)
+4. Submit with correct credentials → loading spinner on button only, then navigate to main screen
+5. Open signup screen → same checks as above
