@@ -68,23 +68,51 @@ class RoutesGeneration {
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: ResetPasswordView(), state: state),
       ),
-      GoRoute(
-        path: AppRoutes.medicalRecordsStepOne,
-        name: AppRoutes.medicalRecordsStepOne,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFlowWrapper(child: AddRecordFirstStep()),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.medicalRecordsStepTwo,
-        name: AppRoutes.medicalRecordsStepTwo,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFlowWrapper(
-            child: AddMedicalRecordSeconedStep(),
+      // Medical Records Flow - Shared Cubits via ShellRoute
+      ShellRoute(
+        builder: (context, state, child) => AddRecordFlowWrapper(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.medicalRecordsStepOne,
+            name: AppRoutes.medicalRecordsStepOne,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordFirstStep(),
+              state: state,
+            ),
           ),
-          state: state,
-        ),
+          GoRoute(
+            path: AppRoutes.medicalRecordsStepTwo,
+            name: AppRoutes.medicalRecordsStepTwo,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddMedicalRecordSeconedStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicalRecords_step_three,
+            name: AppRoutes.medicalRecords_step_three,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordThirdStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.addRecordStepFour,
+            name: AppRoutes.addRecordStepFour,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordForthStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.addRecordStepFive,
+            name: AppRoutes.addRecordStepFive,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordStepFifth(),
+              state: state,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.home,
@@ -97,30 +125,6 @@ class RoutesGeneration {
         name: AppRoutes.addProfile,
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: const AddProfileMain(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.medicalRecords_step_three,
-        name: AppRoutes.medicalRecords_step_three,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFlowWrapper(child: AddRecordThirdStep()),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.addRecordStepFour,
-        name: AppRoutes.addRecordStepFour,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFlowWrapper(child: AddRecordForthStep()),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.addRecordStepFive,
-        name: AppRoutes.addRecordStepFive,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFlowWrapper(child: AddRecordStepFifth()),
-          state: state,
-        ),
       ),
       GoRoute(
         path: AppRoutes.userRecords,

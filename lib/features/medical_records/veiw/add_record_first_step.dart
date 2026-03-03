@@ -1,11 +1,13 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/features/medical_records/veiw_model/add_record_form_cubit.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_condition_section.dart';
 import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:cureta/shared/widgets/step_progress_indicator.dart';
 import 'package:cureta/shared/widgets/custom_top_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AddRecordFirstStep extends StatefulWidget {
@@ -15,18 +17,15 @@ class AddRecordFirstStep extends StatefulWidget {
     this.onCancel,
     this.onNext,
   });
-
   final VoidCallback? onBack;
   final VoidCallback? onCancel;
   final ValueChanged<String>? onNext;
-
   @override
   State<AddRecordFirstStep> createState() => _AddRecordFirstStepState();
 }
 
 class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
   final TextEditingController _conditionController = TextEditingController();
-
   @override
   void dispose() {
     _conditionController.dispose();
@@ -34,7 +33,20 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
   }
 
   void _handleNext() {
-    widget.onNext?.call(_conditionController.text.trim());
+    final condition = _conditionController.text.trim();
+
+    // Condition is required
+    if (condition.isEmpty) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Please enter a condition')));
+      return;
+    }
+
+    // Persist to shared cubit
+    context.read<AddRecordFormCubit>().setCondition(condition);
+
+    widget.onNext?.call(condition);
     GoRouter.of(context).pushNamed(AppRoutes.medicalRecordsStepTwo);
   }
 
