@@ -19,6 +19,8 @@ class AddRecordStepFourBody extends StatelessWidget {
     this.onPrescriptionTap,
     this.onLabTestTap,
     this.onScanTap,
+    this.onReportTap,
+    this.onOtherTap,
     this.onViewFile,
     this.onDeleteFile,
   });
@@ -29,6 +31,8 @@ class AddRecordStepFourBody extends StatelessWidget {
   final VoidCallback? onPrescriptionTap;
   final VoidCallback? onLabTestTap;
   final VoidCallback? onScanTap;
+  final VoidCallback? onReportTap;
+  final VoidCallback? onOtherTap;
   final void Function(
     AddRecordUploadCategory category,
     AddRecordUploadedFile file,
@@ -101,6 +105,34 @@ class AddRecordStepFourBody extends StatelessWidget {
               ),
               AddRecordUploadedFilesSection(
                 category: AddRecordUploadCategory.scan,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
+              SizedBox(height: spacing.md),
+              AddRecordUploadCategoryTile(
+                icon: Icons.description_outlined,
+                iconBackgroundColor: const Color(0xFFE8F5E9),
+                iconColor: const Color(0xFF4CAF50),
+                title: 'Report',
+                description: 'Upload medical reports',
+                onTap: onReportTap,
+              ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.report,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
+              SizedBox(height: spacing.md),
+              AddRecordUploadCategoryTile(
+                icon: Icons.folder_outlined,
+                iconBackgroundColor: const Color(0xFFF3E5F5),
+                iconColor: const Color(0xFF9C27B0),
+                title: 'Other',
+                description: 'Upload other documents',
+                onTap: onOtherTap,
+              ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.other,
                 onViewFile: onViewFile,
                 onDeleteFile: onDeleteFile,
               ),

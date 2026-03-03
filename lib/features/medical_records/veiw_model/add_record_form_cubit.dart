@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Stores the medical record form data across all steps.
@@ -21,35 +22,43 @@ class AddRecordFormCubit extends Cubit<AddRecordFormState> {
     emit(state.copyWith(notes: notes));
   }
 
+  void setIsOngoing(bool isOngoing) {
+    emit(state.copyWith(isOngoing: isOngoing));
+  }
+
   void reset() {
     emit(const AddRecordFormState());
   }
 }
 
-class AddRecordFormState {
+class AddRecordFormState extends Equatable {
   const AddRecordFormState({
-    this.profileId,
+    this.profileId = 'temp-test-profile-id-1234', // Temporary for testing
     this.diseaseName,
     this.recordDate,
     this.notes,
+    this.isOngoing = true,
   });
 
   final String? profileId;
   final String? diseaseName;
   final DateTime? recordDate;
   final String? notes;
+  final bool isOngoing;
 
   AddRecordFormState copyWith({
     String? profileId,
     String? diseaseName,
     DateTime? recordDate,
     String? notes,
+    bool? isOngoing,
   }) {
     return AddRecordFormState(
       profileId: profileId ?? this.profileId,
       diseaseName: diseaseName ?? this.diseaseName,
       recordDate: recordDate ?? this.recordDate,
       notes: notes ?? this.notes,
+      isOngoing: isOngoing ?? this.isOngoing,
     );
   }
 
@@ -58,4 +67,13 @@ class AddRecordFormState {
       diseaseName != null &&
       diseaseName!.isNotEmpty &&
       recordDate != null;
+
+  @override
+  List<Object?> get props => [
+    profileId,
+    diseaseName,
+    recordDate,
+    notes,
+    isOngoing,
+  ];
 }

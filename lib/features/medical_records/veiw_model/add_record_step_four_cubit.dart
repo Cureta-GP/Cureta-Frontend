@@ -24,6 +24,7 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
     }
     return '';
   }
+
   Future<void> pickRecordFile(AddRecordUploadCategory category) async {
     final result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
@@ -51,13 +52,23 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
     emit(state.withCategoryFiles(category, [...currentFiles, ...pickedFiles]));
   }
 
-  Future<bool> viewFile(AddRecordUploadedFile file) async {
+  Future<void> viewFile(AddRecordUploadedFile file) async {
     if (file.path == null || file.path!.isEmpty) {
-      return false;
+      emit(state.copyWith(fileOpenError: 'File path is missing or invalid.'));
+      // Clear error immediately so next time it triggers listener even if same string
+      emit(state.copyWith(clearError: true));
+      return;
     }
 
-    await OpenFilex.open(file.path!);
-    return true;
+    final result = await OpenFilex.open(file.path!);
+    if (result.type != ResultType.done) {
+      emit(
+        state.copyWith(
+          fileOpenError: 'Unable to open this file: ${result.message}',
+        ),
+      );
+      emit(state.copyWith(clearError: true));
+    }
   }
 
   void deleteFile(

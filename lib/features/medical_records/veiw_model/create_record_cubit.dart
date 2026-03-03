@@ -24,9 +24,7 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
   }) async {
     // ── Guard: prevent double-tap ──
     if (state is CreateRecordLoading) return;
-
     emit(const CreateRecordLoading());
-
     try {
       // Flatten into ordered parallel lists
       final List<String> attachmentTypes = [];
@@ -42,14 +40,28 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
       // Process lab test files
       for (final file in stepFourState.labTestFiles) {
         if (file.path == null || file.path!.isEmpty) continue;
-        attachmentTypes.add('Lab-test');
+        attachmentTypes.add('Lab_Test');
         filePaths.add(file.path!);
       }
 
-      // Process scan files
+      // Process scan files (X-ray)
       for (final file in stepFourState.scanFiles) {
         if (file.path == null || file.path!.isEmpty) continue;
-        attachmentTypes.add('Scan');
+        attachmentTypes.add('X-ray');
+        filePaths.add(file.path!);
+      }
+
+      // Process report files
+      for (final file in stepFourState.reportFiles) {
+        if (file.path == null || file.path!.isEmpty) continue;
+        attachmentTypes.add('Report');
+        filePaths.add(file.path!);
+      }
+
+      // Process other files
+      for (final file in stepFourState.otherFiles) {
+        if (file.path == null || file.path!.isEmpty) continue;
+        attachmentTypes.add('Other');
         filePaths.add(file.path!);
       }
 
@@ -64,6 +76,17 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
 
       final dateStr =
           '${recordDate.year}-${recordDate.month.toString().padLeft(2, '0')}-${recordDate.day.toString().padLeft(2, '0')}';
+
+      // --- DEBUG PRINTS ---
+      print('=== SUBMITTING MEDICAL RECORD ===');
+      print('profileId: $profileId');
+      print('diseaseName: $diseaseName');
+      print('notes: $notes');
+      print('recordDate: $dateStr');
+      print('attachmentTypes: $attachmentTypes');
+      print('filePaths: $filePaths');
+      print('=================================');
+      // --------------------
 
       final record = await _repository.createRecord(
         profileId: profileId,

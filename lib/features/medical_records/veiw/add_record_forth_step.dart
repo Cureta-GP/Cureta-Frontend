@@ -2,12 +2,13 @@ import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_cubit.dart';
+import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_four_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class AddRecordForthStep extends StatefulWidget {
+class AddRecordForthStep extends StatelessWidget {
   const AddRecordForthStep({
     super.key,
     this.onBack,
@@ -16,6 +17,8 @@ class AddRecordForthStep extends StatefulWidget {
     this.onPrescriptionTap,
     this.onLabTestTap,
     this.onScanTap,
+    this.onReportTap,
+    this.onOtherTap,
   });
 
   final VoidCallback? onBack;
@@ -24,62 +27,62 @@ class AddRecordForthStep extends StatefulWidget {
   final VoidCallback? onPrescriptionTap;
   final VoidCallback? onLabTestTap;
   final VoidCallback? onScanTap;
+  final VoidCallback? onReportTap;
+  final VoidCallback? onOtherTap;
 
-  @override
-  State<AddRecordForthStep> createState() => _AddRecordForthStepState();
-}
-
-class _AddRecordForthStepState extends State<AddRecordForthStep> {
-  Future<void> _handleViewFile(
-    BuildContext scopedContext,
-    AddRecordUploadedFile file,
-  ) async {
-    final isOpened = await scopedContext
-        .read<AddRecordStepFourCubit>()
-        .viewFile(file);
-    if (!isOpened) {
-      if (!mounted) {
-        return;
-      }
-      ScaffoldMessenger.of(scopedContext).showSnackBar(
-        const SnackBar(content: Text('Unable to open this file.')),
-      );
-    }
-  }
-
-  Future<void> _handlePrescriptionTap(BuildContext scopedContext) async {
-    if (widget.onPrescriptionTap != null) {
-      widget.onPrescriptionTap!.call();
+  void _handlePrescriptionTap(BuildContext context) {
+    if (onPrescriptionTap != null) {
+      onPrescriptionTap!.call();
       return;
     }
-    await scopedContext.read<AddRecordStepFourCubit>().pickRecordFile(
+    context.read<AddRecordStepFourCubit>().pickRecordFile(
       AddRecordUploadCategory.prescription,
     );
   }
 
-  Future<void> _handleLabTestTap(BuildContext scopedContext) async {
-    if (widget.onLabTestTap != null) {
-      widget.onLabTestTap!.call();
+  void _handleLabTestTap(BuildContext context) {
+    if (onLabTestTap != null) {
+      onLabTestTap!.call();
       return;
     }
-    await scopedContext.read<AddRecordStepFourCubit>().pickRecordFile(
+    context.read<AddRecordStepFourCubit>().pickRecordFile(
       AddRecordUploadCategory.labTest,
     );
   }
 
-  Future<void> _handleScanTap(BuildContext scopedContext) async {
-    if (widget.onScanTap != null) {
-      widget.onScanTap!.call();
+  void _handleScanTap(BuildContext context) {
+    if (onScanTap != null) {
+      onScanTap!.call();
       return;
     }
-    await scopedContext.read<AddRecordStepFourCubit>().pickRecordFile(
+    context.read<AddRecordStepFourCubit>().pickRecordFile(
       AddRecordUploadCategory.scan,
     );
   }
 
+  void _handleReportTap(BuildContext context) {
+    if (onReportTap != null) {
+      onReportTap!.call();
+      return;
+    }
+    context.read<AddRecordStepFourCubit>().pickRecordFile(
+      AddRecordUploadCategory.report,
+    );
+  }
+
+  void _handleOtherTap(BuildContext context) {
+    if (onOtherTap != null) {
+      onOtherTap!.call();
+      return;
+    }
+    context.read<AddRecordStepFourCubit>().pickRecordFile(
+      AddRecordUploadCategory.other,
+    );
+  }
+
   void _handleContinue(BuildContext context) {
-    if (widget.onContinue != null) {
-      widget.onContinue!.call();
+    if (onContinue != null) {
+      onContinue!.call();
       return;
     }
     GoRouter.of(context).pushNamed(AppRoutes.addRecordStepFive);
@@ -88,32 +91,35 @@ class _AddRecordForthStepState extends State<AddRecordForthStep> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return Builder(
-      builder: (scopedContext) => Scaffold(
-        backgroundColor: colors.background,
-        body: SafeArea(
+    return Scaffold(
+      backgroundColor: colors.background,
+      body: SafeArea(
+        child: BlocListener<AddRecordStepFourCubit, AddRecordStepFourState>(
+          listenWhen: (previous, current) =>
+              current.fileOpenError != null &&
+              previous.fileOpenError != current.fileOpenError,
+          listener: (context, state) {
+            if (state.fileOpenError != null) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.fileOpenError!)));
+            }
+          },
           child: AddRecordStepFourBody(
-            onBack: widget.onBack,
-            onContinue: () => _handleContinue(scopedContext),
-            onSkip: widget.onSkip,
+            onBack: onBack,
+            onContinue: () => _handleContinue(context),
+            onSkip: onSkip,
             onViewFile: (_, file) {
-              _handleViewFile(scopedContext, file);
+              context.read<AddRecordStepFourCubit>().viewFile(file);
             },
             onDeleteFile: (category, file) {
-              scopedContext.read<AddRecordStepFourCubit>().deleteFile(
-                category,
-                file,
-              );
+              context.read<AddRecordStepFourCubit>().deleteFile(category, file);
             },
-            onPrescriptionTap: () {
-              _handlePrescriptionTap(scopedContext);
-            },
-            onLabTestTap: () {
-              _handleLabTestTap(scopedContext);
-            },
-            onScanTap: () {
-              _handleScanTap(scopedContext);
-            },
+            onPrescriptionTap: () => _handlePrescriptionTap(context),
+            onLabTestTap: () => _handleLabTestTap(context),
+            onScanTap: () => _handleScanTap(context),
+            onReportTap: () => _handleReportTap(context),
+            onOtherTap: () => _handleOtherTap(context),
           ),
         ),
       ),

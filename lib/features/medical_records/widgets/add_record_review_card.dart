@@ -62,7 +62,9 @@ class AddRecordReviewCard extends StatelessWidget {
             selector: (state) =>
                 state.prescriptionFiles.length +
                 state.labTestFiles.length +
-                state.scanFiles.length,
+                state.scanFiles.length +
+                state.reportFiles.length +
+                state.otherFiles.length,
             builder: (context, documentsCount) {
               return AddRecordReviewDocumentsTile(
                 documentsCount: documentsCount,

@@ -25,17 +25,20 @@ class MedicalRecordRepository {
         attachmentTypes: attachmentTypes,
         filePaths: filePaths,
       );
-
       final parsed = CreateRecordResponseModel.fromJson(response.data);
-
+      print('=====================================');
+      print(parsed.data);
+      print('=====================================');
       if (!parsed.isSuccess) {
         throw AppException.validation(
           msg: parsed.message ?? 'Failed to create medical record',
         );
       }
-
       return parsed.data!;
     } catch (e) {
+      print('=====================================');
+      print(e);
+      print('=====================================');
       throw ErrorHandler.handle(e);
     }
   }

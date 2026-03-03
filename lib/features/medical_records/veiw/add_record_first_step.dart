@@ -31,10 +31,8 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
     _conditionController.dispose();
     super.dispose();
   }
-
   void _handleNext() {
     final condition = _conditionController.text.trim();
-
     // Condition is required
     if (condition.isEmpty) {
       ScaffoldMessenger.of(
@@ -42,7 +40,6 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
       ).showSnackBar(const SnackBar(content: Text('Please enter a condition')));
       return;
     }
-
     // Persist to shared cubit
     context.read<AddRecordFormCubit>().setCondition(condition);
 

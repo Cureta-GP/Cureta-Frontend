@@ -1,4 +1,4 @@
-enum AddRecordUploadCategory { prescription, labTest, scan }
+enum AddRecordUploadCategory { prescription, labTest, scan, report, other }
 
 class AddRecordUploadedFile {
   const AddRecordUploadedFile({
