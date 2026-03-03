@@ -15,6 +15,7 @@ import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
+import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
@@ -71,7 +72,7 @@ class RoutesGeneration {
         path: AppRoutes.medicalRecordsStepOne,
         name: AppRoutes.medicalRecordsStepOne,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFirstStep(),
+          child: const AddRecordFlowWrapper(child: AddRecordFirstStep()),
           state: state,
         ),
       ),
@@ -79,7 +80,9 @@ class RoutesGeneration {
         path: AppRoutes.medicalRecordsStepTwo,
         name: AppRoutes.medicalRecordsStepTwo,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddMedicalRecordSeconedStep(),
+          child: const AddRecordFlowWrapper(
+            child: AddMedicalRecordSeconedStep(),
+          ),
           state: state,
         ),
       ),
@@ -99,7 +102,7 @@ class RoutesGeneration {
         path: AppRoutes.medicalRecords_step_three,
         name: AppRoutes.medicalRecords_step_three,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordThirdStep(),
+          child: const AddRecordFlowWrapper(child: AddRecordThirdStep()),
           state: state,
         ),
       ),
@@ -107,7 +110,7 @@ class RoutesGeneration {
         path: AppRoutes.addRecordStepFour,
         name: AppRoutes.addRecordStepFour,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordForthStep(),
+          child: const AddRecordFlowWrapper(child: AddRecordForthStep()),
           state: state,
         ),
       ),
@@ -115,7 +118,7 @@ class RoutesGeneration {
         path: AppRoutes.addRecordStepFive,
         name: AppRoutes.addRecordStepFive,
         pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordStepFifth(),
+          child: const AddRecordFlowWrapper(child: AddRecordStepFifth()),
           state: state,
         ),
       ),
@@ -133,7 +136,7 @@ class RoutesGeneration {
           state: state,
         ),
       ),
-       GoRoute(
+      GoRoute(
         path: AppRoutes.mainNavigation,
         name: AppRoutes.mainNavigation,
         pageBuilder: (context, state) => PageTransitions.scale(

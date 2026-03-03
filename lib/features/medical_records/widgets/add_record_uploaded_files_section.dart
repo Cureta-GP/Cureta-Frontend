@@ -1,5 +1,5 @@
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_cubit.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_uploaded_file_tile.dart';

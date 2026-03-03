@@ -1,4 +1,4 @@
-import 'package:cureta/features/medical_records/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
 
 class AddRecordStepFourState {
   const AddRecordStepFourState({

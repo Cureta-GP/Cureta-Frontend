@@ -1,10 +1,10 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_cubit.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_four_body.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AddRecordForthStep extends StatefulWidget {
@@ -88,35 +88,32 @@ class _AddRecordForthStepState extends State<AddRecordForthStep> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    return BlocProvider(
-      create: (_) => AddRecordStepFourCubit(),
-      child: Builder(
-        builder: (scopedContext) => Scaffold(
-          backgroundColor: colors.background,
-          body: SafeArea(
-            child: AddRecordStepFourBody(
-              onBack: widget.onBack,
-              onContinue: () => _handleContinue(scopedContext),
-              onSkip: widget.onSkip,
-              onViewFile: (_, file) {
-                _handleViewFile(scopedContext, file);
-              },
-              onDeleteFile: (category, file) {
-                scopedContext.read<AddRecordStepFourCubit>().deleteFile(
-                  category,
-                  file,
-                );
-              },
-              onPrescriptionTap: () {
-                _handlePrescriptionTap(scopedContext);
-              },
-              onLabTestTap: () {
-                _handleLabTestTap(scopedContext);
-              },
-              onScanTap: () {
-                _handleScanTap(scopedContext);
-              },
-            ),
+    return Builder(
+      builder: (scopedContext) => Scaffold(
+        backgroundColor: colors.background,
+        body: SafeArea(
+          child: AddRecordStepFourBody(
+            onBack: widget.onBack,
+            onContinue: () => _handleContinue(scopedContext),
+            onSkip: widget.onSkip,
+            onViewFile: (_, file) {
+              _handleViewFile(scopedContext, file);
+            },
+            onDeleteFile: (category, file) {
+              scopedContext.read<AddRecordStepFourCubit>().deleteFile(
+                category,
+                file,
+              );
+            },
+            onPrescriptionTap: () {
+              _handlePrescriptionTap(scopedContext);
+            },
+            onLabTestTap: () {
+              _handleLabTestTap(scopedContext);
+            },
+            onScanTap: () {
+              _handleScanTap(scopedContext);
+            },
           ),
         ),
       ),

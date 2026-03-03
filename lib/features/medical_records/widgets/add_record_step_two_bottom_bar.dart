@@ -8,11 +8,13 @@ class AddRecordStepTwoBottomBar extends StatelessWidget {
     this.onNext,
     this.onSkip,
     this.nextLabel,
+    this.isLoading = false,
   });
 
   final VoidCallback? onNext;
   final VoidCallback? onSkip;
   final String? nextLabel;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +33,7 @@ class AddRecordStepTwoBottomBar extends StatelessWidget {
         onNext: effectiveOnNext,
         onSkip: effectiveOnSkip,
         nextLabel: nextLabel,
+        isLoading: isLoading,
       ),
     );
   }

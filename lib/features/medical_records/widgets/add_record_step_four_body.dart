@@ -1,6 +1,6 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_uploaded_files_section.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_secure_note.dart';

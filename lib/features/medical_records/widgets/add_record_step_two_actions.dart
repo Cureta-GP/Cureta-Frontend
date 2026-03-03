@@ -9,10 +9,12 @@ class AddRecordStepTwoActions extends StatelessWidget {
     this.onNext,
     this.onSkip,
     this.nextLabel,
+    this.isLoading = false,
   });
   final VoidCallback? onNext;
   final VoidCallback? onSkip;
   final String? nextLabel;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -26,12 +28,13 @@ class AddRecordStepTwoActions extends StatelessWidget {
         AddRecordNextButton(
           onPressed: onNext,
           label: nextLabel ?? AppLocalizations.addRecordNextStep,
+          isLoading: isLoading,
         ),
         SizedBox(height: spacing.md),
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: TextButton(
-            onPressed: onSkip,
+            onPressed: isLoading ? null : onSkip,
             style: TextButton.styleFrom(
               padding: EdgeInsets.symmetric(horizontal: spacing.xs),
               minimumSize: const Size(0, 40),

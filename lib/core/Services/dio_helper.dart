@@ -58,6 +58,15 @@ class DioHelper {
     Map<String, dynamic>? query,
     Map<String, dynamic>? data,
   }) async {
-    return dio!.delete(url, queryParameters: query, data: data);
+    return await dio!.delete(url, queryParameters: query, data: data);
+  }
+
+  /// Sends POST with multipart/form-data (file uploads).
+  static Future<Response> postFormData({
+    required String url,
+    Map<String, dynamic>? query,
+    required FormData data,
+  }) async {
+    return await dio!.post(url, queryParameters: query, data: data);
   }
 }

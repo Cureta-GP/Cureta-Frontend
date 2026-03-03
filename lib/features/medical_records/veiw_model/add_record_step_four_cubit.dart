@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:cureta/features/medical_records/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_filex/open_filex.dart';
