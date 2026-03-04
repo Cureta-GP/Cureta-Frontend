@@ -57,6 +57,17 @@
       "sent": "elbannabosina@gmail.com",
       "verify_button": "Verify & Continue",
       "otp_error": "Please enter the full code"
+    },
+    "select_profile": {
+      "title": "Select Profile",
+      "subtitle": "Switch between family members to track their progress",
+      "primary_account": "Primary Account (You)",
+      "secondary": "Secondary",
+      "spouse": "Spouse",
+      "son": "Son",
+      "daughter": "Daughter",
+      "parent": "Parent",
+      "add_profile": "Add New Profile"
     }
   },
   "onboarding": {

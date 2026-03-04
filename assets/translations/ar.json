@@ -57,6 +57,17 @@
             "sent": "elbannabosina@gmail.com",
             "verify_button": "تحقق ومتابعة",
             "otp_error": "الرجاء إدخال الرمز كاملاً"
+        },
+        "select_profile": {
+            "title": "اختر الملف الشخصي",
+            "subtitle": "التنقل بين أفراد الأسرة لتتبع تقدمهم",
+            "primary_account": "الحساب الرئيسي (أنت)",
+            "secondary": "حساب ثانوي",
+            "spouse": "الزوج/الزوجة",
+            "son": "ابن",
+            "daughter": "ابنة",
+            "parent": "الوالد/الوالدة",
+            "add_profile": "إضافة ملف شخصي جديد"
         }
     },
     "onboarding": {
