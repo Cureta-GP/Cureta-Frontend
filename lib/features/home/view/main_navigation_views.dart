@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart'; // تأكد من إضافة الاعتماد في pubspec.yaml
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/Meds/view/medicines_main_view.dart';
@@ -9,6 +8,7 @@ import 'package:cureta/features/home/widgets/top_header.dart';
 import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
 import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
 import 'package:cureta/features/profile/view/all_profies_view.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
