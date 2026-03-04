@@ -1,0 +1,661 @@
+# 🔐 Authentication Feature — Implementation Guide
+
+> **Architecture:** MVVM · **Network:** Dio ([DioHelper](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/dio_helper.dart#4-63)) · **DI:** get_it (`GetItServices`) · **Error Handling:** [AppException](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/error_handling/app_exceptions.dart#12-70) / [ErrorHandler](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/error_handling/error_handler.dart#8-126)
+
+---
+
+## Table of Contents
+
+1. [API Reference](#1-api-reference)
+2. [Models](#2-models)
+3. [Service Layer — `AuthService`](#3-service-layer--authservice)
+4. [Repository Layer — `AuthRepository`](#4-repository-layer--authrepository)
+5. [Dependency Injection](#5-dependency-injection)
+6. [ViewModel — `AuthViewModel`](#6-viewmodel--authviewmodel)
+7. [UI Integration Examples](#7-ui-integration-examples)
+8. [Checklist](#8-checklist)
+
+---
+
+## 1. API Reference
+
+| Action | Method | Endpoint | Success Code |
+|--------|--------|----------|:------------:|
+| Sign Up | `POST` | `auth/signup` | `201` |
+| Login  | `POST` | `auth/login`  | `200` |
+
+### Sign-Up Request
+
+```json
+{
+  "username": "string",
+  "email": "user@example.com",
+  "phone": "string",
+  "password": "string"
+}
+```
+
+### Login Request
+
+```json
+{
+  "email": "user@example.com",
+  "password": "string"
+}
+```
+
+### Success Response (both endpoints)
+
+```json
+{
+  "status": "SUCCESS",
+  "data": {
+    "id": 0,
+    "username": "string",
+    "email": "user@example.com",
+    "phone": "string",
+    "token": "string"
+  }
+}
+```
+
+### Error Response (400 / 409 / 500)
+
+```json
+{
+  "status": "SUCCESS",
+  "message": "string"
+}
+```
+
+---
+
+## 2. Models
+
+### File: `lib/features/authentcation/data/models/user_model.dart`
+
+```dart
+class UserModel {
+  final int id;
+  final String username;
+  final String email;
+  final String phone;
+  final String token;
+
+  const UserModel({
+    required this.id,
+    required this.username,
+    required this.email,
+    required this.phone,
+    required this.token,
+  });
+
+  factory UserModel.fromJson(Map<String, dynamic> json) {
+    return UserModel(
+      id: json['id'] as int,
+      username: json['username'] as String,
+      email: json['email'] as String,
+      phone: json['phone'] as String,
+      token: json['token'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'token': token,
+      };
+}
+```
+
+### File: `lib/features/authentcation/data/models/auth_response_model.dart`
+
+```dart
+import 'user_model.dart';
+
+class AuthResponseModel {
+  final String status;
+  final UserModel? data;
+  final String? message; // populated on error responses
+
+  const AuthResponseModel({
+    required this.status,
+    this.data,
+    this.message,
+  });
+
+  factory AuthResponseModel.fromJson(Map<String, dynamic> json) {
+    return AuthResponseModel(
+      status: json['status'] as String,
+      data: json['data'] != null
+          ? UserModel.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+      message: json['message'] as String?,
+    );
+  }
+
+  bool get isSuccess => status == 'SUCCESS' && data != null;
+}
+```
+
+---
+
+## 3. Service Layer — `AuthService`
+
+> **Responsibility:** Raw HTTP calls only. No parsing, no error handling.
+
+### File: `lib/features/authentcation/data/services/auth_service.dart`
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:cureta/core/Services/dio_helper.dart';
+
+class AuthService {
+  /// POST auth/login
+  Future<Response> login({
+    required String email,
+    required String password,
+  }) async {
+    return await DioHelper.postData(
+      url: 'auth/login',
+      data: {
+        'email': email,
+        'password': password,
+      },
+    );
+  }
+
+  /// POST auth/signup
+  Future<Response> signUp({
+    required String username,
+    required String email,
+    required String phone,
+    required String password,
+  }) async {
+    return await DioHelper.postData(
+      url: 'auth/signup',
+      data: {
+        'username': username,
+        'email': email,
+        'phone': phone,
+        'password': password,
+      },
+    );
+  }
+}
+```
+
+---
+
+## 4. Repository Layer — `AuthRepository`
+
+> **Responsibility:** Calls `AuthService`, parses responses into models, handles errors via [ErrorHandler](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/error_handling/error_handler.dart#8-126), and persists the token to `SharedPreferences` so that subsequent `DioHelper.init()` calls pick it up.
+
+### File: `lib/features/authentcation/data/repo/auth_repository.dart`
+
+```dart
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cureta/core/error_handling/error_handler.dart';
+import 'package:cureta/core/error_handling/app_exceptions.dart';
+import 'package:cureta/core/Services/dio_helper.dart';
+import '../models/auth_response_model.dart';
+import '../models/user_model.dart';
+import '../services/auth_service.dart';
+
+class AuthRepository {
+  final AuthService _authService;
+
+  AuthRepository(this._authService);
+
+  // ────────────────────────────────────────
+  //  LOGIN
+  // ────────────────────────────────────────
+  Future<UserModel> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await _authService.login(
+        email: email,
+        password: password,
+      );
+
+      final authResponse = AuthResponseModel.fromJson(response.data);
+
+      if (!authResponse.isSuccess) {
+        throw AppException.validation(
+          msg: authResponse.message ?? 'Login failed',
+        );
+      }
+
+      await _persistTokenAndReinitDio(authResponse.data!.token);
+      return authResponse.data!;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  // ────────────────────────────────────────
+  //  SIGN-UP
+  // ────────────────────────────────────────
+  Future<UserModel> signUp({
+    required String username,
+    required String email,
+    required String phone,
+    required String password,
+  }) async {
+    try {
+      final response = await _authService.signUp(
+        username: username,
+        email: email,
+        phone: phone,
+        password: password,
+      );
+
+      final authResponse = AuthResponseModel.fromJson(response.data);
+
+      if (!authResponse.isSuccess) {
+        throw AppException.validation(
+          msg: authResponse.message ?? 'Registration failed',
+        );
+      }
+
+      await _persistTokenAndReinitDio(authResponse.data!.token);
+      return authResponse.data!;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  // ────────────────────────────────────────
+  //  TOKEN PERSISTENCE
+  // ────────────────────────────────────────
+  Future<void> _persistTokenAndReinitDio(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('token', token);
+
+    // Re-initialise Dio so the new token is used for all subsequent requests.
+    await DioHelper.init();
+  }
+
+  // ────────────────────────────────────────
+  //  LOGOUT (bonus utility)
+  // ────────────────────────────────────────
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await DioHelper.init();
+  }
+
+  /// Check if a persisted token exists (for splash / auto-login logic).
+  Future<bool> isLoggedIn() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.containsKey('token');
+  }
+}
+```
+
+---
+
+## 5. Dependency Injection
+
+### File: [lib/core/Services/GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart)
+
+Add the following **inside** the [setup()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart#3-34) function. Keep the Service registration **before** the Repository registration (dependency order).
+
+```dart
+import 'package:cureta/features/authentcation/data/services/auth_service.dart';
+import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
+```
+
+```dart
+void setup() {
+  // 🧱 Services
+  getIt.registerSingleton<AuthService>(AuthService());
+
+  // 📦 Repositories
+  getIt.registerSingleton<AuthRepository>(
+    AuthRepository(getIt.get<AuthService>()),
+  );
+}
+```
+
+> [!IMPORTANT]
+> Remember to call [setup()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart#3-34) inside [main()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/main.dart#7-20) **before** `runApp()`:
+> ```dart
+> void main() async {
+>   WidgetsFlutterBinding.ensureInitialized();
+>   await DioHelper.init();
+>   setup(); // ← GetIt registration
+>   // ...
+>   runApp(/* ... */);
+> }
+> ```
+
+---
+
+## 6. ViewModel — `AuthViewModel`
+
+> **Responsibility:** Holds UI state (loading, success, error). Calls `AuthRepository`. Exposes results to the View via `ChangeNotifier`.
+
+### File: `lib/features/authentcation/veiw_model/auth_view_model.dart`
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:cureta/core/error_handling/app_exceptions.dart';
+import 'package:cureta/core/Services/GetItServices.dart';
+import '../data/repo/auth_repository.dart';
+import '../data/models/user_model.dart';
+
+class AuthViewModel extends ChangeNotifier {
+  final AuthRepository _authRepository = getIt.get<AuthRepository>();
+
+  // ──── State ────
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  UserModel? _user;
+  UserModel? get user => _user;
+
+  AppException? _error;
+  AppException? get error => _error;
+
+  bool _isSuccess = false;
+  bool get isSuccess => _isSuccess;
+
+  // ──── Private helpers ────
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  void _setError(AppException? exception) {
+    _error = exception;
+    notifyListeners();
+  }
+
+  void clearError() {
+    _error = null;
+    notifyListeners();
+  }
+
+  void _reset() {
+    _error = null;
+    _isSuccess = false;
+  }
+
+  // ──────────────────────────────────────
+  //  LOGIN
+  // ──────────────────────────────────────
+  Future<void> login({
+    required String email,
+    required String password,
+  }) async {
+    _reset();
+    _setLoading(true);
+
+    try {
+      _user = await _authRepository.login(
+        email: email,
+        password: password,
+      );
+      _isSuccess = true;
+    } on AppException catch (e) {
+      _setError(e);
+    } catch (e) {
+      _setError(AppException.server());
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // ──────────────────────────────────────
+  //  SIGN-UP
+  // ──────────────────────────────────────
+  Future<void> signUp({
+    required String username,
+    required String email,
+    required String phone,
+    required String password,
+  }) async {
+    _reset();
+    _setLoading(true);
+
+    try {
+      _user = await _authRepository.signUp(
+        username: username,
+        email: email,
+        phone: phone,
+        password: password,
+      );
+      _isSuccess = true;
+    } on AppException catch (e) {
+      _setError(e);
+    } catch (e) {
+      _setError(AppException.server());
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  // ──────────────────────────────────────
+  //  LOGOUT
+  // ──────────────────────────────────────
+  Future<void> logout() async {
+    await _authRepository.logout();
+    _user = null;
+    _isSuccess = false;
+    notifyListeners();
+  }
+}
+```
+
+---
+
+## 7. UI Integration Examples
+
+### 7.1 Providing the ViewModel
+
+Wrap the auth screens with `ChangeNotifierProvider`:
+
+```dart
+import 'package:provider/provider.dart';
+import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
+
+// In your router / screen builder:
+ChangeNotifierProvider(
+  create: (_) => AuthViewModel(),
+  child: const LoginScreen(),
+);
+```
+
+### 7.2 Login Screen Snippet
+
+```dart
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<AuthViewModel>();
+
+    // ── React to state changes ──
+    if (viewModel.isSuccess) {
+      // Navigate to home (use addPostFrameCallback to avoid build-phase nav)
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // GoRouter / Navigator.pushReplacement...
+      });
+    }
+
+    if (viewModel.error != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ErrorHandler.show(context, viewModel.error!);
+        viewModel.clearError();
+      });
+    }
+
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+              validator: (v) => v != null && v.contains('@') ? null : 'Invalid email',
+            ),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: 'Password'),
+              validator: (v) => v != null && v.length >= 6 ? null : 'Min 6 characters',
+            ),
+            const SizedBox(height: 24),
+            viewModel.isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        viewModel.login(
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text,
+                        );
+                      }
+                    },
+                    child: const Text('Login'),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+### 7.3 Sign-Up Screen Snippet
+
+```dart
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final _usernameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = context.watch<AuthViewModel>();
+
+    if (viewModel.isSuccess) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // Navigate to home
+      });
+    }
+
+    if (viewModel.error != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ErrorHandler.show(context, viewModel.error!);
+        viewModel.clearError();
+      });
+    }
+
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Column(
+          children: [
+            TextFormField(controller: _usernameController, decoration: const InputDecoration(labelText: 'Username')),
+            TextFormField(controller: _emailController, decoration: const InputDecoration(labelText: 'Email')),
+            TextFormField(controller: _phoneController, decoration: const InputDecoration(labelText: 'Phone')),
+            TextFormField(controller: _passwordController, obscureText: true, decoration: const InputDecoration(labelText: 'Password')),
+            const SizedBox(height: 24),
+            viewModel.isLoading
+                ? const CircularProgressIndicator()
+                : ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        viewModel.signUp(
+                          username: _usernameController.text.trim(),
+                          email: _emailController.text.trim(),
+                          phone: _phoneController.text.trim(),
+                          password: _passwordController.text,
+                        );
+                      }
+                    },
+                    child: const Text('Sign Up'),
+                  ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+---
+
+## 8. Checklist
+
+| # | Task | File(s) |
+|---|------|---------|
+| 1 | Create `UserModel` | `data/models/user_model.dart` |
+| 2 | Create `AuthResponseModel` | `data/models/auth_response_model.dart` |
+| 3 | Create `AuthService` | `data/services/auth_service.dart` |
+| 4 | Create `AuthRepository` | `data/repo/auth_repository.dart` |
+| 5 | Register in GetIt | [core/Services/GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart) |
+| 6 | Call [setup()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart#3-34) + `DioHelper.init()` in [main()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/main.dart#7-20) | [main.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/main.dart) |
+| 7 | Create `AuthViewModel` | `veiw_model/auth_view_model.dart` |
+| 8 | Build Login UI | `veiw/login_screen.dart` |
+| 9 | Build Sign-Up UI | `veiw/signup_screen.dart` |
+
+---
+
+## Architecture Diagram
+
+```mermaid
+graph LR
+    UI["View<br/>(Login / SignUp)"]
+    VM["AuthViewModel<br/>(ChangeNotifier)"]
+    REPO["AuthRepository"]
+    SVC["AuthService"]
+    DIO["DioHelper"]
+    API["REST API"]
+    SP["SharedPreferences"]
+
+    UI -->|watches| VM
+    VM -->|calls| REPO
+    REPO -->|calls| SVC
+    SVC -->|uses| DIO
+    DIO -->|HTTP| API
+    REPO -->|reads/writes token| SP
+    DIO -->|reads token on init| SP
+```
+
+---
+
+## Best Practices Applied
+
+| Principle | How it's applied |
+|-----------|-----------------|
+| **Separation of Concerns** | Service → raw HTTP · Repository → parsing + error + token · ViewModel → UI state · View → rendering |
+| **DRY** | `_persistTokenAndReinitDio()` shared between login & signUp; `_reset()` in ViewModel |
+| **Single Responsibility** | Each class has exactly one reason to change |
+| **Dependency Inversion** | Repository depends on `AuthService` abstraction injected via constructor; resolved through GetIt |
+| **Error Handling** | All errors flow through `ErrorHandler.handle()` → [AppException](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/error_handling/app_exceptions.dart#12-70) → ViewModel exposes typed [AppException](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/error_handling/app_exceptions.dart#12-70) → UI uses `ErrorHandler.show()` |
+| **Testability** | Constructor injection makes mocking straightforward in unit tests |

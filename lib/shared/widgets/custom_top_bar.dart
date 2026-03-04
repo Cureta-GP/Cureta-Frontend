@@ -42,9 +42,10 @@ class CustomTopBar extends StatelessWidget {
               onPressed: onAction ?? () => Navigator.of(context).maybePop(),
               child: Text(
                 actionLabel!,
-                style: actionStyle ??
+                style:
+                    actionStyle ??
                     typography.medicalRecordCancel.copyWith(
-                      color: colors.medicalRecordMuted,
+                      color: colors.textSecondary,
                     ),
               ),
             ),

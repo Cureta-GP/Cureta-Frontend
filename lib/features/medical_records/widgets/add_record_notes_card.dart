@@ -16,7 +16,7 @@ class AddRecordNotesCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: colors.medicalRecordCard,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(radius.xl),
       ),
       padding: EdgeInsets.all(spacing.xl),
@@ -25,14 +25,14 @@ class AddRecordNotesCard extends StatelessWidget {
         maxLines: 8,
         minLines: 8,
         style: typography.medicalRecordInput.copyWith(
-          color: colors.medicalRecordStrongText,
+          color: colors.textPrimary,
         ),
         decoration: InputDecoration(
           isCollapsed: true,
           border: InputBorder.none,
           hintText: AppLocalizations.addRecordOptionalNotesHint,
           hintStyle: typography.medicalRecordInput.copyWith(
-            color: colors.medicalRecordInputHint,
+            color: colors.textHint,
           ),
         ),
       ),

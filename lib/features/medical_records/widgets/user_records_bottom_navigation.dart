@@ -75,11 +75,11 @@ class UserRecordsBottomNavigation extends StatelessWidget {
         leftCornerRadius: spacing.lg,
         rightCornerRadius: spacing.lg,
         height: spacing.xxl * 2 + spacing.lg,
-        backgroundColor: colors.medicalRecordCard,
+        backgroundColor: colors.surface,
         splashColor: colors.primary,
         onTap: _handleTap,
         tabBuilder: (index, isActive) {
-          final fg = isActive ? colors.primary : colors.medicalRecordMuted;
+          final fg = isActive ? colors.primary : colors.textSecondary;
           return AnimatedScale(
             duration: const Duration(milliseconds: 180),
             scale: isActive ? 1.05 : 1,

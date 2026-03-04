@@ -20,7 +20,7 @@ class UserRecordsNavItem extends StatelessWidget {
     final colors = context.colors;
     final spacing = context.spacing;
     final typography = context.typography;
-    final fg = active ? colors.primary : colors.medicalRecordMuted;
+    final fg = active ? colors.primary : colors.textSecondary;
 
     return GestureDetector(
       onTap: onTap,

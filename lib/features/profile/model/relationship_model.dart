@@ -34,3 +34,18 @@ final List<RelationshipModel> relationshipOptions = [
     iconPath: AppIcons.more_horiz,
   ),
 ];
+final List<RelationshipModel> familyProfiles = [
+  RelationshipModel(
+    name: AppLocalizations.profilesRelationSon,
+    iconPath: AppIcons.son,
+  ),
+  RelationshipModel(
+    name: AppLocalizations.profilesRelationDaughter,
+    iconPath: AppIcons.daughter,
+  ),
+  RelationshipModel(
+    name: AppLocalizations.profilesRelationMother,
+    iconPath: AppIcons.woman,
+  ),
+ 
+];

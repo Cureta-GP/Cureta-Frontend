@@ -27,11 +27,9 @@ class UserRecordsFilterChip extends StatelessWidget {
         constraints: BoxConstraints(minHeight: spacing.xl + spacing.xs),
         padding: EdgeInsets.symmetric(horizontal: spacing.lg),
         decoration: BoxDecoration(
-          color: selected ? colors.primary : colors.medicalRecordCard,
+          color: selected ? colors.primary : colors.surface,
           borderRadius: BorderRadius.circular(radius.full),
-          border: selected
-              ? null
-              : Border.all(color: colors.medicalRecordOptionBorder),
+          border: selected ? null : Border.all(color: colors.divider),
         ),
         alignment: Alignment.center,
         child: Text(

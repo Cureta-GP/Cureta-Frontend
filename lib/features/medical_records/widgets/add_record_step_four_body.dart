@@ -1,5 +1,7 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_uploaded_files_section.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_secure_note.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
@@ -17,6 +19,10 @@ class AddRecordStepFourBody extends StatelessWidget {
     this.onPrescriptionTap,
     this.onLabTestTap,
     this.onScanTap,
+    this.onReportTap,
+    this.onOtherTap,
+    this.onViewFile,
+    this.onDeleteFile,
   });
 
   final VoidCallback? onBack;
@@ -25,6 +31,18 @@ class AddRecordStepFourBody extends StatelessWidget {
   final VoidCallback? onPrescriptionTap;
   final VoidCallback? onLabTestTap;
   final VoidCallback? onScanTap;
+  final VoidCallback? onReportTap;
+  final VoidCallback? onOtherTap;
+  final void Function(
+    AddRecordUploadCategory category,
+    AddRecordUploadedFile file,
+  )?
+  onViewFile;
+  final void Function(
+    AddRecordUploadCategory category,
+    AddRecordUploadedFile file,
+  )?
+  onDeleteFile;
 
   @override
   Widget build(BuildContext context) {
@@ -51,29 +69,72 @@ class AddRecordStepFourBody extends StatelessWidget {
               SizedBox(height: spacing.xxl),
               AddRecordUploadCategoryTile(
                 icon: Icons.receipt_long,
-                iconBackgroundColor: colors.medicalRecordUploadPrescriptionBg,
-                iconColor: colors.medicalRecordUploadPrescriptionIcon,
+                iconBackgroundColor: colors.accentCyan,
+                iconColor: colors.primary,
                 title: AppLocalizations.addRecordPrescriptionTitle,
                 description: AppLocalizations.addRecordPrescriptionDescription,
                 onTap: onPrescriptionTap,
               ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.prescription,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
               SizedBox(height: spacing.md),
               AddRecordUploadCategoryTile(
                 icon: Icons.science_outlined,
-                iconBackgroundColor: colors.medicalRecordUploadLabBg,
-                iconColor: colors.medicalRecordUploadLabIcon,
+                iconBackgroundColor: colors.accentOrange,
+                iconColor: const Color(0xFFF97316),
                 title: AppLocalizations.addRecordLabTestTitle,
                 description: AppLocalizations.addRecordLabTestDescription,
                 onTap: onLabTestTap,
               ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.labTest,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
               SizedBox(height: spacing.md),
               AddRecordUploadCategoryTile(
                 icon: Icons.image_search_outlined,
-                iconBackgroundColor: colors.medicalRecordUploadScanBg,
-                iconColor: colors.medicalRecordUploadScanIcon,
+                iconBackgroundColor: colors.accentBlue,
+                iconColor: const Color(0xFF3B82F6),
                 title: AppLocalizations.addRecordScanTitle,
                 description: AppLocalizations.addRecordScanDescription,
                 onTap: onScanTap,
+              ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.scan,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
+              SizedBox(height: spacing.md),
+              AddRecordUploadCategoryTile(
+                icon: Icons.description_outlined,
+                iconBackgroundColor: const Color(0xFFE8F5E9),
+                iconColor: const Color(0xFF4CAF50),
+                title: 'Report',
+                description: 'Upload medical reports',
+                onTap: onReportTap,
+              ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.report,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
+              ),
+              SizedBox(height: spacing.md),
+              AddRecordUploadCategoryTile(
+                icon: Icons.folder_outlined,
+                iconBackgroundColor: const Color(0xFFF3E5F5),
+                iconColor: const Color(0xFF9C27B0),
+                title: 'Other',
+                description: 'Upload other documents',
+                onTap: onOtherTap,
+              ),
+              AddRecordUploadedFilesSection(
+                category: AddRecordUploadCategory.other,
+                onViewFile: onViewFile,
+                onDeleteFile: onDeleteFile,
               ),
               SizedBox(height: spacing.xxl),
               const AddRecordSecureNote(),

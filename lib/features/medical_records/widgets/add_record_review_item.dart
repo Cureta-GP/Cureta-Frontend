@@ -25,7 +25,7 @@ class AddRecordReviewItem extends StatelessWidget {
           ? BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: colors.medicalRecordProgressTrack,
+                  color: colors.divider,
                   width: spacing.hairline,
                 ),
               ),
@@ -37,14 +37,14 @@ class AddRecordReviewItem extends StatelessWidget {
           Text(
             label,
             style: typography.medicalRecordHelper.copyWith(
-              color: colors.medicalRecordProgressText,
+              color: colors.textSecondary,
             ),
           ),
           SizedBox(height: spacing.xs),
           Text(
             value,
             style: typography.medicalRecordPickerLabel.copyWith(
-              color: colors.medicalRecordStrongText,
+              color: colors.textPrimary,
             ),
           ),
         ],

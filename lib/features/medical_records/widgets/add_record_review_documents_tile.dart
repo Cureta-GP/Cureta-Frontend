@@ -17,7 +17,7 @@ class AddRecordReviewDocumentsTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(spacing.lg),
       decoration: BoxDecoration(
-        color: colors.medicalRecordBackground,
+        color: colors.background,
         borderRadius: BorderRadius.circular(radius.xl),
       ),
       child: Row(
@@ -26,7 +26,7 @@ class AddRecordReviewDocumentsTile extends StatelessWidget {
             width: spacing.xxl + spacing.lg,
             height: spacing.xxl + spacing.lg,
             decoration: BoxDecoration(
-              color: colors.medicalRecordAccentSoft,
+              color: colors.accentCyan,
               borderRadius: BorderRadius.circular(radius.md),
             ),
             alignment: Alignment.center,
@@ -44,14 +44,14 @@ class AddRecordReviewDocumentsTile extends StatelessWidget {
                 Text(
                   AppLocalizations.addRecordReviewReports(documentsCount),
                   style: typography.medicalRecordChoice.copyWith(
-                    color: colors.medicalRecordStrongText,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: spacing.xs),
                 Text(
                   AppLocalizations.addRecordReviewDocumentsAttached,
                   style: typography.medicalRecordHelper.copyWith(
-                    color: colors.medicalRecordMuted,
+                    color: colors.textSecondary,
                   ),
                 ),
               ],

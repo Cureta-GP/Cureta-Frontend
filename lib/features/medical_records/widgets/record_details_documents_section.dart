@@ -54,7 +54,7 @@ class RecordDetailsDocumentsSection extends StatelessWidget {
               Text(
                 AppLocalizations.recordDetailsDocumentsTitle,
                 style: typography.medicalRecordScreenTitle.copyWith(
-                  color: colors.medicalRecordStrongText,
+                  color: colors.textPrimary,
                 ),
               ),
               GestureDetector(

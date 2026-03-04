@@ -20,19 +20,19 @@ class AddRecordConditionSection extends StatelessWidget {
         Text(
           AppLocalizations.addRecordConditionQuestion,
           style: typography.medicalRecordQuestion.copyWith(
-            color: colors.medicalRecordHeading,
+            color: colors.textPrimary,
           ),
         ),
         SizedBox(height: spacing.xl),
         TextField(
           controller: controller,
           style: typography.medicalRecordInput.copyWith(
-            color: colors.medicalRecordHeading,
+            color: colors.textPrimary,
           ),
           decoration: InputDecoration(
             hintText: AppLocalizations.addRecordTypeHint,
             hintStyle: typography.medicalRecordInput.copyWith(
-              color: colors.medicalRecordInputHint,
+              color: colors.textHint,
             ),
             filled: true,
             fillColor: colors.background,
@@ -42,10 +42,7 @@ class AddRecordConditionSection extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius.full),
-              borderSide: BorderSide(
-                color: colors.medicalRecordInputBorder,
-                width: 1,
-              ),
+              borderSide: BorderSide(color: colors.divider, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius.full),
@@ -63,7 +60,7 @@ class AddRecordConditionSection extends StatelessWidget {
               child: Text(
                 AppLocalizations.addRecordConditionExample,
                 style: typography.medicalRecordHelper.copyWith(
-                  color: colors.medicalRecordMuted,
+                  color: colors.textSecondary,
                 ),
               ),
             ),

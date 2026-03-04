@@ -1,0 +1,749 @@
+# 🏥 Create Medical Record — Implementation Guide (Cubit + Performance)
+
+> **Architecture:** MVVM · **State:** Cubit (flutter_bloc) · **Network:** Dio · **DI:** get_it  
+> **Key challenge:** `multipart/form-data` with file uploads + linking two Cubits with zero unnecessary rebuilds.
+
+---
+
+## Table of Contents
+
+1. [API Reference](#1-api-reference)
+2. [Extend DioHelper — `postFormData`](#2-extend-diohelper--postformdata)
+3. [Models](#3-models)
+4. [Service Layer](#4-service-layer--medicalrecordservice)
+5. [Repository Layer](#5-repository-layer--medicalrecordrepository)
+6. [Dependency Injection](#6-dependency-injection)
+7. [Submission Cubit — State & Cubit](#7-submission-cubit--createrecordcubit)
+8. [UI Integration — Zero Irrelevant Rebuilds](#8-ui-integration--zero-irrelevant-rebuilds)
+9. [Checklist](#9-checklist)
+
+---
+
+## 1. API Reference
+
+| Action | Method | Endpoint | Content-Type | Success Code |
+|--------|--------|----------|--------------|:------------:|
+| Create Record | `POST` | `medical-records` | `multipart/form-data` | `201` |
+
+### Request Fields (Form-Data)
+
+| Field | Type | Required |
+|-------|------|:--------:|
+| `profile_id` | `string (uuid)` | ✅ |
+| `disease_name` | `string` | ✅ |
+| `notes` | `string` | ❌ |
+| `record_date` | `string (YYYY-MM-DD)` | ✅ |
+| `attachment_types` | `array<string>` | ✅ |
+| [files](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/add_record_step_four_state.dart#26-36) | `array<file>` | ✅ |
+
+### Success Response — `201`
+
+```json
+{
+  "status": "SUCCESS",
+  "data": {
+    "id": "uuid",
+    "profile_id": "uuid",
+    "disease_name": "string",
+    "notes": "string",
+    "record_date": "2026-03-03",
+    "created_at": "2026-03-03T13:09:11.387Z",
+    "attachments": [
+      {
+        "id": "uuid",
+        "record_id": "uuid",
+        "file_url": "string",
+        "attachment_type": "X-ray",
+        "file_name": "string"
+      }
+    ]
+  }
+}
+```
+
+---
+
+## 2. Extend DioHelper — `postFormData`
+
+> [!IMPORTANT]
+> The existing [postData](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/dio_helper.dart#32-39) sends JSON. File uploads require Dio's `FormData`. Add this method inside [DioHelper](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/dio_helper.dart#5-64):
+
+```dart
+/// Sends POST with multipart/form-data (file uploads).
+static Future<Response> postFormData({
+  required String url,
+  Map<String, dynamic>? query,
+  required FormData data,
+}) async {
+  return dio!.post(url, queryParameters: query, data: data);
+}
+```
+
+---
+
+## 3. Models
+
+### 3.1 `attachment_model.dart`
+
+**File:** `lib/features/medical_records/data/models/attachment_model.dart`
+
+```dart
+class AttachmentModel {
+  final String id;
+  final String recordId;
+  final String fileUrl;
+  final String attachmentType;
+  final String fileName;
+
+  const AttachmentModel({
+    required this.id,
+    required this.recordId,
+    required this.fileUrl,
+    required this.attachmentType,
+    required this.fileName,
+  });
+
+  factory AttachmentModel.fromJson(Map<String, dynamic> json) {
+    return AttachmentModel(
+      id: json['id'] as String,
+      recordId: json['record_id'] as String,
+      fileUrl: json['file_url'] as String,
+      attachmentType: json['attachment_type'] as String,
+      fileName: json['file_name'] as String,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'record_id': recordId,
+        'file_url': fileUrl,
+        'attachment_type': attachmentType,
+        'file_name': fileName,
+      };
+}
+```
+
+### 3.2 `medical_record_model.dart`
+
+**File:** `lib/features/medical_records/data/models/medical_record_model.dart`
+
+```dart
+import 'attachment_model.dart';
+
+class MedicalRecordModel {
+  final String id;
+  final String profileId;
+  final String diseaseName;
+  final String? notes;
+  final String recordDate;
+  final DateTime createdAt;
+  final List<AttachmentModel> attachments;
+
+  const MedicalRecordModel({
+    required this.id,
+    required this.profileId,
+    required this.diseaseName,
+    this.notes,
+    required this.recordDate,
+    required this.createdAt,
+    required this.attachments,
+  });
+
+  factory MedicalRecordModel.fromJson(Map<String, dynamic> json) {
+    return MedicalRecordModel(
+      id: json['id'] as String,
+      profileId: json['profile_id'] as String,
+      diseaseName: json['disease_name'] as String,
+      notes: json['notes'] as String?,
+      recordDate: json['record_date'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      attachments: (json['attachments'] as List<dynamic>)
+          .map((e) => AttachmentModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'profile_id': profileId,
+        'disease_name': diseaseName,
+        'notes': notes,
+        'record_date': recordDate,
+        'created_at': createdAt.toIso8601String(),
+        'attachments': attachments.map((a) => a.toJson()).toList(),
+      };
+}
+```
+
+### 3.3 `create_record_response_model.dart`
+
+**File:** `lib/features/medical_records/data/models/create_record_response_model.dart`
+
+```dart
+import 'medical_record_model.dart';
+
+class CreateRecordResponseModel {
+  final String status;
+  final MedicalRecordModel? data;
+  final String? message;
+
+  const CreateRecordResponseModel({
+    required this.status,
+    this.data,
+    this.message,
+  });
+
+  factory CreateRecordResponseModel.fromJson(Map<String, dynamic> json) {
+    return CreateRecordResponseModel(
+      status: json['status'] as String,
+      data: json['data'] != null
+          ? MedicalRecordModel.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+      message: json['message'] as String?,
+    );
+  }
+
+  bool get isSuccess => status == 'SUCCESS' && data != null;
+}
+```
+
+---
+
+## 4. Service Layer — `MedicalRecordService`
+
+**File:** `lib/features/medical_records/data/services/medical_record_service.dart`
+
+```dart
+import 'package:dio/dio.dart';
+import 'package:cureta/core/Services/dio_helper.dart';
+
+class MedicalRecordService {
+  Future<Response> createRecord({
+    required String profileId,
+    required String diseaseName,
+    String? notes,
+    required String recordDate,
+    required List<String> attachmentTypes,
+    required List<String> filePaths,
+  }) async {
+    final formData = FormData.fromMap({
+      'profile_id': profileId,
+      'disease_name': diseaseName,
+      if (notes != null && notes.isNotEmpty) 'notes': notes,
+      'record_date': recordDate,
+    });
+
+    // Add attachment_types as repeated form fields
+    for (final type in attachmentTypes) {
+      formData.fields.add(MapEntry('attachment_types', type));
+    }
+
+    // Add files as MultipartFile entries
+    for (final path in filePaths) {
+      formData.files.add(
+        MapEntry(
+          'files',
+          await MultipartFile.fromFile(
+            path,
+            filename: path.split(RegExp(r'[/\\]')).last,
+          ),
+        ),
+      );
+    }
+
+    return await DioHelper.postFormData(url: 'medical-records', data: formData);
+  }
+}
+```
+
+---
+
+## 5. Repository Layer — `MedicalRecordRepository`
+
+**File:** `lib/features/medical_records/data/repo/medical_record_repository.dart`
+
+```dart
+import 'package:cureta/core/error_handling/error_handler.dart';
+import 'package:cureta/core/error_handling/app_exceptions.dart';
+import '../models/create_record_response_model.dart';
+import '../models/medical_record_model.dart';
+import '../services/medical_record_service.dart';
+
+class MedicalRecordRepository {
+  final MedicalRecordService _service;
+  MedicalRecordRepository(this._service);
+
+  Future<MedicalRecordModel> createRecord({
+    required String profileId,
+    required String diseaseName,
+    String? notes,
+    required String recordDate,
+    required List<String> attachmentTypes,
+    required List<String> filePaths,
+  }) async {
+    try {
+      final response = await _service.createRecord(
+        profileId: profileId,
+        diseaseName: diseaseName,
+        notes: notes,
+        recordDate: recordDate,
+        attachmentTypes: attachmentTypes,
+        filePaths: filePaths,
+      );
+
+      final parsed = CreateRecordResponseModel.fromJson(response.data);
+
+      if (!parsed.isSuccess) {
+        throw AppException.validation(
+          msg: parsed.message ?? 'Failed to create medical record',
+        );
+      }
+
+      return parsed.data!;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+}
+```
+
+---
+
+## 6. Dependency Injection
+
+**File:** [lib/core/Services/GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart) — add inside [setup()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart#7-21):
+
+```dart
+import 'package:cureta/features/medical_records/data/services/medical_record_service.dart';
+import 'package:cureta/features/medical_records/data/repo/medical_record_repository.dart';
+```
+
+```dart
+// 🧱 Services
+getIt.registerSingleton<MedicalRecordService>(MedicalRecordService());
+
+// 📦 Repositories
+getIt.registerSingleton<MedicalRecordRepository>(
+  MedicalRecordRepository(getIt.get<MedicalRecordService>()),
+);
+```
+
+---
+
+## 7. Submission Cubit — `CreateRecordCubit`
+
+### 7.1 State — `create_record_state.dart`
+
+> Uses `sealed class` for exhaustive pattern matching — the compiler enforces that every state is handled. No accidental rebuilds from boolean flag combinations.
+
+**File:** `lib/features/medical_records/veiw_model/create_record_state.dart`
+
+```dart
+import 'package:cureta/core/error_handling/app_exceptions.dart';
+import '../data/models/medical_record_model.dart';
+
+sealed class CreateRecordState {
+  const CreateRecordState();
+}
+
+/// Initial idle state — nothing has happened yet.
+final class CreateRecordInitial extends CreateRecordState {
+  const CreateRecordInitial();
+}
+
+/// API call in progress.
+final class CreateRecordLoading extends CreateRecordState {
+  const CreateRecordLoading();
+}
+
+/// Record created successfully.
+final class CreateRecordSuccess extends CreateRecordState {
+  final MedicalRecordModel record;
+  const CreateRecordSuccess(this.record);
+}
+
+/// Submission failed.
+final class CreateRecordFailure extends CreateRecordState {
+  final AppException error;
+  const CreateRecordFailure(this.error);
+}
+```
+
+### 7.2 Cubit — `create_record_cubit.dart`
+
+**File:** `lib/features/medical_records/veiw_model/create_record_cubit.dart`
+
+```dart
+import 'package:bloc/bloc.dart';
+import 'package:cureta/core/error_handling/app_exceptions.dart';
+import 'package:cureta/core/Services/GetItServices.dart';
+import '../data/models/add_record_uploaded_file.dart';
+import '../data/repo/medical_record_repository.dart';
+import 'create_record_state.dart';
+
+class CreateRecordCubit extends Cubit<CreateRecordState> {
+  CreateRecordCubit()
+      : _repository = getIt.get<MedicalRecordRepository>(),
+        super(const CreateRecordInitial());
+
+  final MedicalRecordRepository _repository;
+
+  /// Submit the full medical record.
+  ///
+  /// [files] — gathered from `AddRecordStepFourCubit.state`.
+  Future<void> submit({
+    required String profileId,
+    required String diseaseName,
+    String? notes,
+    required DateTime recordDate,
+    required Map<AddRecordUploadCategory, List<AddRecordUploadedFile>> files,
+  }) async {
+    // ── Guard: prevent double-tap ──
+    if (state is CreateRecordLoading) return;
+
+    emit(const CreateRecordLoading());
+
+    try {
+      // Flatten into ordered parallel lists
+      final List<String> attachmentTypes = [];
+      final List<String> filePaths = [];
+
+      for (final entry in files.entries) {
+        final apiType = _categoryToApiType(entry.key);
+        for (final file in entry.value) {
+          if (file.path == null || file.path!.isEmpty) continue;
+          attachmentTypes.add(apiType);
+          filePaths.add(file.path!);
+        }
+      }
+
+      if (filePaths.isEmpty) {
+        emit(CreateRecordFailure(
+          AppException.validation(msg: 'Please attach at least one file'),
+        ));
+        return;
+      }
+
+      final dateStr =
+          '${recordDate.year}-${recordDate.month.toString().padLeft(2, '0')}-${recordDate.day.toString().padLeft(2, '0')}';
+
+      final record = await _repository.createRecord(
+        profileId: profileId,
+        diseaseName: diseaseName,
+        notes: notes,
+        recordDate: dateStr,
+        attachmentTypes: attachmentTypes,
+        filePaths: filePaths,
+      );
+
+      emit(CreateRecordSuccess(record));
+    } on AppException catch (e) {
+      emit(CreateRecordFailure(e));
+    } catch (_) {
+      emit(CreateRecordFailure(AppException.server()));
+    }
+  }
+
+  /// Reset to initial so the user can retry or start fresh.
+  void reset() => emit(const CreateRecordInitial());
+
+  String _categoryToApiType(AddRecordUploadCategory category) {
+    return switch (category) {
+      AddRecordUploadCategory.prescription => 'Prescription',
+      AddRecordUploadCategory.labTest     => 'Lab-test',
+      AddRecordUploadCategory.scan        => 'Scan',
+    };
+  }
+}
+```
+
+---
+
+## 8. UI Integration — Zero Irrelevant Rebuilds
+
+### 8.1 Architecture overview
+
+```mermaid
+graph TD
+    subgraph "Shared scope (e.g. above the step navigator)"
+        ACUBIT["AddRecordStepFourCubit<br/>File picking / deletion"]
+        CCUBIT["CreateRecordCubit<br/>API submission"]
+    end
+
+    STEP4["Step 4 — Upload Files"]
+    STEP5["Step 5 — Review & Submit"]
+
+    STEP4 -->|"reads & mutates"| ACUBIT
+    STEP5 -->|"reads files"| ACUBIT
+    STEP5 -->|"calls submit()"| CCUBIT
+    STEP5 -->|"listens to state"| CCUBIT
+```
+
+> [!IMPORTANT]
+> **Both cubits must be provided ABOVE the step navigator** (not inside individual step screens) so they survive GoRouter pushes and share state across steps.
+
+### 8.2 Providing both Cubits at the flow root
+
+```dart
+// Where the add-record flow starts (router config or parent wrapper)
+MultiBlocProvider(
+  providers: [
+    BlocProvider(create: (_) => AddRecordStepFourCubit()),
+    BlocProvider(create: (_) => CreateRecordCubit()),
+  ],
+  child: const AddRecordFlowNavigator(), // your step host
+);
+```
+
+> [!WARNING]
+> **Remove** the local `BlocProvider(create: (_) => AddRecordStepFourCubit())` that currently exists inside `AddRecordForthStep.build()` (line 91-92 of [add_record_forth_step.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/add_record_forth_step.dart)). It must live at the shared scope above.
+
+### 8.3 Step 4 — File Upload Screen (no changes needed)
+
+Step 4 already consumes [AddRecordStepFourCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/add_record_step_four_cubit.dart#7-75) via `context.read<AddRecordStepFourCubit>()`. After moving the provider up, the `BlocBuilder` inside [add_record_step_four_body.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/add_record_step_four_body.dart) continues to work — it only rebuilds when file lists change.
+
+### 8.4 Step 5 — Review & Submit Screen (wired to `CreateRecordCubit`)
+
+Replace the existing [AddRecordStepFifth](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/add_record_step_fifth.dart#12-127) with this performant, production-ready version:
+
+```dart
+import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/error_handling/error_handler.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/medical_records/data/models/add_record_uploaded_file.dart';
+import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_cubit.dart';
+import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
+import 'package:cureta/features/medical_records/veiw_model/create_record_cubit.dart';
+import 'package:cureta/features/medical_records/veiw_model/create_record_state.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_review_documents_tile.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_review_item.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
+import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
+import 'package:cureta/shared/widgets/add_record_step_progress.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+
+class AddRecordStepFifth extends StatelessWidget {
+  const AddRecordStepFifth({
+    super.key,
+    required this.profileId,
+    required this.diseaseName,
+    required this.recordDate,
+    this.notes,
+    this.onBack,
+  });
+
+  final String profileId;
+  final String diseaseName;
+  final DateTime recordDate;
+  final String? notes;
+  final VoidCallback? onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final spacing = context.spacing;
+    final radius = context.radius;
+    final typography = context.typography;
+
+    final dateLabel = MaterialLocalizations.of(context)
+        .formatMediumDate(recordDate);
+
+    return Scaffold(
+      backgroundColor: colors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            AddRecordScreenHeader(
+              title: AppLocalizations.addRecordReviewDetailsTitle,
+              onBack: onBack,
+            ),
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+                children: [
+                  AddRecordStepProgress(
+                    stepLabel: AppLocalizations.addRecordStep5Label,
+                    progressLabel: AppLocalizations.addRecordProgress100,
+                    progress: 1,
+                  ),
+                  SizedBox(height: spacing.xxl),
+                  Text(
+                    AppLocalizations.addRecordReviewQuestion,
+                    textAlign: TextAlign.center,
+                    style: typography.medicalRecordQuestion
+                        .copyWith(color: colors.textPrimary),
+                  ),
+                  SizedBox(height: spacing.sm),
+                  Text(
+                    AppLocalizations.addRecordReviewDescription,
+                    textAlign: TextAlign.center,
+                    style: typography.medicalRecordHelper
+                        .copyWith(color: colors.textSecondary),
+                  ),
+                  SizedBox(height: spacing.xl),
+
+                  // ── Review Card ──
+                  Container(
+                    padding: EdgeInsets.all(spacing.xl),
+                    decoration: BoxDecoration(
+                      color: colors.surface,
+                      borderRadius: BorderRadius.circular(radius.xxl),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AddRecordReviewItem(
+                          label: AppLocalizations.addRecordReviewCondition,
+                          value: diseaseName,
+                        ),
+                        SizedBox(height: spacing.md),
+                        AddRecordReviewItem(
+                          label: AppLocalizations.addRecordReviewStartedOn,
+                          value: dateLabel,
+                        ),
+                        SizedBox(height: spacing.md),
+                        Text(
+                          AppLocalizations.addRecordReviewDocuments,
+                          style: typography.medicalRecordHelper
+                              .copyWith(color: colors.textSecondary),
+                        ),
+                        SizedBox(height: spacing.sm),
+
+                        // ✅ BlocSelector: only rebuilds when total file count changes
+                        BlocSelector<AddRecordStepFourCubit,
+                            AddRecordStepFourState, int>(
+                          selector: (state) =>
+                              state.prescriptionFiles.length +
+                              state.labTestFiles.length +
+                              state.scanFiles.length,
+                          builder: (context, totalCount) {
+                            return AddRecordReviewDocumentsTile(
+                              documentsCount: totalCount,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: spacing.xl),
+
+                  // ── Submit Button — only rebuilds on submission state ──
+                  _SubmitSection(
+                    profileId: profileId,
+                    diseaseName: diseaseName,
+                    recordDate: recordDate,
+                    notes: notes,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ────────────────────────────────────────────────────────
+//  Private widget: isolated so loading/error never rebuilds
+//  the review card above.
+// ────────────────────────────────────────────────────────
+class _SubmitSection extends StatelessWidget {
+  const _SubmitSection({
+    required this.profileId,
+    required this.diseaseName,
+    required this.recordDate,
+    this.notes,
+  });
+
+  final String profileId;
+  final String diseaseName;
+  final DateTime recordDate;
+  final String? notes;
+
+  void _onSubmit(BuildContext context) {
+    final fileState = context.read<AddRecordStepFourCubit>().state;
+
+    context.read<CreateRecordCubit>().submit(
+      profileId: profileId,
+      diseaseName: diseaseName,
+      notes: notes,
+      recordDate: recordDate,
+      files: {
+        AddRecordUploadCategory.prescription: fileState.prescriptionFiles,
+        AddRecordUploadCategory.labTest: fileState.labTestFiles,
+        AddRecordUploadCategory.scan: fileState.scanFiles,
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<CreateRecordCubit, CreateRecordState>(
+      // ── listenWhen: fire side-effects only on terminal states ──
+      listenWhen: (prev, curr) =>
+          curr is CreateRecordSuccess || curr is CreateRecordFailure,
+      listener: (context, state) {
+        if (state is CreateRecordSuccess) {
+          // Navigate to records list (replace stack so "back" doesn't return here)
+          GoRouter.of(context).goNamed(AppRoutes.userRecords);
+        } else if (state is CreateRecordFailure) {
+          ErrorHandler.show(context, state.error);
+          context.read<CreateRecordCubit>().reset();
+        }
+      },
+
+      // ── buildWhen: only rebuild this widget on loading toggle ──
+      buildWhen: (prev, curr) =>
+          (prev is CreateRecordLoading) != (curr is CreateRecordLoading),
+      builder: (context, state) {
+        final isLoading = state is CreateRecordLoading;
+
+        return AddRecordStepTwoBottomBar(
+          nextLabel: isLoading
+              ? '...' // or swap for a small CircularProgressIndicator
+              : AppLocalizations.addRecordSaveRecord,
+          onNext: isLoading ? null : () => _onSubmit(context),
+          onSkip: isLoading ? null : null, // disable cancel while uploading
+        );
+      },
+    );
+  }
+}
+```
+
+### 8.5 Performance guarantees — why there are zero irrelevant rebuilds
+
+| Widget / Area | Technique | What triggers rebuild |
+|---|---|---|
+| Review card (condition, date) | Plain `StatelessWidget` constructor params | Never (immutable props) |
+| Document count | `BlocSelector<..., int>` | Only when `totalCount` actually changes |
+| Submit button | `BlocConsumer.buildWhen` | Only when `isLoading` flips |
+| Navigation & errors | `BlocConsumer.listenWhen` | Only on `Success` / `Failure` — no rebuild at all |
+| Step 4 file lists | Existing `BlocBuilder` inside body widget | Only when that category's file list changes |
+| Entire Step 5 Scaffold | `const` + extracted `_SubmitSection` | Never (cubit activity stays inside `_SubmitSection`) |
+
+> [!TIP]
+> **Why a separate `_SubmitSection` widget?**
+> Because `BlocConsumer` sits inside `_SubmitSection`, its rebuilds are scoped to *just* the bottom bar. The review card, header, and progress indicator above it are never touched — even during loading or error states.
+
+---
+
+## 9. Checklist
+
+| # | Task | File(s) |
+|---|------|---------|
+| 1 | Add `postFormData()` to DioHelper | [core/Services/dio_helper.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/dio_helper.dart) |
+| 2 | Create `AttachmentModel` | `data/models/attachment_model.dart` |
+| 3 | Create `MedicalRecordModel` | `data/models/medical_record_model.dart` |
+| 4 | Create `CreateRecordResponseModel` | `data/models/create_record_response_model.dart` |
+| 5 | Create `MedicalRecordService` | `data/services/medical_record_service.dart` |
+| 6 | Create `MedicalRecordRepository` | `data/repo/medical_record_repository.dart` |
+| 7 | Register in GetIt | [core/Services/GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart) |
+| 8 | Create `CreateRecordState` (sealed) | `veiw_model/create_record_state.dart` |
+| 9 | Create `CreateRecordCubit` | `veiw_model/create_record_cubit.dart` |
+| 10 | Move [AddRecordStepFourCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/add_record_step_four_cubit.dart#7-75) provider to flow root | Router / flow wrapper |
+| 11 | Wire Step 5 with `BlocConsumer` + `BlocSelector` | [veiw/add_record_step_fifth.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/add_record_step_fifth.dart) |

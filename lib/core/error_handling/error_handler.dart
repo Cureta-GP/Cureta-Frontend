@@ -64,15 +64,18 @@ class ErrorHandler {
     switch (status) {
       case 400:
       case 422:
-        return AppException.validation(msg: msg, fields: fields);
+        return AppException.validation(
+          msg: msg ?? 'Validation Error',
+          fields: fields,
+        );
       case 401:
-        return AppException.unauthorized();
+        return AppException.unauthorized(msg: msg ?? 'Unauthorized Access');
       case 403:
-        return AppException.suspended();
+        return AppException.suspended(msg: msg ?? 'Account Suspended');
       case 404:
-        return AppException.notFound();
+        return AppException.notFound(msg: msg ?? 'Resource not found');
       default:
-        return AppException.server(msg);
+        return AppException.server(msg: msg ?? 'Internal Server Error');
     }
   }
 
@@ -118,7 +121,12 @@ class ErrorHandler {
 
       case ErrorType.fullScreen:
       case ErrorType.inline:
-        // UI handles these
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.message),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
         break;
     }
   }

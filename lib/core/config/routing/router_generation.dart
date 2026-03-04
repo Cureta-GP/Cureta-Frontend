@@ -15,6 +15,7 @@ import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
+import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
@@ -67,21 +68,51 @@ class RoutesGeneration {
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: ResetPasswordView(), state: state),
       ),
-      GoRoute(
-        path: AppRoutes.medicalRecordsStepOne,
-        name: AppRoutes.medicalRecordsStepOne,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordFirstStep(),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.medicalRecordsStepTwo,
-        name: AppRoutes.medicalRecordsStepTwo,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddMedicalRecordSeconedStep(),
-          state: state,
-        ),
+      // Medical Records Flow - Shared Cubits via ShellRoute
+      ShellRoute(
+        builder: (context, state, child) => AddRecordFlowWrapper(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.medicalRecordsStepOne,
+            name: AppRoutes.medicalRecordsStepOne,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordFirstStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicalRecordsStepTwo,
+            name: AppRoutes.medicalRecordsStepTwo,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddMedicalRecordSeconedStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicalRecords_step_three,
+            name: AppRoutes.medicalRecords_step_three,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordThirdStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.addRecordStepFour,
+            name: AppRoutes.addRecordStepFour,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordForthStep(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.addRecordStepFive,
+            name: AppRoutes.addRecordStepFive,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddRecordStepFifth(),
+              state: state,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.home,
@@ -94,30 +125,6 @@ class RoutesGeneration {
         name: AppRoutes.addProfile,
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: const AddProfileMain(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.medicalRecords_step_three,
-        name: AppRoutes.medicalRecords_step_three,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordThirdStep(),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.addRecordStepFour,
-        name: AppRoutes.addRecordStepFour,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordForthStep(),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.addRecordStepFive,
-        name: AppRoutes.addRecordStepFive,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordStepFifth(),
-          state: state,
-        ),
       ),
       GoRoute(
         path: AppRoutes.userRecords,
@@ -133,7 +140,7 @@ class RoutesGeneration {
           state: state,
         ),
       ),
-       GoRoute(
+      GoRoute(
         path: AppRoutes.mainNavigation,
         name: AppRoutes.mainNavigation,
         pageBuilder: (context, state) => PageTransitions.scale(

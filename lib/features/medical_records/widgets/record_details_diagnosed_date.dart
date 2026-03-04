@@ -20,7 +20,7 @@ class RecordDetailsDiagnosedDate extends StatelessWidget {
         Text(
           AppLocalizations.recordDetailsDiagnosedOn,
           style: typography.medicalRecordDetailLabel.copyWith(
-            color: colors.medicalRecordMuted,
+            color: colors.textSecondary,
           ),
         ),
         SizedBox(height: spacing.xs),

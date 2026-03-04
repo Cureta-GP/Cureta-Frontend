@@ -67,7 +67,7 @@ class ProgressStepLayout extends StatelessWidget {
                       title,
                       textAlign: TextAlign.center,
                       style: typography.medicalRecordScreenTitle.copyWith(
-                        color: colors.medicalRecordHeading,
+                        color: colors.textPrimary,
                         fontSize: 24,
                       ),
                     ),
@@ -77,7 +77,7 @@ class ProgressStepLayout extends StatelessWidget {
                         subtitle!,
                         textAlign: TextAlign.center,
                         style: typography.body.copyWith(
-                          color: colors.medicalRecordMuted,
+                          color: colors.textSecondary,
                         ),
                       ),
                     ],
@@ -91,10 +91,7 @@ class ProgressStepLayout extends StatelessWidget {
               padding: EdgeInsets.all(spacing.lg),
               child: Column(
                 children: [
-                  AddRecordNextButton(
-                    label: buttonLabel,
-                    onPressed: onNext,
-                  ),
+                  AddRecordNextButton(label: buttonLabel, onPressed: onNext),
                   if (onSkip != null)
                     TextButton(
                       onPressed: onSkip,
