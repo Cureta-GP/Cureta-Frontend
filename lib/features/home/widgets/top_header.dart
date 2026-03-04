@@ -13,33 +13,11 @@ class TopHeader extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: spacing.md,
+        horizontal: spacing.sm, 
         vertical: spacing.sm,
       ),
       child: Row(
         children: [
-          // User Avatar with a subtle border
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: colors.secondary.withOpacity(0.5),
-                width: 2,
-              ),
-            ),
-            child: CircleAvatar(
-              radius: 24, // Slightly larger for better presence
-              backgroundColor: colors.secondary,
-              child: Icon(
-                Icons.person_outline,
-                color: colors.primary,
-                size: 28,
-              ),
-            ),
-          ),
-
-          SizedBox(width: spacing.sm), // Essential breathing room
-          // Text Column
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,13 +28,14 @@ class TopHeader extends StatelessWidget {
                   style: typography.homeWelcomeBack.copyWith(
                     color: colors.textSecondary,
                     height: 1.2,
+                    fontSize: 12, 
                   ),
                 ),
                 Text(
-                  'Name',
+                  'Steve Lin',
                   style: typography.homeUserName.copyWith(
                     color: colors.textPrimary,
-                    fontWeight: FontWeight.bold, // Stronger visual anchor
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
