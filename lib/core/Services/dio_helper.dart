@@ -20,6 +20,18 @@ class DioHelper {
         },
       ),
     );
+
+    // Add interceptor to log requests and responses (especially error bodies)
+    dio!.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
   }
 
   static Future<Response> getData({
@@ -67,6 +79,14 @@ class DioHelper {
     Map<String, dynamic>? query,
     required FormData data,
   }) async {
-    return await dio!.post(url, queryParameters: query, data: data);
+    return await dio!.post(
+      url,
+      queryParameters: query,
+      data: data,
+      options: Options(
+        // Let Dio auto-set 'multipart/form-data; boundary=xxx' from FormData
+        contentType: null,
+      ),
+    );
   }
 }

@@ -27,18 +27,18 @@ class AppException implements Exception {
       AppException('انتهت مهلة الاتصال', ErrorType.fullScreen);
 
   // ========== Server ==========
-  factory AppException.server([String? msg]) =>
+  factory AppException.server({String? msg}) =>
       AppException(msg ?? 'حدث خطأ في الخادم', ErrorType.fullScreen);
 
-  factory AppException.notFound() =>
-      AppException('البيانات غير موجودة', ErrorType.fullScreen);
+  factory AppException.notFound({String? msg}) =>
+      AppException(msg ?? 'البيانات غير موجودة', ErrorType.fullScreen);
 
   // ========== Auth ==========
-  factory AppException.unauthorized() =>
-      AppException('انتهت الجلسة، سجل دخول مرة أخرى', ErrorType.dialog);
+  factory AppException.unauthorized({String? msg}) =>
+      AppException(msg ?? 'انتهت الجلسة، سجل دخول مرة أخرى', ErrorType.dialog);
 
-  factory AppException.suspended() =>
-      AppException('حسابك موقوف، تواصل مع الدعم', ErrorType.dialog);
+  factory AppException.suspended({String? msg}) =>
+      AppException(msg ?? 'حسابك موقوف، تواصل مع الدعم', ErrorType.dialog);
 
   factory AppException.emailExists() =>
       AppException('البريد الإلكتروني مستخدم', ErrorType.snackbar);

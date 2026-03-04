@@ -34,11 +34,11 @@ class MedicalRecordRepository {
           msg: parsed.message ?? 'Failed to create medical record',
         );
       }
+      if (parsed.data == null) {
+        throw AppException.server(msg: 'No record data returned from server');
+      }
       return parsed.data!;
     } catch (e) {
-      print('=====================================');
-      print(e);
-      print('=====================================');
       throw ErrorHandler.handle(e);
     }
   }

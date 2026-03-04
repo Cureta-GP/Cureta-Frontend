@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:cureta/core/Services/dio_helper.dart';
 
@@ -15,14 +16,11 @@ class MedicalRecordService {
       'disease_name': diseaseName,
       if (notes != null && notes.isNotEmpty) 'notes': notes,
       'record_date': recordDate,
+      // Backend's parseArrayField() does JSON.parse() on strings
+      'attachment_types': jsonEncode(attachmentTypes),
     });
 
-    // Add attachment_types as repeated form fields
-    for (final type in attachmentTypes) {
-      formData.fields.add(MapEntry('attachment_types', type));
-    }
-
-    // Add files as MultipartFile entries
+    // files WITHOUT [] — multer field name is 'files'
     for (final path in filePaths) {
       formData.files.add(
         MapEntry(
