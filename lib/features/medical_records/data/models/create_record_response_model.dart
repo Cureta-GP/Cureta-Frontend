@@ -28,5 +28,5 @@ class CreateRecordResponseModel {
     );
   }
 
-  bool get isSuccess => status == 'SUCCESS';
+  bool get isSuccess => status.toUpperCase() == 'SUCCESS';
 }
