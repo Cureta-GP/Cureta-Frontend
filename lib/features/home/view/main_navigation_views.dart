@@ -1,3 +1,4 @@
+import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
@@ -11,7 +12,8 @@ import 'package:cureta/features/profile/view/all_profies_view.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
 class MainNavigationScreen extends StatefulWidget {
-  const MainNavigationScreen({super.key});
+ final ProfileState profile;
+  const MainNavigationScreen({super.key, required this.profile});
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -85,7 +87,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               },
             ),
           ),
-          title: const TopHeader(),
+          title: TopHeader(userName: widget.profile.name),
         ),
         body: IndexedStack(index: _selectedIndex, children: _screens),
         floatingActionButton: FloatingActionButton(

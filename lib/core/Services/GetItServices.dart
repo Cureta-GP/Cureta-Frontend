@@ -1,3 +1,6 @@
+import 'package:cureta/features/profile/data/models/services/profile_service.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/features/profile/view_model/profile_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cureta/features/authentcation/data/services/auth_service.dart';
 import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
@@ -9,10 +12,12 @@ import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_
 import 'package:cureta/features/medical_records/veiw_model/create_record_cubit.dart';
 
 final getIt = GetIt.instance;
+
 void setup() {
   // 🧱 Services
   getIt.registerSingleton<AuthService>(AuthService());
   getIt.registerSingleton<MedicalRecordService>(MedicalRecordService());
+  getIt.registerSingleton<ProfileService>(ProfileService()); // ✅
 
   // 📦 Repositories
   getIt.registerSingleton<AuthRepository>(
@@ -21,14 +26,18 @@ void setup() {
   getIt.registerSingleton<MedicalRecordRepository>(
     MedicalRecordRepository(getIt.get<MedicalRecordService>()),
   );
+  getIt.registerSingleton<ProfileRepository>(               // ✅
+    ProfileRepository(getIt.get<ProfileService>()),
+  );
 
-  // 🧠 Cubits (singleton = same instance across the entire add record flow)
+  // 🧠 Cubits
   getIt.registerSingleton<AddRecordFormCubit>(AddRecordFormCubit());
   getIt.registerSingleton<AddRecordStepFourCubit>(AddRecordStepFourCubit());
   getIt.registerSingleton<CreateRecordCubit>(CreateRecordCubit());
 
-  // 🧠 Auth Cubit (factory = new instance per screen)
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(getIt.get<AuthRepository>()),
   );
+
+  
 }

@@ -175,6 +175,7 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
               label: AppLocalizations.profilesMedicalConditionsOther,
             ),
           ],
+          SizedBox(height: spacing.xxl * 4),
         ],
       ),
     );
