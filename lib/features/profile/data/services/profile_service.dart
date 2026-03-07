@@ -6,8 +6,8 @@ import 'package:dio/dio.dart';
 class ProfileService {
   Future<Response> getProfiles() async {
     return await DioHelper.getData(
-      url: ApiEndpoints.profiles,
-      query: {},
+      url: ApiEndpoints.profiles, query: {},
+      
     );
   }
 

@@ -1,4 +1,4 @@
-import 'package:cureta/features/profile/data/models/services/profile_service.dart';
+import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view_model/profile_cubit.dart';
 import 'package:get_it/get_it.dart';

@@ -1,5 +1,5 @@
 // lib/data/repositories/profile_repository.dart
-import 'package:cureta/features/profile/data/models/services/profile_service.dart';
+import 'package:cureta/features/profile/data/services/profile_service.dart';
 
 import '../models/profile_model.dart';
 
@@ -10,8 +10,10 @@ class ProfileRepository {
 
   Future<List<ProfileModel>> getProfiles() async {
     final response = await _service.getProfiles();
+
     final List data = response.data['data'];
-    return data.map((json) => ProfileModel.fromJson(json)).toList();
+
+    return data.map((profile) => ProfileModel.fromJson(profile)).toList();
   }
 
   Future<ProfileModel> createPrimaryProfile({

@@ -1,12 +1,16 @@
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cureta/features/profile/data/models/profile_model.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  
-  ProfileCubit({required bool isFamilyMember})
-    : super(ProfileState(isAddingFamilyMember: isFamilyMember));
+  final ProfileRepository repository;
 
+  ProfileCubit({required bool isFamilyMember, required this.repository})
+      : super(ProfileState(isAddingFamilyMember: isFamilyMember));
+
+  // 🔹 تحديث الحقول
   void updateName(String val) => emit(state.copyWith(name: val));
   void updateGender(String val) => emit(state.copyWith(gender: val));
   void updateRelation(String val) => emit(state.copyWith(relationship: val));
@@ -56,6 +60,36 @@ class ProfileCubit extends Cubit<ProfileState> {
         curve: Curves.easeInOut,
       );
       emit(state.copyWith(currentPage: prev));
+    }
+  }
+
+  // 🔹 إنشاء البروفايل
+  Future<ProfileModel> createProfile({String? imagePath}) async {
+    if (state.isAddingFamilyMember) {
+      return await repository.createFamilyProfile(
+        fullName: state.name,
+        age: state.age,
+        gender: state.gender,
+        relationship: state.relationship,
+        bloodType: state.bloodType,
+        chronicDiseases: state.chronicConditions
+            .map((e) => {'name': e})
+            .toList(),
+        allergies: state.allergies.map((e) => {'name': e}).toList(),
+        imagePath: imagePath,
+      );
+    } else {
+      return await repository.createPrimaryProfile(
+        fullName: state.name,
+        age: state.age,
+        gender: state.gender,
+        bloodType: state.bloodType,
+        chronicDiseases: state.chronicConditions
+            .map((e) => {'name': e})
+            .toList(),
+        allergies: state.allergies.map((e) => {'name': e}).toList(),
+        imagePath: imagePath,
+      );
     }
   }
 }

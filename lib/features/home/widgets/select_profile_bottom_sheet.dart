@@ -1,7 +1,13 @@
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/profile/data/models/profile_model.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
+import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class SelectProfileBottomSheet extends StatelessWidget {
@@ -13,60 +19,88 @@ class SelectProfileBottomSheet extends StatelessWidget {
     final spacing = context.spacing;
     final typography = context.typography;
 
-    return Container(
-      padding: EdgeInsets.all(spacing.lg),
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: colors.divider,
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          SizedBox(height: spacing.lg),
-          Text("Select Profile", style: typography.title),
-          Text(
-            "Switch between family members to track their progress.",
-            style: typography.body.copyWith(color: colors.textSecondary),
-          ),
-          SizedBox(height: spacing.xl),
-
-          _buildProfileTile(
-            context,
-            name: "John Doe",
-            relation: "Primary Account (You)",
-            isSelected: true,
-          ),
-
-          SizedBox(height: spacing.xl),
-          SizedBox(
-            width: double.infinity,
-            child: CustomButton(
-              text: "Add New Profile",
-              onPressed: () {
-                GoRouter.of(context).go(AppRoutes.addProfile, extra: true);
-              },
-            ),
-          ),
-        ],
+    return BlocProvider(
+create: (_) => ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),      child: Container(
+        padding: EdgeInsets.all(spacing.lg),
+        decoration: BoxDecoration(
+          color: colors.background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+          builder: (context, state) {
+            if (state is ProfilesLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+      
+            if (state is ProfilesError) {
+              return Center(child: Text(state.message));
+            }
+      
+            if (state is ProfilesSuccess) {
+              final profiles = state.profiles;
+      
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: colors.divider,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+      
+                  SizedBox(height: spacing.lg),
+      
+                  Text("Select Profile", style: typography.title),
+      
+                  Text(
+                    "Switch between family members to track their progress.",
+                    style: typography.body
+                        .copyWith(color: colors.textSecondary),
+                  ),
+      
+                  SizedBox(height: spacing.xl),
+      
+                  ...profiles.map(
+                    (profile) => _buildProfileTile(
+                      context,
+                      profile: profile,
+                      isSelected: profile.isPrimary,
+                    ),
+                  ),
+      
+                  SizedBox(height: spacing.xl),
+      
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      text: "Add New Profile",
+                      onPressed: () {
+                        GoRouter.of(context)
+                            .go(AppRoutes.addProfile, extra: true);
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }
+      
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
 
   Widget _buildProfileTile(
     BuildContext context, {
-    required String name,
-    required String relation,
+    required ProfileModel profile,
     bool isSelected = false,
   }) {
     final colors = context.colors;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
@@ -78,11 +112,22 @@ class SelectProfileBottomSheet extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: ListTile(
-        leading: const CircleAvatar(
-          backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+        onTap: () {
+          // هنا ممكن تعملي select profile في cubit
+        },
+        leading: CircleAvatar(
+          backgroundImage: profile.imageUrl != null
+              ? NetworkImage(profile.imageUrl!)
+              : null,
+          child: profile.imageUrl == null
+              ? Text(profile.fullName[0])
+              : null,
         ),
-        title: Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text(relation),
+        title: Text(
+          profile.fullName,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(profile.relationship),
         trailing: isSelected
             ? Icon(Icons.check_circle, color: colors.primary)
             : const Icon(Icons.arrow_forward_ios, size: 16),

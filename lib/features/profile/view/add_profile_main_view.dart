@@ -1,3 +1,5 @@
+import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/steps/age_step_view.dart';
 import 'package:cureta/features/profile/view/steps/blood_type_step_view.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
@@ -18,35 +20,35 @@ class AddProfileMain extends StatelessWidget {
   const AddProfileMain({super.key, this.isFamilyMember = false});
 
   List<Map<String, String>> _getStepsContent(BuildContext context) => [
-    {
-      "title": AppLocalizations.profilesNameTitle,
-      "subtitle": AppLocalizations.profilesNameSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesGenderTitle,
-      "subtitle": AppLocalizations.profilesGenderSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesRelationTitle,
-      "subtitle": AppLocalizations.profilesRelationSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesAgeTitle,
-      "subtitle": AppLocalizations.profilesAgeSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesBloodTypeTitle,
-      "subtitle": AppLocalizations.profilesBloodTypeSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesMedicalConditionsChronicTitle,
-      "subtitle": AppLocalizations.profilesMedicalConditionsChronicSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesMedicalConditionsAllergiesTitle,
-      "subtitle": AppLocalizations.profilesMedicalConditionsAllergiesSubtitle,
-    },
-  ];
+        {
+          "title": AppLocalizations.profilesNameTitle,
+          "subtitle": AppLocalizations.profilesNameSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesGenderTitle,
+          "subtitle": AppLocalizations.profilesGenderSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesRelationTitle,
+          "subtitle": AppLocalizations.profilesRelationSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesAgeTitle,
+          "subtitle": AppLocalizations.profilesAgeSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesBloodTypeTitle,
+          "subtitle": AppLocalizations.profilesBloodTypeSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesMedicalConditionsChronicTitle,
+          "subtitle": AppLocalizations.profilesMedicalConditionsChronicSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesMedicalConditionsAllergiesTitle,
+          "subtitle": AppLocalizations.profilesMedicalConditionsAllergiesSubtitle,
+        },
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +56,10 @@ class AddProfileMain extends StatelessWidget {
     final steps = _getStepsContent(context);
 
     return BlocProvider(
-      create: (context) => ProfileCubit(isFamilyMember: isFamilyMember),
+      create: (_) => ProfileCubit(
+        isFamilyMember: isFamilyMember,
+        repository: getIt.get<ProfileRepository>(),
+      ),
       child: BlocBuilder<ProfileCubit, ProfileState>(
         builder: (context, state) {
           final cubit = context.read<ProfileCubit>();
@@ -69,9 +74,27 @@ class AddProfileMain extends StatelessWidget {
             ),
             progressLabel: "${((state.currentPage + 1) / 7 * 100).toInt()}%",
             progress: (state.currentPage + 1) / 7,
-            onNext: () {
+            onNext: () async {
               if (state.currentPage == 6) {
-                GoRouter.of(context).go(AppRoutes.mainNavigation, extra: state);
+                // آخر خطوة، إنشاء البروفايل
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+
+                try {
+                  final profile = await cubit.createProfile();
+                  Navigator.pop(context); // غلق Loading
+                  GoRouter.of(context).go(AppRoutes.mainNavigation, extra: profile);
+                } catch (e) {
+                  Navigator.pop(context); // غلق Loading
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to create profile: $e')),
+                  );
+                }
               } else {
                 cubit.nextStep(pageController);
               }

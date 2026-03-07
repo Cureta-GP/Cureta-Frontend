@@ -1,4 +1,3 @@
-// lib/data/models/profile_model.dart
 class ProfileModel {
   final String id;
   final int primaryOwnerId;
@@ -30,19 +29,39 @@ class ProfileModel {
     required this.allergies,
   });
 
-  factory ProfileModel.fromJson(Map<String, dynamic> json) => ProfileModel(
-        id: json['id'],
-        primaryOwnerId: json['primary_owner_id'],
-        parentProfileId: json['parent_profile_id'],
-        isPrimary: json['is_primary'],
-        fullName: json['full_name'],
-        relationship: json['relationship'],
-        age: json['age'],
-        gender: json['gender'],
-        bloodType: json['blood_type'],
-        imageUrl: json['image_url'],
-        createdAt: json['created_at'],
-        chronicDiseases: json['chronic_diseases'] ?? [],
-        allergies: json['allergies'] ?? [],
-      );
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
+      id: json['id'],
+      primaryOwnerId: json['primary_owner_id'],
+      parentProfileId: json['parent_profile_id'],
+      isPrimary: json['is_primary'],
+      fullName: json['full_name'],
+      relationship: json['relationship'],
+      age: json['age'],
+      gender: json['gender'],
+      bloodType: json['blood_type'],
+      imageUrl: json['image_url'],
+      createdAt: json['created_at'],
+      chronicDiseases: json['chronic_diseases'] ?? [],
+      allergies: json['allergies'] ?? [],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'primary_owner_id': primaryOwnerId,
+      'parent_profile_id': parentProfileId,
+      'is_primary': isPrimary,
+      'full_name': fullName,
+      'relationship': relationship,
+      'age': age,
+      'gender': gender,
+      'blood_type': bloodType,
+      'image_url': imageUrl,
+      'created_at': createdAt,
+      'chronic_diseases': chronicDiseases,
+      'allergies': allergies,
+    };
+  }
 }
