@@ -55,9 +55,7 @@ class AuthRepository {
         phone: phone,
         password: password,
       );
-
       final authResponse = AuthResponseModel.fromJson(response.data);
-
       if (!authResponse.isSuccess) {
         throw AppException.validation(
           msg: authResponse.message ?? 'Registration failed',
@@ -77,7 +75,8 @@ class AuthRepository {
   Future<void> _persistTokenAndReinitDio(String token) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', token);
-    // Re-initialise Dio so the new token is used for all subsequent requests.
+    // Update the active client immediately, then re-init for full consistency.
+    DioHelper.setAuthToken(token);
     await DioHelper.init();
   }
 
@@ -87,6 +86,7 @@ class AuthRepository {
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
+    DioHelper.clearAuthToken();
     await DioHelper.init();
   }
 

@@ -6,8 +6,7 @@ import 'package:dio/dio.dart';
 class ProfileService {
   Future<Response> getProfiles() async {
     return await DioHelper.getData(
-      url: ApiEndpoints.profiles, query: {},
-      
+      url: ApiEndpoints.profiles, query: {}, 
     );
   }
 
@@ -20,7 +19,7 @@ class ProfileService {
     required List<Map<String, dynamic>> allergies,
     String? imagePath, 
   }) async {
-    final formData = FormData.fromMap({
+    final formData = {
       'full_name': fullName,
       'age': age.toString(),
       'gender': gender,
@@ -32,9 +31,9 @@ class ProfileService {
           imagePath,
           filename: imagePath.split('/').last,
         ),
-    });
+    };
 
-    return await DioHelper.postFormData(
+    return await DioHelper.postData(
       url: ApiEndpoints.primaryProfile,
       data: formData,
     );
@@ -50,7 +49,7 @@ class ProfileService {
     required List<Map<String, dynamic>> allergies,
     String? imagePath,
   }) async {
-    final formData = FormData.fromMap({
+    final formData = {
       'full_name': fullName,
       'age': age.toString(),
       'gender': gender,
@@ -63,9 +62,9 @@ class ProfileService {
           imagePath,
           filename: imagePath.split('/').last,
         ),
-    });
+    };
 
-    return await DioHelper.postFormData(
+    return await DioHelper.postData(
       url: ApiEndpoints.familyProfile,
       data: formData,
     );

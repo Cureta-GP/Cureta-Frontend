@@ -8,6 +8,19 @@ class ProfileRepository {
 
   ProfileRepository(this._service);
 
+  String _normalizeGenderForApi(String gender) {
+    final value = gender.trim().toLowerCase();
+
+    // Backend accepts only: Male, Female
+    if (value == 'male' || value == 'm' || value == 'ذكر') return 'Male';
+    if (value == 'female' || value == 'f' || value == 'انثى' || value == 'أنثى') {
+      return 'Female';
+    }
+
+    // Fall back to original value to surface backend validation for unknown inputs.
+    return gender;
+  }
+
   Future<List<ProfileModel>> getProfiles() async {
     final response = await _service.getProfiles();
 
@@ -25,10 +38,12 @@ class ProfileRepository {
     required List<Map<String, dynamic>> allergies,
     String? imagePath,
   }) async {
+    final normalizedGender = _normalizeGenderForApi(gender);
+
     final response = await _service.createPrimaryProfile(
       fullName: fullName,
       age: age,
-      gender: gender,
+      gender: normalizedGender,
       bloodType: bloodType,
       chronicDiseases: chronicDiseases,
       allergies: allergies,
@@ -47,10 +62,12 @@ class ProfileRepository {
     required List<Map<String, dynamic>> allergies,
     String? imagePath,
   }) async {
+    final normalizedGender = _normalizeGenderForApi(gender);
+
     final response = await _service.createFamilyProfile(
       fullName: fullName,
       age: age,
-      gender: gender,
+      gender: normalizedGender,
       relationship: relationship,
       bloodType: bloodType,
       chronicDiseases: chronicDiseases,

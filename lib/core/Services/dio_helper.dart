@@ -5,6 +5,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 class DioHelper {
   static Dio? dio;
   static String baseurl = "https://cureta.onrender.com/api/";
+
+  static Map<String, dynamic> _buildHeaders(String? token) {
+    final headers = <String, dynamic>{'Content-Type': 'application/json'};
+    if (token != null && token.isNotEmpty) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+    return headers;
+  }
+
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
@@ -14,10 +23,7 @@ class DioHelper {
         receiveDataWhenStatusError: true,
         connectTimeout: const Duration(seconds: 10),
         receiveTimeout: const Duration(seconds: 15),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
+        headers: _buildHeaders(token),
       ),
     );
 
@@ -32,6 +38,18 @@ class DioHelper {
         error: true,
       ),
     );
+  }
+
+  static void setAuthToken(String token) {
+    final client = dio;
+    if (client == null) return;
+    client.options.headers['Authorization'] = 'Bearer $token';
+  }
+
+  static void clearAuthToken() {
+    final client = dio;
+    if (client == null) return;
+    client.options.headers.remove('Authorization');
   }
 
   static Future<Response> getData({
