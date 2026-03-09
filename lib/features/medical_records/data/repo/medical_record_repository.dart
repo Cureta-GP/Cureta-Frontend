@@ -1,6 +1,5 @@
 import 'package:cureta/core/error_handling/error_handler.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
-import '../models/create_record_response_model.dart';
 import '../models/medical_record_model.dart';
 import '../services/medical_record_service.dart';
 
@@ -17,6 +16,8 @@ class MedicalRecordRepository {
     required List<String> filePaths,
   }) async {
     try {
+      // Dio throws DioException automatically on 4xx/5xx status codes.
+      // If we reach the next line, the HTTP status is 2xx (success).
       final response = await _service.createRecord(
         profileId: profileId,
         diseaseName: diseaseName,
@@ -25,19 +26,12 @@ class MedicalRecordRepository {
         attachmentTypes: attachmentTypes,
         filePaths: filePaths,
       );
-      final parsed = CreateRecordResponseModel.fromJson(response.data);
-      print('=====================================');
-      print(parsed.data);
-      print('=====================================');
-      if (!parsed.isSuccess) {
-        throw AppException.validation(
-          msg: parsed.message ?? 'Failed to create medical record',
-        );
-      }
-      if (parsed.data == null) {
+      final data = response.data['data'];
+      if (data == null || data is! Map<String, dynamic>) {
         throw AppException.server(msg: 'No record data returned from server');
       }
-      return parsed.data!;
+
+      return MedicalRecordModel.fromJson(data);
     } catch (e) {
       throw ErrorHandler.handle(e);
     }

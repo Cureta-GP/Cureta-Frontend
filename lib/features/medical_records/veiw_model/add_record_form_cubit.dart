@@ -33,7 +33,7 @@ class AddRecordFormCubit extends Cubit<AddRecordFormState> {
 
 class AddRecordFormState extends Equatable {
   const AddRecordFormState({
-    this.profileId = 'temp-test-profile-id-1234', // Temporary for testing
+    this.profileId = 'af7ecd51-feb6-4754-a76e-a9bd28f48617', // Temporary for testing
     this.diseaseName,
     this.recordDate,
     this.notes,

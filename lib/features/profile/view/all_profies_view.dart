@@ -1,6 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/profile/model/relationship_model.dart';
+import 'package:cureta/features/profile/data/models/relationship_model.dart';
 import 'package:cureta/features/profile/widgets/add_member_card.dart';
 import 'package:cureta/features/profile/widgets/icon_text_container.dart';
 import 'package:flutter/material.dart';

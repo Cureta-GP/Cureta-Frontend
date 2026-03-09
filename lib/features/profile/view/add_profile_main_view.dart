@@ -1,111 +1,129 @@
+import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/steps/age_step_view.dart';
 import 'package:cureta/features/profile/view/steps/blood_type_step_view.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/view/steps/medical_conditions_step_view.dart';
+import 'package:cureta/features/profile/view_model/profile_cubit.dart';
+import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/shared/widgets/progress_step_layout.dart';
 import 'package:cureta/features/profile/view/steps/name_step_view.dart';
 import 'package:cureta/features/profile/view/steps/gender_step_view.dart';
 import 'package:cureta/features/profile/view/steps/relation_step_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 
-class AddProfileMain extends StatefulWidget {
-  const AddProfileMain({super.key});
+class AddProfileMain extends StatelessWidget {
+  final bool isFamilyMember;
+  const AddProfileMain({super.key, this.isFamilyMember = false});
 
-  @override
-  State<AddProfileMain> createState() => _AddProfileMainState();
-}
-
-class _AddProfileMainState extends State<AddProfileMain> {
-  final PageController _pageController = PageController();
-  int _currentPage = 0;
-  final int _totalSteps = 7;
-
-  List<Map<String, String>> get _stepsContent => [
-    {
-      "title": AppLocalizations.profilesNameTitle,
-      "subtitle": AppLocalizations.profilesNameSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesGenderTitle,
-      "subtitle": AppLocalizations.profilesGenderSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesRelationTitle,
-      "subtitle": AppLocalizations.profilesRelationSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesAgeTitle,
-      "subtitle": AppLocalizations.profilesAgeSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesBloodTypeTitle,
-      "subtitle": AppLocalizations.profilesBloodTypeSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesMedicalConditionsChronicTitle,
-      "subtitle": AppLocalizations.profilesMedicalConditionsChronicSubtitle,
-    },
-    {
-      "title": AppLocalizations.profilesMedicalConditionsAllergiesTitle,
-      "subtitle": AppLocalizations.profilesMedicalConditionsAllergiesSubtitle,
-    },
-  ];
-
-  void _onNext() {
-    if (_currentPage < _totalSteps - 1) {
-      _pageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      GoRouter.of(context).go(AppRoutes.medicalRecordsStepOne);
-    }
-  }
+  List<Map<String, String>> _getStepsContent(BuildContext context) => [
+        {
+          "title": AppLocalizations.profilesNameTitle,
+          "subtitle": AppLocalizations.profilesNameSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesGenderTitle,
+          "subtitle": AppLocalizations.profilesGenderSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesRelationTitle,
+          "subtitle": AppLocalizations.profilesRelationSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesAgeTitle,
+          "subtitle": AppLocalizations.profilesAgeSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesBloodTypeTitle,
+          "subtitle": AppLocalizations.profilesBloodTypeSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesMedicalConditionsChronicTitle,
+          "subtitle": AppLocalizations.profilesMedicalConditionsChronicSubtitle,
+        },
+        {
+          "title": AppLocalizations.profilesMedicalConditionsAllergiesTitle,
+          "subtitle": AppLocalizations.profilesMedicalConditionsAllergiesSubtitle,
+        },
+      ];
 
   @override
   Widget build(BuildContext context) {
-    return ProgressStepLayout(
-      appBarTitle: AppLocalizations.profilesAddProfile,
-      title: _stepsContent[_currentPage]["title"]!,
-      subtitle: _stepsContent[_currentPage]["subtitle"],
-      stepLabel: AppLocalizations.profilesStepIndicator(
-        _currentPage + 1,
-        _totalSteps,
+    final PageController pageController = PageController();
+    final steps = _getStepsContent(context);
+
+    return BlocProvider(
+      create: (_) => ProfileCubit(
+        isFamilyMember: isFamilyMember,
+        repository: getIt.get<ProfileRepository>(),
       ),
-      progressLabel: "${((_currentPage + 1) / _totalSteps * 100).toInt()}%",
-      progress: (_currentPage + 1) / _totalSteps,
-      onNext: _onNext,
-      onSkip: () {},
-      onBack: () {
-        if (_currentPage > 0) {
-          _pageController.previousPage(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
+      child: BlocBuilder<ProfileCubit, ProfileState>(
+        builder: (context, state) {
+          final cubit = context.read<ProfileCubit>();
+
+          return ProgressStepLayout(
+            appBarTitle: AppLocalizations.profilesAddProfile,
+            title: steps[state.currentPage]["title"]!,
+            subtitle: steps[state.currentPage]["subtitle"],
+            stepLabel: AppLocalizations.profilesStepIndicator(
+              state.currentPage + 1,
+              7,
+            ),
+            progressLabel: "${((state.currentPage + 1) / 7 * 100).toInt()}%",
+            progress: (state.currentPage + 1) / 7,
+            onNext: () async {
+              if (state.currentPage == 6) {
+                // آخر خطوة، إنشاء البروفايل
+                showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (_) => const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+
+                try {
+                  final profile = await cubit.createProfile();
+                  Navigator.pop(context); // غلق Loading
+                  GoRouter.of(context).go(AppRoutes.mainNavigation, extra: profile);
+                } catch (e) {
+                  Navigator.pop(context); // غلق Loading
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to create profile: $e')),
+                  );
+                }
+              } else {
+                cubit.nextStep(pageController);
+              }
+            },
+            onBack: () {
+              if (state.currentPage == 0) {
+                context.pop();
+              } else {
+                cubit.previousStep(pageController);
+              }
+            },
+            child: SizedBox(
+              height: 450,
+              child: PageView(
+                controller: pageController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: const [
+                  NameInputStep(),
+                  GenderSelectionStep(),
+                  RelationSelectionStep(),
+                  AgeStep(),
+                  BloodTypeStep(),
+                  MedicalConditionsStep(type: MedicalConditionType.chronic),
+                  MedicalConditionsStep(type: MedicalConditionType.allergy),
+                ],
+              ),
+            ),
           );
-        } else {
-          Navigator.maybePop(context);
-        }
-      },
-      child: SizedBox(
-        height: 300,
-        child: PageView(
-          controller: _pageController,
-          physics: const NeverScrollableScrollPhysics(),
-          onPageChanged: (int page) {
-            setState(() => _currentPage = page);
-          },
-          children: const [
-            NameInputStep(),
-            GenderSelectionStep(),
-            RelationSelectionStep(),
-            AgeStep(),
-            BloodTypeStep(),
-            MedicalConditionsStep(type: MedicalConditionType.chronic),
-            MedicalConditionsStep(type: MedicalConditionType.allergy),
-          ],
-        ),
+        },
       ),
     );
   }

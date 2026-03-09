@@ -18,6 +18,8 @@ import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
+import 'package:cureta/features/profile/data/models/profile_model.dart';
+import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
@@ -123,8 +125,13 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddProfileMain(), state: state),
+        pageBuilder: (context, state) {
+          final bool isFamily = state.extra as bool? ?? false;
+          return PageTransitions.fade(
+            child: AddProfileMain(isFamilyMember: isFamily),
+            state: state,
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.userRecords,
@@ -143,10 +150,30 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.mainNavigation,
         name: AppRoutes.mainNavigation,
-        pageBuilder: (context, state) => PageTransitions.scale(
-          child: const MainNavigationScreen(),
-          state: state,
-        ),
+        pageBuilder: (context, state) {
+          final extra = state.extra;
+          final ProfileState profileModel;
+
+          if (extra is ProfileState) {
+            profileModel = extra;
+          } else if (extra is ProfileModel) {
+            profileModel = ProfileState(
+              name: extra.fullName,
+              gender: extra.gender,
+              relationship: extra.relationship,
+              age: extra.age,
+              bloodType: extra.bloodType,
+              isAddingFamilyMember: !extra.isPrimary,
+            );
+          } else {
+            profileModel = ProfileState(isAddingFamilyMember: false);
+          }
+
+          return PageTransitions.scale(
+            child: MainNavigationScreen(profile: profileModel),
+            state: state,
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.recordDetails,
