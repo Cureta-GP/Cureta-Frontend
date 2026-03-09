@@ -12,8 +12,6 @@ class CreateRecordResponseModel {
   });
 
   factory CreateRecordResponseModel.fromJson(Map<String, dynamic> json) {
-    // Backend sometimes sends error message directly in 'message',
-    // or sometimes nested, or sometimes 'data' string.
     String? parsedMessage = json['message'] as String?;
     if (parsedMessage == null && json['data'] is String) {
       parsedMessage = json['data'] as String;
@@ -28,5 +26,5 @@ class CreateRecordResponseModel {
     );
   }
 
-  bool get isSuccess => status == 'SUCCESS';
+  bool get isSuccess => status == 'SUCCESS' || status == 'success';
 }

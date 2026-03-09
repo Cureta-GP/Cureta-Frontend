@@ -89,7 +89,7 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
       // --------------------
 
       final record = await _repository.createRecord(
-        profileId: profileId,
+        profileId: "a32b023b-a5fa-4f17-a600-b127dffd088f",
         diseaseName: diseaseName,
         notes: notes,
         recordDate: dateStr,
