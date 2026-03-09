@@ -30,10 +30,8 @@ class AddRecordStepFifth extends StatelessWidget {
     final colors = context.colors;
     final spacing = context.spacing;
     final typography = context.typography;
-
     // Read form state once (it's finalized at step 5)
     final formState = context.read<AddRecordFormCubit>().state;
-
     return BlocListener<CreateRecordCubit, CreateRecordState>(
       listener: (context, state) {
         if (state is CreateRecordSuccess) {

@@ -20,6 +20,20 @@ class ProfileRepository {
     // Fall back to original value to surface backend validation for unknown inputs.
     return gender;
   }
+  String _normalizeRelationshipForApi(String relationship) {
+    final value = relationship.trim().toLowerCase();
+
+    // Backend accepts only: Father, Mother, Brother, Sister, Son, Daughter
+    if (value == 'father' || value == 'dad' || value == 'أب') return 'Father';
+    if (value == 'mother' || value == 'mom' || value == 'أم') return 'Mother';
+    if (value == 'brother' || value == 'bro' || value == 'أخ') return 'Brother';
+    if (value == 'sister' || value == 'sis' || value == 'أخت') return 'Sister';
+    if (value == 'son' || value == 'ابن') return 'Son';
+    if (value == 'daughter' || value == 'ابنة') return 'Daughter';
+
+    // Fall back to original value to surface backend validation for unknown inputs.
+    return relationship;
+  }
 
   Future<List<ProfileModel>> getProfiles() async {
     final response = await _service.getProfiles();
@@ -68,7 +82,7 @@ class ProfileRepository {
       fullName: fullName,
       age: age,
       gender: normalizedGender,
-      relationship: relationship,
+      relationship: _normalizeRelationshipForApi(relationship),
       bloodType: bloodType,
       chronicDiseases: chronicDiseases,
       allergies: allergies,

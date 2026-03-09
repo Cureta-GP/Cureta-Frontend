@@ -1,6 +1,8 @@
 // profile_cubit.dart
 
-class ProfileState {
+import 'package:equatable/equatable.dart';
+
+class ProfileState extends Equatable {
   final String name;
   final String gender;
   final String relationship;
@@ -50,5 +52,17 @@ class ProfileState {
     "chronic_conditions": chronicConditions.toList(),
     "allergies": allergies.toList(),
   };
-}
 
+  @override
+  List<Object?> get props => [
+    name,
+    gender,
+    relationship,
+    age,
+    bloodType,
+    chronicConditions,
+    allergies,
+    currentPage,
+    isAddingFamilyMember,
+  ];
+}
