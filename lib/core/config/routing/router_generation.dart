@@ -30,7 +30,7 @@ import 'package:go_router/go_router.dart';
 class RoutesGeneration {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
-    redirect: (context, state) async {
+  /*  redirect: (context, state) async {
   final authRepo = getIt.get<AuthRepository>();
   final profileRepo = getIt.get<ProfileRepository>();
   final bool loggedIn = await authRepo.isLoggedIn();
@@ -54,7 +54,7 @@ class RoutesGeneration {
   }
 
   return null; 
-},
+},*/
     routes: [
       GoRoute(
         path: AppRoutes.splash,
