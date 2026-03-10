@@ -1,6 +1,8 @@
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
 import 'package:cureta/features/Meds/view/medicines_main_view.dart';
+import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
@@ -10,6 +12,7 @@ import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/view/main_navigation_views.dart';
 import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
@@ -27,6 +30,31 @@ import 'package:go_router/go_router.dart';
 class RoutesGeneration {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
+    redirect: (context, state) async {
+  final authRepo = getIt.get<AuthRepository>();
+  final profileRepo = getIt.get<ProfileRepository>();
+  final bool loggedIn = await authRepo.isLoggedIn();
+
+ 
+  final bool hasProfiles = await profileRepo.hasProfiles(); 
+
+  final bool isAuthRoute = state.matchedLocation == AppRoutes.login || 
+                           state.matchedLocation == AppRoutes.signup ||
+                           state.matchedLocation == AppRoutes.splash ||
+                           state.matchedLocation == AppRoutes.onboarding;
+
+  if (loggedIn && !hasProfiles) {
+     if (state.matchedLocation != AppRoutes.addProfile) {
+       return AppRoutes.addProfile;
+     }
+  }
+
+  if (loggedIn && hasProfiles && isAuthRoute && state.matchedLocation != AppRoutes.splash) {
+    return AppRoutes.mainNavigation;
+  }
+
+  return null; 
+},
     routes: [
       GoRoute(
         path: AppRoutes.splash,

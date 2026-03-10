@@ -13,13 +13,17 @@ class ProfileRepository {
 
     // Backend accepts only: Male, Female
     if (value == 'male' || value == 'm' || value == 'ذكر') return 'Male';
-    if (value == 'female' || value == 'f' || value == 'انثى' || value == 'أنثى') {
+    if (value == 'female' ||
+        value == 'f' ||
+        value == 'انثى' ||
+        value == 'أنثى') {
       return 'Female';
     }
 
     // Fall back to original value to surface backend validation for unknown inputs.
     return gender;
   }
+
   String _normalizeRelationshipForApi(String relationship) {
     final value = relationship.trim().toLowerCase();
 
@@ -89,5 +93,14 @@ class ProfileRepository {
       imagePath: imagePath,
     );
     return ProfileModel.fromJson(response.data['data']);
+  }
+
+  Future<bool> hasProfiles() async {
+    try {
+      final profiles = await getProfiles();
+      return profiles.isNotEmpty;
+    } catch (e) {
+      return false;
+    }
   }
 }

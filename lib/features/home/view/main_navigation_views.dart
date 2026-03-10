@@ -1,5 +1,6 @@
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/features/profile/view/profile_detail_view.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
@@ -31,7 +32,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeView(),
     const MedicinesMainView(),
     const UserRecordsView(),
-    const AllProfiesView(),
+    const ProfileDetailsScreen(),
   ];
 
   void _onItemTapped(int index) {

@@ -1,6 +1,8 @@
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/constants/app_images.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -19,9 +21,18 @@ class _SplashViewState extends State<SplashView> {
   }
 
   Future<void> _navigateToHome() async {
-    await Future.delayed(const Duration(seconds: 3), () {});
+    await Future.delayed(const Duration(seconds: 3));
+    
     if (!mounted) return;
-    GoRouter.of(context).go(AppRoutes.onboarding);
+
+    final authRepo = getIt.get<AuthRepository>();
+    final bool loggedIn = await authRepo.isLoggedIn();
+
+    if (loggedIn) {
+      context.go(AppRoutes.mainNavigation);
+    } else {
+      context.go(AppRoutes.onboarding);
+    }
   }
 
   @override
