@@ -1,18 +1,21 @@
+import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
+import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
-import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/Meds/view/medicines_main_view.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/widgets/custom_drawer.dart';
 import 'package:cureta/features/home/widgets/top_header.dart';
 import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
-import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
 import 'package:cureta/features/profile/view/all_profies_view.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MainNavigationScreen extends StatefulWidget {
- final ProfileState profile;
+  final ProfileState profile;
   const MainNavigationScreen({super.key, required this.profile});
 
   @override
@@ -45,68 +48,58 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final spacing = context.spacing;
-    return AdvancedDrawer(
-      backdrop: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(color: colors.primary),
-      ),
-      controller: _advancedDrawerController,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 300),
-      animateChildDecoration: true,
-      rtlOpening: false,
-      disabledGestures: false,
-      childDecoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(32)),
-        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
-      ),
-      drawer: const CustomDrawer(),
-      child: Scaffold(
-        backgroundColor: colors.background,
-        appBar: AppBar(
+
+    return BlocProvider(
+      create: (context) =>
+          ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+      child: AdvancedDrawer(
+        backdrop: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(color: colors.primary),
+        ),
+        controller: _advancedDrawerController,
+        drawer: const CustomDrawer(),
+        child: Scaffold(
           backgroundColor: colors.background,
-          scrolledUnderElevation: 0,
-          elevation: 0,
-          centerTitle: false,
-          titleSpacing: 0,
-          leading: IconButton(
-            onPressed: _handleMenuButtonPressed,
-            icon: ValueListenableBuilder<AdvancedDrawerValue>(
-              valueListenable: _advancedDrawerController,
-              builder: (_, value, __) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 250),
-                  child: Icon(
-                    value.visible ? Icons.clear : Icons.menu,
-                    size: spacing.xl + spacing.sm,
-                    key: ValueKey<bool>(value.visible),
-                    color: colors.textPrimary,
-                  ),
-                );
+          appBar: AppBar(
+            backgroundColor: colors.background,
+            scrolledUnderElevation: 0,
+            elevation: 0,
+            centerTitle: false,
+            titleSpacing: 0,
+            leading: IconButton(
+              onPressed: _handleMenuButtonPressed,
+              icon: ValueListenableBuilder<AdvancedDrawerValue>(
+                valueListenable: _advancedDrawerController,
+                builder: (_, value, __) {
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 250),
+                    child: Icon(
+                      value.visible ? Icons.clear : Icons.menu,
+                      size: spacing.xl + spacing.sm,
+                      key: ValueKey<bool>(value.visible),
+                      color: colors.textPrimary,
+                    ),
+                  );
+                },
+              ),
+            ),
+            title: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+              builder: (context, state) {
+                String name = "Loading...";
+                if (state is ProfilesSuccess) {
+                  final selectedProfile = state.profiles.firstWhere(
+                    (p) => p.id == state.selectedProfileId,
+                    orElse: () => state.profiles.first,
+                  );
+                  name = selectedProfile.fullName;
+                }
+                return TopHeader(userName: name);
               },
             ),
           ),
-          title: TopHeader(userName: widget.profile.name),
-        ),
-        body: IndexedStack(index: _selectedIndex, children: _screens),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: colors.primary,
-          child: const Icon(Icons.document_scanner, color: Colors.white),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: UserRecordsBottomNavigation(
-          currentIndex: _selectedIndex,
-          homeLabel: AppLocalizations.recordsListNavHome,
-          medsLabel: AppLocalizations.recordsListNavMeds,
-          scanRxLabel: AppLocalizations.recordsListNavScanRx,
-          recordsLabel: AppLocalizations.recordsListNavRecords,
-          profileLabel: AppLocalizations.recordsListNavProfile,
-          onHomePressed: () => _onItemTapped(0),
-          onMedsPressed: () => _onItemTapped(1),
-          onRecordsPressed: () => _onItemTapped(2),
-          onProfilePressed: () => _onItemTapped(3),
+          body: IndexedStack(index: _selectedIndex, children: _screens),
         ),
       ),
     );

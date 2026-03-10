@@ -17,11 +17,11 @@ class ProfilesLoading extends ProfilesListState {
 
 class ProfilesSuccess extends ProfilesListState {
   final List<ProfileModel> profiles;
-  ProfilesSuccess(this.profiles);
+  final String? selectedProfileId;
+  ProfilesSuccess(this.profiles, this.selectedProfileId);
   
   @override
-  List<Object?> get props => [profiles];
-  
+  List<Object?> get props => [profiles, selectedProfileId];
 }
 
 class ProfilesError extends ProfilesListState {

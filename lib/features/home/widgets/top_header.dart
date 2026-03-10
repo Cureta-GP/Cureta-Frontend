@@ -1,19 +1,23 @@
 import 'package:cureta/features/home/widgets/select_profile_bottom_sheet.dart';
+import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TopHeader extends StatelessWidget {
   final String userName;
   const TopHeader({super.key, required this.userName});
 
-  // دالة لإظهار قائمة البروفايلات
   void _showProfileSelector(BuildContext context) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const SelectProfileBottomSheet(), // الويدجت اللي هنبنيها تحت
+      builder: (innerContext) => BlocProvider.value(
+      value: BlocProvider.of<ProfilesListCubit>(context),
+      child: const SelectProfileBottomSheet(),
+    ), 
     );
   }
 
@@ -25,7 +29,7 @@ class TopHeader extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: spacing.sm, vertical: spacing.sm),
-      child: InkWell( // جعل المنطقة قابلة للضغط
+      child: InkWell( 
         onTap: () => _showProfileSelector(context),
         child: Row(
           children: [
@@ -41,7 +45,7 @@ class TopHeader extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
-                  Row( // إضافة سهم صغير بجانب الاسم ليوحي بأنه قابل للضغط
+                  Row( 
                     children: [
                       Text(
                         userName,
