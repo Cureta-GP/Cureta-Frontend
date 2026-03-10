@@ -1,8 +1,6 @@
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
-import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
@@ -19,77 +17,77 @@ class SelectProfileBottomSheet extends StatelessWidget {
     final spacing = context.spacing;
     final typography = context.typography;
 
-    return BlocProvider(
-create: (_) => ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),      child: Container(
-        padding: EdgeInsets.all(spacing.lg),
-        decoration: BoxDecoration(
-          color: colors.background,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-        ),
-        child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
-          builder: (context, state) {
-            if (state is ProfilesLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-      
-            if (state is ProfilesError) {
-              return Center(child: Text(state.message));
-            }
-      
-            if (state is ProfilesSuccess) {
-              final profiles = state.profiles;
-      
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: colors.divider,
-                      borderRadius: BorderRadius.circular(2),
-                    ),
+    return Container(
+      padding: EdgeInsets.all(spacing.lg),
+      decoration: BoxDecoration(
+        color: colors.background,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+      ),
+      child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+        builder: (context, state) {
+          if (state is ProfilesLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+    
+          if (state is ProfilesError) {
+            return Center(child: Text(state.message));
+          }
+    
+          if (state is ProfilesSuccess) {
+            final profiles = state.profiles;
+    
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: colors.divider,
+                    borderRadius: BorderRadius.circular(2),
                   ),
-      
-                  SizedBox(height: spacing.lg),
-      
-                  Text("Select Profile", style: typography.title),
-      
-                  Text(
-                    "Switch between family members to track their progress.",
-                    style: typography.body
-                        .copyWith(color: colors.textSecondary),
+                ),
+    
+                SizedBox(height: spacing.lg),
+    
+                Text("Select Profile", style: typography.title),
+    
+                Text(
+                  "Switch between family members to track their progress.",
+                  style: typography.body.copyWith(
+                    color: colors.textSecondary,
                   ),
-      
-                  SizedBox(height: spacing.xl),
-      
-                  ...profiles.map(
-                    (profile) => _buildProfileTile(
-                      context,
-                      profile: profile,
-                      isSelected: profile.isPrimary,
-                    ),
+                ),
+    
+                SizedBox(height: spacing.xl),
+    
+                ...profiles.map(
+                  (profile) => _buildProfileTile(
+                    context,
+                    profile: profile,
+                    isSelected: profile.id == state.selectedProfileId,
                   ),
-      
-                  SizedBox(height: spacing.xl),
-      
-                  SizedBox(
-                    width: double.infinity,
-                    child: CustomButton(
-                      text: "Add New Profile",
-                      onPressed: () {
-                        GoRouter.of(context)
-                            .go(AppRoutes.addProfile, extra: true);
-                      },
-                    ),
+                ),
+    
+                SizedBox(height: spacing.xl),
+    
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Add New Profile",
+                    onPressed: () {
+                      GoRouter.of(
+                        context,
+                      ).go(AppRoutes.addProfile, extra: true);
+                    },
                   ),
-                ],
-              );
-            }
-      
-            return const SizedBox();
-          },
-        ),
+                ),
+              ],
+            );
+          }
+    
+          return const SizedBox();
+        },
       ),
     );
   }
@@ -113,15 +111,14 @@ create: (_) => ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
       ),
       child: ListTile(
         onTap: () {
-          // هنا ممكن تعملي select profile في cubit
+          context.read<ProfilesListCubit>().selectProfile(profile.id);
+          Navigator.pop(context);
         },
         leading: CircleAvatar(
           backgroundImage: profile.imageUrl != null
               ? NetworkImage(profile.imageUrl!)
               : null,
-          child: profile.imageUrl == null
-              ? Text(profile.fullName[0])
-              : null,
+          child: profile.imageUrl == null ? Text(profile.fullName[0]) : null,
         ),
         title: Text(
           profile.fullName,
