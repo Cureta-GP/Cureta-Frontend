@@ -7,10 +7,12 @@ import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_
 import 'package:cureta/features/medical_records/veiw_model/create_record_cubit.dart';
 import 'package:cureta/features/medical_records/veiw_model/create_record_state.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
-import 'package:cureta/shared/widgets/full_screen_loading_overlay.dart';
+import 'package:cureta/shared/widgets/loading_overlay.dart';
+import 'package:cureta/shared/widgets/success_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+
 class AddRecordReviewSubmitSection extends StatelessWidget {
   const AddRecordReviewSubmitSection({
     super.key,
@@ -28,24 +30,24 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
     return BlocListener<CreateRecordCubit, CreateRecordState>(
       listener: (context, state) {
         if (state is CreateRecordLoading) {
-          FullScreenLoadingOverlay.show(
+          LoadingOverlay.show(
             context,
             lottiePath: 'assets/animations/loading.json',
-            playOnceAndComplete: false ,
           );
         } else if (state is CreateRecordSuccess) {
-          FullScreenLoadingOverlay.show(
+          LoadingOverlay.hide();
+          SuccessOverlay.show(
             context,
             lottiePath: 'assets/animations/check mark.json',
-            playOnceAndComplete: true,
+            message: 'تم حفظ السجل بنجاح',
+            onFinished: () {
+              context.read<AddRecordFormCubit>().reset();
+              context.read<CreateRecordCubit>().reset();
+              GoRouter.of(context).goNamed(AppRoutes.userRecords);
+            },
           );
-          Future.delayed(const Duration(seconds: 2), () {
-            context.read<AddRecordFormCubit>().reset();
-            context.read<CreateRecordCubit>().reset();
-            GoRouter.of(context).goNamed(AppRoutes.userRecords);
-          });
         } else {
-          FullScreenLoadingOverlay.hide();
+          LoadingOverlay.hide();
         }
       },
       child: AddRecordStepTwoBottomBar(

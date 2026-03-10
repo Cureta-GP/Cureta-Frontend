@@ -85,7 +85,7 @@ class RoutesGeneration {
           GoRoute(
             path: AppRoutes.medicalRecordsStepTwo,
             name: AppRoutes.medicalRecordsStepTwo,
-            pageBuilder: (context, state) => PageTransitions.fade(
+            pageBuilder: (context, state) => PageTransitions.slideRight(
               child: const AddMedicalRecordSeconedStep(),
               state: state,
             ),
@@ -93,7 +93,7 @@ class RoutesGeneration {
           GoRoute(
             path: AppRoutes.medicalRecords_step_three,
             name: AppRoutes.medicalRecords_step_three,
-            pageBuilder: (context, state) => PageTransitions.fade(
+            pageBuilder: (context, state) => PageTransitions.slideRight(
               child: const AddRecordThirdStep(),
               state: state,
             ),
@@ -101,7 +101,7 @@ class RoutesGeneration {
           GoRoute(
             path: AppRoutes.addRecordStepFour,
             name: AppRoutes.addRecordStepFour,
-            pageBuilder: (context, state) => PageTransitions.fade(
+            pageBuilder: (context, state) => PageTransitions.slideRight(
               child: const AddRecordForthStep(),
               state: state,
             ),
@@ -109,7 +109,7 @@ class RoutesGeneration {
           GoRoute(
             path: AppRoutes.addRecordStepFive,
             name: AppRoutes.addRecordStepFive,
-            pageBuilder: (context, state) => PageTransitions.fade(
+            pageBuilder: (context, state) => PageTransitions.slideRight(
               child: const AddRecordStepFifth(),
               state: state,
             ),
