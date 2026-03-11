@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserRecordsView extends StatefulWidget {
-  const UserRecordsView({super.key, this.isActive = false});
+  const UserRecordsView({super.key, this.isActive = true});
 
   final bool isActive;
 

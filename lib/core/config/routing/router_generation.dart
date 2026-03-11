@@ -153,7 +153,9 @@ class RoutesGeneration {
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
         redirect: (context, state) async {
-          final hasProfiles = await getIt.get<ProfileRepository>().hasProfiles();
+          final hasProfiles = await getIt
+              .get<ProfileRepository>()
+              .hasProfiles();
           if (hasProfiles) {
             return AppRoutes.mainNavigation;
           }
@@ -170,8 +172,10 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.userRecords,
         name: AppRoutes.userRecords,
-        pageBuilder: (context, state) =>
-            PageTransitions.scale(child: const UserRecordsView(), state: state),
+        pageBuilder: (context, state) => PageTransitions.scale(
+          child: const UserRecordsView(isActive: true),
+          state: state,
+        ),
       ),
       GoRoute(
         path: AppRoutes.medicines,
