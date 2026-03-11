@@ -1,9 +1,13 @@
 // lib/data/repositories/profile_repository.dart
+import 'package:cureta/core/error_handling/error_handler.dart';
+import 'package:dio/dio.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/profile_model.dart';
 
 class ProfileRepository {
+  static const String _profileIdKey = 'profileId';
   final ProfileService _service;
 
   ProfileRepository(this._service);
@@ -43,8 +47,19 @@ class ProfileRepository {
     final response = await _service.getProfiles();
 
     final List data = response.data['data'];
+    final profiles = data
+        .map((profile) => ProfileModel.fromJson(profile))
+        .toList();
 
-    return data.map((profile) => ProfileModel.fromJson(profile)).toList();
+    if (profiles.isNotEmpty) {
+      final selected = profiles.firstWhere(
+        (p) => p.isPrimary,
+        orElse: () => profiles.first,
+      );
+      await cacheSelectedProfileId(selected.id);
+    }
+
+    return profiles;
   }
 
   Future<ProfileModel> createPrimaryProfile({
@@ -58,16 +73,58 @@ class ProfileRepository {
   }) async {
     final normalizedGender = _normalizeGenderForApi(gender);
 
-    final response = await _service.createPrimaryProfile(
-      fullName: fullName,
-      age: age,
-      gender: normalizedGender,
-      bloodType: bloodType,
-      chronicDiseases: chronicDiseases,
-      allergies: allergies,
-      imagePath: imagePath,
-    );
-    return ProfileModel.fromJson(response.data['data']);
+    try {
+      final response = await _service.createPrimaryProfile(
+        fullName: fullName,
+        age: age,
+        gender: normalizedGender,
+        bloodType: bloodType,
+        chronicDiseases: chronicDiseases,
+        allergies: allergies,
+        imagePath: imagePath,
+      );
+      final profile = ProfileModel.fromJson(response.data['data']);
+      await cacheSelectedProfileId(profile.id);
+      return profile;
+    } on DioException catch (e) {
+      final responseData = e.response?.data;
+      final code = responseData is Map
+          ? responseData['code']?.toString().toUpperCase()
+          : null;
+
+      if (code == 'PROFILE_ALREADY_EXISTS' && responseData is Map) {
+        final payload = responseData['data'];
+        final profileId =
+            responseData['profile_id']?.toString() ??
+            (payload is Map ? payload['id']?.toString() : null);
+
+        if (profileId != null && profileId.isNotEmpty) {
+          await cacheSelectedProfileId(profileId);
+        }
+
+        if (payload is Map) {
+          return ProfileModel.fromJson(Map<String, dynamic>.from(payload));
+        }
+
+        final profiles = await getProfiles();
+        if (profiles.isNotEmpty) {
+          if (profileId != null) {
+            final exact = profiles.where((p) => p.id == profileId);
+            if (exact.isNotEmpty) {
+              return exact.first;
+            }
+          }
+          return profiles.firstWhere(
+            (p) => p.isPrimary,
+            orElse: () => profiles.first,
+          );
+        }
+      }
+
+      throw ErrorHandler.handle(e);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
   }
 
   Future<ProfileModel> createFamilyProfile({
@@ -92,10 +149,32 @@ class ProfileRepository {
       allergies: allergies,
       imagePath: imagePath,
     );
-    return ProfileModel.fromJson(response.data['data']);
+    final profile = ProfileModel.fromJson(response.data['data']);
+    await cacheSelectedProfileId(profile.id);
+    return profile;
+  }
+
+  Future<void> cacheSelectedProfileId(String profileId) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileIdKey, profileId);
+  }
+
+  Future<String?> getCachedProfileId() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_profileIdKey);
+  }
+
+  Future<void> clearCachedProfileId() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_profileIdKey);
   }
 
   Future<bool> hasProfiles() async {
+    final cachedId = await getCachedProfileId();
+    if (cachedId != null && cachedId.isNotEmpty) {
+      return true;
+    }
+
     try {
       final profiles = await getProfiles();
       return profiles.isNotEmpty;

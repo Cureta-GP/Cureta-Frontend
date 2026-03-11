@@ -5,8 +5,56 @@ import '../services/medical_record_service.dart';
 
 class MedicalRecordRepository {
   final MedicalRecordService _service;
+
+  // ── Session Cache ──
+  List<MedicalRecordModel>? _cachedRecords;
+  String? _cachedProfileId;
+
   MedicalRecordRepository(this._service);
 
+  // ── GET RECORDS (new) ──
+  Future<List<MedicalRecordModel>> getRecords({
+    required String profileId,
+    String? type,
+    String? search,
+    bool forceRefresh = false,
+  }) async {
+    try {
+      // Return session cache instantly if no refresh forced and no filters
+      final hasFilters = type != null || (search != null && search.isNotEmpty);
+      if (!forceRefresh &&
+          !hasFilters &&
+          _cachedRecords != null &&
+          _cachedProfileId == profileId) {
+        return _cachedRecords!;
+      }
+
+      final response = await _service.getRecords(
+        profileId: profileId,
+        type: type,
+        search: search,
+      );
+
+      final data = response.data['data'] as List<dynamic>?;
+      if (data == null) return [];
+
+      final records = data
+          .map((e) => MedicalRecordModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      // Only cache the unfiltered full list
+      if (!hasFilters) {
+        _cachedRecords = records;
+        _cachedProfileId = profileId;
+      }
+
+      return records;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  // ── CREATE (existing) ──
   Future<MedicalRecordModel> createRecord({
     required String profileId,
     required String diseaseName,
@@ -31,7 +79,14 @@ class MedicalRecordRepository {
         throw AppException.server(msg: 'No record data returned from server');
       }
 
-      return MedicalRecordModel.fromJson(data);
+      final newRecord = MedicalRecordModel.fromJson(data);
+
+      // Prepend to session cache so list screen sees it immediately
+      if (_cachedProfileId == profileId) {
+        _cachedRecords?.insert(0, newRecord);
+      }
+
+      return newRecord;
     } catch (e) {
       throw ErrorHandler.handle(e);
     }

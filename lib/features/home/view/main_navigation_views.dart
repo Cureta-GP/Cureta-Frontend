@@ -1,5 +1,6 @@
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/profile_detail_view.dart';
@@ -12,8 +13,6 @@ import 'package:cureta/features/Meds/view/medicines_main_view.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/widgets/custom_drawer.dart';
 import 'package:cureta/features/home/widgets/top_header.dart';
-import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
-import 'package:cureta/features/profile/view/all_profies_view.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -29,13 +28,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
 
   final _advancedDrawerController = AdvancedDrawerController();
-
-  final List<Widget> _screens = [
-    const HomeView(),
-    const MedicinesMainView(),
-    const UserRecordsView(),
-    const ProfileDetailsScreen(),
-  ];
 
   void _onItemTapped(int index) {
     setState(() {
@@ -75,7 +67,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               onPressed: _handleMenuButtonPressed,
               icon: ValueListenableBuilder<AdvancedDrawerValue>(
                 valueListenable: _advancedDrawerController,
-                builder: (_, value, __) {
+                builder: (context, value, child) {
                   return AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
                     child: Icon(
@@ -102,7 +94,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               },
             ),
           ),
-          body: IndexedStack(index: _selectedIndex, children: _screens),
+          body: IndexedStack(
+            index: _selectedIndex,
+            children: [
+              const HomeView(),
+              const MedicinesMainView(),
+              UserRecordsView(isActive: _selectedIndex == 2),
+              const ProfileDetailsScreen(),
+            ],
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: UserRecordsBottomNavigation(

@@ -3,6 +3,23 @@ import 'package:dio/dio.dart';
 import 'package:cureta/core/Services/dio_helper.dart';
 
 class MedicalRecordService {
+  Future<Response> getRecords({
+    required String profileId,
+    String? type,
+    String? startDate,
+    String? endDate,
+    String? search,
+  }) async {
+    final query = <String, dynamic>{
+      'profile_id': profileId,
+      if (type != null) 'type': type,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (search != null && search.isNotEmpty) 'search': search,
+    };
+    return await DioHelper.getData(url: 'medical-records', query: query);
+  }
+
   Future<Response> createRecord({
     required String profileId,
     required String diseaseName,

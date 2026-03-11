@@ -11,8 +11,17 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
     emit(ProfilesLoading());
     try {
       final profiles = await repository.getProfiles();
-      
-      final initialId = profiles.firstWhere((p) => p.isPrimary).id;
+
+      final cachedId = await repository.getCachedProfileId();
+      final hasCached =
+          cachedId != null && profiles.any((profile) => profile.id == cachedId);
+      final initialId = hasCached
+          ? cachedId
+          : profiles
+                .firstWhere((p) => p.isPrimary, orElse: () => profiles.first)
+                .id;
+
+      await repository.cacheSelectedProfileId(initialId);
 
       emit(ProfilesSuccess(profiles, initialId));
     } catch (e) {
@@ -20,9 +29,10 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
     }
   }
 
-  void selectProfile(String profileId) {
+  Future<void> selectProfile(String profileId) async {
     if (state is ProfilesSuccess) {
       final currentState = state as ProfilesSuccess;
+      await repository.cacheSelectedProfileId(profileId);
       emit(ProfilesSuccess(currentState.profiles, profileId));
     }
   }

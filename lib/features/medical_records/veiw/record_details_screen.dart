@@ -6,6 +6,7 @@ import 'package:cureta/features/medical_records/widgets/record_details_documents
 import 'package:cureta/features/medical_records/widgets/record_details_header.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_notes_card.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// The main Record Details screen that assembles all micro-widgets.
 ///
@@ -34,6 +35,59 @@ class RecordDetailsView extends StatelessWidget {
   final VoidCallback? onDelete;
   final VoidCallback? onViewAllFiles;
   final ValueChanged<int>? onFileTap;
+
+  Future<void> _openFile(BuildContext context, RecordFile file) async {
+    final url = file.fileUrl;
+    if (url == null || url.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('File URL is not available')),
+      );
+      return;
+    }
+
+    if (file.fileType == 'image') {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => Dialog.fullscreen(
+          child: Stack(
+            children: [
+              Center(
+                child: InteractiveViewer(
+                  minScale: 0.8,
+                  maxScale: 4,
+                  child: Image.network(url, fit: BoxFit.contain),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                right: 12,
+                child: IconButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid file URL')));
+      return;
+    }
+
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open attachment')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +143,8 @@ class RecordDetailsView extends StatelessWidget {
                 RecordDetailsDocumentsSection(
                   files: files,
                   onViewAll: onViewAllFiles,
-                  onFileTap: onFileTap,
+                  onFileTap:
+                      onFileTap ?? (index) => _openFile(context, files[index]),
                 ),
               ],
               RecordDetailsBottomActions(onEdit: onEdit, onDelete: onDelete),

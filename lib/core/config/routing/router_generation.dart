@@ -1,8 +1,7 @@
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/Meds/view/medicines_main_view.dart';
-import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
@@ -10,7 +9,7 @@ import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/view/main_navigation_views.dart';
-import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
+import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
@@ -30,7 +29,7 @@ import 'package:go_router/go_router.dart';
 class RoutesGeneration {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
-  /*  redirect: (context, state) async {
+    /*  redirect: (context, state) async {
   final authRepo = getIt.get<AuthRepository>();
   final profileRepo = getIt.get<ProfileRepository>();
   final bool loggedIn = await authRepo.isLoggedIn();
@@ -153,6 +152,13 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
+        redirect: (context, state) async {
+          final hasProfiles = await getIt.get<ProfileRepository>().hasProfiles();
+          if (hasProfiles) {
+            return AppRoutes.mainNavigation;
+          }
+          return null;
+        },
         pageBuilder: (context, state) {
           final bool isFamily = state.extra as bool? ?? false;
           return PageTransitions.fade(
