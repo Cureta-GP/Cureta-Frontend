@@ -30,12 +30,10 @@ class RecordDetailsDocumentsSection extends StatelessWidget {
   const RecordDetailsDocumentsSection({
     super.key,
     required this.files,
-    this.onViewAll,
     this.onFileTap,
   });
 
   final List<RecordFile> files;
-  final VoidCallback? onViewAll;
   final ValueChanged<int>? onFileTap;
 
   @override
@@ -50,26 +48,11 @@ class RecordDetailsDocumentsSection extends StatelessWidget {
         // Section header
         Padding(
           padding: EdgeInsets.symmetric(horizontal: spacing.xs / 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppLocalizations.recordDetailsDocumentsTitle,
-                style: typography.medicalRecordScreenTitle.copyWith(
-                  color: colors.textPrimary,
-                ),
-              ),
-              GestureDetector(
-                onTap: onViewAll,
-                child: Text(
-                  AppLocalizations.recordDetailsViewAll,
-                  style: typography.label.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: colors.primary,
-                  ),
-                ),
-              ),
-            ],
+          child: Text(
+            AppLocalizations.recordDetailsDocumentsTitle,
+            style: typography.medicalRecordScreenTitle.copyWith(
+              color: colors.textPrimary,
+            ),
           ),
         ),
         SizedBox(height: spacing.lg),

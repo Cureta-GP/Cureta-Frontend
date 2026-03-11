@@ -1,8 +1,10 @@
 // ignore_for_file: file_names
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/data/user_records_data.dart';
 import 'package:cureta/features/medical_records/data/user_records_models.dart';
 import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/medical_records/widgets/records_list_body.dart';
 import 'package:cureta/features/medical_records/widgets/user_records_top_section.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
@@ -54,8 +56,9 @@ class _UserRecordsViewState extends State<UserRecordsView> {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final filters = localizedUserRecordFilters();
+    final hasProfilesCubit = context.read<ProfilesListCubit?>() != null;
 
-    return BlocProvider(
+    Widget child = BlocProvider(
       create: (_) => MedicalRecordsCubit(),
       child: BlocListener<ProfilesListCubit, ProfilesListState>(
         listenWhen: (prev, curr) {
@@ -78,20 +81,14 @@ class _UserRecordsViewState extends State<UserRecordsView> {
             return Scaffold(
               backgroundColor: colors.background,
               body: SafeArea(
-                child: Column(
-                  children: [
-                    _TopSection(
-                      searchController: _searchController,
-                      filters: filters,
-                      filterNotifier: _filterNotifier,
-                    ),
-                    Expanded(
-                      child: RecordsListBody(
-                        searchController: _searchController,
-                        filterNotifier: _filterNotifier,
-                      ),
-                    ),
-                  ],
+                child: RecordsListBody(
+                  topSection: _TopSection(
+                    searchController: _searchController,
+                    filters: filters,
+                    filterNotifier: _filterNotifier,
+                  ),
+                  searchController: _searchController,
+                  filterNotifier: _filterNotifier,
                 ),
               ),
             );
@@ -99,6 +96,15 @@ class _UserRecordsViewState extends State<UserRecordsView> {
         ),
       ),
     );
+
+    if (!hasProfilesCubit) {
+      child = BlocProvider(
+        create: (_) =>
+            ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+        child: child,
+      );
+    }
+    return child;
   }
 }
 

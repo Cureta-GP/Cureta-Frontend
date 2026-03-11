@@ -31,8 +31,8 @@ class UserRecordCard extends StatelessWidget {
 
     final dateStr = _formatDate(record.recordDate);
     final attachmentCount = record.attachments.length;
+    final isOngoing = attachmentCount > 0;
     final meta = '$dateStr · $attachmentCount files';
-
     // Convert AttachmentModel to RecordFile for details screen
     final files = record.attachments.map((attachment) {
       final isImage =
@@ -42,7 +42,6 @@ class UserRecordCard extends StatelessWidget {
           attachment.fileName.toLowerCase().endsWith('.png') ||
           attachment.fileName.toLowerCase().endsWith('.gif');
       final isPdf = attachment.fileName.toLowerCase().endsWith('.pdf');
-
       return RecordFile(
         name: attachment.fileName,
         meta: attachment.attachmentType,
@@ -61,7 +60,7 @@ class UserRecordCard extends StatelessWidget {
         AppRoutes.recordDetails,
         extra: {
           'conditionName': record.diseaseName,
-          'isOngoing': true,
+          'isOngoing': isOngoing,
           'diagnosedDate': dateStr,
           'notes': record.notes ?? '',
           'files': files,
@@ -86,7 +85,7 @@ class UserRecordCard extends StatelessWidget {
                     children: [
                       UserRecordStatusPill(
                         label: '$attachmentCount attachments',
-                        isOngoing: true,
+                        isOngoing: isOngoing,
                       ),
                       SizedBox(height: spacing.md),
                       Text(

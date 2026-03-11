@@ -22,7 +22,6 @@ class RecordDetailsView extends StatelessWidget {
     required this.files,
     this.onEdit,
     this.onDelete,
-    this.onViewAllFiles,
     this.onFileTap,
   });
 
@@ -33,7 +32,6 @@ class RecordDetailsView extends StatelessWidget {
   final List<RecordFile> files;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
-  final VoidCallback? onViewAllFiles;
   final ValueChanged<int>? onFileTap;
 
   Future<void> _openFile(BuildContext context, RecordFile file) async {
@@ -112,45 +110,42 @@ class RecordDetailsView extends StatelessWidget {
             color: colors.textPrimary,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.more_vert, color: colors.textPrimary),
-            onPressed: () {
-              // TODO: show options menu
-            },
-          ),
-        ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: spacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: spacing.xs),
-              RecordDetailsHeader(
-                conditionName: conditionName,
-                isOngoing: isOngoing,
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: spacing.xl),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  SizedBox(height: spacing.xs),
+                  RecordDetailsHeader(
+                    conditionName: conditionName,
+                    isOngoing: isOngoing,
+                  ),
+                  SizedBox(height: spacing.xxl),
+                  RecordDetailsDiagnosedDate(date: diagnosedDate),
+                  SizedBox(height: spacing.xxl),
+                  if (notes.isNotEmpty) ...[
+                    RecordDetailsNotesCard(notes: notes),
+                    SizedBox(height: spacing.xxl),
+                  ],
+                  if (files.isNotEmpty)
+                    RecordDetailsDocumentsSection(
+                      files: files,
+                      onFileTap:
+                          onFileTap ??
+                          (index) => _openFile(context, files[index]),
+                    ),
+                  RecordDetailsBottomActions(
+                    onEdit: onEdit,
+                    onDelete: onDelete,
+                  ),
+                  SizedBox(height: spacing.xl),
+                ]),
               ),
-              SizedBox(height: spacing.xxl),
-              RecordDetailsDiagnosedDate(date: diagnosedDate),
-              SizedBox(height: spacing.xxl),
-              if (notes.isNotEmpty) ...[
-                RecordDetailsNotesCard(notes: notes),
-                SizedBox(height: spacing.xxl),
-              ],
-              if (files.isNotEmpty) ...[
-                RecordDetailsDocumentsSection(
-                  files: files,
-                  onViewAll: onViewAllFiles,
-                  onFileTap:
-                      onFileTap ?? (index) => _openFile(context, files[index]),
-                ),
-              ],
-              RecordDetailsBottomActions(onEdit: onEdit, onDelete: onDelete),
-              SizedBox(height: spacing.xl),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
