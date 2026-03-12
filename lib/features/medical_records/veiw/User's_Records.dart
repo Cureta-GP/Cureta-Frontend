@@ -25,26 +25,21 @@ class _UserRecordsViewState extends State<UserRecordsView> {
   final _searchController = TextEditingController();
   final _filterNotifier = ValueNotifier<String>(UserRecordFilterIds.all);
   String? _lastFetchedProfileId;
-
   void _fetchIfNeeded(BuildContext context, {bool forceRefresh = false}) {
     if (!widget.isActive) return;
-
     final profileState = context.read<ProfilesListCubit>().state;
     if (profileState is! ProfilesSuccess ||
         profileState.selectedProfileId == null) {
       return;
     }
-
     final profileId = profileState.selectedProfileId!;
     if (!forceRefresh && _lastFetchedProfileId == profileId) return;
-
     _lastFetchedProfileId = profileId;
     context.read<MedicalRecordsCubit>().fetchRecords(
       profileId: profileId,
       forceRefresh: forceRefresh,
     );
   }
-
   @override
   void dispose() {
     _searchController.dispose();

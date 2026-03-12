@@ -1,5 +1,6 @@
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
+import 'package:cureta/features/medical_records/widgets/animated_sliver_record_item.dart';
 import 'package:cureta/features/medical_records/widgets/records_error_view.dart';
 import 'package:cureta/features/medical_records/widgets/shimmer_record_card.dart';
 import 'package:cureta/features/medical_records/widgets/user_record_card.dart';
@@ -139,7 +140,11 @@ class RecordsSuccessScroll extends StatelessWidget {
               final record = records[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: spacing.lg),
-                child: UserRecordCard(key: ValueKey(record.id), record: record),
+                child: AnimatedSliverRecordItem(
+                  key: ValueKey('record_anim_${record.id}_$index'),
+                  index: index,
+                  child: UserRecordCard(record: record),
+                ),
               );
             }, childCount: records.length),
           ),
