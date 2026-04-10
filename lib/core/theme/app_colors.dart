@@ -18,6 +18,10 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.accentOrange,
     required this.accentBlue,
     required this.accentPurple,
+    required this.chatBackground,
+    required this.statusOnline,
+    required this.chatAssistantLabel,
+    required this.chatQuickActionBorder,
   });
 
   final Color primary;
@@ -35,6 +39,10 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color accentOrange;
   final Color accentBlue;
   final Color accentPurple;
+  final Color chatBackground;
+  final Color statusOnline;
+  final Color chatAssistantLabel;
+  final Color chatQuickActionBorder;
 
   // --- Light Theme Setup ---
   static final light = AppColors(
@@ -53,6 +61,10 @@ class AppColors extends ThemeExtension<AppColors> {
     accentOrange: const Color(0xFFFFEDD5),
     accentBlue: const Color(0xFFE0E7FF),
     accentPurple: const Color(0xFFF5F3FF),
+    chatBackground: const Color(0xFFF5F8F8),
+    statusOnline: const Color(0xFF10B981),
+    chatAssistantLabel: const Color(0xFF33B3B9),
+    chatQuickActionBorder: const Color(0xFFCCECED),
   );
 
   // --- Dark Theme Setup ---
@@ -72,6 +84,10 @@ class AppColors extends ThemeExtension<AppColors> {
     accentOrange: const Color(0xFF3D3127),
     accentBlue: const Color(0xFF223244),
     accentPurple: const Color(0xFF2E1065),
+    chatBackground: const Color(0xFF1A2C2E),
+    statusOnline: const Color(0xFF34D399),
+    chatAssistantLabel: const Color(0xFF5DD5DB),
+    chatQuickActionBorder: const Color(0xFF3A5456),
   );
 
   static AppColors fromBrightness(Brightness brightness) =>
@@ -95,6 +111,10 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? accentOrange,
     Color? accentBlue,
     Color? accentPurple,
+    Color? chatBackground,
+    Color? statusOnline,
+    Color? chatAssistantLabel,
+    Color? chatQuickActionBorder,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -112,6 +132,13 @@ class AppColors extends ThemeExtension<AppColors> {
       accentOrange: accentOrange ?? this.accentOrange,
       accentBlue: accentBlue ?? this.accentBlue,
       accentPurple: accentPurple ?? this.accentPurple,
+      chatBackground:
+          chatBackground ?? this.chatBackground,
+      statusOnline: statusOnline ?? this.statusOnline,
+      chatAssistantLabel:
+          chatAssistantLabel ?? this.chatAssistantLabel,
+      chatQuickActionBorder:
+          chatQuickActionBorder ?? this.chatQuickActionBorder,
     );
   }
 
@@ -134,6 +161,26 @@ class AppColors extends ThemeExtension<AppColors> {
       accentOrange: Color.lerp(accentOrange, other.accentOrange, t)!,
       accentBlue: Color.lerp(accentBlue, other.accentBlue, t)!,
       accentPurple: Color.lerp(accentPurple, other.accentPurple, t)!,
+      chatBackground: Color.lerp(
+        chatBackground,
+        other.chatBackground,
+        t,
+      )!,
+      statusOnline: Color.lerp(
+        statusOnline,
+        other.statusOnline,
+        t,
+      )!,
+      chatAssistantLabel: Color.lerp(
+        chatAssistantLabel,
+        other.chatAssistantLabel,
+        t,
+      )!,
+      chatQuickActionBorder: Color.lerp(
+        chatQuickActionBorder,
+        other.chatQuickActionBorder,
+        t,
+      )!,
     );
   }
 }

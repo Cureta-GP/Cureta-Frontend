@@ -7,6 +7,7 @@ import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
 import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
+import 'package:cureta/features/chat_bot/veiw/Chat_screen.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/view/main_navigation_views.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
@@ -234,6 +235,15 @@ class RoutesGeneration {
           );
         },
       ),
+      GoRoute(
+        path: AppRoutes.chat,
+        name: AppRoutes.chat,
+        pageBuilder: (context, state) => PageTransitions.fade (
+          child: const ChatScreen(),
+          state: state,
+        ),
+      ),
     ],
   );
+
 }

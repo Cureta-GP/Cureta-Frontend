@@ -54,7 +54,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           decoration: BoxDecoration(color: colors.primary),
         ),
         controller: _advancedDrawerController,
-        drawer: const CustomDrawer(),
+        drawer: CustomDrawer(controller: _advancedDrawerController),
         child: Scaffold(
           backgroundColor: colors.background,
           appBar: AppBar(

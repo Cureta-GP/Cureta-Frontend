@@ -383,4 +383,12 @@ class AppLocalizations {
   static String get homeVitaminDNote => 'home.vitamin_d_note'.tr();
   static String get homeBloodTestResults => 'home.blood_test_results'.tr();
   static String get homeVaccinationRecord => 'home.vaccination_record'.tr();
+  static String? get chatInputHint => 'chat.input_hint'.tr();
+  static String get chatAssistantTitle => 'chat.assistant_title'.tr();
+  static String get chatOnlineStatus => 'chat.online_status'.tr();
+  static String get chatAssistantSender => 'chat.assistant_sender'.tr();
+  static String get chatUserSender => 'chat.user_sender'.tr();
+  static String get chatGreetingMessage => 'chat.greeting_message'.tr();
+  static String get chatUserQuestion => 'chat.user_question'.tr();
+  static String get chatReplyMessage => 'chat.reply_message'.tr();
 }

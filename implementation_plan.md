@@ -1,1010 +1,210 @@
-# GET Medical Records — Detailed Implementation Plan
+# Refactor [Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart) — Extract Theme Tokens & Decompose Into Widgets
 
-## Goal
-Integrate `GET /api/medical-records` into the existing UI. Replace all dummy/hardcoded data with real API data. Show shimmer cards while loading. View attachments inline (no download).
+## Problem
 
----
+[Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart) is an **832-line monolithic build method** containing:
 
-## API Reference
+- **~25 hardcoded colors** (e.g. [Color(0xFF00A0A8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140), [Color(0xFFF5F8F8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140), …)
+- **~12 inline `TextStyle` blocks** with explicit `fontSize`, `fontWeight`, and `fontFamily`
+- **Fixed pixel widths/heights** everywhere (e.g. `width: 375`, `width: 360`, `height: 71.20`)
+- **No widget decomposition** — everything is a nested tree of `Container → Row/Column → Container …`
+- **Icons rendered as `Text` with `fontFamily: 'Material Icons'`** instead of the `Icon` widget
 
-```
-GET /api/medical-records?profile_id=<uuid>&type=<string>&start_date=<date>&end_date=<date>&search=<string>
-```
-
-**Response 200:**
-```json
-{
-  "status": "SUCCESS",
-  "data": [{
-    "id": "uuid",
-    "profile_id": "uuid",
-    "disease_name": "string",
-    "notes": "string",
-    "record_date": "2026-03-11",
-    "created_at": "2026-03-11T11:46:43.519Z",
-    "attachments": [{
-      "id": "uuid",
-      "record_id": "uuid",
-      "file_url": "string",
-      "attachment_type": "X-ray",
-      "file_name": "string"
-    }]
-  }]
-}
-```
-
-**Where does `profileId` come from?**
-From [ProfilesListCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/profile/view_model/profile_list_cubit.dart#5-30) → `ProfilesSuccess.selectedProfileId`. This cubit is already provided above the navigation tree. We access it via `context.read<ProfilesListCubit>()`.
+This violates the project's theme system ([AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140), [AppTypography](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart#3-546), [AppSpacing](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_spacing.dart#3-88), [AppRadius](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_radius.dart#3-78)) and the [rules.md.txt](file:///d:/Flutter_Projects/Cureta-Frontend/rules.md.txt) guidelines (small private widgets, composition over inheritance, `const` constructors, no hardcoded styles).
 
 ---
 
-## Changes (ordered by dependency)
+## Hardcoded Value Audit
 
-### 1. Add `shimmer` package
+### Colors
 
-#### [MODIFY] [pubspec.yaml](file:///d:/Flutter_Projects/Cureta-Frontend/pubspec.yaml)
+| Hardcoded Value | Occurrences | Existing Token | Action |
+|---|---|---|---|
+| [Color(0xFFF5F8F8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (screen bg) | `colors.background` (white/dark) — **close but not exact** | Add `chatBackground` to [AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) **or** use `colors.surface` |
+| `Colors.white` | 4 (header bg, assistant bubble bg) | `colors.background` (light = white) | Use `colors.background` |
+| [Color(0xFFF1F5F9)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (header border, input border) | `colors.divider` (`0xFFE0E0E0`) — **different shade** | Add `chatBorderLight` to [AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) **or** reuse `colors.divider` |
+| [Color(0xFFE5F5F6)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 4 (bot avatar bg, quick-action bg) | `colors.accentCyan` (`0xFFE0F1F3`) — **very close** | **Reuse `colors.accentCyan`** |
+| [Color(0xFF00A0A8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 5 (bot icon, user bubble bg, quick-action text, send btn) | `colors.primary` (`0xFF00A1A9`) — **1 hex step off** | **Reuse `colors.primary`** |
+| [Color(0xFF0F172A)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (header title) | `colors.textPrimary` (`0xFF212121`) — **similar dark** | Add `chatHeaderTitle` **or** reuse `colors.textPrimary` |
+| [Color(0xFF10B981)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (online dot) | No match | Add `statusOnline` to [AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) |
+| [Color(0xFF64748B)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (online text, close icon) | `colors.textSecondary` (`0xFF757575`) — **close** | **Reuse `colors.textSecondary`** |
+| [Color(0xFF33B3B9)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (assistant label) | Close to `primary` | Add `chatAssistantLabel` **or** derive from `primary` |
+| [Color(0xFF1E293B)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (assistant body text) | `colors.textPrimary` — close | **Reuse `colors.textPrimary`** |
+| [Color(0xFF94A3B8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 3 (user label, attach icon, mic icon) | `colors.textHint` (`0xFFBDBDBD`) — **different shade** | `colors.icon` (`0xFF99A1AF`) — **closest match, use it** |
+| [Color(0xFFE2E8F0)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (user avatar bg) | `colors.divider` — close | Reuse `colors.divider` or add dedicated token |
+| [Color(0xFFCCECED)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 3 (quick-action border) | No exact match | Add `chatQuickActionBorder` **or** derive |
+| [Color(0xFF878B94)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (input placeholder) | `colors.textHint` — close | **Reuse `colors.textHint`** |
 
-```diff
-  shared_preferences: ^2.3.3
-+ shimmer: ^3.0.0
-```
+### Text Styles
 
-Then run:
-```bash
-flutter pub get
-```
+| Usage | Current Inline Style | Matching [AppTypography](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart#3-546) Token | Action |
+|---|---|---|---|
+| Header title "Cureta Assistant" | `fontSize: 16, w700` | `body` (16, normal) — weight differs | Add `chatHeaderTitle` to [AppTypography](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart#3-546) |
+| Online status | `fontSize: 11, w500` | None exact | Add `chatStatusLabel` |
+| Assistant label "Assistant" | `fontSize: 12, w600` | `label` is 14 — close but smaller | Add `chatSenderLabel` |
+| Message body text | `fontSize: 15, w400` | `body` (16, normal) — close | Add `chatMessageBody` |
+| User label "You" | `fontSize: 12, w600` | Same as assistant label above | Reuse `chatSenderLabel` |
+| Quick-action chip text | `fontSize: 14, w500` | `label` (14, normal) — weight differs | Add `chatQuickActionLabel` |
+| Input placeholder | `fontSize: 15, w400` | Same as message body | Reuse `chatMessageBody` |
+
+### Spacing & Radius
+
+| Usage | Hardcoded Value | Matching Token | Action |
+|---|---|---|---|
+| Header padding | `h:16, v:12` | `spacing.lg` (16), `spacing.md` (12) | Use tokens |
+| Message area padding | `h:16, v:24` | `spacing.lg` (16), `spacing.xl` (24) | Use tokens |
+| Avatar gap | `12` | `spacing.md` (12) | Use `spacing.md` |
+| Label-to-bubble gap | `6` | None exact (xs=8, closest) | Use a fraction or add `spacing.xxs` |
+| Message vertical gap | `24` | `spacing.xl` (24) | Use `spacing.xl` |
+| Quick-action gap | `8` | `spacing.xs` (8) | Use `spacing.xs` |
+| Bubble corner radius | `24` | `radius.xl` (24) | Use `radius.xl` |
+| Full circle (avatar) | `9999` | `radius.full` (9999) | Use `radius.full` |
+| Input field radius | `16` | `radius.md` is 14 — close | Use `radius.lg` (18) **or** add token |
+| Send btn radius | `24` | `radius.xl` (24) | Use `radius.xl` |
 
 ---
 
-### 2. Add `getRecords()` to Service
+## Proposed Changes
 
-#### [MODIFY] [medical_record_service.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/services/medical_record_service.dart)
+### Component 1: Theme Tokens
 
-Add this method **after** the existing [createRecord()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/repo/medical_record_repository.dart#10-39):
+#### [MODIFY] [app_colors.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart)
+
+Add chat-specific colors:
 
 ```dart
-Future<Response> getRecords({
-  required String profileId,
-  String? type,
-  String? startDate,
-  String? endDate,
-  String? search,
-}) async {
-  final query = <String, dynamic>{
-    'profile_id': profileId,
-    if (type != null) 'type': type,
-    if (startDate != null) 'start_date': startDate,
-    if (endDate != null) 'end_date': endDate,
-    if (search != null && search.isNotEmpty) 'search': search,
-  };
-  return await DioHelper.getData(url: 'medical-records', query: query);
-}
+final Color chatBackground;      // 0xFFF5F8F8 light / dark variant
+final Color statusOnline;         // 0xFF10B981
+final Color chatAssistantLabel;   // 0xFF33B3B9
+final Color chatQuickActionBorder;// 0xFFCCECED
+```
+
+> These 4 colors have no close match in the existing palette. All other hardcoded colors can map to existing tokens (`primary`, `background`, `textPrimary`, `textSecondary`, `textHint`, `icon`, `accentCyan`, `divider`).
+
+#### [MODIFY] [app_typography.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart)
+
+Add chat-specific text styles (with mobile / tablet / desktop scales):
+
+```dart
+final TextStyle chatHeaderTitle;      // 16/w700 → 18/w700 → 20/w700
+final TextStyle chatStatusLabel;      // 11/w500 → 13/w500 → 15/w500
+final TextStyle chatSenderLabel;      // 12/w600 → 14/w600 → 16/w600
+final TextStyle chatMessageBody;      // 15/w400 → 17/w400 → 19/w400
+final TextStyle chatQuickActionLabel; // 14/w500 → 16/w500 → 18/w500
 ```
 
 ---
 
-### 3. Add `getRecords()` + Session Cache to Repository
+### Component 2: Widget Decomposition
 
-#### [MODIFY] [medical_record_repository.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/repo/medical_record_repository.dart)
+All new widget files go in [widgets/](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/).
 
-**Full file after changes:**
+#### [NEW] [chat_header.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_header.dart)
 
-```dart
-import 'package:cureta/core/error_handling/error_handler.dart';
-import 'package:cureta/core/error_handling/app_exceptions.dart';
-import '../models/medical_record_model.dart';
-import '../services/medical_record_service.dart';
+Extracts lines **23–195** (header bar with bot avatar, title, online status, close button).
 
-class MedicalRecordRepository {
-  final MedicalRecordService _service;
+- Uses `context.colors`, `context.typography`, `context.spacing`, `context.radius`
+- Replaces `Text('smart_toy', fontFamily: 'Material Icons')` with `Icon(Icons.smart_toy)`
+- Replaces `Text('close', fontFamily: 'Material Icons')` with `IconButton(icon: Icon(Icons.close))`
+- Removes all hardcoded widths/heights, uses intrinsic sizing
 
-  // ── Session Cache ──
-  List<MedicalRecordModel>? _cachedRecords;
+#### [NEW] [chat_bot_avatar.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_bot_avatar.dart)
 
-  MedicalRecordRepository(this._service);
+Reusable circular bot avatar (appears 3 times in the screen). Params: `double size`.
 
-  // ── CREATE (existing) ──
-  Future<MedicalRecordModel> createRecord({
-    required String profileId,
-    required String diseaseName,
-    String? notes,
-    required String recordDate,
-    required List<String> attachmentTypes,
-    required List<String> filePaths,
-  }) async {
-    try {
-      final response = await _service.createRecord(
-        profileId: profileId,
-        diseaseName: diseaseName,
-        notes: notes,
-        recordDate: recordDate,
-        attachmentTypes: attachmentTypes,
-        filePaths: filePaths,
-      );
-      final data = response.data['data'];
-      if (data == null || data is! Map<String, dynamic>) {
-        throw AppException.server(msg: 'No record data returned from server');
-      }
+- Uses `colors.accentCyan` bg, `colors.primary` icon color, `radius.full`
 
-      final newRecord = MedicalRecordModel.fromJson(data);
+#### [NEW] [chat_bubble.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_bubble.dart)
 
-      // Prepend to session cache so list screen sees it immediately
-      _cachedRecords?.insert(0, newRecord);
+Generic chat bubble supporting **assistant** and **user** variants. Params: `String senderLabel`, `String message`, `bool isUser`.
 
-      return newRecord;
-    } catch (e) {
-      throw ErrorHandler.handle(e);
-    }
-  }
+- Assistant: white bg, rounded top-left/top-right/bottom-right
+- User: primary bg, rounded top-left/top-right/bottom-left, white text
+- Uses `typography.chatSenderLabel`, `typography.chatMessageBody`, `radius.xl`
 
-  // ── GET RECORDS (new) ──
-  Future<List<MedicalRecordModel>> getRecords({
-    required String profileId,
-    String? type,
-    String? search,
-    bool forceRefresh = false,
-  }) async {
-    try {
-      // Return session cache instantly if no refresh forced and no filters
-      final hasFilters = type != null || (search != null && search.isNotEmpty);
-      if (!forceRefresh && !hasFilters && _cachedRecords != null) {
-        return _cachedRecords!;
-      }
+#### [NEW] [chat_message_list.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_message_list.dart)
 
-      final response = await _service.getRecords(
-        profileId: profileId,
-        type: type,
-        search: search,
-      );
+Extracts lines **196–509** (scrollable conversation area). Composes `ChatBotAvatar` + `ChatBubble` for each message.
 
-      final data = response.data['data'] as List<dynamic>?;
-      if (data == null) return [];
+- Uses `spacing.xl` for vertical gap, `spacing.md` for avatar gap
+- Replaces fixed `width: 360`, `height: 576` with `Expanded` + `ListView`
 
-      final records = data
-          .map((e) => MedicalRecordModel.fromJson(e as Map<String, dynamic>))
-          .toList();
+#### [NEW] [quick_action_chips.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/quick_action_chips.dart)
 
-      // Only cache the unfiltered full list
-      if (!hasFilters) {
-        _cachedRecords = records;
-      }
+Extracts the 3 quick-action pill buttons (lines **544–665**). Params: `List<String> labels`, `ValueChanged<String> onTap`.
 
-      return records;
-    } catch (e) {
-      throw ErrorHandler.handle(e);
-    }
-  }
-}
-```
+- Uses `colors.accentCyan`, `colors.primary`, `typography.chatQuickActionLabel`
+- Uses `Wrap` instead of fixed-width `Row` for responsiveness
 
-**Key design decisions:**
-- `_cachedRecords` is in-memory only — lives as long as the app session.
-- When [createRecord](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/repo/medical_record_repository.dart#10-39) succeeds, we prepend to cache so the list screen shows the new record immediately without refetching.
-- When `forceRefresh: true` (pull-to-refresh), we bypass cache & fetch from API.
-- When filters (`type`, `search`) are active, we always fetch from API (since cache = unfiltered).
+#### [NEW] [chat_input_bar.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_input_bar.dart)
 
----
+Extracts lines **510–825** (bottom input area with attach, text field, mic, send button).
 
-### 4. Create Cubit + State
+- Replaces `Text('attach_file', fontFamily: 'Material Icons')` → `Icon(Icons.attach_file)`
+- Replaces `Text('mic', fontFamily: 'Material Icons')` → `Icon(Icons.mic)`
+- Replaces `Text('send', fontFamily: 'Material Icons')` → `Icon(Icons.send)`
+- Uses a real `TextField` with `InputDecoration` instead of static placeholder text
+- Uses `colors`, `spacing`, `radius` tokens throughout
 
-#### [NEW] [medical_records_state.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/medical_records_state.dart)
+#### [MODIFY] [Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart)
+
+Refactored to ~40–50 lines:
 
 ```dart
-import 'package:cureta/core/error_handling/app_exceptions.dart';
-import '../data/models/medical_record_model.dart';
-
-sealed class MedicalRecordsState {
-  const MedicalRecordsState();
-}
-
-final class MedicalRecordsInitial extends MedicalRecordsState {
-  const MedicalRecordsInitial();
-}
-
-final class MedicalRecordsLoading extends MedicalRecordsState {
-  final bool isRefresh; // true = pull-to-refresh (don't show full shimmer)
-  const MedicalRecordsLoading({this.isRefresh = false});
-}
-
-final class MedicalRecordsSuccess extends MedicalRecordsState {
-  final List<MedicalRecordModel> records;
-  const MedicalRecordsSuccess(this.records);
-}
-
-final class MedicalRecordsFailure extends MedicalRecordsState {
-  final AppException error;
-  const MedicalRecordsFailure(this.error);
-}
-```
-
-#### [NEW] [medical_records_cubit.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/medical_records_cubit.dart)
-
-```dart
-import 'package:bloc/bloc.dart';
-import 'package:cureta/core/error_handling/app_exceptions.dart';
-import 'package:cureta/core/Services/GetItServices.dart';
-import '../data/repo/medical_record_repository.dart';
-import 'medical_records_state.dart';
-
-class MedicalRecordsCubit extends Cubit<MedicalRecordsState> {
-  MedicalRecordsCubit()
-      : _repository = getIt.get<MedicalRecordRepository>(),
-        super(const MedicalRecordsInitial());
-
-  final MedicalRecordRepository _repository;
-
-  /// Fetch records for the given profile.
-  /// [forceRefresh] = true bypasses session cache (used by pull-to-refresh).
-  Future<void> fetchRecords({
-    required String profileId,
-    String? type,
-    String? search,
-    bool forceRefresh = false,
-  }) async {
-    emit(MedicalRecordsLoading(isRefresh: forceRefresh));
-
-    try {
-      final records = await _repository.getRecords(
-        profileId: profileId,
-        type: type,
-        search: search,
-        forceRefresh: forceRefresh,
-      );
-      emit(MedicalRecordsSuccess(records));
-    } on AppException catch (e) {
-      emit(MedicalRecordsFailure(e));
-    } catch (_) {
-      emit(MedicalRecordsFailure(
-        AppException.server(msg: 'Failed to load records'),
-      ));
-    }
-  }
-}
-```
-
----
-
-### 5. Create Shimmer Card Widget
-
-#### [NEW] [shimmer_record_card.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/shimmer_record_card.dart)
-
-A skeleton that mimics the shape of [UserRecordCard](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_record_card.dart#9-122) (status pill + title + meta row):
-
-```dart
-import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:shimmer/shimmer.dart';
-
-class ShimmerRecordCard extends StatelessWidget {
-  const ShimmerRecordCard({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final radius = context.radius;
-
-    return Shimmer.fromColors(
-      baseColor: colors.surface,
-      highlightColor: colors.divider,
-      child: Container(
-        padding: EdgeInsets.all(spacing.lg),
-        decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: BorderRadius.circular(radius.lg),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Status pill placeholder
-            Container(
-              width: 72,
-              height: 24,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(radius.full),
-              ),
-            ),
-            SizedBox(height: spacing.md),
-            // Title placeholder
-            Container(
-              width: double.infinity,
-              height: 18,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(radius.sm),
-              ),
-            ),
-            SizedBox(height: spacing.md),
-            // Meta row placeholder
-            Container(
-              width: 140,
-              height: 14,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(radius.sm),
-              ),
-            ),
-          ],
-        ),
+Scaffold(
+  body: Column(
+    children: [
+      const ChatHeader(),
+      Expanded(child: ChatMessageList(messages: ...)),
+      ChatInputBar(
+        quickActions: ['Check symptoms', ...],
+        onSend: ...,
       ),
-    );
-  }
-}
-
-/// Shows a list of shimmer cards (default 4).
-class ShimmerRecordsList extends StatelessWidget {
-  const ShimmerRecordsList({super.key, this.count = 4});
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    final spacing = context.spacing;
-    return Padding(
-      padding: EdgeInsets.fromLTRB(spacing.lg, spacing.lg, spacing.lg, 0),
-      child: Column(
-        children: List.generate(
-          count,
-          (i) => Padding(
-            padding: EdgeInsets.only(bottom: spacing.lg),
-            child: const ShimmerRecordCard(),
-          ),
-        ),
-      ),
-    );
-  }
-}
+    ],
+  ),
+)
 ```
+
+- Removes the `AppBar` (the header widget replaces it)
+- Removes `ConstrainedBox` with fixed `minHeight: 812` / `width: 375`
+- Uses `context.colors.chatBackground` for scaffold bg
 
 ---
 
-### 6. Update [UserRecordCard](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_record_card.dart#9-122) — Accept [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46)
-
-#### [MODIFY] [user_record_card.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_record_card.dart)
-
-**What changes:**
-- Accept `MedicalRecordModel record` instead of individual string fields.
-- Remove the hardcoded dummy [RecordFile](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/record_details_documents_section.dart#7-24) list and notes from [onTap](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/add_record_forth_step.dart#33-42) navigation.
-- Pass the real [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46) to the details screen via `state.extra`.
-- Format the `record_date` and derive status/meta from the model.
-
-```dart
-import 'package:cureta/core/config/routing/app_routes.dart';
-import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
-import 'package:cureta/features/medical_records/widgets/user_record_action_button.dart';
-import 'package:cureta/features/medical_records/widgets/user_record_status_pill.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
-
-class UserRecordCard extends StatelessWidget {
-  const UserRecordCard({
-    super.key,
-    required this.record,
-    this.onTap,
-  });
-
-  final MedicalRecordModel record;
-  final VoidCallback? onTap;
-
-  String _formatDate(String rawDate) {
-    try {
-      final date = DateTime.parse(rawDate);
-      return DateFormat('MMM d, yyyy').format(date);
-    } catch (_) {
-      return rawDate;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final radius = context.radius;
-    final typography = context.typography;
-
-    final dateStr = _formatDate(record.recordDate);
-    final attachmentCount = record.attachments.length;
-    final meta = '$dateStr · $attachmentCount files';
-
-    return GestureDetector(
-      onTap: () => GoRouter.of(context).pushNamed(
-        AppRoutes.recordDetails,
-        extra: record, // Pass the full MedicalRecordModel
-      ),
-      child: Container(
-        padding: EdgeInsets.all(spacing.lg),
-        decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: BorderRadius.circular(radius.lg),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      UserRecordStatusPill(
-                        label: '${record.attachments.length} attachments',
-                        isOngoing: true,
-                      ),
-                      SizedBox(height: spacing.md),
-                      Text(
-                        record.diseaseName,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: typography.surfaceTitle.copyWith(
-                          color: colors.textPrimary,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: spacing.md),
-            Row(
-              children: [
-                Icon(Icons.calendar_today, size: 16, color: colors.textSecondary),
-                SizedBox(width: spacing.xs),
-                Expanded(
-                  child: Text(
-                    meta,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: typography.medicalRecordUploadCardDescription
-                        .copyWith(color: colors.textSecondary),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-```
-
----
-
-### 7. Update [UserRecordsList](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_records_list.dart#6-39) — Use [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46)
-
-#### [MODIFY] [user_records_list.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_records_list.dart)
-
-```dart
-import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
-import 'package:cureta/features/medical_records/widgets/user_record_card.dart';
-import 'package:flutter/material.dart';
-
-class UserRecordsList extends StatelessWidget {
-  const UserRecordsList({super.key, required this.records});
-
-  final List<MedicalRecordModel> records;
-
-  @override
-  Widget build(BuildContext context) {
-    final spacing = context.spacing;
-
-    return Column(
-      children: records
-          .map(
-            (record) => Padding(
-              padding: EdgeInsets.only(bottom: spacing.lg),
-              child: UserRecordCard(record: record),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-```
-
----
-
-### 8. Rewrite `User's_Records.dart` — Wire to Cubit
-
-#### [MODIFY] [User's_Records.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/User's_Records.dart)
-
-**Full replacement:**
-
-```dart
-// ignore_for_file: file_names
-import 'package:cureta/core/localization/app_localizations.dart';
-import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/data/user_records_data.dart';
-import 'package:cureta/features/medical_records/data/user_records_models.dart';
-import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
-import 'package:cureta/features/medical_records/veiw_model/medical_records_state.dart';
-import 'package:cureta/features/medical_records/widgets/shimmer_record_card.dart';
-import 'package:cureta/features/medical_records/widgets/user_records_list.dart';
-import 'package:cureta/features/medical_records/widgets/user_records_top_section.dart';
-import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
-import 'package:cureta/features/profile/view_model/profile_list_state.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-class UserRecordsView extends StatefulWidget {
-  const UserRecordsView({super.key});
-
-  @override
-  State<UserRecordsView> createState() => _UserRecordsViewState();
-}
-
-class _UserRecordsViewState extends State<UserRecordsView> {
-  final _searchController = TextEditingController();
-  String _selectedFilter = UserRecordFilterIds.all;
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchRecords();
-  }
-
-  void _fetchRecords({bool forceRefresh = false}) {
-    final profileState = context.read<ProfilesListCubit>().state;
-    if (profileState is ProfilesSuccess && profileState.selectedProfileId != null) {
-      context.read<MedicalRecordsCubit>().fetchRecords(
-            profileId: profileState.selectedProfileId!,
-            search: _searchController.text.isNotEmpty
-                ? _searchController.text
-                : null,
-            forceRefresh: forceRefresh,
-          );
-    }
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final filters = localizedUserRecordFilters();
-
-    return Scaffold(
-      backgroundColor: colors.background,
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async => _fetchRecords(forceRefresh: true),
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              UserRecordsTopSection(
-                searchController: _searchController,
-                filters: filters,
-                selectedFilterId: _selectedFilter,
-                onFilterSelected: (id) {
-                  setState(() => _selectedFilter = id);
-                  _fetchRecords();
-                },
-              ),
-
-              // ── Records list driven by Cubit ──
-              BlocBuilder<MedicalRecordsCubit, MedicalRecordsState>(
-                builder: (context, state) {
-                  // Loading (first load — show shimmer)
-                  if (state is MedicalRecordsLoading && !state.isRefresh) {
-                    return const ShimmerRecordsList();
-                  }
-
-                  // Error
-                  if (state is MedicalRecordsFailure) {
-                    return Padding(
-                      padding: EdgeInsets.all(spacing.xl),
-                      child: Center(
-                        child: Text(
-                          state.error.msg,
-                          style: context.typography.medicalRecordHelper
-                              .copyWith(color: colors.error),
-                        ),
-                      ),
-                    );
-                  }
-
-                  // Success
-                  if (state is MedicalRecordsSuccess) {
-                    if (state.records.isEmpty) {
-                      return Padding(
-                        padding: EdgeInsets.all(spacing.xl),
-                        child: Center(
-                          child: Text(
-                            AppLocalizations.recordsListTitle,
-                            style: context.typography.medicalRecordHelper
-                                .copyWith(color: colors.textSecondary),
-                          ),
-                        ),
-                      );
-                    }
-
-                    return Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        spacing.lg, spacing.lg, spacing.lg, spacing.xxl,
-                      ),
-                      child: UserRecordsList(records: state.records),
-                    );
-                  }
-
-                  // Initial (before first fetch)
-                  return const ShimmerRecordsList();
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
+## Key Design Decisions
 
 > [!IMPORTANT]
-> `MedicalRecordsCubit` must be provided **above** this screen. Best place: wherever `UserRecordsView` is created in the navigation tree. Example:
-> ```dart
-> BlocProvider(
->   create: (_) => MedicalRecordsCubit(),
->   child: const UserRecordsView(),
-> )
-> ```
-> We need to find where `UserRecordsView` is instantiated in the router or navigation and wrap it there.
+> **Hardcoded colors that are ≤2 hex digits away from existing tokens** (e.g. `0xFF00A0A8` vs `colors.primary` `0xFF00A1A9`) will be mapped to the existing token. If you need the exact Figma values preserved, please flag this.
 
----
+> [!IMPORTANT]
+> **Fixed widths/heights will be removed** in favor of `Expanded`, `Flexible`, and intrinsic sizing. The layout will become responsive. The current design is a static 375×812 mockup translation.
 
-### 9. Update Router — Record Details accepts [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46)
-
-#### [MODIFY] [router_generation.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/config/routing/router_generation.dart) (lines 206-226)
-
-**Before:**
-```dart
-GoRoute(
-  path: AppRoutes.recordDetails,
-  name: AppRoutes.recordDetails,
-  pageBuilder: (context, state) {
-    final data = state.extra as Map<String, dynamic>? ?? {};
-    final rawFiles = data['files'];
-    final files = rawFiles is List
-        ? rawFiles.whereType<RecordFile>().toList()
-        : <RecordFile>[];
-    return PageTransitions.scale(
-      child: RecordDetailsView(
-        conditionName: data['conditionName'] ?? '',
-        isOngoing: data['isOngoing'] ?? false,
-        diagnosedDate: data['diagnosedDate'] ?? '',
-        notes: data['notes'] ?? '',
-        files: files,
-      ),
-      state: state,
-    );
-  },
-),
-```
-
-**After:**
-```dart
-GoRoute(
-  path: AppRoutes.recordDetails,
-  name: AppRoutes.recordDetails,
-  pageBuilder: (context, state) {
-    final record = state.extra as MedicalRecordModel;
-    return PageTransitions.scale(
-      child: RecordDetailsView(record: record),
-      state: state,
-    );
-  },
-),
-```
-
-Add import at the top of [router_generation.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/config/routing/router_generation.dart):
-```dart
-import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
-```
-
----
-
-### 10. Update [RecordDetailsView](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/record_details_screen.dart#14-104) — Accept [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46)
-
-#### [MODIFY] [record_details_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/record_details_screen.dart)
-
-```dart
-import 'package:cureta/core/localization/app_localizations.dart';
-import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_bottom_actions.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_diagnosed_date.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_header.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_notes_card.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
-class RecordDetailsView extends StatelessWidget {
-  const RecordDetailsView({
-    super.key,
-    required this.record,
-    this.onEdit,
-    this.onDelete,
-  });
-
-  final MedicalRecordModel record;
-  final VoidCallback? onEdit;
-  final VoidCallback? onDelete;
-
-  String _formatDate(String rawDate) {
-    try {
-      final date = DateTime.parse(rawDate);
-      return DateFormat('MMM d, yyyy').format(date);
-    } catch (_) {
-      return rawDate;
-    }
-  }
-
-  /// Maps an AttachmentModel to a RecordFile for display.
-  List<RecordFile> _mapAttachments(BuildContext context) {
-    final colors = context.colors;
-    return record.attachments.map((att) {
-      final isImage = att.fileName.endsWith('.jpg') ||
-          att.fileName.endsWith('.jpeg') ||
-          att.fileName.endsWith('.png');
-      final isPdf = att.fileName.endsWith('.pdf');
-
-      return RecordFile(
-        name: att.fileName,
-        meta: '${att.attachmentType}${isPdf ? " • PDF" : isImage ? " • Image" : ""}',
-        icon: isPdf ? Icons.picture_as_pdf : Icons.image,
-        iconBgColor: isPdf
-            ? colors.error.withOpacity(0.1)
-            : colors.accentBlue,
-        iconColor: isPdf ? colors.error : const Color(0xFF3B82F6),
-        fileType: isPdf ? 'pdf' : 'image',
-        fileUrl: att.fileUrl,
-      );
-    }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final typography = context.typography;
-    final files = _mapAttachments(context);
-
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: AppBar(
-        backgroundColor: colors.background,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colors.textPrimary),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        centerTitle: true,
-        title: Text(
-          AppLocalizations.recordDetailsTitle,
-          style: typography.medicalRecordUploadCardTitle.copyWith(
-            color: colors.textPrimary,
-          ),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: spacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: spacing.xs),
-              RecordDetailsHeader(
-                conditionName: record.diseaseName,
-                isOngoing: true,
-              ),
-              SizedBox(height: spacing.xxl),
-              RecordDetailsDiagnosedDate(
-                date: _formatDate(record.recordDate),
-              ),
-              SizedBox(height: spacing.xxl),
-              if (record.notes != null && record.notes!.isNotEmpty) ...[
-                RecordDetailsNotesCard(notes: record.notes!),
-                SizedBox(height: spacing.xxl),
-              ],
-              if (files.isNotEmpty) ...[
-                RecordDetailsDocumentsSection(
-                  files: files,
-                  onFileTap: (index) {
-                    final file = files[index];
-                    if (file.fileType == 'image') {
-                      // Open fullscreen image viewer
-                      _openImageViewer(context, file.fileUrl!);
-                    } else {
-                      // Open PDF/other in external viewer
-                      _openExternalFile(file.fileUrl!);
-                    }
-                  },
-                ),
-              ],
-              RecordDetailsBottomActions(onEdit: onEdit, onDelete: onDelete),
-              SizedBox(height: spacing.xl),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _openImageViewer(BuildContext context, String url) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => _FullScreenImageViewer(imageUrl: url),
-      ),
-    );
-  }
-
-  void _openExternalFile(String url) {
-    // Uses url_launcher to open in browser
-    // (already available since open_filex is in pubspec)
-    // Or use launchUrl(Uri.parse(url));
-  }
-}
-
-/// Simple fullscreen image viewer using CachedNetworkImage.
-class _FullScreenImageViewer extends StatelessWidget {
-  const _FullScreenImageViewer({required this.imageUrl});
-  final String imageUrl;
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Center(
-        child: InteractiveViewer(
-          child: Image.network(
-            imageUrl,
-            fit: BoxFit.contain,
-            loadingBuilder: (_, child, progress) {
-              if (progress == null) return child;
-              return const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              );
-            },
-            errorBuilder: (_, __, ___) => const Icon(
-              Icons.broken_image,
-              color: Colors.white54,
-              size: 64,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-```
-
----
-
-### 11. Update [RecordFile](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/record_details_documents_section.dart#7-24) — Add `fileUrl`
-
-#### [MODIFY] [record_details_documents_section.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/record_details_documents_section.dart) (lines 7-23)
-
-Add `fileUrl` field to [RecordFile](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/record_details_documents_section.dart#7-24):
-
-```diff
- class RecordFile {
-   const RecordFile({
-     required this.name,
-     required this.meta,
-     required this.icon,
-     required this.iconBgColor,
-     required this.iconColor,
-     required this.fileType,
-+    this.fileUrl,
-   });
-
-   final String name;
-   final String meta;
-   final IconData icon;
-   final Color iconBgColor;
-   final Color iconColor;
-   final String fileType;
-+  final String? fileUrl;
- }
-```
-
----
-
-### 12. Cleanup — Remove [UserRecordItem](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart#10-25)
-
-#### [MODIFY] [user_records_models.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart)
-
-Remove [UserRecordItem](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart#10-25) class (replaced by [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46)). Keep [UserRecordFilter](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart#3-9) and [UserRecordFilterIds](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart#26-32):
-
-```dart
-class UserRecordFilter {
-  const UserRecordFilter({required this.id, required this.label});
-  final String id;
-  final String label;
-}
-
-class UserRecordFilterIds {
-  static const all = 'all';
-  static const ongoing = 'ongoing';
-  static const past = 'past';
-  static const recent = 'recent';
-}
-```
-
-#### [MODIFY] [user_records_data.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_data.dart)
-
-Remove [localizedUserRecordItems()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_data.dart#26-58) and [filteredUserRecordItems()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_data.dart#59-80). Keep only [localizedUserRecordFilters()](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_data.dart#5-25):
-
-```dart
-import 'package:cureta/core/localization/app_localizations.dart';
-import 'package:cureta/features/medical_records/data/user_records_models.dart';
-
-List<UserRecordFilter> localizedUserRecordFilters() {
-  return [
-    UserRecordFilter(
-      id: UserRecordFilterIds.all,
-      label: AppLocalizations.recordsListFilterAll,
-    ),
-    UserRecordFilter(
-      id: UserRecordFilterIds.ongoing,
-      label: AppLocalizations.recordsListFilterOngoing,
-    ),
-    UserRecordFilter(
-      id: UserRecordFilterIds.past,
-      label: AppLocalizations.recordsListFilterPast,
-    ),
-    UserRecordFilter(
-      id: UserRecordFilterIds.recent,
-      label: AppLocalizations.recordsListFilterRecent,
-    ),
-  ];
-}
-```
-
----
-
-## Summary of All Files
-
-| # | Action | File | What |
-|---|--------|------|------|
-| 1 | MODIFY | [pubspec.yaml](file:///d:/Flutter_Projects/Cureta-Frontend/pubspec.yaml) | Add `shimmer: ^3.0.0` |
-| 2 | MODIFY | [medical_record_service.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/services/medical_record_service.dart) | Add `getRecords()` |
-| 3 | MODIFY | [medical_record_repository.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/repo/medical_record_repository.dart) | Add `getRecords()` + `_cachedRecords` + prepend on create |
-| 4 | NEW | [medical_records_state.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/medical_records_state.dart) | Sealed state classes |
-| 5 | NEW | [medical_records_cubit.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw_model/medical_records_cubit.dart) | Cubit with `fetchRecords()` |
-| 6 | NEW | `shimmer_record_card.dart` | Shimmer loading cards |
-| 7 | MODIFY | [user_record_card.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_record_card.dart) | Accept [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46), remove dummy data |
-| 8 | MODIFY | [user_records_list.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/user_records_list.dart) | Use `List<MedicalRecordModel>` |
-| 9 | MODIFY | `User's_Records.dart` | Wire to `MedicalRecordsCubit` + shimmer + pull-to-refresh |
-| 10 | MODIFY | [router_generation.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/config/routing/router_generation.dart) | Pass [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46) to details |
-| 11 | MODIFY | [record_details_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/veiw/record_details_screen.dart) | Accept [MedicalRecordModel](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/models/medical_record_model.dart#3-46), map attachments, add image viewer |
-| 12 | MODIFY | [record_details_documents_section.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/record_details_documents_section.dart) | Add `fileUrl` to [RecordFile](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/widgets/record_details_documents_section.dart#7-24) |
-| 13 | MODIFY | [user_records_models.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart) | Remove [UserRecordItem](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_models.dart#10-25) |
-| 14 | MODIFY | [user_records_data.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/medical_records/data/user_records_data.dart) | Remove dummy data functions |
+> [!WARNING]
+> **`Text` widgets using `fontFamily: 'Material Icons'` will become `Icon` widgets.** This is a semantic fix — the current approach is fragile and won't work correctly on all platforms.
 
 ---
 
 ## Verification Plan
 
-1. Open Records List → shimmer cards appear during loading
-2. After loading → real records from API are displayed
-3. Pull down → shimmer briefly, data reloads from server
-4. Navigate away and back → loads instantly (session cache, no shimmer)
-5. Tap a record → details screen shows real data + attachments
-6. Tap an image attachment → opens fullscreen viewer (no download prompt)
-7. Create a new record → go back to list → new record appears at top without refetching
+### Automated Tests
+
+There are no existing widget tests for the chat screen. The [test/widget_test.dart](file:///d:/Flutter_Projects/Cureta-Frontend/test/widget_test.dart) file only contains a default counter app test.
+
+- Run `flutter analyze` to ensure no lint errors in new/modified files:
+  ```shell
+  flutter analyze lib/features/chat_bot/ lib/core/theme/app_colors.dart lib/core/theme/app_typography.dart
+  ```
+
+### Manual Verification
+
+> Since this is a UI-only refactoring, visual verification is the primary testing method.
+
+1. **Hot-reload the app** and navigate to the Chat screen
+2. Verify the screen looks **visually identical** to the current version (colors, spacing, text sizes)
+3. Toggle **dark mode** and verify the chat screen responds to theme changes (it currently doesn't since all colors are hardcoded)
+4. **Resize the window** (if running on web/desktop) and verify responsive behavior
+5. Tap the quick-action chips and verify they are tappable (currently they are static containers)
+6. Verify the input field is functional (currently a static placeholder)
+
+> [!TIP]
+> I recommend you visually compare before & after since there are no widget tests. Would you like me to write widget tests for the new components as part of the refactoring?

@@ -1,9 +1,14 @@
 import 'package:cureta/core/constants/app_images.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/utils/navigation_helper.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 
 class CustomDrawer extends StatelessWidget {
-  const CustomDrawer({super.key});
+  const CustomDrawer({super.key, required this.controller});
+
+  final AdvancedDrawerController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +31,11 @@ class CustomDrawer extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           _buildMenuItem(Icons.dashboard_outlined, 'Dashboard'),
+          _buildMenuItem(
+            Icons.chat_bubble_outline,
+            'Chat',
+            onTap: () => _openChat(context),
+          ),
           _buildMenuItem(Icons.qr_code_outlined, 'QR Code'),
           _buildMenuItem(Icons.calendar_today_outlined, 'Calendar'),
           _buildMenuItem(Icons.person_outline, 'Family Profiles'),
@@ -44,9 +54,14 @@ class CustomDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuItem(IconData icon, String title) {
+  void _openChat(BuildContext context) {
+    controller.hideDrawer();
+    Nav.to(context, AppRoutes.chat);
+  }
+
+  Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {
     return ListTile(
-      onTap: () {},
+      onTap: onTap,
       leading: Icon(icon, size: 22),
       title: Text(
         title,
