@@ -169,6 +169,31 @@ class ProfileRepository {
     await prefs.remove(_profileIdKey);
   }
 
+  /// Returns the currently selected profile id.
+  ///
+  /// Priority:
+  /// 1) cached selection
+  /// 2) first primary profile from backend
+  /// 3) first profile from backend
+  ///
+  /// Returns null only when there are no profiles.
+  Future<String?> getResolvedSelectedProfileId() async {
+    final cachedId = await getCachedProfileId();
+    if (cachedId != null && cachedId.isNotEmpty) {
+      return cachedId;
+    }
+
+    final profiles = await getProfiles();
+    if (profiles.isEmpty) return null;
+
+    final selected = profiles.firstWhere(
+      (p) => p.isPrimary,
+      orElse: () => profiles.first,
+    );
+    await cacheSelectedProfileId(selected.id);
+    return selected.id;
+  }
+
   Future<bool> hasProfiles() async {
     final cachedId = await getCachedProfileId();
     if (cachedId != null && cachedId.isNotEmpty) {

@@ -11,10 +11,8 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
     emit(ProfilesLoading());
     try {
       final profiles = await repository.getProfiles();
-
       final cachedId = await repository.getCachedProfileId();
-      final hasCached =
-          cachedId != null && profiles.any((profile) => profile.id == cachedId);
+      final hasCached =cachedId != null && profiles.any((profile) => profile.id == cachedId);
       final initialId = hasCached
           ? cachedId
           : profiles

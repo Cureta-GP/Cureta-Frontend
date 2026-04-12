@@ -11,6 +11,12 @@ class AddRecordFormCubit extends Cubit<AddRecordFormState> {
   }
 
   void setProfileId(String profileId) {
+    if (state.profileId == profileId) return;
+    emit(state.copyWith(profileId: profileId));
+  }
+
+  void setProfileIdIfAbsent(String profileId) {
+    if (state.profileId != null && state.profileId!.isNotEmpty) return;
     emit(state.copyWith(profileId: profileId));
   }
 
@@ -33,7 +39,7 @@ class AddRecordFormCubit extends Cubit<AddRecordFormState> {
 
 class AddRecordFormState extends Equatable {
   const AddRecordFormState({
-    this.profileId = 'af7ecd51-feb6-4754-a76e-a9bd28f48617', // Temporary for testing
+    this.profileId,
     this.diseaseName,
     this.recordDate,
     this.notes,

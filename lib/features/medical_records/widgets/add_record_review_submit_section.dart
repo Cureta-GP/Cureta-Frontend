@@ -63,13 +63,6 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
   VoidCallback _createSubmitHandler(BuildContext context) {
     return () {
       // Validation - check required fields
-      if (formState.profileId == null) {
-        ErrorHandler.show(
-          context,
-          AppException.validation(msg: 'Profile not selected'),
-        );
-        return;
-      }
       if (formState.diseaseName == null || formState.diseaseName!.isEmpty) {
         ErrorHandler.show(
           context,
@@ -86,7 +79,7 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
       }
       // Submit via cubit
       context.read<CreateRecordCubit>().submit(
-        profileId: formState.profileId!,
+        profileId: formState.profileId,
         diseaseName: formState.diseaseName!,
         notes: formState.notes,
         recordDate: formState.recordDate!,
