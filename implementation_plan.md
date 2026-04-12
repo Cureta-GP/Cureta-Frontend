@@ -1,210 +1,244 @@
-# Refactor [Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart) — Extract Theme Tokens & Decompose Into Widgets
+# Chat Bot API Integration — MVVM with Cubit, Repository, Service & GetIt
 
-## Problem
+## Goal
 
-[Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart) is an **832-line monolithic build method** containing:
+Wire the 3 chat API endpoints into the existing `chat_bot` feature using the **exact same MVVM pattern** already established in the codebase (Service → Repository → Cubit → View), with GetIt DI registration.
 
-- **~25 hardcoded colors** (e.g. [Color(0xFF00A0A8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140), [Color(0xFFF5F8F8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140), …)
-- **~12 inline `TextStyle` blocks** with explicit `fontSize`, `fontWeight`, and `fontFamily`
-- **Fixed pixel widths/heights** everywhere (e.g. `width: 375`, `width: 360`, `height: 71.20`)
-- **No widget decomposition** — everything is a nested tree of `Container → Row/Column → Container …`
-- **Icons rendered as `Text` with `fontFamily: 'Material Icons'`** instead of the `Icon` widget
-
-This violates the project's theme system ([AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140), [AppTypography](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart#3-546), [AppSpacing](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_spacing.dart#3-88), [AppRadius](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_radius.dart#3-78)) and the [rules.md.txt](file:///d:/Flutter_Projects/Cureta-Frontend/rules.md.txt) guidelines (small private widgets, composition over inheritance, `const` constructors, no hardcoded styles).
+All new files must stay **under 100 lines**.
 
 ---
 
-## Hardcoded Value Audit
+## API Endpoints Summary
 
-### Colors
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/api/chats/profile/{profile_id}` | List chat sessions for a profile |
+| `GET` | `/api/chats/session/{session_id}/messages` | Get messages for a chat session |
+| `POST` | `/api/chat` | Send a message (creates session if `session_id` omitted) |
 
-| Hardcoded Value | Occurrences | Existing Token | Action |
-|---|---|---|---|
-| [Color(0xFFF5F8F8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (screen bg) | `colors.background` (white/dark) — **close but not exact** | Add `chatBackground` to [AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) **or** use `colors.surface` |
-| `Colors.white` | 4 (header bg, assistant bubble bg) | `colors.background` (light = white) | Use `colors.background` |
-| [Color(0xFFF1F5F9)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (header border, input border) | `colors.divider` (`0xFFE0E0E0`) — **different shade** | Add `chatBorderLight` to [AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) **or** reuse `colors.divider` |
-| [Color(0xFFE5F5F6)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 4 (bot avatar bg, quick-action bg) | `colors.accentCyan` (`0xFFE0F1F3`) — **very close** | **Reuse `colors.accentCyan`** |
-| [Color(0xFF00A0A8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 5 (bot icon, user bubble bg, quick-action text, send btn) | `colors.primary` (`0xFF00A1A9`) — **1 hex step off** | **Reuse `colors.primary`** |
-| [Color(0xFF0F172A)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (header title) | `colors.textPrimary` (`0xFF212121`) — **similar dark** | Add `chatHeaderTitle` **or** reuse `colors.textPrimary` |
-| [Color(0xFF10B981)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (online dot) | No match | Add `statusOnline` to [AppColors](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) |
-| [Color(0xFF64748B)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (online text, close icon) | `colors.textSecondary` (`0xFF757575`) — **close** | **Reuse `colors.textSecondary`** |
-| [Color(0xFF33B3B9)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (assistant label) | Close to `primary` | Add `chatAssistantLabel` **or** derive from `primary` |
-| [Color(0xFF1E293B)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 2 (assistant body text) | `colors.textPrimary` — close | **Reuse `colors.textPrimary`** |
-| [Color(0xFF94A3B8)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 3 (user label, attach icon, mic icon) | `colors.textHint` (`0xFFBDBDBD`) — **different shade** | `colors.icon` (`0xFF99A1AF`) — **closest match, use it** |
-| [Color(0xFFE2E8F0)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (user avatar bg) | `colors.divider` — close | Reuse `colors.divider` or add dedicated token |
-| [Color(0xFFCCECED)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 3 (quick-action border) | No exact match | Add `chatQuickActionBorder` **or** derive |
-| [Color(0xFF878B94)](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart#3-140) | 1 (input placeholder) | `colors.textHint` — close | **Reuse `colors.textHint`** |
+---
 
-### Text Styles
+## Existing Patterns Followed
 
-| Usage | Current Inline Style | Matching [AppTypography](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart#3-546) Token | Action |
-|---|---|---|---|
-| Header title "Cureta Assistant" | `fontSize: 16, w700` | `body` (16, normal) — weight differs | Add `chatHeaderTitle` to [AppTypography](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart#3-546) |
-| Online status | `fontSize: 11, w500` | None exact | Add `chatStatusLabel` |
-| Assistant label "Assistant" | `fontSize: 12, w600` | `label` is 14 — close but smaller | Add `chatSenderLabel` |
-| Message body text | `fontSize: 15, w400` | `body` (16, normal) — close | Add `chatMessageBody` |
-| User label "You" | `fontSize: 12, w600` | Same as assistant label above | Reuse `chatSenderLabel` |
-| Quick-action chip text | `fontSize: 14, w500` | `label` (14, normal) — weight differs | Add `chatQuickActionLabel` |
-| Input placeholder | `fontSize: 15, w400` | Same as message body | Reuse `chatMessageBody` |
+Based on [AuthService](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/services/auth_service.dart), [AuthRepository](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/repo/auth_repository.dart), [AuthCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart), and [AuthState](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_state.dart):
 
-### Spacing & Radius
-
-| Usage | Hardcoded Value | Matching Token | Action |
-|---|---|---|---|
-| Header padding | `h:16, v:12` | `spacing.lg` (16), `spacing.md` (12) | Use tokens |
-| Message area padding | `h:16, v:24` | `spacing.lg` (16), `spacing.xl` (24) | Use tokens |
-| Avatar gap | `12` | `spacing.md` (12) | Use `spacing.md` |
-| Label-to-bubble gap | `6` | None exact (xs=8, closest) | Use a fraction or add `spacing.xxs` |
-| Message vertical gap | `24` | `spacing.xl` (24) | Use `spacing.xl` |
-| Quick-action gap | `8` | `spacing.xs` (8) | Use `spacing.xs` |
-| Bubble corner radius | `24` | `radius.xl` (24) | Use `radius.xl` |
-| Full circle (avatar) | `9999` | `radius.full` (9999) | Use `radius.full` |
-| Input field radius | `16` | `radius.md` is 14 — close | Use `radius.lg` (18) **or** add token |
-| Send btn radius | `24` | `radius.xl` (24) | Use `radius.xl` |
+- **Service**: Thin `DioHelper` wrapper, returns raw `Response`
+- **Repository**: Constructor-injected service, parses JSON → models, wraps errors with `ErrorHandler.handle(e)`
+- **Cubit**: Constructor-injected repository, `sealed` state classes with `Equatable`, catches `AppException`
+- **GetIt**: Services as singletons → Repos as singletons (injected with service) → Cubits as factories (injected with repo)
+- **Profile ID**: Resolved via `ProfileRepository.getResolvedSelectedProfileId()`
 
 ---
 
 ## Proposed Changes
 
-### Component 1: Theme Tokens
+### Component 1: Data Models (`data/models/`)
 
-#### [MODIFY] [app_colors.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_colors.dart)
-
-Add chat-specific colors:
+#### [NEW] chat_session_model.dart
+`lib/features/chat_bot/data/models/chat_session_model.dart`
 
 ```dart
-final Color chatBackground;      // 0xFFF5F8F8 light / dark variant
-final Color statusOnline;         // 0xFF10B981
-final Color chatAssistantLabel;   // 0xFF33B3B9
-final Color chatQuickActionBorder;// 0xFFCCECED
+class ChatSessionModel {
+  final String id;
+  final String title;
+  final DateTime createdAt;
+  // factory fromJson(Map<String, dynamic>)
+  // Map<String, dynamic> toJson()
+}
 ```
 
-> These 4 colors have no close match in the existing palette. All other hardcoded colors can map to existing tokens (`primary`, `background`, `textPrimary`, `textSecondary`, `textHint`, `icon`, `accentCyan`, `divider`).
-
-#### [MODIFY] [app_typography.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/theme/app_typography.dart)
-
-Add chat-specific text styles (with mobile / tablet / desktop scales):
+#### [NEW] chat_message_model.dart
+`lib/features/chat_bot/data/models/chat_message_model.dart`
 
 ```dart
-final TextStyle chatHeaderTitle;      // 16/w700 → 18/w700 → 20/w700
-final TextStyle chatStatusLabel;      // 11/w500 → 13/w500 → 15/w500
-final TextStyle chatSenderLabel;      // 12/w600 → 14/w600 → 16/w600
-final TextStyle chatMessageBody;      // 15/w400 → 17/w400 → 19/w400
-final TextStyle chatQuickActionLabel; // 14/w500 → 16/w500 → 18/w500
+class ChatMessageModel {
+  final String id;
+  final String role;   // "user" | "assistant"
+  final String content;
+  final DateTime createdAt;
+  // factory fromJson(Map<String, dynamic>)
+}
+```
+
+#### [NEW] send_message_request.dart
+`lib/features/chat_bot/data/models/send_message_request.dart`
+
+```dart
+class SendMessageRequest {
+  final String message;
+  final String profileId;
+  final String? sessionId;  // null → creates new session
+  final String appLanguage;
+  // Map<String, dynamic> toJson()
+}
+```
+
+#### [NEW] send_message_response.dart
+`lib/features/chat_bot/data/models/send_message_response.dart`
+
+```dart
+class SendMessageResponse {
+  final String sessionId;
+  final String answer;
+  // factory fromJson(Map<String, dynamic>)
+}
 ```
 
 ---
 
-### Component 2: Widget Decomposition
+### Component 2: Service Layer (`data/services/`)
 
-All new widget files go in [widgets/](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/).
+#### [NEW] chat_service.dart
+`lib/features/chat_bot/data/services/chat_service.dart`
 
-#### [NEW] [chat_header.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_header.dart)
+Three methods wrapping `DioHelper`:
 
-Extracts lines **23–195** (header bar with bot avatar, title, online status, close button).
+| Method | DioHelper Call | Endpoint |
+|--------|---------------|----------|
+| `getSessions(profileId)` | `DioHelper.getData` | `chats/profile/$profileId` |
+| `getMessages(sessionId)` | `DioHelper.getData` | `chats/session/$sessionId/messages` |
+| `sendMessage(data)` | `DioHelper.postData` | `chat` |
 
-- Uses `context.colors`, `context.typography`, `context.spacing`, `context.radius`
-- Replaces `Text('smart_toy', fontFamily: 'Material Icons')` with `Icon(Icons.smart_toy)`
-- Replaces `Text('close', fontFamily: 'Material Icons')` with `IconButton(icon: Icon(Icons.close))`
-- Removes all hardcoded widths/heights, uses intrinsic sizing
+---
 
-#### [NEW] [chat_bot_avatar.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_bot_avatar.dart)
+### Component 3: Repository Layer (`data/repo/`)
 
-Reusable circular bot avatar (appears 3 times in the screen). Params: `double size`.
+#### [NEW] chat_repository.dart
+`lib/features/chat_bot/data/repo/chat_repository.dart`
 
-- Uses `colors.accentCyan` bg, `colors.primary` icon color, `radius.full`
+Constructor-injected with `ChatService`. Three methods:
 
-#### [NEW] [chat_bubble.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_bubble.dart)
+| Method | Returns | Error handling |
+|--------|---------|----------------|
+| `fetchSessions(profileId)` | `List<ChatSessionModel>` | `ErrorHandler.handle(e)` |
+| `fetchMessages(sessionId)` | `List<ChatMessageModel>` | `ErrorHandler.handle(e)` |
+| `sendMessage(request)` | `SendMessageResponse` | `ErrorHandler.handle(e)` |
 
-Generic chat bubble supporting **assistant** and **user** variants. Params: `String senderLabel`, `String message`, `bool isUser`.
+Each method follows the same pattern as `AuthRepository.login()`:
+try → call service → check `status == "success"` → parse `data` → return model, catch → throw `ErrorHandler.handle(e)`.
 
-- Assistant: white bg, rounded top-left/top-right/bottom-right
-- User: primary bg, rounded top-left/top-right/bottom-left, white text
-- Uses `typography.chatSenderLabel`, `typography.chatMessageBody`, `radius.xl`
+---
 
-#### [NEW] [chat_message_list.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_message_list.dart)
+### Component 4: ViewModel / Cubit Layer (`veiw_model/`)
 
-Extracts lines **196–509** (scrollable conversation area). Composes `ChatBotAvatar` + `ChatBubble` for each message.
+> [!IMPORTANT]
+> Two separate cubits to keep files under 100 lines and responsibilities clean.
 
-- Uses `spacing.xl` for vertical gap, `spacing.md` for avatar gap
-- Replaces fixed `width: 360`, `height: 576` with `Expanded` + `ListView`
+#### [NEW] chat_sessions_state.dart
+`lib/features/chat_bot/veiw_model/chat_sessions_state.dart`
 
-#### [NEW] [quick_action_chips.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/quick_action_chips.dart)
+```dart
+sealed class ChatSessionsState extends Equatable { }
+class ChatSessionsInitial    // no data
+class ChatSessionsLoading    // loading spinner
+class ChatSessionsSuccess    // List<ChatSessionModel>
+class ChatSessionsError      // String message, AppException?
+```
 
-Extracts the 3 quick-action pill buttons (lines **544–665**). Params: `List<String> labels`, `ValueChanged<String> onTap`.
+#### [NEW] chat_sessions_cubit.dart
+`lib/features/chat_bot/veiw_model/chat_sessions_cubit.dart`
 
-- Uses `colors.accentCyan`, `colors.primary`, `typography.chatQuickActionLabel`
-- Uses `Wrap` instead of fixed-width `Row` for responsiveness
+- `fetchSessions(profileId)` — loads session list
+- Injected with `ChatRepository`
 
-#### [NEW] [chat_input_bar.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_input_bar.dart)
+---
 
-Extracts lines **510–825** (bottom input area with attach, text field, mic, send button).
+#### [NEW] chat_state.dart
+`lib/features/chat_bot/veiw_model/chat_state.dart`
 
-- Replaces `Text('attach_file', fontFamily: 'Material Icons')` → `Icon(Icons.attach_file)`
-- Replaces `Text('mic', fontFamily: 'Material Icons')` → `Icon(Icons.mic)`
-- Replaces `Text('send', fontFamily: 'Material Icons')` → `Icon(Icons.send)`
-- Uses a real `TextField` with `InputDecoration` instead of static placeholder text
-- Uses `colors`, `spacing`, `radius` tokens throughout
+```dart
+sealed class ChatState extends Equatable { }
+class ChatInitial           // empty conversation
+class ChatLoading           // waiting for assistant response
+class ChatMessagesLoaded    // List<ChatMessageModel>, String? sessionId
+class ChatError             // String message, AppException?
+```
+
+#### [NEW] chat_cubit.dart
+`lib/features/chat_bot/veiw_model/chat_cubit.dart`
+
+- `loadMessages(sessionId)` — fetches history for an existing session
+- `sendMessage(text, profileId, appLanguage)` — sends user message, appends both user + assistant messages to state, tracks `sessionId`
+- `startNewChat()` — resets to `ChatInitial`
+- Injected with `ChatRepository`
+
+---
+
+### Component 5: DI Registration
+
+#### [MODIFY] [GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart)
+
+Add at the end of `setup()`:
+
+```dart
+// 🤖 Chat Bot
+getIt.registerSingleton<ChatService>(ChatService());
+getIt.registerSingleton<ChatRepository>(
+  ChatRepository(getIt.get<ChatService>()),
+);
+getIt.registerFactory<ChatCubit>(
+  () => ChatCubit(getIt.get<ChatRepository>()),
+);
+getIt.registerFactory<ChatSessionsCubit>(
+  () => ChatSessionsCubit(getIt.get<ChatRepository>()),
+);
+```
+
+---
+
+### Component 6: View Layer Updates
 
 #### [MODIFY] [Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart)
 
-Refactored to ~40–50 lines:
+- Wrap with `MultiBlocProvider` providing `ChatCubit` and `ChatSessionsCubit` from GetIt
+- Replace static `_sampleMessages` with `BlocBuilder<ChatCubit, ChatState>`
+- Connect `ChatInputBar.onSend` to `chatCubit.sendMessage()`
+- Resolve `profileId` from `ProfileListCubit` state or `ProfileRepository`
+- Resolve `appLanguage` from `context.locale`
 
-```dart
-Scaffold(
-  body: Column(
-    children: [
-      const ChatHeader(),
-      Expanded(child: ChatMessageList(messages: ...)),
-      ChatInputBar(
-        quickActions: ['Check symptoms', ...],
-        onSend: ...,
-      ),
-    ],
-  ),
-)
-```
+#### [MODIFY] [chat_message.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_message.dart)
 
-- Removes the `AppBar` (the header widget replaces it)
-- Removes `ConstrainedBox` with fixed `minHeight: 812` / `width: 375`
-- Uses `context.colors.chatBackground` for scaffold bg
+- Update `ChatMessage` widget model to be constructible from `ChatMessageModel` (add `factory ChatMessage.fromModel(ChatMessageModel)`)
 
 ---
 
-## Key Design Decisions
+## File Inventory (all under 100 lines)
+
+| File | Est. Lines | Layer |
+|------|-----------|-------|
+| `data/models/chat_session_model.dart` | ~30 | Model |
+| `data/models/chat_message_model.dart` | ~30 | Model |
+| `data/models/send_message_request.dart` | ~30 | Model |
+| `data/models/send_message_response.dart` | ~25 | Model |
+| `data/services/chat_service.dart` | ~40 | Service |
+| `data/repo/chat_repository.dart` | ~80 | Repository |
+| `veiw_model/chat_sessions_state.dart` | ~35 | State |
+| `veiw_model/chat_sessions_cubit.dart` | ~35 | Cubit |
+| `veiw_model/chat_state.dart` | ~40 | State |
+| `veiw_model/chat_cubit.dart` | ~75 | Cubit |
+
+---
+
+## Open Questions
 
 > [!IMPORTANT]
-> **Hardcoded colors that are ≤2 hex digits away from existing tokens** (e.g. `0xFF00A0A8` vs `colors.primary` `0xFF00A1A9`) will be mapped to the existing token. If you need the exact Figma values preserved, please flag this.
+> **`appLanguage` value**: The API expects a string like `"Egyptian Arabic"`. Should this be derived from `context.locale` (e.g., `ar` → `"Egyptian Arabic"`, `en` → `"English"`) or hardcoded? Please confirm the mapping.
 
 > [!IMPORTANT]
-> **Fixed widths/heights will be removed** in favor of `Expanded`, `Flexible`, and intrinsic sizing. The layout will become responsive. The current design is a static 375×812 mockup translation.
-
-> [!WARNING]
-> **`Text` widgets using `fontFamily: 'Material Icons'` will become `Icon` widgets.** This is a semantic fix — the current approach is fragile and won't work correctly on all platforms.
+> **Chat sessions list screen**: The API supports listing sessions per profile (`GET /api/chats/profile/{profile_id}`). Do you want a **chat sessions list screen** (to pick or resume old conversations) built as part of this work, or only the single active-chat screen?
 
 ---
 
 ## Verification Plan
 
 ### Automated Tests
-
-There are no existing widget tests for the chat screen. The [test/widget_test.dart](file:///d:/Flutter_Projects/Cureta-Frontend/test/widget_test.dart) file only contains a default counter app test.
-
-- Run `flutter analyze` to ensure no lint errors in new/modified files:
-  ```shell
-  flutter analyze lib/features/chat_bot/ lib/core/theme/app_colors.dart lib/core/theme/app_typography.dart
-  ```
+```shell
+flutter analyze lib/features/chat_bot/ lib/core/Services/GetItServices.dart
+```
 
 ### Manual Verification
-
-> Since this is a UI-only refactoring, visual verification is the primary testing method.
-
-1. **Hot-reload the app** and navigate to the Chat screen
-2. Verify the screen looks **visually identical** to the current version (colors, spacing, text sizes)
-3. Toggle **dark mode** and verify the chat screen responds to theme changes (it currently doesn't since all colors are hardcoded)
-4. **Resize the window** (if running on web/desktop) and verify responsive behavior
-5. Tap the quick-action chips and verify they are tappable (currently they are static containers)
-6. Verify the input field is functional (currently a static placeholder)
-
-> [!TIP]
-> I recommend you visually compare before & after since there are no widget tests. Would you like me to write widget tests for the new components as part of the refactoring?
+1. Open the Chat screen → verify it starts with `ChatInitial` (empty state)
+2. Type a message and tap send → verify loading indicator while waiting for API
+3. Verify the assistant response appears as a new bubble
+4. Close and re-open the chat → verify messages reload from `GET /messages`
+5. Test error states: turn off network → verify error snackbar appears

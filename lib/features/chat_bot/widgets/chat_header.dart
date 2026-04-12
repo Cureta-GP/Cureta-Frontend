@@ -7,12 +7,12 @@ import 'chat_bot_avatar.dart';
 /// Top header bar for the chat screen.
 ///
 /// Shows the bot avatar, title, online status indicator,
-/// and a close button.
+/// and a menu button.
 class ChatHeader extends StatelessWidget {
-  const ChatHeader({super.key, this.onClose});
+  const ChatHeader({super.key, this.onMenu});
 
-  /// Called when the user taps the close button.
-  final VoidCallback? onClose;
+  /// Called when the user taps the menu button.
+  final VoidCallback? onMenu;
 
   @override
   Widget build(BuildContext context) {
@@ -68,8 +68,8 @@ class ChatHeader extends StatelessWidget {
             ),
           ),
           IconButton(
-            icon: Icon(Icons.close, color: colors.textSecondary),
-            onPressed: onClose,
+            icon: Icon(Icons.menu, color: colors.textSecondary),
+            onPressed: onMenu,
           ),
         ],
       ),

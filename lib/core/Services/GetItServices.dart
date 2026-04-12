@@ -10,6 +10,10 @@ import 'package:cureta/features/medical_records/data/repo/medical_record_reposit
 import 'package:cureta/features/medical_records/veiw_model/add_record_form_cubit.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_cubit.dart';
 import 'package:cureta/features/medical_records/veiw_model/create_record_cubit.dart';
+import 'package:cureta/features/chat_bot/data/services/chat_service.dart';
+import 'package:cureta/features/chat_bot/data/repo/chat_repository.dart';
+import 'package:cureta/features/chat_bot/veiw_model/chat_cubit.dart';
+import 'package:cureta/features/chat_bot/veiw_model/chat_sessions_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -26,7 +30,8 @@ void setup() {
   getIt.registerSingleton<MedicalRecordRepository>(
     MedicalRecordRepository(getIt.get<MedicalRecordService>()),
   );
-  getIt.registerSingleton<ProfileRepository>(               // ✅
+  getIt.registerSingleton<ProfileRepository>(
+    // ✅
     ProfileRepository(getIt.get<ProfileService>()),
   );
 
@@ -39,5 +44,11 @@ void setup() {
     () => AuthCubit(getIt.get<AuthRepository>()),
   );
 
-  
+  // 🤖 Chat Bot
+  getIt.registerSingleton<ChatService>(ChatService());
+  getIt.registerSingleton<ChatRepository>(
+    ChatRepository(getIt.get<ChatService>()),
+  );
+  getIt.registerFactory<ChatCubit>(() => ChatCubit());
+  getIt.registerFactory<ChatSessionsCubit>(() => ChatSessionsCubit());
 }
