@@ -1,44 +1,43 @@
 import 'package:flutter/material.dart';
 
-/// Circular send button used in the chat input bar.
 class SendButton extends StatelessWidget {
   const SendButton({
     super.key,
     required this.onPressed,
-    required this.radius,
-    required this.color,
+    this.isLoading = false,
   });
 
-  /// Called when the button is pressed.
   final VoidCallback? onPressed;
-
-  /// Corner radius for the button shape.
-  final double radius;
-
-  /// Background fill colour.
-  final Color color;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
-      width: 40,
-      height: 40,
+      width: 42,
+      height: 42,
       child: Material(
-        color: color,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius),
-        ),
+        color: colorScheme.primary,
+        shape: const CircleBorder(),
         child: InkWell(
-          onTap: onPressed,
-          customBorder: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(radius),
-          ),
-          child: const Center(
-            child: Icon(
-              Icons.send,
-              color: Colors.white,
-              size: 24,
-            ),
+          onTap: isLoading ? null : onPressed,
+          customBorder: const CircleBorder(),
+          child: Center(
+            child: isLoading
+                ? SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: colorScheme.onPrimary,
+                    ),
+                  )
+                : Icon(
+                    Icons.send_rounded,
+                    color: colorScheme.onPrimary,
+                    size: 19,
+                  ),
           ),
         ),
       ),

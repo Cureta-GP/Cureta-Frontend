@@ -1,73 +1,73 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/theme_extensions.dart';
-
-/// A single chat message bubble.
-///
-/// Renders differently for user vs. assistant messages:
-/// - **User**: primary-coloured bg, rounded except bottom-right.
-/// - **Assistant**: white/surface bg, rounded except bottom-left.
 class ChatBubble extends StatelessWidget {
   const ChatBubble({
     super.key,
     required this.message,
     required this.senderLabel,
+    required this.timestampLabel,
     this.isUser = false,
   });
 
-  /// The message body text.
   final String message;
-
-  /// Label shown above the bubble (e.g. "You", "Assistant").
   final String senderLabel;
-
-  /// Whether this bubble belongs to the current user.
+  final String timestampLabel;
   final bool isUser;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typography;
-    final spacing = context.spacing;
-    final radius = context.radius;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
-    final bubbleRadius = BorderRadius.only(
-      topLeft: Radius.circular(radius.xl),
-      topRight: Radius.circular(radius.xl),
-      bottomLeft: isUser
-          ? Radius.circular(radius.xl)
-          : Radius.zero,
-      bottomRight: isUser
-          ? Radius.zero
-          : Radius.circular(radius.xl),
+    final bubbleColor = isUser
+        ? colorScheme.primary
+        : colorScheme.surfaceContainerHigh;
+    final bubbleTextColor = isUser
+        ? colorScheme.onPrimary
+        : colorScheme.onSurface;
+    final borderRadius = BorderRadius.only(
+      topLeft: const Radius.circular(20),
+      topRight: const Radius.circular(20),
+      bottomLeft: Radius.circular(isUser ? 20 : 4),
+      bottomRight: Radius.circular(isUser ? 4 : 20),
     );
 
     return Column(
-      crossAxisAlignment:
-          isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+      crossAxisAlignment: isUser
+          ? CrossAxisAlignment.end
+          : CrossAxisAlignment.start,
       children: [
         Text(
           senderLabel,
-          style: typography.chatSenderLabel.copyWith(
-            color: isUser ? colors.icon : colors.chatAssistantLabel,
+          style: textTheme.labelSmall?.copyWith(
+            color: colorScheme.onSurfaceVariant,
           ),
         ),
-        SizedBox(height: spacing.xs * 0.75),
+        const SizedBox(height: 4),
         Container(
-          padding: EdgeInsets.all(spacing.lg),
-          decoration: ShapeDecoration(
-            color: isUser ? colors.primary : colors.background,
-            shape: RoundedRectangleBorder(
-              borderRadius: bubbleRadius,
-            ),
+          constraints: const BoxConstraints(maxWidth: 360),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: bubbleColor,
+            borderRadius: borderRadius,
+            border: isUser
+                ? null
+                : Border.all(color: colorScheme.outlineVariant),
           ),
           child: Text(
             message,
-            style: typography.chatMessageBody.copyWith(
-              color: isUser ? Colors.white : colors.textPrimary,
-            ),
+            style: textTheme.bodyLarge?.copyWith(color: bubbleTextColor),
           ),
         ),
+        if (timestampLabel.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            timestampLabel,
+            style: textTheme.labelSmall?.copyWith(
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ],
     );
   }

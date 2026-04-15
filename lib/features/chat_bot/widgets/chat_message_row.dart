@@ -1,34 +1,44 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/localization/app_localizations.dart';
-import '../../../core/theme/theme_extensions.dart';
+import '../data/models/chat_message_model.dart';
 import 'chat_bot_avatar.dart';
 import 'chat_bubble.dart';
-import 'chat_message.dart';
 
 /// Layout row for an assistant message: avatar + bubble.
 class AssistantMessageRow extends StatelessWidget {
   const AssistantMessageRow({super.key, required this.message});
 
-  /// The assistant message to display.
-  final ChatMessage message;
+  final ChatMessageModel message;
 
   @override
   Widget build(BuildContext context) {
-    final spacing = context.spacing;
+    final colorScheme = Theme.of(context).colorScheme;
+    final timeLabel = _formatTimestamp(context, message.createdAt);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const ChatBotAvatar(size: 32),
-        SizedBox(width: spacing.md),
+        const SizedBox(width: 12),
         Expanded(
           child: ChatBubble(
-            message: message.text,
+            message: message.content,
             senderLabel: AppLocalizations.chatAssistantSender,
+            timestampLabel: timeLabel,
           ),
         ),
       ],
+    );
+  }
+
+  String _formatTimestamp(BuildContext context, DateTime dateTime) {
+    final localTime = dateTime.toLocal();
+    final timeOfDay = TimeOfDay.fromDateTime(localTime);
+    final materialLocalizations = MaterialLocalizations.of(context);
+    return materialLocalizations.formatTimeOfDay(
+      timeOfDay,
+      alwaysUse24HourFormat: false,
     );
   }
 }
@@ -37,14 +47,12 @@ class AssistantMessageRow extends StatelessWidget {
 class UserMessageRow extends StatelessWidget {
   const UserMessageRow({super.key, required this.message});
 
-  /// The user message to display.
-  final ChatMessage message;
+  final ChatMessageModel message;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final radius = context.radius;
+    final colorScheme = Theme.of(context).colorScheme;
+    final timeLabel = _formatTimestamp(context, message.createdAt);
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -53,23 +61,37 @@ class UserMessageRow extends StatelessWidget {
         Flexible(
           flex: 4,
           child: ChatBubble(
-            message: message.text,
+            message: message.content,
             senderLabel: AppLocalizations.chatUserSender,
+            timestampLabel: timeLabel,
             isUser: true,
           ),
         ),
-        SizedBox(width: spacing.md),
+        const SizedBox(width: 12),
         Container(
           width: 32,
           height: 32,
-          decoration: ShapeDecoration(
-            color: colors.divider,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius.full),
-            ),
+          decoration: BoxDecoration(
+            color: colorScheme.primaryContainer,
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            Icons.person_outline,
+            color: colorScheme.primary,
+            size: 18,
           ),
         ),
       ],
+    );
+  }
+
+  String _formatTimestamp(BuildContext context, DateTime dateTime) {
+    final localTime = dateTime.toLocal();
+    final timeOfDay = TimeOfDay.fromDateTime(localTime);
+    final materialLocalizations = MaterialLocalizations.of(context);
+    return materialLocalizations.formatTimeOfDay(
+      timeOfDay,
+      alwaysUse24HourFormat: false,
     );
   }
 }

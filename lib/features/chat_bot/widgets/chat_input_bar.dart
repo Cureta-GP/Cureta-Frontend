@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/theme_extensions.dart';
 import 'chat_text_field.dart';
 
-/// Bottom input area for the chat screen.
-///
-/// Composes [ChatTextField] in a themed container.
 class ChatInputBar extends StatefulWidget {
   const ChatInputBar({
     super.key,
@@ -13,19 +9,14 @@ class ChatInputBar extends StatefulWidget {
     this.onSend,
     this.onAttach,
     this.onMic,
+    this.isLoading = false,
   });
 
-  /// Controller for the text input field.
   final TextEditingController? controller;
-
-  /// Called when the send button is pressed with the message text.
-  final Function(String)? onSend;
-
-  /// Called when the attach button is pressed.
+  final ValueChanged<String>? onSend;
   final VoidCallback? onAttach;
-
-  /// Called when the microphone button is pressed.
   final VoidCallback? onMic;
+  final bool isLoading;
 
   @override
   State<ChatInputBar> createState() => _ChatInputBarState();
@@ -49,38 +40,26 @@ class _ChatInputBarState extends State<ChatInputBar> {
   }
 
   void _handleSend() {
-    if (_controller.text.isNotEmpty) {
-      widget.onSend?.call(_controller.text);
-      _controller.clear();
+    final text = _controller.text.trim();
+    if (text.isEmpty) {
+      return;
     }
+    widget.onSend?.call(text);
+    _controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-
+    final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
     return Container(
-      padding: EdgeInsets.only(
-        top: spacing.xs,
-        left: spacing.lg,
-        right: spacing.lg,
-        bottom: spacing.xxl,
-      ),
-      decoration: BoxDecoration(
-        color: colors.background,
-        border: Border(top: BorderSide(width: 0.8, color: colors.divider)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ChatTextField(
-            controller: _controller,
-            onSend: _handleSend,
-            onAttach: widget.onAttach,
-            onMic: widget.onMic,
-          ),
-        ],
+      padding: EdgeInsets.fromLTRB(0, 0, 5, bottomInset > 0 ? 10 : 14),
+      //color: const Color.fromARGB(0, 237, 233, 233),
+      child: ChatTextField(
+        controller: _controller,
+        onSend: _handleSend,
+        onAttach: widget.onAttach,
+        onMic: widget.onMic,
+        isLoading: widget.isLoading,
       ),
     );
   }

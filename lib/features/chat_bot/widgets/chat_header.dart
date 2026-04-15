@@ -1,38 +1,26 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/localization/app_localizations.dart';
-import '../../../core/theme/theme_extensions.dart';
 import 'chat_bot_avatar.dart';
 
-/// Top header bar for the chat screen.
-///
-/// Shows the bot avatar, title, online status indicator,
-/// and a menu button.
 class ChatHeader extends StatelessWidget {
-  const ChatHeader({super.key, this.onMenu});
+  const ChatHeader({super.key, this.onMenu, required this.isLoading});
 
-  /// Called when the user taps the menu button.
   final VoidCallback? onMenu;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typography;
-    final spacing = context.spacing;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: spacing.lg,
-        vertical: spacing.md,
-      ),
-      decoration: BoxDecoration(
-        color: colors.background,
-        border: Border(bottom: BorderSide(width: 0.8, color: colors.divider)),
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(color: colorScheme.surface),
       child: Row(
         children: [
           const ChatBotAvatar(size: 40),
-          SizedBox(width: spacing.md),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -40,35 +28,48 @@ class ChatHeader extends StatelessWidget {
               children: [
                 Text(
                   AppLocalizations.chatAssistantTitle,
-                  style: typography.chatHeaderTitle.copyWith(
-                    color: colors.textPrimary,
+                  style: textTheme.titleMedium?.copyWith(
+                    color: colorScheme.onSurface,
                   ),
                 ),
-                SizedBox(height: spacing.xs * 0.25),
+                const SizedBox(height: 2),
                 Row(
                   children: [
                     Container(
                       width: 8,
                       height: 8,
-                      decoration: ShapeDecoration(
-                        color: colors.statusOnline,
-                        shape: const CircleBorder(),
+                      decoration: BoxDecoration(
+                        color: colorScheme.tertiary,
+                        shape: BoxShape.circle,
                       ),
                     ),
-                    SizedBox(width: spacing.xs * 0.75),
+                    const SizedBox(width: 6),
                     Text(
-                      AppLocalizations.chatOnlineStatus,
-                      style: typography.chatStatusLabel.copyWith(
-                        color: colors.textSecondary,
+                      isLoading
+                          ? 'Thinking'
+                          : AppLocalizations.chatOnlineStatus,
+                      style: textTheme.labelSmall?.copyWith(
+                        color: colorScheme.onSurfaceVariant,
                       ),
                     ),
+                    if (isLoading) ...[
+                      const SizedBox(width: 8),
+                      SizedBox(
+                        width: 12,
+                        height: 12,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 1.8,
+                          color: colorScheme.primary,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ],
             ),
           ),
           IconButton(
-            icon: Icon(Icons.menu, color: colors.textSecondary),
+            icon: Icon(Icons.menu, color: colorScheme.onSurfaceVariant),
             onPressed: onMenu,
           ),
         ],

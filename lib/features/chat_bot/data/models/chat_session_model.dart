@@ -12,12 +12,15 @@ class ChatSessionModel extends Equatable {
   });
 
   factory ChatSessionModel.fromJson(Map<String, dynamic> json) {
+    final rawId = json['id'] ?? json['_id'] ?? json['session_id'];
+    final rawTitle = json['title'] ?? json['name'] ?? json['subject'];
+    final rawDate =
+        json['created_at'] ?? json['createdAt'] ?? json['timestamp'];
+
     return ChatSessionModel(
-      id: json['id'] as String,
-      title: json['title'] as String? ?? 'Chat',
-      createdAt: DateTime.parse(
-        json['created_at'] as String? ?? DateTime.now().toIso8601String(),
-      ),
+      id: rawId?.toString() ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      title: rawTitle?.toString() ?? 'Chat',
+      createdAt: _parseDate(rawDate),
     );
   }
 
@@ -29,4 +32,14 @@ class ChatSessionModel extends Equatable {
 
   @override
   List<Object?> get props => [id, title, createdAt];
+
+  static DateTime _parseDate(dynamic value) {
+    if (value is String && value.isNotEmpty) {
+      return DateTime.tryParse(value)?.toUtc() ?? DateTime.now().toUtc();
+    }
+    if (value is int) {
+      return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
+    }
+    return DateTime.now().toUtc();
+  }
 }

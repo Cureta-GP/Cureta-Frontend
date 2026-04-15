@@ -14,13 +14,18 @@ class ChatMessageModel extends Equatable {
   });
 
   factory ChatMessageModel.fromJson(Map<String, dynamic> json) {
+    final rawId = json['id'] ?? json['_id'] ?? json['message_id'];
+    final rawRole = json['role'] ?? json['sender_role'] ?? json['sender'];
+    final rawContent =
+        json['content'] ?? json['message'] ?? json['text'] ?? json['body'];
+    final rawDate =
+        json['created_at'] ?? json['createdAt'] ?? json['timestamp'];
+
     return ChatMessageModel(
-      id: json['id'] as String,
-      role: json['role'] as String,
-      content: json['content'] as String,
-      createdAt: DateTime.parse(
-        json['created_at'] as String? ?? DateTime.now().toIso8601String(),
-      ),
+      id: rawId?.toString() ?? DateTime.now().microsecondsSinceEpoch.toString(),
+      role: rawRole?.toString() ?? 'assistant',
+      content: rawContent?.toString() ?? '',
+      createdAt: _parseDate(rawDate),
     );
   }
 
@@ -31,6 +36,20 @@ class ChatMessageModel extends Equatable {
     'created_at': createdAt.toIso8601String(),
   };
 
+  bool get isUser => role.toLowerCase() == 'user';
+
+  bool get isAssistant => role.toLowerCase() == 'assistant';
+
   @override
   List<Object?> get props => [id, role, content, createdAt];
+
+  static DateTime _parseDate(dynamic value) {
+    if (value is String && value.isNotEmpty) {
+      return DateTime.tryParse(value)?.toUtc() ?? DateTime.now().toUtc();
+    }
+    if (value is int) {
+      return DateTime.fromMillisecondsSinceEpoch(value, isUtc: true);
+    }
+    return DateTime.now().toUtc();
+  }
 }

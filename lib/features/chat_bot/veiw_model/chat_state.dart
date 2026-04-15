@@ -1,43 +1,18 @@
 import 'package:equatable/equatable.dart';
-import 'package:cureta/core/error_handling/app_exceptions.dart';
-import '../data/models/chat_message_model.dart';
 
-sealed class ChatState extends Equatable {
-  const ChatState();
-}
+class ChatState extends Equatable {
+  final bool isLoading;
+  final bool isEmpty;
 
-class ChatInitial extends ChatState {
-  const ChatInitial();
+  const ChatState({this.isLoading = false, this.isEmpty = true});
 
-  @override
-  List<Object?> get props => [];
-}
-
-class ChatLoading extends ChatState {
-  final List<ChatMessageModel> messages;
-  final String? sessionId;
-
-  const ChatLoading(this.messages, {this.sessionId});
+  ChatState copyWith({bool? isLoading, bool? isEmpty}) {
+    return ChatState(
+      isLoading: isLoading ?? this.isLoading,
+      isEmpty: isEmpty ?? this.isEmpty,
+    );
+  }
 
   @override
-  List<Object?> get props => [messages, sessionId];
-}
-
-class ChatMessagesLoaded extends ChatState {
-  final List<ChatMessageModel> messages;
-  final String? sessionId;
-
-  const ChatMessagesLoaded(this.messages, {this.sessionId});
-
-  @override
-  List<Object?> get props => [messages, sessionId];
-}
-
-class ChatError extends ChatState {
-  final AppException error;
-
-  const ChatError(this.error);
-
-  @override
-  List<Object?> get props => [error];
+  List<Object?> get props => [isLoading, isEmpty];
 }

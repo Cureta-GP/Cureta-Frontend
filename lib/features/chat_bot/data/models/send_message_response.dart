@@ -7,9 +7,13 @@ class SendMessageResponse extends Equatable {
   const SendMessageResponse({required this.sessionId, required this.answer});
 
   factory SendMessageResponse.fromJson(Map<String, dynamic> json) {
+    final rawSessionId =
+        json['session_id'] ?? json['sessionId'] ?? json['chat_session_id'];
+    final rawAnswer = json['answer'] ?? json['response'] ?? json['message'];
+
     return SendMessageResponse(
-      sessionId: json['session_id'] as String,
-      answer: json['answer'] as String,
+      sessionId: rawSessionId?.toString() ?? '',
+      answer: rawAnswer?.toString() ?? '',
     );
   }
 

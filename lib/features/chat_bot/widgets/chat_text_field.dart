@@ -1,10 +1,8 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/theme/theme_extensions.dart';
 import 'send_button.dart';
-/// Row containing the attach button, text field,
-/// microphone button, and send button.
+
 class ChatTextField extends StatelessWidget {
   const ChatTextField({
     super.key,
@@ -12,75 +10,96 @@ class ChatTextField extends StatelessWidget {
     this.onSend,
     this.onAttach,
     this.onMic,
+    this.isLoading = false,
   });
 
-  /// Controller for the text input.
   final TextEditingController? controller;
-
-  /// Called when the send button is pressed.
   final VoidCallback? onSend;
-
-  /// Called when the attach button is pressed.
   final VoidCallback? onAttach;
-
-  /// Called when the microphone button is pressed.
   final VoidCallback? onMic;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typography;
-    final spacing = context.spacing;
-    final radius = context.radius;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
 
     return Container(
-      padding: EdgeInsets.all(spacing.xs),
-      decoration: ShapeDecoration(
-        color: colors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(radius.lg),
-        ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.shadow.withValues(alpha: 0.22),
+            blurRadius: 22,
+            offset: const Offset(0, 4),
+          ),
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.10),
+            blurRadius: 16,
+            offset: const Offset(0, 1),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.attach_file,
-              color: colors.icon,
-            ),
+          _buildActionButton(
+            context,
+            icon: Icons.attach_file,
             onPressed: onAttach,
           ),
           Expanded(
             child: TextField(
               controller: controller,
-              style: typography.chatMessageBody.copyWith(
-                color: colors.textPrimary,
+              minLines: 1,
+              maxLines: 5,
+              style: textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurface,
               ),
               decoration: InputDecoration(
                 hintText: AppLocalizations.chatInputHint,
-                hintStyle:
-                    typography.chatMessageBody.copyWith(
-                  color: colors.textHint,
+                hintStyle: textTheme.bodyLarge?.copyWith(
+                  color: colorScheme.onSurfaceVariant,
                 ),
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: spacing.xs * 0.5,
-                  vertical: spacing.xs,
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 10,
                 ),
               ),
+              textInputAction: TextInputAction.send,
+              onSubmitted: (_) => onSend?.call(),
             ),
           ),
-          IconButton(
-            icon: Icon(Icons.mic, color: colors.icon),
-            onPressed: onMic,
-          ),
-          SendButton(
-            onPressed: onSend,
-            radius: radius.xl,
-            color: colors.primary,
-          ),
+          _buildActionButton(context, icon: Icons.mic_none, onPressed: onMic),
+          SendButton(onPressed: onSend, isLoading: isLoading),
         ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context, {
+    required IconData icon,
+    VoidCallback? onPressed,
+  }) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: 45,
+      height: 45,
+      margin: const EdgeInsetsDirectional.only(end: 4),
+      decoration: BoxDecoration(
+        color: colorScheme.primary.withValues(alpha: 0.14),
+        shape: BoxShape.circle,
+      ),
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        iconSize: 22,
+        icon: Icon(icon, color: colorScheme.primary),
+        onPressed: onPressed ?? () {},
       ),
     );
   }
