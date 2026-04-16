@@ -154,10 +154,11 @@ class RoutesGeneration {
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
         redirect: (context, state) async {
+          final isFamily = state.extra as bool? ?? false;
           final hasProfiles = await getIt
               .get<ProfileRepository>()
               .hasProfiles();
-          if (hasProfiles) {
+          if (hasProfiles && !isFamily) {
             return AppRoutes.mainNavigation;
           }
           return null;
@@ -238,13 +239,9 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.chat,
         name: AppRoutes.chat,
-        pageBuilder: (context, state) => PageTransitions.fade (
-          child: const ChatScreen(),
-          state: state,
-        ),
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const ChatScreen(), state: state),
       ),
-
     ],
   );
-
 }

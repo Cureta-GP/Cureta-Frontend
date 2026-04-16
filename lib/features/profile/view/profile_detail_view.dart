@@ -76,7 +76,7 @@ class ProfileDetailsScreen extends StatelessWidget {
                     context,
                     icon: Icons.cake_outlined,
                     label: "Age",
-                    value: "25 Years", 
+                    value: "${profile.age} Years",
                   ),
                   
                   SizedBox(height: spacing.xxl),

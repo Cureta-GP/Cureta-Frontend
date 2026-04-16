@@ -81,7 +81,7 @@ class _LoginFormState extends State<LoginForm> {
           _animationManager.playSuccess();
           Future.delayed(const Duration(milliseconds: 500), () {
             if (context.mounted) {
-              GoRouter.of(context).go(AppRoutes.home);
+              GoRouter.of(context).go(AppRoutes.mainNavigation);
             }
           });
         } else if (state is AuthError) {
