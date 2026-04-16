@@ -29,7 +29,7 @@ class RecordDetailsHeader extends StatelessWidget {
           Text(
             conditionName,
             style: typography.medicalRecordDetailHero.copyWith(
-              color: colors.medicalRecordStrongText,
+              color: colors.textPrimary,
             ),
           ),
           SizedBox(height: spacing.lg),

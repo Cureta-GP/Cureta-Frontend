@@ -33,11 +33,8 @@ class DocumentFileTile extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(spacing.lg),
         decoration: BoxDecoration(
-          color: colors.medicalRecordCard,
-          border: Border.all(
-            width: 0.8,
-            color: colors.medicalRecordOptionBorder,
-          ),
+          color: colors.surface,
+          border: Border.all(width: 0.8, color: colors.divider),
           borderRadius: BorderRadius.circular(radius.xxl),
         ),
         child: Row(
@@ -72,7 +69,7 @@ class DocumentFileTile extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.medicalRecordDetailLabel.copyWith(
-                      color: colors.medicalRecordMuted,
+                      color: colors.textSecondary,
                     ),
                   ),
                 ],

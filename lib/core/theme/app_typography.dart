@@ -16,7 +16,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medicalRecordHelper,
     required this.medicalRecordCancel,
     required this.medicalRecordScreenTitle,
-    required this.medicalRecordCardTitle,
+    required this.surfaceTitle,
     required this.medicalRecordPickerLabel,
     required this.medicalRecordChoice,
     required this.medicalRecordSkip,
@@ -40,6 +40,11 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.homeMedTime,
     required this.homeActivityName,
     required this.homeActivityDate,
+    required this.chatHeaderTitle,
+    required this.chatStatusLabel,
+    required this.chatSenderLabel,
+    required this.chatMessageBody,
+    required this.chatQuickActionLabel,
   });
 
   final TextStyle hero;
@@ -55,7 +60,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medicalRecordHelper;
   final TextStyle medicalRecordCancel;
   final TextStyle medicalRecordScreenTitle;
-  final TextStyle medicalRecordCardTitle;
+  final TextStyle surfaceTitle;
   final TextStyle medicalRecordPickerLabel;
   final TextStyle medicalRecordChoice;
   final TextStyle medicalRecordSkip;
@@ -79,6 +84,11 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle homeMedTime;
   final TextStyle homeActivityName;
   final TextStyle homeActivityDate;
+  final TextStyle chatHeaderTitle;
+  final TextStyle chatStatusLabel;
+  final TextStyle chatSenderLabel;
+  final TextStyle chatMessageBody;
+  final TextStyle chatQuickActionLabel;
 
   static const mobile = AppTypography(
     hero: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -97,10 +107,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 20,
       fontWeight: FontWeight.w700,
     ),
-    medicalRecordCardTitle: TextStyle(
-      fontSize: 26,
-      fontWeight: FontWeight.w700,
-    ),
+    surfaceTitle: TextStyle(fontSize: 26, fontWeight: FontWeight.w700),
     medicalRecordPickerLabel: TextStyle(
       fontSize: 18,
       fontWeight: FontWeight.w500,
@@ -154,6 +161,14 @@ class AppTypography extends ThemeExtension<AppTypography> {
     homeMedTime: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
     homeActivityName: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
     homeActivityDate: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+    chatHeaderTitle: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+    chatStatusLabel: TextStyle(fontSize: 11, fontWeight: FontWeight.w500),
+    chatSenderLabel: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+    chatMessageBody: TextStyle(fontSize: 15, fontWeight: FontWeight.w400),
+    chatQuickActionLabel: TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w500,
+    ),
   );
 
   static const tablet = AppTypography(
@@ -173,10 +188,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 22,
       fontWeight: FontWeight.w700,
     ),
-    medicalRecordCardTitle: TextStyle(
-      fontSize: 30,
-      fontWeight: FontWeight.w700,
-    ),
+    surfaceTitle: TextStyle(fontSize: 30, fontWeight: FontWeight.w700),
     medicalRecordPickerLabel: TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.w500,
@@ -230,6 +242,14 @@ class AppTypography extends ThemeExtension<AppTypography> {
     homeMedTime: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
     homeActivityName: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
     homeActivityDate: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+    chatHeaderTitle: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+    chatStatusLabel: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+    chatSenderLabel: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+    chatMessageBody: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+    chatQuickActionLabel: TextStyle(
+      fontSize: 16,
+      fontWeight: FontWeight.w500,
+    ),
   );
 
   static const desktop = AppTypography(
@@ -249,10 +269,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontSize: 24,
       fontWeight: FontWeight.w700,
     ),
-    medicalRecordCardTitle: TextStyle(
-      fontSize: 34,
-      fontWeight: FontWeight.w700,
-    ),
+    surfaceTitle: TextStyle(fontSize: 34, fontWeight: FontWeight.w700),
     medicalRecordPickerLabel: TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.w500,
@@ -306,6 +323,14 @@ class AppTypography extends ThemeExtension<AppTypography> {
     homeMedTime: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
     homeActivityName: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
     homeActivityDate: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
+    chatHeaderTitle: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+    chatStatusLabel: TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
+    chatSenderLabel: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+    chatMessageBody: TextStyle(fontSize: 19, fontWeight: FontWeight.w400),
+    chatQuickActionLabel: TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w500,
+    ),
   );
 
   @override
@@ -323,7 +348,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medicalRecordHelper,
     TextStyle? medicalRecordCancel,
     TextStyle? medicalRecordScreenTitle,
-    TextStyle? medicalRecordCardTitle,
+    TextStyle? surfaceTitle,
     TextStyle? medicalRecordPickerLabel,
     TextStyle? medicalRecordChoice,
     TextStyle? medicalRecordSkip,
@@ -347,6 +372,11 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? homeMedTime,
     TextStyle? homeActivityName,
     TextStyle? homeActivityDate,
+    TextStyle? chatHeaderTitle,
+    TextStyle? chatStatusLabel,
+    TextStyle? chatSenderLabel,
+    TextStyle? chatMessageBody,
+    TextStyle? chatQuickActionLabel,
   }) {
     return AppTypography(
       hero: hero ?? this.hero,
@@ -365,8 +395,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medicalRecordCancel: medicalRecordCancel ?? this.medicalRecordCancel,
       medicalRecordScreenTitle:
           medicalRecordScreenTitle ?? this.medicalRecordScreenTitle,
-      medicalRecordCardTitle:
-          medicalRecordCardTitle ?? this.medicalRecordCardTitle,
+      surfaceTitle: surfaceTitle ?? this.surfaceTitle,
       medicalRecordPickerLabel:
           medicalRecordPickerLabel ?? this.medicalRecordPickerLabel,
       medicalRecordChoice: medicalRecordChoice ?? this.medicalRecordChoice,
@@ -402,6 +431,16 @@ class AppTypography extends ThemeExtension<AppTypography> {
       homeMedTime: homeMedTime ?? this.homeMedTime,
       homeActivityName: homeActivityName ?? this.homeActivityName,
       homeActivityDate: homeActivityDate ?? this.homeActivityDate,
+      chatHeaderTitle:
+          chatHeaderTitle ?? this.chatHeaderTitle,
+      chatStatusLabel:
+          chatStatusLabel ?? this.chatStatusLabel,
+      chatSenderLabel:
+          chatSenderLabel ?? this.chatSenderLabel,
+      chatMessageBody:
+          chatMessageBody ?? this.chatMessageBody,
+      chatQuickActionLabel:
+          chatQuickActionLabel ?? this.chatQuickActionLabel,
     );
   }
 
@@ -454,11 +493,7 @@ class AppTypography extends ThemeExtension<AppTypography> {
         other.medicalRecordScreenTitle,
         t,
       )!,
-      medicalRecordCardTitle: TextStyle.lerp(
-        medicalRecordCardTitle,
-        other.medicalRecordCardTitle,
-        t,
-      )!,
+      surfaceTitle: TextStyle.lerp(surfaceTitle, other.surfaceTitle, t)!,
       medicalRecordPickerLabel: TextStyle.lerp(
         medicalRecordPickerLabel,
         other.medicalRecordPickerLabel,
@@ -552,6 +587,31 @@ class AppTypography extends ThemeExtension<AppTypography> {
       homeActivityDate: TextStyle.lerp(
         homeActivityDate,
         other.homeActivityDate,
+        t,
+      )!,
+      chatHeaderTitle: TextStyle.lerp(
+        chatHeaderTitle,
+        other.chatHeaderTitle,
+        t,
+      )!,
+      chatStatusLabel: TextStyle.lerp(
+        chatStatusLabel,
+        other.chatStatusLabel,
+        t,
+      )!,
+      chatSenderLabel: TextStyle.lerp(
+        chatSenderLabel,
+        other.chatSenderLabel,
+        t,
+      )!,
+      chatMessageBody: TextStyle.lerp(
+        chatMessageBody,
+        other.chatMessageBody,
+        t,
+      )!,
+      chatQuickActionLabel: TextStyle.lerp(
+        chatQuickActionLabel,
+        other.chatQuickActionLabel,
         t,
       )!,
     );

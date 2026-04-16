@@ -6,6 +6,7 @@ import 'package:cureta/features/medical_records/widgets/record_details_documents
 import 'package:cureta/features/medical_records/widgets/record_details_header.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_notes_card.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// The main Record Details screen that assembles all micro-widgets.
 ///
@@ -21,7 +22,6 @@ class RecordDetailsView extends StatelessWidget {
     required this.files,
     this.onEdit,
     this.onDelete,
-    this.onViewAllFiles,
     this.onFileTap,
   });
 
@@ -32,8 +32,60 @@ class RecordDetailsView extends StatelessWidget {
   final List<RecordFile> files;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
-  final VoidCallback? onViewAllFiles;
   final ValueChanged<int>? onFileTap;
+
+  Future<void> _openFile(BuildContext context, RecordFile file) async {
+    final url = file.fileUrl;
+    if (url == null || url.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('File URL is not available')),
+      );
+      return;
+    }
+
+    if (file.fileType == 'image') {
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => Dialog.fullscreen(
+          child: Stack(
+            children: [
+              Center(
+                child: InteractiveViewer(
+                  minScale: 0.8,
+                  maxScale: 4,
+                  child: Image.network(url, fit: BoxFit.contain),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                right: 12,
+                child: IconButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  icon: const Icon(Icons.close),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      return;
+    }
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Invalid file URL')));
+      return;
+    }
+
+    final launched = await launchUrl(uri, mode: LaunchMode.externalApplication);
+    if (!launched && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open attachment')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +94,9 @@ class RecordDetailsView extends StatelessWidget {
     final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: colors.medicalRecordBackground,
+        backgroundColor: colors.background,
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
@@ -58,44 +110,42 @@ class RecordDetailsView extends StatelessWidget {
             color: colors.textPrimary,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.more_vert, color: colors.textPrimary),
-            onPressed: () {
-              // TODO: show options menu
-            },
-          ),
-        ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: spacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: spacing.xs),
-              RecordDetailsHeader(
-                conditionName: conditionName,
-                isOngoing: isOngoing,
+        child: CustomScrollView(
+          slivers: [
+            SliverPadding(
+              padding: EdgeInsets.symmetric(horizontal: spacing.xl),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  SizedBox(height: spacing.xs),
+                  RecordDetailsHeader(
+                    conditionName: conditionName,
+                    isOngoing: isOngoing,
+                  ),
+                  SizedBox(height: spacing.xxl),
+                  RecordDetailsDiagnosedDate(date: diagnosedDate),
+                  SizedBox(height: spacing.xxl),
+                  if (notes.isNotEmpty) ...[
+                    RecordDetailsNotesCard(notes: notes),
+                    SizedBox(height: spacing.xxl),
+                  ],
+                  if (files.isNotEmpty)
+                    RecordDetailsDocumentsSection(
+                      files: files,
+                      onFileTap:
+                          onFileTap ??
+                          (index) => _openFile(context, files[index]),
+                    ),
+                  RecordDetailsBottomActions(
+                    onEdit: onEdit,
+                    onDelete: onDelete,
+                  ),
+                  SizedBox(height: spacing.xl),
+                ]),
               ),
-              SizedBox(height: spacing.xxl),
-              RecordDetailsDiagnosedDate(date: diagnosedDate),
-              SizedBox(height: spacing.xxl),
-              if (notes.isNotEmpty) ...[
-                RecordDetailsNotesCard(notes: notes),
-                SizedBox(height: spacing.xxl),
-              ],
-              if (files.isNotEmpty) ...[
-                RecordDetailsDocumentsSection(
-                  files: files,
-                  onViewAll: onViewAllFiles,
-                  onFileTap: onFileTap,
-                ),
-              ],
-              RecordDetailsBottomActions(onEdit: onEdit, onDelete: onDelete),
-              SizedBox(height: spacing.xl),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

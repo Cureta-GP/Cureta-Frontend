@@ -12,6 +12,7 @@ class RecordFile {
     required this.iconBgColor,
     required this.iconColor,
     required this.fileType,
+    this.fileUrl,
   });
 
   final String name;
@@ -20,6 +21,7 @@ class RecordFile {
   final Color iconBgColor;
   final Color iconColor;
   final String fileType;
+  final String? fileUrl;
 }
 
 /// Displays the "Documents & Files" section with a header row
@@ -28,12 +30,10 @@ class RecordDetailsDocumentsSection extends StatelessWidget {
   const RecordDetailsDocumentsSection({
     super.key,
     required this.files,
-    this.onViewAll,
     this.onFileTap,
   });
 
   final List<RecordFile> files;
-  final VoidCallback? onViewAll;
   final ValueChanged<int>? onFileTap;
 
   @override
@@ -48,46 +48,39 @@ class RecordDetailsDocumentsSection extends StatelessWidget {
         // Section header
         Padding(
           padding: EdgeInsets.symmetric(horizontal: spacing.xs / 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                AppLocalizations.recordDetailsDocumentsTitle,
-                style: typography.medicalRecordScreenTitle.copyWith(
-                  color: colors.medicalRecordStrongText,
-                ),
-              ),
-              GestureDetector(
-                onTap: onViewAll,
-                child: Text(
-                  AppLocalizations.recordDetailsViewAll,
-                  style: typography.label.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: colors.primary,
-                  ),
-                ),
-              ),
-            ],
+          child: Text(
+            AppLocalizations.recordDetailsDocumentsTitle,
+            style: typography.medicalRecordScreenTitle.copyWith(
+              color: colors.textPrimary,
+            ),
           ),
         ),
         SizedBox(height: spacing.lg),
         // File list
-        ...List.generate(files.length, (index) {
-          final file = files[index];
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: index < files.length - 1 ? spacing.md : 0,
-            ),
-            child: DocumentFileTile(
-              fileName: file.name,
-              fileMeta: file.meta,
-              fileIcon: file.icon,
-              iconBgColor: file.iconBgColor,
-              iconColor: file.iconColor,
-              onTap: onFileTap != null ? () => onFileTap!(index) : null,
-            ),
-          );
-        }),
+        ListView.builder(
+          shrinkWrap: true,
+          primary: false,
+          addAutomaticKeepAlives: false,
+          addRepaintBoundaries: false,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: files.length,
+          itemBuilder: (context, index) {
+            final file = files[index];
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: index < files.length - 1 ? spacing.md : 0,
+              ),
+              child: DocumentFileTile(
+                fileName: file.name,
+                fileMeta: file.meta,
+                fileIcon: file.icon,
+                iconBgColor: file.iconBgColor,
+                iconColor: file.iconColor,
+                onTap: onFileTap != null ? () => onFileTap!(index) : null,
+              ),
+            );
+          },
+        ),
       ],
     );
   }

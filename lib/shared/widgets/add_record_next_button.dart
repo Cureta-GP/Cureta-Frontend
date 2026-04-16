@@ -3,10 +3,16 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordNextButton extends StatelessWidget {
-  const AddRecordNextButton({super.key, this.onPressed, this.label});
+  const AddRecordNextButton({
+    super.key,
+    this.onPressed,
+    this.label,
+    this.isLoading = false,
+  });
 
   final VoidCallback? onPressed;
   final String? label;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class AddRecordNextButton extends StatelessWidget {
       child: ConstrainedBox(
         constraints: const BoxConstraints(minHeight: 56),
         child: ElevatedButton(
-          onPressed: onPressed ?? () {},
+          onPressed: isLoading ? null : (onPressed ?? () {}),
           style: ElevatedButton.styleFrom(
             backgroundColor: colors.primary,
             disabledBackgroundColor: colors.primary,
@@ -32,29 +38,38 @@ class AddRecordNextButton extends StatelessWidget {
             ),
             padding: EdgeInsets.symmetric(vertical: spacing.md),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: Text(
-                  label ?? AppLocalizations.addRecordNext,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  softWrap: false,
-                  style: typography.medicalRecordButton.copyWith(
-                    color: Colors.white,
+          child: isLoading
+              ? const SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                   ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        label ?? AppLocalizations.addRecordNext,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: false,
+                        style: typography.medicalRecordButton.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: spacing.xs),
+                    Icon(
+                      isRtl ? Icons.arrow_back : Icons.arrow_forward,
+                      size: 20,
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
-              ),
-              SizedBox(width: spacing.xs),
-              Icon(
-                isRtl ? Icons.arrow_back : Icons.arrow_forward,
-                size: 20,
-                color: Colors.white,
-              ),
-            ],
-          ),
         ),
       ),
     );

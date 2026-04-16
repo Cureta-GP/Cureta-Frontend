@@ -21,13 +21,13 @@ class AddRecordUploadSectionHeader extends StatelessWidget {
             Text(
               AppLocalizations.addRecordOptional,
               style: typography.medicalRecordOptional.copyWith(
-                color: colors.medicalRecordProgressText,
+                color: colors.textSecondary,
               ),
             ),
             Text(
               AppLocalizations.addRecordRelatedFilesTitle,
               style: typography.medicalRecordUploadTitle.copyWith(
-                color: colors.medicalRecordStrongText,
+                color: colors.textPrimary,
               ),
             ),
           ],
@@ -36,7 +36,7 @@ class AddRecordUploadSectionHeader extends StatelessWidget {
         Text(
           AppLocalizations.addRecordRelatedFilesDescription,
           style: typography.medicalRecordUploadDescription.copyWith(
-            color: colors.medicalRecordMuted,
+            color: colors.textSecondary,
           ),
         ),
       ],

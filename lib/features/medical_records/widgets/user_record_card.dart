@@ -1,28 +1,26 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/medical_records/widgets/user_record_action_button.dart';
+import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
 import 'package:cureta/features/medical_records/widgets/user_record_status_pill.dart';
 import 'package:flutter/material.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 class UserRecordCard extends StatelessWidget {
-  const UserRecordCard({
-    super.key,
-    required this.status,
-    required this.title,
-    required this.meta,
-    required this.metaIcon,
-    required this.isOngoing,
-    this.onTap,
-  });
+  const UserRecordCard({super.key, required this.record, this.onTap});
 
-  final String status;
-  final String title;
-  final String meta;
-  final IconData metaIcon;
-  final bool isOngoing;
+  final MedicalRecordModel record;
   final VoidCallback? onTap;
+
+  String _formatDate(String rawDate) {
+    try {
+      final date = DateTime.parse(rawDate);
+      return DateFormat('MMM d, yyyy').format(date);
+    } catch (_) {
+      return rawDate;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,41 +28,48 @@ class UserRecordCard extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
     final typography = context.typography;
-    final bg = isOngoing ? colors.medicalRecordCard : colors.surface;
+
+    final dateStr = _formatDate(record.recordDate);
+    final attachmentCount = record.attachments.length;
+    final isOngoing = attachmentCount > 0;
+    final meta = '$dateStr · $attachmentCount files';
+    // Convert AttachmentModel to RecordFile for details screen
+    final files = record.attachments.map((attachment) {
+      final isImage =
+          attachment.attachmentType.toLowerCase().contains('image') ||
+          attachment.fileName.toLowerCase().endsWith('.jpg') ||
+          attachment.fileName.toLowerCase().endsWith('.jpeg') ||
+          attachment.fileName.toLowerCase().endsWith('.png') ||
+          attachment.fileName.toLowerCase().endsWith('.gif');
+      final isPdf = attachment.fileName.toLowerCase().endsWith('.pdf');
+      return RecordFile(
+        name: attachment.fileName,
+        meta: attachment.attachmentType,
+        icon: isPdf ? Icons.picture_as_pdf : Icons.image,
+        iconBgColor: isPdf
+            ? colors.error.withValues(alpha: 0.1)
+            : colors.accentBlue,
+        iconColor: isPdf ? colors.error : const Color(0xFF3B82F6),
+        fileType: isPdf ? 'pdf' : (isImage ? 'image' : 'file'),
+        fileUrl: attachment.fileUrl,
+      );
+    }).toList();
 
     return GestureDetector(
       onTap: () => GoRouter.of(context).pushNamed(
         AppRoutes.recordDetails,
         extra: {
-          'conditionName': title,
+          'conditionName': record.diseaseName,
           'isOngoing': isOngoing,
-          'diagnosedDate': meta,
-          'notes':
-              "This is a note for hypertension and it is long to test the overflow",
-          'files': <RecordFile>[
-            RecordFile(
-              name: "Blood_Test_Oct24.pdf",
-              meta: "PDF • 2.4 MB",
-              icon: Icons.picture_as_pdf,
-              iconBgColor: colors.medicalRecordDetailPdfBg,
-              iconColor: colors.medicalRecordDetailPdfIcon,
-              fileType: "pdf",
-            ),
-            RecordFile(
-              name: "Prescription_Slip.jpg",
-              meta: "Image • 1.1 MB",
-              icon: Icons.image,
-              iconBgColor: colors.medicalRecordUploadScanBg,
-              iconColor: colors.medicalRecordUploadScanIcon,
-              fileType: "image",
-            ),
-          ],
+          'diagnosedDate': dateStr,
+          'notes': record.notes ?? '',
+          'files': files,
         },
       ),
       child: Container(
         padding: EdgeInsets.all(spacing.lg),
         decoration: BoxDecoration(
-          color: bg,
+          color: colors.surface,
           borderRadius: BorderRadius.circular(radius.lg),
         ),
         child: Column(
@@ -78,29 +83,32 @@ class UserRecordCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      UserRecordStatusPill(label: status, isOngoing: isOngoing),
+                      UserRecordStatusPill(
+                        label: '$attachmentCount attachments',
+                        isOngoing: isOngoing,
+                      ),
                       SizedBox(height: spacing.md),
                       Text(
-                        title,
+                        record.diseaseName,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
-                        style: typography.medicalRecordCardTitle.copyWith(
-                          color: colors.medicalRecordStrongText,
+                        style: typography.surfaceTitle.copyWith(
+                          color: colors.textPrimary,
                         ),
                       ),
                     ],
                   ),
                 ),
-                if (isOngoing) ...[
-                  SizedBox(width: spacing.md),
-                  UserRecordActionButton(isOngoing: isOngoing, onTap: onTap),
-                ],
               ],
             ),
             SizedBox(height: spacing.md),
             Row(
               children: [
-                Icon(metaIcon, size: 16, color: colors.medicalRecordMuted),
+                Icon(
+                  Icons.calendar_today,
+                  size: 16,
+                  color: colors.textSecondary,
+                ),
                 SizedBox(width: spacing.xs),
                 Expanded(
                   child: Text(
@@ -108,7 +116,7 @@ class UserRecordCard extends StatelessWidget {
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: typography.medicalRecordUploadCardDescription
-                        .copyWith(color: colors.medicalRecordMuted),
+                        .copyWith(color: colors.textSecondary),
                   ),
                 ),
               ],

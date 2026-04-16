@@ -1,11 +1,13 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/medical_records/veiw_model/add_record_form_cubit.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_notes_card.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_screen_header.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
 import 'package:cureta/shared/widgets/add_record_step_progress.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AddRecordThirdStep extends StatefulWidget {
@@ -34,7 +36,13 @@ class _AddRecordThirdStepState extends State<AddRecordThirdStep> {
   }
 
   void _handleContinue() {
-    widget.onContinue?.call(_notesController.text.trim());
+    // Notes is optional — persist whatever the user typed (even if empty)
+    final notes = _notesController.text.trim();
+    if (notes.isNotEmpty) {
+      context.read<AddRecordFormCubit>().setNotes(notes);
+    }
+
+    widget.onContinue?.call(notes);
     GoRouter.of(context).pushNamed(AppRoutes.addRecordStepFour);
   }
 
@@ -45,7 +53,7 @@ class _AddRecordThirdStepState extends State<AddRecordThirdStep> {
     final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: colors.medicalRecordBackground,
+      backgroundColor: colors.background,
       body: SafeArea(
         child: Column(
           children: [
@@ -66,14 +74,14 @@ class _AddRecordThirdStepState extends State<AddRecordThirdStep> {
                   Text(
                     AppLocalizations.addRecordAdditionalNotesTitle,
                     style: typography.medicalRecordQuestion.copyWith(
-                      color: colors.medicalRecordStrongText,
+                      color: colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: spacing.sm),
                   Text(
                     AppLocalizations.addRecordAdditionalNotesDescription,
                     style: typography.medicalRecordHelper.copyWith(
-                      color: colors.medicalRecordMuted,
+                      color: colors.textSecondary,
                     ),
                   ),
                   SizedBox(height: spacing.xl),

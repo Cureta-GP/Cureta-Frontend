@@ -34,12 +34,9 @@ class AddRecordUploadCategoryTile extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(spacing.lg),
       decoration: BoxDecoration(
-        color: colors.medicalRecordCard,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(radius.xxl),
-        border: Border.all(
-          color: colors.medicalRecordUploadCardBorder,
-          width: spacing.hairline,
-        ),
+        border: Border.all(color: colors.divider, width: spacing.hairline),
       ),
       child: Row(
         children: [
@@ -63,7 +60,7 @@ class AddRecordUploadCategoryTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: typography.medicalRecordUploadCardTitle.copyWith(
-                    color: colors.medicalRecordStrongText,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: spacing.hairline * 2),
@@ -72,7 +69,7 @@ class AddRecordUploadCategoryTile extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: typography.medicalRecordUploadCardDescription.copyWith(
-                    color: colors.medicalRecordMuted,
+                    color: colors.textSecondary,
                   ),
                 ),
               ],
@@ -86,13 +83,13 @@ class AddRecordUploadCategoryTile extends StatelessWidget {
               width: addButtonSize,
               height: addButtonSize,
               decoration: BoxDecoration(
-                color: colors.medicalRecordUploadAddButtonBg,
+                color: colors.divider,
                 borderRadius: BorderRadius.circular(radius.full),
               ),
               alignment: Alignment.center,
               child: Icon(
                 Icons.add,
-                color: colors.medicalRecordProgressText,
+                color: colors.textSecondary,
                 size: addIconSize,
               ),
             ),

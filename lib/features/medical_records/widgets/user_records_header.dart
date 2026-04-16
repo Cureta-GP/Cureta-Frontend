@@ -34,7 +34,7 @@ class UserRecordsHeader extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: typography.medicalRecordQuestion.copyWith(
-                color: colors.medicalRecordStrongText,
+                color: colors.textPrimary,
               ),
             ),
           ),

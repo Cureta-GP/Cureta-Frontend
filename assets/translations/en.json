@@ -272,5 +272,17 @@
     "vitamin_d_note": "1 Tablet",
     "blood_test_results": "Blood Test Results",
     "vaccination_record": "Vaccination Record"
+  },
+  "chat": {
+    "input_hint": "Ask me anything...",
+    "assistant_title": "Cureta Assistant",
+    "online_status": "Online",
+    "thinking_status": "Thinking...",
+    "assistant_sender": "Assistant",
+    "user_sender": "You",
+    "greeting_message": "Hello! I can help you understand your medical records or check for drug interactions. What would you like to do today?",
+    "user_question": "Can you explain my recent blood test results?",
+    "reply_message": "Of course. I can see your fasting glucose was 105 mg/dL. This is slightly above the typical range (70-99 mg/dL). Would you like me to explain what might cause this or suggest some follow-up questions for your doctor?"
   }
+
 }

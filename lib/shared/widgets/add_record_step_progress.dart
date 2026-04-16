@@ -41,7 +41,7 @@ class AddRecordStepProgress extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.end,
               style: typography.medicalRecordProgress.copyWith(
-                color: colors.medicalRecordProgressText,
+                color: colors.textSecondary,
               ),
             ),
           ],
@@ -54,7 +54,7 @@ class AddRecordStepProgress extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-              backgroundColor: colors.medicalRecordProgressTrack,
+              backgroundColor: colors.divider,
             ),
           ),
         ),

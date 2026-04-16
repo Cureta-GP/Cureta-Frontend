@@ -134,12 +134,10 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
                   decoration: BoxDecoration(
                     color: isSelected
                         ? colors.primary.withOpacity(0.1)
-                        : colors.medicalRecordBackground,
+                        : colors.background,
                     borderRadius: BorderRadius.circular(radius.md),
                     border: Border.all(
-                      color: isSelected
-                          ? colors.primary
-                          : colors.medicalRecordOptionBorder,
+                      color: isSelected ? colors.primary : colors.divider,
                       width: 1.5,
                     ),
                   ),
@@ -177,6 +175,7 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
               label: AppLocalizations.profilesMedicalConditionsOther,
             ),
           ],
+          SizedBox(height: spacing.xxl * 4),
         ],
       ),
     );
