@@ -21,8 +21,12 @@ import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
+<<<<<<< HEAD
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
+=======
+import 'package:cureta/features/profile/view/select_profile_screen.dart';
+>>>>>>> temp
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
 import 'package:go_router/go_router.dart';
@@ -153,6 +157,7 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
+<<<<<<< HEAD
         redirect: (context, state) async {
           final hasProfiles = await getIt
               .get<ProfileRepository>()
@@ -169,6 +174,35 @@ class RoutesGeneration {
             state: state,
           );
         },
+=======
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const AddProfileMain(), state: state),
+      ),
+     
+      GoRoute(
+        path: AppRoutes.medicalRecords_step_three,
+        name: AppRoutes.medicalRecords_step_three,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordThirdStep(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.addRecordStepFour,
+        name: AppRoutes.addRecordStepFour,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordForthStep(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.addRecordStepFive,
+        name: AppRoutes.addRecordStepFive,
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: const AddRecordStepFifth(),
+          state: state,
+        ),
+>>>>>>> temp
       ),
       GoRoute(
         path: AppRoutes.userRecords,
@@ -235,6 +269,7 @@ class RoutesGeneration {
           );
         },
       ),
+<<<<<<< HEAD
       GoRoute(
         path: AppRoutes.chat,
         name: AppRoutes.chat,
@@ -243,6 +278,10 @@ class RoutesGeneration {
           state: state,
         ),
       ),
+=======
+     
+
+>>>>>>> temp
     ],
   );
 
