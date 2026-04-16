@@ -74,7 +74,7 @@ class ChatTextField extends StatelessWidget {
             ),
           ),
           _buildActionButton(context, icon: Icons.mic_none, onPressed: onMic),
-          SendButton(onPressed: onSend, isLoading: isLoading),
+          SendButton(onPressed: isLoading ? null : onSend, isLoading: false),
         ],
       ),
     );

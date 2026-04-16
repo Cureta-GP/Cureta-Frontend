@@ -49,7 +49,13 @@ class ChatCubit extends Cubit<ChatState> {
 
   Future<void> loadMessages({required String sessionId}) async {
     _sessionId = sessionId;
-    emit(state.copyWith(isLoading: true));
+    emit(
+      state.copyWith(
+        isHistoryLoading: true,
+        isReplyLoading: false,
+        isEmpty: false,
+      ),
+    );
     _log('loadMessages start | sessionId=$sessionId');
 
     try {
@@ -64,16 +70,22 @@ class ChatCubit extends Cubit<ChatState> {
       _log(
         'chatController now contains ${chatController.messages.length} messages',
       );
-      emit(state.copyWith(isLoading: false, isEmpty: uiMessages.isEmpty));
+      emit(
+        state.copyWith(
+          isHistoryLoading: false,
+          isReplyLoading: false,
+          isEmpty: uiMessages.isEmpty,
+        ),
+      );
       onMessageInserted?.call();
     } on AppException catch (error) {
       _log('loadMessages AppException: ${error.message}');
       await chatController.setMessages(const <Message>[]);
-      emit(const ChatState(isLoading: false, isEmpty: true));
+      emit(const ChatState(isHistoryLoading: false, isEmpty: true));
     } catch (error) {
       _log('loadMessages unexpected error: $error');
       await chatController.setMessages(const <Message>[]);
-      emit(const ChatState(isLoading: false, isEmpty: true));
+      emit(const ChatState(isHistoryLoading: false, isEmpty: true));
     }
   }
 
@@ -112,7 +124,13 @@ class ChatCubit extends Cubit<ChatState> {
 
     await chatController.insertMessage(userMessage);
     _log('inserted user message id=${userMessage.id}');
-    emit(state.copyWith(isLoading: true, isEmpty: false));
+    emit(
+      state.copyWith(
+        isReplyLoading: true,
+        isHistoryLoading: false,
+        isEmpty: false,
+      ),
+    );
     onMessageInserted?.call();
 
     try {
@@ -138,9 +156,15 @@ class ChatCubit extends Cubit<ChatState> {
       _log('sendTextMessage unexpected error: $error');
       await _insertAssistantFallbackMessage();
     } finally {
-      emit(state.copyWith(isLoading: false, isEmpty: false));
+      emit(
+        state.copyWith(
+          isReplyLoading: false,
+          isHistoryLoading: false,
+          isEmpty: false,
+        ),
+      );
       _log(
-        'sendTextMessage end | isLoading=${state.isLoading} | messageCount=${chatController.messages.length}',
+        'sendTextMessage end | isReplyLoading=${state.isReplyLoading} | messageCount=${chatController.messages.length}',
       );
     }
   }
@@ -148,7 +172,7 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> startNewChat() async {
     _sessionId = null;
     await chatController.setMessages(const <Message>[]);
-    emit(const ChatState(isLoading: false, isEmpty: true));
+    emit(const ChatState(isEmpty: true));
   }
 
   Future<void> _applyAssistantResponse(SendMessageResponse response) async {

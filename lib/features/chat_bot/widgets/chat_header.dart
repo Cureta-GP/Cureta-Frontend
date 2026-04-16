@@ -46,23 +46,12 @@ class ChatHeader extends StatelessWidget {
                     const SizedBox(width: 6),
                     Text(
                       isLoading
-                          ? 'Thinking'
+                          ? AppLocalizations.chatThinkingStatus
                           : AppLocalizations.chatOnlineStatus,
                       style: textTheme.labelSmall?.copyWith(
                         color: colorScheme.onSurfaceVariant,
                       ),
                     ),
-                    if (isLoading) ...[
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        width: 12,
-                        height: 12,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 1.8,
-                          color: colorScheme.primary,
-                        ),
-                      ),
-                    ],
                   ],
                 ),
               ],

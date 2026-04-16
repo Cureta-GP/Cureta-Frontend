@@ -277,6 +277,7 @@
     "input_hint": "Ask me anything...",
     "assistant_title": "Cureta Assistant",
     "online_status": "Online",
+    "thinking_status": "Thinking...",
     "assistant_sender": "Assistant",
     "user_sender": "You",
     "greeting_message": "Hello! I can help you understand your medical records or check for drug interactions. What would you like to do today?",

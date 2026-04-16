@@ -386,6 +386,7 @@ class AppLocalizations {
   static String? get chatInputHint => 'chat.input_hint'.tr();
   static String get chatAssistantTitle => 'chat.assistant_title'.tr();
   static String get chatOnlineStatus => 'chat.online_status'.tr();
+  static String get chatThinkingStatus => 'chat.thinking_status'.tr();
   static String get chatAssistantSender => 'chat.assistant_sender'.tr();
   static String get chatUserSender => 'chat.user_sender'.tr();
   static String get chatGreetingMessage => 'chat.greeting_message'.tr();

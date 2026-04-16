@@ -1,18 +1,30 @@
 import 'package:equatable/equatable.dart';
 
 class ChatState extends Equatable {
-  final bool isLoading;
+  final bool isReplyLoading;
+  final bool isHistoryLoading;
   final bool isEmpty;
 
-  const ChatState({this.isLoading = false, this.isEmpty = true});
+  const ChatState({
+    this.isReplyLoading = false,
+    this.isHistoryLoading = false,
+    this.isEmpty = true,
+  });
 
-  ChatState copyWith({bool? isLoading, bool? isEmpty}) {
+  bool get isLoading => isReplyLoading || isHistoryLoading;
+
+  ChatState copyWith({
+    bool? isReplyLoading,
+    bool? isHistoryLoading,
+    bool? isEmpty,
+  }) {
     return ChatState(
-      isLoading: isLoading ?? this.isLoading,
+      isReplyLoading: isReplyLoading ?? this.isReplyLoading,
+      isHistoryLoading: isHistoryLoading ?? this.isHistoryLoading,
       isEmpty: isEmpty ?? this.isEmpty,
     );
   }
 
   @override
-  List<Object?> get props => [isLoading, isEmpty];
+  List<Object?> get props => [isReplyLoading, isHistoryLoading, isEmpty];
 }
