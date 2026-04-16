@@ -114,6 +114,22 @@ class AppLocalizations {
   static String get verifyButton => 'auth.verify_email.verify_button'.tr();
   static String get otpError => 'auth.verify_email.otp_error'.tr();
 
+  // Select Profile
+  static String get selectProfileTitle => 'auth.select_profile.title'.tr();
+  static String get selectProfileSubtitle =>
+      'auth.select_profile.subtitle'.tr();
+  static String get selectProfilePrimaryAccount =>
+      'auth.select_profile.primary_account'.tr();
+  static String get selectProfileSecondary =>
+      'auth.select_profile.secondary'.tr();
+  static String get selectProfileSpouse => 'auth.select_profile.spouse'.tr();
+  static String get selectProfileSon => 'auth.select_profile.son'.tr();
+  static String get selectProfileDaughter =>
+      'auth.select_profile.daughter'.tr();
+  static String get selectProfileParent => 'auth.select_profile.parent'.tr();
+  static String get selectProfileAddProfile =>
+      'auth.select_profile.add_profile'.tr();
+
   // Medical Records - Add Record Step 1
   static String get addRecordCancel => 'medical_records.add_record.cancel'.tr();
   static String get addRecordStepLabel =>

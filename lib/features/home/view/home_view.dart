@@ -14,6 +14,7 @@ class HomeView extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
+      
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
