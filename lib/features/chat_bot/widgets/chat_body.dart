@@ -155,7 +155,17 @@ class ChatBody extends StatelessWidget {
               },
             ),
           );
+          cubit.onMessageInserted?.call();
         },
+      );
+
+      // Keep the list anchored to bottom while animated text expands lines.
+      messageText = NotificationListener<SizeChangedLayoutNotification>(
+        onNotification: (_) {
+          cubit.onMessageInserted?.call();
+          return false;
+        },
+        child: SizeChangedLayoutNotifier(child: messageText),
       );
     }
 

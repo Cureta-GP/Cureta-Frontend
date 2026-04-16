@@ -116,11 +116,7 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
     }
 
     final position = scrollController.position;
-    final target =
-        (position.axisDirection == AxisDirection.down
-                ? position.maxScrollExtent
-                : position.minScrollExtent)
-            .clamp(position.minScrollExtent, position.maxScrollExtent);
+    final target = _bottomTarget(position);
     final distance = (position.pixels - target).abs();
 
     if (distance <= 0.5) {
@@ -134,12 +130,42 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
 
       _smoothing = true;
       try {
-        final milliseconds = (distance / 1.2).round().clamp(260, 2200);
-        await scrollController.animateTo(
-          target,
-          duration: Duration(milliseconds: milliseconds),
-          curve: Curves.easeOutCubic,
-        );
+        // Keep following the bottom while content grows (e.g. animated text).
+        var attempts = 0;
+        while (_autoScroll && scrollController.hasClients && attempts < 6) {
+          final currentPosition = scrollController.position;
+          final currentTarget = _bottomTarget(currentPosition);
+          final currentDistance = (currentPosition.pixels - currentTarget)
+              .abs();
+
+          if (currentDistance <= 0.5) {
+            break;
+          }
+
+          final milliseconds = (currentDistance / 1.2).round().clamp(220, 1500);
+          await scrollController.animateTo(
+            currentTarget,
+            duration: Duration(milliseconds: milliseconds),
+            curve: Curves.easeOutCubic,
+          );
+
+          attempts++;
+          await WidgetsBinding.instance.endOfFrame;
+        }
+
+        // Final settle to the latest available bottom after all relayouts.
+        if (_autoScroll && scrollController.hasClients) {
+          final latestPosition = scrollController.position;
+          final latestTarget = _bottomTarget(latestPosition);
+          final latestDistance = (latestPosition.pixels - latestTarget).abs();
+          if (latestDistance > 0.5) {
+            await scrollController.animateTo(
+              latestTarget,
+              duration: const Duration(milliseconds: 180),
+              curve: Curves.easeOut,
+            );
+          }
+        }
       } finally {
         _smoothing = false;
       }
@@ -147,5 +173,12 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
     }
 
     scrollController.jumpTo(target);
+  }
+
+  double _bottomTarget(ScrollPosition position) {
+    return (position.axisDirection == AxisDirection.down
+            ? position.maxScrollExtent
+            : position.minScrollExtent)
+        .clamp(position.minScrollExtent, position.maxScrollExtent);
   }
 }
