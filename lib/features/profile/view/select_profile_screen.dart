@@ -1,6 +1,6 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/profile/model/profile_model.dart';
+import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
 
@@ -130,9 +130,9 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                     return Column(
                       children: [
                         ProfileCard(
-                          name: profile.name,
+                          name: profile.fullName,
                           relationship: profile.relationship,
-                          avatarUrl: profile.avatarUrl,
+                          avatarUrl: profile.imageUrl,
                           isSelected: _selectedId == profile.id,
                           onTap: () => _handleProfileSelected(profile),
                         ),

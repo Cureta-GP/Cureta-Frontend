@@ -1,4 +1,3 @@
-<<<<<<< HEAD:lib/features/profile/data/models/profile_model.dart
 class ProfileModel {
   final String id;
   final int primaryOwnerId;
@@ -65,9 +64,9 @@ class ProfileModel {
       'allergies': allergies,
     };
   }
-=======
+}
 /// Model class for profile data
-class ProfileModel {
+/*class ProfileModel {
   final String id;
   final String name;
   final String relationship;
@@ -79,5 +78,4 @@ class ProfileModel {
     required this.relationship,
     this.avatarUrl,
   });
->>>>>>> temp:lib/features/profile/model/profile_model.dart
-}
+}*/

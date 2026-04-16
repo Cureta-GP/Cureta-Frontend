@@ -1,13 +1,10 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-<<<<<<< HEAD
+import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/data/models/relationship_model.dart';
 import 'package:cureta/features/profile/widgets/add_member_card.dart';
 import 'package:cureta/features/profile/widgets/icon_text_container.dart';
-=======
-import 'package:cureta/features/profile/model/profile_model.dart';
 import 'package:cureta/features/profile/view/select_profile_screen.dart';
->>>>>>> temp
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -34,27 +31,63 @@ class _AllProfiesViewState extends State<AllProfiesView> {
     _profiles = [
       ProfileModel(
         id: '1',
-        name: 'John Doe',
+        primaryOwnerId: 1,
+        parentProfileId: null,
+        isPrimary: true,
+        fullName: 'John Doe',
         relationship: 'Primary Account (You)',
-        avatarUrl: '',
+        age: 30,
+        gender: 'Male',
+        bloodType: 'O+',
+        imageUrl: '',
+        createdAt: '2023-01-01T00:00:00Z',
+        chronicDiseases: [],
+        allergies: [],      
       ),
       ProfileModel(
         id: '2',
-        name: 'Jane Doe',
+        primaryOwnerId: 2,
+        parentProfileId: '1',
+        isPrimary: false,
+        fullName: 'Jane Doe',
         relationship: 'Spouse',
-        avatarUrl: '',
+        age: 28,
+        gender: 'Female',
+        bloodType: 'A+',
+        imageUrl: '',
+        createdAt: '2023-01-01T00:00:00Z',
+        chronicDiseases: [],
+        allergies: [],
       ),
       ProfileModel(
         id: '3',
-        name: 'Billy Doe',
+        primaryOwnerId: 3,
+        parentProfileId: '1',
+        isPrimary: false,
+        fullName: 'Billy Doe',
         relationship: 'Son',
-        avatarUrl: '',
+        age: 5,
+        gender: 'Male',
+        bloodType: 'B-',
+        imageUrl: '',
+        createdAt: '2023-01-01T00:00:00Z',
+        chronicDiseases: [],
+        allergies: [],
       ),
       ProfileModel(
         id: '4',
-        name: 'Emma Doe',
+        primaryOwnerId: 4,
+        parentProfileId: '1',
+        isPrimary: false,
+        fullName: 'Emma Doe',
         relationship: 'Daughter',
-        avatarUrl: '',
+        age: 3,
+        gender: 'Female',
+        bloodType: 'AB+',
+        imageUrl: '',
+        createdAt: '2023-01-01T00:00:00Z',
+        chronicDiseases: [],
+        allergies: [],
       ),
     ];
     _selectedProfileId = _profiles.first.id;
@@ -165,7 +198,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
               ),
               child: Center(
                 child: Text(
-                  _getInitials(_currentProfile.name),
+                  _getInitials(_currentProfile.fullName),
                   style: typography.title.copyWith(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -181,7 +214,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _currentProfile.name,
+                    _currentProfile.fullName ,
                     style: typography.title.copyWith(color: colors.textPrimary),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
