@@ -15,7 +15,7 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
 
   void disposeAutoScroll() => scrollController.dispose();
 
-  void onIncomingContent() => scheduleScrollToBottom();
+  void onIncomingContent() => scheduleScrollToBottom(smooth: true);
 
   void enableAutoScroll() {
     _autoScroll = true;
@@ -65,7 +65,32 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
 
     _autoScroll = true;
     _setScrolledAway(false);
-    unawaited(_doScroll(smooth: true));
+    unawaited(smoothScrollToBottom());
+  }
+
+  Future<void> smoothScrollToBottom() async {
+    if (_smoothing || !_autoScroll || !scrollController.hasClients) {
+      return;
+    }
+
+    _smoothing = true;
+    try {
+      final position = scrollController.position;
+      final target = _bottomTarget(position);
+      final distance = (position.pixels - target).abs();
+      if (distance <= 0.5) {
+        return;
+      }
+
+      final milliseconds = (distance / 2.6).round().clamp(220, 900);
+      await scrollController.animateTo(
+        target,
+        duration: Duration(milliseconds: milliseconds),
+        curve: Curves.easeOutCubic,
+      );
+    } finally {
+      _smoothing = false;
+    }
   }
 
   void scheduleScrollToBottom({bool smooth = false}) {
@@ -104,9 +129,7 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
   }
 
   bool _isNearBottom(ScrollMetrics metrics) {
-    final bottom = metrics.axisDirection == AxisDirection.down
-        ? metrics.maxScrollExtent
-        : metrics.minScrollExtent;
+    final bottom = _bottomTargetFromMetrics(metrics);
     return (metrics.pixels - bottom).abs() <= 20.0;
   }
 
@@ -124,51 +147,7 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
     }
 
     if (smooth) {
-      if (_smoothing) {
-        return;
-      }
-
-      _smoothing = true;
-      try {
-        // Keep following the bottom while content grows (e.g. animated text).
-        var attempts = 0;
-        while (_autoScroll && scrollController.hasClients && attempts < 6) {
-          final currentPosition = scrollController.position;
-          final currentTarget = _bottomTarget(currentPosition);
-          final currentDistance = (currentPosition.pixels - currentTarget)
-              .abs();
-
-          if (currentDistance <= 0.5) {
-            break;
-          }
-
-          final milliseconds = (currentDistance / 1.2).round().clamp(220, 1500);
-          await scrollController.animateTo(
-            currentTarget,
-            duration: Duration(milliseconds: milliseconds),
-            curve: Curves.easeOutCubic,
-          );
-
-          attempts++;
-          await WidgetsBinding.instance.endOfFrame;
-        }
-
-        // Final settle to the latest available bottom after all relayouts.
-        if (_autoScroll && scrollController.hasClients) {
-          final latestPosition = scrollController.position;
-          final latestTarget = _bottomTarget(latestPosition);
-          final latestDistance = (latestPosition.pixels - latestTarget).abs();
-          if (latestDistance > 0.5) {
-            await scrollController.animateTo(
-              latestTarget,
-              duration: const Duration(milliseconds: 180),
-              curve: Curves.easeOut,
-            );
-          }
-        }
-      } finally {
-        _smoothing = false;
-      }
+      await smoothScrollToBottom();
       return;
     }
 
@@ -176,9 +155,14 @@ mixin AutoScrollMixin<T extends StatefulWidget> on State<T> {
   }
 
   double _bottomTarget(ScrollPosition position) {
-    return (position.axisDirection == AxisDirection.down
-            ? position.maxScrollExtent
-            : position.minScrollExtent)
-        .clamp(position.minScrollExtent, position.maxScrollExtent);
+    return 0.0
+        .clamp(position.minScrollExtent, position.maxScrollExtent)
+        .toDouble();
+  }
+
+  double _bottomTargetFromMetrics(ScrollMetrics metrics) {
+    return 0.0
+        .clamp(metrics.minScrollExtent, metrics.maxScrollExtent)
+        .toDouble();
   }
 }

@@ -32,28 +32,15 @@ class ChatHeader extends StatelessWidget {
                     color: colorScheme.onSurface,
                   ),
                 ),
-                const SizedBox(height: 2),
-                Row(
-                  children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        color: colorScheme.tertiary,
-                        shape: BoxShape.circle,
-                      ),
+                if (isLoading) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    AppLocalizations.chatThinkingStatus,
+                    style: textTheme.labelSmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      isLoading
-                          ? AppLocalizations.chatThinkingStatus
-                          : AppLocalizations.chatOnlineStatus,
-                      style: textTheme.labelSmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ],
             ),
           ),

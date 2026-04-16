@@ -40,7 +40,6 @@ class ChatBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final typingIndicatorBottomSpace = isReplyLoading ? 58.0 : 0.0;
-
     return Stack(
       children: [
         Positioned.fill(
@@ -55,6 +54,8 @@ class ChatBody extends StatelessWidget {
               return NotificationListener<ScrollNotification>(
                 onNotification: onScrollNotification,
                 child: ChatAnimatedList(
+                  reversed: true,
+                  physics: const ClampingScrollPhysics(),
                   scrollController: scrollController,
                   itemBuilder: itemBuilder,
                   topPadding: 2,
