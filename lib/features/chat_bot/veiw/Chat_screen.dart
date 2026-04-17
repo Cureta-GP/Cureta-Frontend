@@ -137,6 +137,10 @@ class _ChatScreenBodyState extends State<_ChatScreenBody>
     return BlocBuilder<ChatCubit, ChatState>(
       builder: (context, chatState) {
         final chatBackgroundColor = Theme.of(context).scaffoldBackgroundColor;
+        final mediaQuery = MediaQuery.of(context);
+        final isKeyboardOpen = mediaQuery.viewInsets.bottom > 0;
+        final isLandscape = mediaQuery.orientation == Orientation.landscape;
+        final useCompactLayout = isKeyboardOpen && isLandscape;
 
         return Scaffold(
           key: _scaffoldKey,
@@ -218,10 +222,12 @@ class _ChatScreenBodyState extends State<_ChatScreenBody>
 
                             final colorScheme = Theme.of(context).colorScheme;
                             return ListView.separated(
-                              addAutomaticKeepAlives: false, // لا تحتفظ تلقائيًا بالحالة
-                              addRepaintBoundaries: false, // قلل إنشاء الطبقات الزائدة
-                               cacheExtent: 250, // مسافة التحميل المسبق
-                               physics: const BouncingScrollPhysics(),
+                              addAutomaticKeepAlives:
+                                  false, // لا تحتفظ تلقائيًا بالحالة
+                              addRepaintBoundaries:
+                                  false, // قلل إنشاء الطبقات الزائدة
+                              cacheExtent: 250, // مسافة التحميل المسبق
+                              physics: const BouncingScrollPhysics(),
                               padding: const EdgeInsets.fromLTRB(12, 8, 12, 16),
                               itemCount: state.sessions.length,
                               separatorBuilder: (_, __) =>
@@ -363,13 +369,14 @@ class _ChatScreenBodyState extends State<_ChatScreenBody>
           body: SafeArea(
             child: Column(
               children: [
-                ChatHeader(
-                  isLoading: chatState.isReplyLoading,
-                  onMenu: () {
-                    context.read<ChatSessionsCubit>().fetchSessions();
-                    _scaffoldKey.currentState?.openDrawer();
-                  },
-                ),
+                if (!useCompactLayout)
+                  ChatHeader(
+                    isLoading: chatState.isReplyLoading,
+                    onMenu: () {
+                      context.read<ChatSessionsCubit>().fetchSessions();
+                      _scaffoldKey.currentState?.openDrawer();
+                    },
+                  ),
                 Expanded(
                   child: ChatBody(
                     cubit: context.read<ChatCubit>(),
@@ -386,6 +393,7 @@ class _ChatScreenBodyState extends State<_ChatScreenBody>
                 ),
                 ChatInputBar(
                   controller: _inputController,
+                  compactMode: useCompactLayout,
                   isLoading: chatState.isLoading,
                   onSend: _handleSend,
                   onAttach: null,

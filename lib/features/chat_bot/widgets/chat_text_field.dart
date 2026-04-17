@@ -10,6 +10,7 @@ class ChatTextField extends StatelessWidget {
     this.onSend,
     this.onAttach,
     this.onMic,
+    this.compactMode = false,
     this.isLoading = false,
   });
 
@@ -17,18 +18,28 @@ class ChatTextField extends StatelessWidget {
   final VoidCallback? onSend;
   final VoidCallback? onAttach;
   final VoidCallback? onMic;
+  final bool compactMode;
   final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final actionButtonSize = compactMode ? 38.0 : 45.0;
+    final actionIconSize = compactMode ? 20.0 : 22.0;
+    final rowVerticalPadding = compactMode ? 4.0 : 6.0;
+    final fieldVerticalPadding = compactMode ? 6.0 : 10.0;
+    final borderRadius = compactMode ? 22.0 : 26.0;
+    final inputMaxLines = compactMode ? 3 : 5;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+      padding: EdgeInsets.symmetric(
+        horizontal: 8,
+        vertical: rowVerticalPadding,
+      ),
       decoration: BoxDecoration(
         color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
             color: colorScheme.shadow.withValues(alpha: 0.22),
@@ -48,12 +59,15 @@ class ChatTextField extends StatelessWidget {
             context,
             icon: Icons.attach_file,
             onPressed: onAttach,
+            size: actionButtonSize,
+            iconSize: actionIconSize,
+            marginEnd: compactMode ? 2 : 4,
           ),
           Expanded(
             child: TextField(
               controller: controller,
               minLines: 1,
-              maxLines: 5,
+              maxLines: inputMaxLines,
               style: textTheme.bodyLarge?.copyWith(
                 color: colorScheme.onSurface,
               ),
@@ -64,16 +78,23 @@ class ChatTextField extends StatelessWidget {
                 ),
                 border: InputBorder.none,
                 isDense: true,
-                contentPadding: const EdgeInsets.symmetric(
+                contentPadding: EdgeInsets.symmetric(
                   horizontal: 10,
-                  vertical: 10,
+                  vertical: fieldVerticalPadding,
                 ),
               ),
               textInputAction: TextInputAction.send,
               onSubmitted: (_) => onSend?.call(),
             ),
           ),
-          _buildActionButton(context, icon: Icons.mic_none, onPressed: onMic),
+          _buildActionButton(
+            context,
+            icon: Icons.mic_none,
+            onPressed: onMic,
+            size: actionButtonSize,
+            iconSize: actionIconSize,
+            marginEnd: compactMode ? 2 : 4,
+          ),
           SendButton(onPressed: isLoading ? null : onSend, isLoading: false),
         ],
       ),
@@ -84,20 +105,23 @@ class ChatTextField extends StatelessWidget {
     BuildContext context, {
     required IconData icon,
     VoidCallback? onPressed,
+    required double size,
+    required double iconSize,
+    required double marginEnd,
   }) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
-      width: 45,
-      height: 45,
-      margin: const EdgeInsetsDirectional.only(end: 4),
+      width: size,
+      height: size,
+      margin: EdgeInsetsDirectional.only(end: marginEnd),
       decoration: BoxDecoration(
         color: colorScheme.primary.withValues(alpha: 0.14),
         shape: BoxShape.circle,
       ),
       child: IconButton(
         padding: EdgeInsets.zero,
-        iconSize: 22,
+        iconSize: iconSize,
         icon: Icon(icon, color: colorScheme.primary),
         onPressed: onPressed ?? () {},
       ),
