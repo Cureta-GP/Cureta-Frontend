@@ -9,5 +9,5 @@ class ApiEndpoints {
   static const String profiles = 'profile';
   static const String primaryProfile = 'profile/user-profile';
   static const String familyProfile = 'profile/family-profile';
-  static String profileData(int id) => "profile/$id";
+  static String profileData(String id) => "profile/$id";
 }

@@ -70,9 +70,29 @@ class DioHelper {
   static Future<Response> putData({
     required String url,
     Map<String, dynamic>? query,
-    required Map<String, dynamic> data,
+    required dynamic data,
   }) async {
-    return dio!.put(url, queryParameters: query, data: data);
+    return dio!.put(
+      url,
+      queryParameters: query,
+      data: data,
+      options: Options(
+        contentType: data is FormData ? null : 'application/json',
+      ),
+    );
+  }
+
+  static Future<Response> putFormData({
+    required String url,
+    Map<String, dynamic>? query,
+    required FormData data,
+  }) async {
+    return await dio!.put(
+      url,
+      queryParameters: query,
+      data: data,
+      options: Options(contentType: null),
+    );
   }
 
   static Future<Response> patchData({

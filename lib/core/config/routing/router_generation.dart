@@ -154,19 +154,30 @@ class RoutesGeneration {
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
         redirect: (context, state) async {
-          final isFamily = state.extra as bool? ?? false;
-          final hasProfiles = await getIt
-              .get<ProfileRepository>()
-              .hasProfiles();
-          if (hasProfiles && !isFamily) {
-            return AppRoutes.mainNavigation;
+          final extra = state.extra;
+          final bool isFamily = extra is bool ? extra : false;
+          if (extra is! ProfileModel) {
+            final hasProfiles = await getIt
+                .get<ProfileRepository>()
+                .hasProfiles();
+            if (hasProfiles && !isFamily) {
+              return AppRoutes.mainNavigation;
+            }
           }
           return null;
         },
         pageBuilder: (context, state) {
-          final bool isFamily = state.extra as bool? ?? false;
+          final extra = state.extra;
+          final bool isFamily = extra is bool ? extra : false;
+          final ProfileModel? editingProfile = extra is ProfileModel
+              ? extra
+              : null;
+
           return PageTransitions.fade(
-            child: AddProfileMain(isFamilyMember: isFamily),
+            child: AddProfileMain(
+              isFamilyMember: editingProfile?.isPrimary == false || isFamily,
+              editingProfile: editingProfile,
+            ),
             state: state,
           );
         },

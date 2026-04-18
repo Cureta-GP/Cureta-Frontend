@@ -13,10 +13,10 @@ class AddMemberCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: colors.primary.withOpacity(0.02),
+          color: colors.primary.withValues(alpha: 0.02),
           borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: colors.primary.withOpacity(0.2),
+            color: colors.primary.withValues(alpha: 0.2),
             style: BorderStyle.solid,
             width: 1.5,
           ),
@@ -26,7 +26,7 @@ class AddMemberCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 25,
-              backgroundColor: colors.primary.withOpacity(0.1),
+              backgroundColor: colors.primary.withValues(alpha: 0.1),
               child: Icon(Icons.add, color: colors.primary, size: 30),
             ),
             const SizedBox(height: 12),
