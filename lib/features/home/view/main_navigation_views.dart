@@ -1,4 +1,5 @@
 import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
@@ -15,6 +16,7 @@ import 'package:cureta/features/home/widgets/custom_drawer.dart';
 import 'package:cureta/features/home/widgets/top_header.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final ProfileState profile;
@@ -115,8 +117,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               const ProfileDetailsScreen(),
             ],
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
+         floatingActionButton: FloatingActionButton(
+          onPressed: (){
+          context.pushNamed(AppRoutes.chat);
+          },
+         child: Icon(Icons.chat),
+         ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: UserRecordsBottomNavigation(
             currentIndex: _selectedIndex,
             homeLabel: AppLocalizations.recordsListNavHome,

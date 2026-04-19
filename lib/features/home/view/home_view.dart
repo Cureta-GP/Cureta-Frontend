@@ -12,7 +12,9 @@ class HomeView extends StatelessWidget {
     final colors = context.colors;
     final spacing = context.spacing;
 
-    return Scaffold(
+    return 
+    
+    Scaffold(
       backgroundColor: colors.background,
       
       body: SafeArea(

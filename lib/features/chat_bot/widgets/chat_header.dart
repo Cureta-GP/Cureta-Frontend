@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/localization/app_localizations.dart';
 import 'chat_bot_avatar.dart';
@@ -19,7 +20,10 @@ class ChatHeader extends StatelessWidget {
       decoration: BoxDecoration(color: colorScheme.surface),
       child: Row(
         children: [
-          const ChatBotAvatar(size: 40),
+          IconButton( onPressed: () { 
+            context.pop();
+           }, icon: Icon(Icons.arrow_back),),
+          //const ChatBotAvatar(size: 40),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
