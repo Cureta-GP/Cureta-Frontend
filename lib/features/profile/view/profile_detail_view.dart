@@ -152,13 +152,17 @@ class ProfileDetailsScreen extends StatelessWidget {
                       Expanded(
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: colors.error),
+                            side: BorderSide(
+                              color: profile.isPrimary ? colors.divider : colors.error,
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
                           ),
-                          onPressed: () async {
+                          onPressed: profile.isPrimary
+                              ? null
+                              : () async {
                             final confirmed = await showDialog<bool>(
                               context: context,
                               builder: (context) => AlertDialog(
@@ -218,8 +222,10 @@ class ProfileDetailsScreen extends StatelessWidget {
                             }
                           },
                           child: Text(
-                            'Delete',
-                            style: TextStyle(color: colors.error),
+                            profile.isPrimary ? 'Cannot Delete' : 'Delete',
+                            style: TextStyle(
+                              color: profile.isPrimary ? colors.divider : colors.error,
+                            ),
                           ),
                         ),
                       ),

@@ -124,14 +124,28 @@ class ProfileCubit extends Cubit<ProfileState> {
   }
 
   List<Map<String, dynamic>> _mapConditions(Set<String> conditions, String otherText) {
+    if (conditions.isEmpty) {
+      // إرجاع list فارغة إذا لم يكن هناك اختيارات
+      return [];
+    }
+
     return conditions
-        .where((e) => e != 'other' || otherText.isNotEmpty) // Skip 'other' if no custom text
+        .where((e) {
+          // تخطي 'other' إذا لم يكن هناك نص مخصص
+          // تخطي 'no_allergy' إذا كان هناك اختيارات أخرى
+          if (e == 'other' && otherText.isEmpty) return false;
+          return true;
+        })
         .map((e) {
           String value = e;
           if (e == 'other' && otherText.isNotEmpty) {
             value = otherText;
           }
-          return {'id': 0, 'description': value};
+          return {
+            'id': 0,
+            'description': value,
+            'name': value,
+          };
         })
         .toList();
   }
