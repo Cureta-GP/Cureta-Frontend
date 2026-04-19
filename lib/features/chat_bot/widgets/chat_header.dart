@@ -21,7 +21,7 @@ class ChatHeader extends StatelessWidget {
       child: Row(
         children: [
           IconButton( onPressed: () { 
-            context.pop();
+          context.pop();
            }, icon: Icon(Icons.arrow_back),),
           //const ChatBotAvatar(size: 40),
           const SizedBox(width: 12),

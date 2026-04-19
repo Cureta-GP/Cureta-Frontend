@@ -144,11 +144,15 @@ class RoutesGeneration {
           ),
         ],
       ),
+     // Home Page 
       GoRoute(
         path: AppRoutes.home,
         name: AppRoutes.home,
         pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const HomeView(), state: state),
+            PageTransitions.fade(
+              child: HomeView(onMenuPressed: () {}), 
+              state: state
+            ),
       ),
       GoRoute(
         path: AppRoutes.addProfile,
