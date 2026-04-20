@@ -75,7 +75,7 @@ class UserRecordsBottomNavigation extends StatelessWidget {
         leftCornerRadius: spacing.lg,
         rightCornerRadius: spacing.lg,
         height: spacing.xxl * 2 + spacing.lg,
-        backgroundColor: colors.surface,
+        backgroundColor: colors.background,
         splashColor: colors.primary,
         onTap: _handleTap,
         tabBuilder: (index, isActive) {

@@ -1,4 +1,6 @@
+import 'package:cureta/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
+import 'package:rive/rive.dart' hide Image;
 
 class ChatBotAvatar extends StatelessWidget {
   const ChatBotAvatar({super.key, this.size = 32});
@@ -16,10 +18,8 @@ class ChatBotAvatar extends StatelessWidget {
         color: colorScheme.primaryContainer,
         shape: BoxShape.circle,
       ),
-      child: Icon(
-        Icons.local_hospital_outlined,
-        size: size * 0.56,
-        color: colorScheme.primary,
+      child: Image(
+        image: AssetImage(AppImages.logo),
       ),
     );
   }

@@ -10,10 +10,12 @@ class ProfileState extends Equatable {
   final String bloodType;
   final Set<String> chronicConditions;
   final Set<String> allergies;
+  final String otherChronicText;
+  final String otherAllergyText;
   final int currentPage;
   final bool isAddingFamilyMember; 
 
-  ProfileState({
+  const ProfileState({
     this.name = '',
     this.gender = '',
     this.relationship = '',
@@ -21,6 +23,8 @@ class ProfileState extends Equatable {
     this.bloodType = '',
     this.chronicConditions = const {},
     this.allergies = const {},
+    this.otherChronicText = '',
+    this.otherAllergyText = '',
     this.currentPage = 0,
     required this.isAddingFamilyMember,
   });
@@ -28,7 +32,8 @@ class ProfileState extends Equatable {
   ProfileState copyWith({
     String? name, String? gender, String? relationship,
     int? age, String? bloodType, Set<String>? chronicConditions,
-    Set<String>? allergies, int? currentPage, bool? isAddingFamilyMember,
+    Set<String>? allergies, String? otherChronicText, String? otherAllergyText,
+    int? currentPage, bool? isAddingFamilyMember,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -38,6 +43,8 @@ class ProfileState extends Equatable {
       bloodType: bloodType ?? this.bloodType,
       chronicConditions: chronicConditions ?? this.chronicConditions,
       allergies: allergies ?? this.allergies,
+      otherChronicText: otherChronicText ?? this.otherChronicText,
+      otherAllergyText: otherAllergyText ?? this.otherAllergyText,
       currentPage: currentPage ?? this.currentPage,
       isAddingFamilyMember: isAddingFamilyMember ?? this.isAddingFamilyMember,
     );

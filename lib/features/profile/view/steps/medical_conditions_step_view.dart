@@ -1,7 +1,9 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/profile/view_model/profile_cubit.dart';
 import 'package:cureta/shared/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum MedicalConditionType { chronic, allergy }
 
@@ -18,8 +20,16 @@ class MedicalConditionsStep extends StatefulWidget {
 }
 
 class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
-  final Set<String> _selectedItems = {};
   final TextEditingController _otherController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final state = context.read<ProfileCubit>().state;
+    _otherController.text = widget.type == MedicalConditionType.chronic
+        ? state.otherChronicText
+        : state.otherAllergyText;
+  }
 
   List<String> get _items {
     if (widget.type == MedicalConditionType.chronic) {
@@ -54,19 +64,12 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
   }
 
   void _toggleItem(String item) {
-    setState(() {
-      if (_selectedItems.contains(item)) {
-        _selectedItems.remove(item);
-      } else {
-        if (item == 'no_allergy') {
-          _selectedItems.clear();
-          _selectedItems.add(item);
-        } else {
-          _selectedItems.remove('no_allergy');
-          _selectedItems.add(item);
-        }
-      }
-    });
+    final cubit = context.read<ProfileCubit>();
+    if (widget.type == MedicalConditionType.chronic) {
+      cubit.toggleChronic(item);
+    } else {
+      cubit.toggleAllergy(item);
+    }
   }
 
   String _getLocalizedItem(String item) {
@@ -112,6 +115,10 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
     final spacing = context.spacing;
     final typography = context.typography;
     final radius = context.radius;
+    final state = context.watch<ProfileCubit>().state;
+    final selectedItems = widget.type == MedicalConditionType.chronic
+        ? state.chronicConditions
+        : state.allergies;
 
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
@@ -122,7 +129,7 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ..._items.map((item) {
-            final isSelected = _selectedItems.contains(item);
+            final isSelected = selectedItems.contains(item);
 
             return Padding(
               padding: EdgeInsets.only(bottom: spacing.sm),
@@ -133,7 +140,7 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
                   padding: EdgeInsets.all(spacing.md),
                   decoration: BoxDecoration(
                     color: isSelected
-                        ? colors.primary.withOpacity(0.1)
+                        ? colors.primary.withValues(alpha: 0.1)
                         : colors.background,
                     borderRadius: BorderRadius.circular(radius.md),
                     border: Border.all(
@@ -167,12 +174,19 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
               ),
             );
           }),
-          if (_selectedItems.contains('other')) ...[
+          if (selectedItems.contains('other')) ...[
             SizedBox(height: spacing.md),
             CustomTextField(
               controller: _otherController,
               hint: AppLocalizations.profilesMedicalConditionsOther,
               label: AppLocalizations.profilesMedicalConditionsOther,
+              onChanged: (val) {
+                if (widget.type == MedicalConditionType.chronic) {
+                  context.read<ProfileCubit>().updateOtherChronicText(val);
+                } else {
+                  context.read<ProfileCubit>().updateOtherAllergyText(val);
+                }
+              },
             ),
           ],
           SizedBox(height: spacing.xxl * 4),

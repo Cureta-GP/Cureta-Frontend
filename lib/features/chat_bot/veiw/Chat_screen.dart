@@ -363,6 +363,7 @@ class _ChatScreenBodyState extends State<_ChatScreenBody>
           body: SafeArea(
             child: Column(
               children: [
+                
                 ChatHeader(
                   isLoading: chatState.isReplyLoading,
                   onMenu: () {
