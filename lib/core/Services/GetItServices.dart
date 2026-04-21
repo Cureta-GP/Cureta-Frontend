@@ -35,9 +35,9 @@ void setup() {
   );
 
   // 🧠 Cubits
-  getIt.registerSingleton<AddRecordFormCubit>(AddRecordFormCubit());
-  getIt.registerSingleton<AddRecordStepFourCubit>(AddRecordStepFourCubit());
-  getIt.registerSingleton<CreateRecordCubit>(CreateRecordCubit());
+  getIt.registerFactory<AddRecordFormCubit>(() => AddRecordFormCubit());
+  getIt.registerFactory<AddRecordStepFourCubit>(() => AddRecordStepFourCubit());
+  getIt.registerFactory<CreateRecordCubit>(() => CreateRecordCubit());
 
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(getIt.get<AuthRepository>()),

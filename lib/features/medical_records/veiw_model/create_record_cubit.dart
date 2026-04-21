@@ -93,16 +93,6 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
         return;
       }
 
-      // --- DEBUG PRINTS ---
-      print('=== SUBMITTING MEDICAL RECORD ===');
-      print('profileId: $resolvedProfileId');
-      print('diseaseName: $diseaseName');
-      print('notes: $notes');
-      print('recordDate: $dateStr');
-      print('attachmentTypes: $attachmentTypes');
-      print('filePaths: $filePaths');
-      print('=================================');
-      // --------------------
 
       final record = await _repository.createRecord(
         profileId: resolvedProfileId,

@@ -26,7 +26,7 @@ class ProfileState extends Equatable {
     this.otherChronicText = '',
     this.otherAllergyText = '',
     this.currentPage = 0,
-    required this.isAddingFamilyMember,
+    required this.isAddingFamilyMember, 
   });
 
   ProfileState copyWith({

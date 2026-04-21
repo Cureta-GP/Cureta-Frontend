@@ -38,11 +38,9 @@ class AddRecordUploadedFileTile extends StatelessWidget {
 
     final icon = file.isPdf ? Icons.picture_as_pdf : Icons.image_outlined;
     final iconBg = file.isPdf
-        ? colors.error.withOpacity(0.1)
+        ? colors.error.withValues(alpha: 0.1)
         : colors.accentBlue;
-    final iconColor = file.isPdf
-        ? colors.error
-        : const Color(0xFF3B82F6);
+    final iconColor = file.isPdf ? colors.error : colors.primary;
 
     return Container(
       padding: EdgeInsets.all(spacing.lg),

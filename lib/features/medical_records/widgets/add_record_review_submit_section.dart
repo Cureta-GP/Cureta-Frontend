@@ -42,8 +42,9 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
             message: 'تم حفظ السجل بنجاح',
             onFinished: () {
               context.read<AddRecordFormCubit>().reset();
+              context.read<AddRecordStepFourCubit>().reset();
               context.read<CreateRecordCubit>().reset();
-              GoRouter.of(context).goNamed(AppRoutes.userRecords);
+              GoRouter.of(context).go('${AppRoutes.mainNavigation}?tab=2');
             },
           );
         } else {

@@ -7,9 +7,21 @@ import 'package:flutter/material.dart';
 /// reuses [AddRecordNextButton] for "Edit Record" and adds a danger
 /// "Delete Record" text button below it.
 class RecordDetailsBottomActions extends StatelessWidget {
-  const RecordDetailsBottomActions({super.key, this.onEdit, this.onDelete});
+  const RecordDetailsBottomActions({
+    super.key,
+    this.isEditing = false,
+    this.isBusy = false,
+    this.onEdit,
+    this.onSave,
+    this.onCancel,
+    this.onDelete,
+  });
 
+  final bool isEditing;
+  final bool isBusy;
   final VoidCallback? onEdit;
+  final VoidCallback? onSave;
+  final VoidCallback? onCancel;
   final VoidCallback? onDelete;
 
   @override
@@ -22,23 +34,35 @@ class RecordDetailsBottomActions extends StatelessWidget {
       padding: EdgeInsets.only(top: spacing.xxl),
       child: Column(
         children: [
-          // Edit Record — reuses the existing AddRecordNextButton
           AddRecordNextButton(
-            label: AppLocalizations.recordDetailsEditRecord,
-            onPressed: onEdit,
+            label: isEditing
+                ? AppLocalizations.addRecordSaveRecord
+                : AppLocalizations.recordDetailsEditRecord,
+            onPressed: isEditing ? onSave : onEdit,
+            isLoading: isBusy,
           ),
           SizedBox(height: spacing.md),
-          // Delete Record
-          TextButton.icon(
-            onPressed: onDelete,
-            icon: Icon(Icons.delete, size: 20, color: colors.error),
-            label: Text(
-              AppLocalizations.recordDetailsDeleteRecord,
-              style: typography.medicalRecordDetailDeleteBtn.copyWith(
-                color: colors.error,
+          if (isEditing)
+            TextButton(
+              onPressed: isBusy ? null : onCancel,
+              child: Text(
+                AppLocalizations.addRecordCancel,
+                style: typography.medicalRecordDetailDeleteBtn.copyWith(
+                  color: colors.textSecondary,
+                ),
+              ),
+            )
+          else
+            TextButton.icon(
+              onPressed: isBusy ? null : onDelete,
+              icon: Icon(Icons.delete, size: 20, color: colors.error),
+              label: Text(
+                AppLocalizations.recordDetailsDeleteRecord,
+                style: typography.medicalRecordDetailDeleteBtn.copyWith(
+                  color: colors.error,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

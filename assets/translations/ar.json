@@ -183,7 +183,21 @@
             "documents_title": "المستندات والملفات",
             "view_all": "عرض الكل",
             "edit_record": "تعديل السجل",
-            "delete_record": "حذف السجل"
+            "delete_record": "حذف السجل",
+            "condition_required": "اسم الحالة مطلوب",
+            "remove_attachments_hint": "اضغط على أي مرفق لتحديده للحذف عند الحفظ",
+            "remove_attachment": "حذف",
+            "file_url_missing": "رابط الملف غير متاح",
+            "invalid_file_url": "رابط الملف غير صالح",
+            "open_attachment_error": "تعذر فتح المرفق",
+            "delete_unavailable": "لا يمكن حذف هذا السجل الآن",
+            "edit_unavailable": "لا يمكن تعديل هذا السجل الآن",
+            "delete_success": "تم حذف السجل الطبي بنجاح",
+            "update_success": "تم تحديث السجل الطبي بنجاح",
+            "delete_failed": "فشل حذف السجل",
+            "update_failed": "فشل تحديث السجل",
+            "delete_confirm_title": "هل تريد حذف هذا السجل؟",
+            "delete_confirm_message": "سيتم حذف \"{condition}\" وكل المرفقات المرتبطة به نهائيًا."
         }
     },
     "profiles": {

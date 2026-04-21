@@ -68,6 +68,8 @@ class ProfileModel {
       'allergies': allergies,
     };
   }
+
+  void operator [](String other) {}
 }
 /// Model class for profile data
 /*class ProfileModel {

@@ -183,7 +183,21 @@
       "documents_title": "Documents & Files",
       "view_all": "View All",
       "edit_record": "Edit Record",
-      "delete_record": "Delete Record"
+      "delete_record": "Delete Record",
+      "condition_required": "Condition is required",
+      "remove_attachments_hint": "Tap attachments to remove them while saving",
+      "remove_attachment": "Remove",
+      "file_url_missing": "File URL is not available",
+      "invalid_file_url": "Invalid file URL",
+      "open_attachment_error": "Could not open attachment",
+      "delete_unavailable": "Unable to delete this record right now",
+      "edit_unavailable": "Unable to edit this record right now",
+      "delete_success": "Medical record deleted successfully",
+      "update_success": "Medical record updated successfully",
+      "delete_failed": "Failed to delete",
+      "update_failed": "Failed to update",
+      "delete_confirm_title": "Delete this record?",
+      "delete_confirm_message": "\"{condition}\" and all linked attachments will be deleted permanently."
     }
   },
   "profiles": {

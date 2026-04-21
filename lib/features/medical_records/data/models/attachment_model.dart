@@ -13,6 +13,23 @@ class AttachmentModel {
     required this.fileName,
   });
 
+  // ── Computed ──────────────────────────────────────────────────────────────
+
+  bool get isPdf => fileName.toLowerCase().endsWith('.pdf');
+
+  bool get isImage {
+    if (attachmentType.toLowerCase().contains('image')) return true;
+    final name = fileName.toLowerCase();
+    return name.endsWith('.jpg') ||
+        name.endsWith('.jpeg') ||
+        name.endsWith('.png') ||
+        name.endsWith('.gif') ||
+        name.endsWith('.webp');
+  }
+
+  /// 'pdf' | 'image' | 'file'
+  String get fileType => isPdf ? 'pdf' : (isImage ? 'image' : 'file');
+
   factory AttachmentModel.fromJson(Map<String, dynamic> json) {
     return AttachmentModel(
       id: json['id'] as String,

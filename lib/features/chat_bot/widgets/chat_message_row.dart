@@ -13,7 +13,6 @@ class AssistantMessageRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     final timeLabel = _formatTimestamp(context, message.createdAt);
 
     return Row(
