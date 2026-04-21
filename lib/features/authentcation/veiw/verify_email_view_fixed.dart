@@ -12,9 +12,7 @@ import '../veiw_model/forgot_password_view_model.dart';
 import '../veiw_model/forgot_password_state.dart';
 
 class VerifyEmailView extends StatefulWidget {
-  final String email;
-  
-  const VerifyEmailView({super.key, required this.email});
+  const VerifyEmailView({super.key});
 
   @override
   State<VerifyEmailView> createState() => _VerifyEmailViewState();
@@ -50,7 +48,10 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     }
 
     // Call verify OTP via repository
-    context.read<ForgotPasswordViewModel>().verifyOTP(otp);
+    context.read<ForgotPasswordViewModel>().resetPassword(
+      otp: otp,
+      newPassword: '',
+    );
   }
 
   @override
@@ -66,7 +67,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           child: SingleChildScrollView(
             child: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
               listener: (context, state) {
-                if (state is ForgotPasswordEmailSentSuccess) { // Changed to listen for successful OTP entry
+                if (state is ResetPasswordSuccess) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('OTP verified successfully')),
                   );
@@ -87,23 +88,10 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: Column(
-                      children: [
-                        Text(
-                          AppLocalizations.verifyEmailSent,
-                          textAlign: TextAlign.center,
-                          style: typography.body.copyWith(color: colors.primary),
-                        ),
-                        SizedBox(height: spacing.sm),
-                        Text(
-                          widget.email,
-                          textAlign: TextAlign.center,
-                          style: typography.body.copyWith(
-                            color: colors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                    child: Text(
+                      AppLocalizations.verifyEmailSent,
+                      textAlign: TextAlign.center,
+                      style: typography.body.copyWith(color: colors.primary),
                     ),
                   ),
                   SizedBox(height: spacing.xxl),

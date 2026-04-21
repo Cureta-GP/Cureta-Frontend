@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/localization/app_localizations.dart';
-import 'chat_bot_avatar.dart';
 
 class ChatHeader extends StatelessWidget {
   const ChatHeader({super.key, this.onMenu, required this.isLoading});

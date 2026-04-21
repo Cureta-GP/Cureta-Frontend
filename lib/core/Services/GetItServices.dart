@@ -1,3 +1,4 @@
+import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -41,6 +42,10 @@ void setup() {
 
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(getIt.get<AuthRepository>()),
+  );
+
+  getIt.registerFactory<ForgotPasswordViewModel>(
+    () => ForgotPasswordViewModel(getIt.get<AuthRepository>()),
   );
 
   // 🤖 Chat Bot

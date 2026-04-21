@@ -3,6 +3,7 @@ class ApiEndpoints {
   //Auth
   static const String register = 'auth/signup';
   static const String login = 'auth/login';
+  static const String logout = 'auth/logout';
   static const String forgotPassword = 'auth/forgot-password';
   static const String resetPassword = 'auth/reset-password';
   //Profiles

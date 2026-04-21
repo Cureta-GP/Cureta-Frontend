@@ -68,7 +68,45 @@ class AuthRepository {
       throw ErrorHandler.handle(e);
     }
   }
+ // ────────────────────────────────────────
+  //  LOGOUT 
+  // ────────────────────────────────────────
+  Future<void> logout() async {
+    try {
+      await _authService.logout();
+    } catch (e) {
+      // Log the error but proceed to clear local auth state regardless of API response
+      print('Logout API call failed: $e');
+    } finally {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.remove('token');
+      DioHelper.clearAuthToken();
+    }
+  }
 
+  // ────────────────────────────────────────
+  //  FORGOT-PASSWORD
+  // ────────────────────────────────────────
+  Future<void> forgotPassword({required String email}) async {
+    try {
+      await _authService.forgotPassword(email: email);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  // ────────────────────────────────────────
+  //  RESET-PASSWORD
+  // ────────────────────────────────────────
+  Future<void> resetPassword({
+    required String otp,
+    required String newPassword,
+  }) async {
+    try {
+      await _authService.resetPassword(otp: otp, newPassword: newPassword);
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }}
   // ────────────────────────────────────────
   //  TOKEN PERSISTENCE
   // ────────────────────────────────────────
@@ -80,19 +118,11 @@ class AuthRepository {
     await DioHelper.init();
   }
 
-  // ────────────────────────────────────────
-  //  LOGOUT (bonus utility)
-  // ────────────────────────────────────────
-  Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('token');
-    DioHelper.clearAuthToken();
-    await DioHelper.init();
-  }
-
+ 
   /// Check if a persisted token exists (for splash / auto-login logic).
   Future<bool> isLoggedIn() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.containsKey('token');
   }
 }
+

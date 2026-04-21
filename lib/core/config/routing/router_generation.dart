@@ -1,7 +1,7 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
-import 'package:cureta/features/Meds/view/medicines_main_view.dart';
+import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
@@ -10,8 +10,10 @@ import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
 import 'package:cureta/features/chat_bot/veiw/Chat_screen.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/view/main_navigation_views.dart';
+import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
+import 'package:cureta/features/medicines/view/medicines_main_view.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
@@ -21,6 +23,7 @@ import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
@@ -30,31 +33,40 @@ import 'package:go_router/go_router.dart';
 class RoutesGeneration {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
-    /*  redirect: (context, state) async {
+ /*  redirect: (context, state) async {
   final authRepo = getIt.get<AuthRepository>();
-  final profileRepo = getIt.get<ProfileRepository>();
   final bool loggedIn = await authRepo.isLoggedIn();
+  final String currentLocation = state.matchedLocation;
 
- 
-  final bool hasProfiles = await profileRepo.hasProfiles(); 
-
-  final bool isAuthRoute = state.matchedLocation == AppRoutes.login || 
-                           state.matchedLocation == AppRoutes.signup ||
-                           state.matchedLocation == AppRoutes.splash ||
-                           state.matchedLocation == AppRoutes.onboarding;
-
-  if (loggedIn && !hasProfiles) {
-     if (state.matchedLocation != AppRoutes.addProfile) {
-       return AppRoutes.addProfile;
-     }
+  // 1. لو مش عامل Login
+  if (!loggedIn) {
+    // لو هو في صفحة الـ Auth (Login/Signup/Splash/Onboarding) سيبيه مكانه
+    final bool isAuthRoute = currentLocation == AppRoutes.login || 
+                             currentLocation == AppRoutes.signup ||
+                             currentLocation == AppRoutes.splash ||
+                             currentLocation == AppRoutes.onboarding;
+    return isAuthRoute ? null : AppRoutes.login;
   }
 
-  if (loggedIn && hasProfiles && isAuthRoute && state.matchedLocation != AppRoutes.splash) {
+  // 2. لو عامل Login، نتحقق من البروفايل
+  final profileRepo = getIt.get<ProfileRepository>();
+  final bool hasProfiles = await profileRepo.hasProfiles(); 
+
+  // لو معندوش بروفايل وهو لسه مش في صفحة "إضافة بروفايل" -> واديه يضيف بروفايل
+  if (!hasProfiles && currentLocation != AppRoutes.addProfile) {
+    return AppRoutes.addProfile;
+  }
+
+  // لو عنده بروفايل وبيحاول يدخل صفحات الـ Auth (زي اللوجن) -> واديه المين
+  final bool isAuthRoute = currentLocation == AppRoutes.login || 
+                           currentLocation == AppRoutes.signup;
+  if (hasProfiles && isAuthRoute) {
     return AppRoutes.mainNavigation;
   }
 
-  return null; 
+  return null; // كمل في طريقك عادي
 },*/
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: AppRoutes.splash,
@@ -80,23 +92,35 @@ class RoutesGeneration {
         pageBuilder: (context, state) =>
             PageTransitions.scale(child: const LoginView(), state: state),
       ),
-      GoRoute(
-        path: AppRoutes.forgetPassword,
-        name: AppRoutes.forgetPassword,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: ForgetPasswordView(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.verifyEmail,
-        name: AppRoutes.verifyEmail,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: VerifyEmailView(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.resetPassword,
-        name: AppRoutes.resetPassword,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: ResetPasswordView(), state: state),
+      // Forgot Password Flow - Shared Cubit via ShellRoute
+      ShellRoute(
+        builder: (context, state, child) => BlocProvider(
+          create: (context) => getIt<ForgotPasswordViewModel>(),
+          child: child,
+        ),
+        routes: [
+          GoRoute(
+            path: AppRoutes.forgetPassword,
+            name: AppRoutes.forgetPassword,
+            pageBuilder: (context, state) =>
+                PageTransitions.fade(child: ForgetPasswordView(), state: state),
+          ),
+          GoRoute(
+            path: AppRoutes.verifyEmail,
+            name: AppRoutes.verifyEmail,
+            pageBuilder: (context, state) =>
+                PageTransitions.fade(
+                  child: VerifyEmailView(email: state.extra as String? ?? ''),
+                  state: state,
+                ),
+          ),
+          GoRoute(
+            path: AppRoutes.resetPassword,
+            name: AppRoutes.resetPassword,
+            pageBuilder: (context, state) =>
+                PageTransitions.fade(child: ResetPasswordView(), state: state),
+          ),
+        ],
       ),
       // Medical Records Flow - Shared Cubits via ShellRoute
       ShellRoute(

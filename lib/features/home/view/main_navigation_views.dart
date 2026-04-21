@@ -9,7 +9,7 @@ import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/Meds/view/medicines_main_view.dart';
+import 'package:cureta/features/medicines/view/medicines_main_view.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/widgets/custom_drawer.dart';
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';

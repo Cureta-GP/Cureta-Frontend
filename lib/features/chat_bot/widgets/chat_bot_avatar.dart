@@ -1,6 +1,5 @@
 import 'package:cureta/core/constants/app_images.dart';
 import 'package:flutter/material.dart';
-import 'package:rive/rive.dart' hide Image;
 
 class ChatBotAvatar extends StatelessWidget {
   const ChatBotAvatar({super.key, this.size = 32});
