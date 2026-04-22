@@ -114,6 +114,14 @@ class ChatBody extends StatelessWidget {
               height: 1.5,
               decoration: TextDecoration.none,
             );
+    final textScaler = MediaQuery.textScalerOf(context);
+    final baseFontSize =
+        baseTextStyle.fontSize ??
+        DefaultTextStyle.of(context).style.fontSize ??
+        14;
+    final messageTextStyle = baseTextStyle.copyWith(
+      fontSize: textScaler.scale(baseFontSize + 1.5),
+    );
     final timeStyle = (textTheme.labelSmall ?? const TextStyle()).copyWith(
       color: messageForeground.withValues(alpha: 0.78),
       decoration: TextDecoration.none,
@@ -146,7 +154,8 @@ class ChatBody extends StatelessWidget {
     Widget messageText = Text(
       message.text,
       textAlign: TextAlign.start,
-      style: baseTextStyle,
+      style: messageTextStyle,
+      textScaler: TextScaler.noScaling,
     );
 
     if (shouldAnimate) {
@@ -158,7 +167,7 @@ class ChatBody extends StatelessWidget {
           TypewriterAnimatedText(
             message.text,
             speed: const Duration(milliseconds: 24),
-            textStyle: baseTextStyle,
+            textStyle: messageTextStyle,
             textAlign: TextAlign.start,
           ),
         ],
