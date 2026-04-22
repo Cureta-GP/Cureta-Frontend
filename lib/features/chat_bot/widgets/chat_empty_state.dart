@@ -1,17 +1,19 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/theme/theme_extensions.dart';
+
 class ChatEmptyState extends StatelessWidget {
   const ChatEmptyState({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final textTheme = Theme.of(context).textTheme;
+    final colors = context.colors;
+    final spacing = context.spacing;
 
     return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24),
+      child: SingleChildScrollView(
+        padding: EdgeInsets.all(spacing.xl),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -19,21 +21,21 @@ class ChatEmptyState extends StatelessWidget {
               width: 72,
               height: 72,
               decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
+                color: colors.primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.health_and_safety_outlined,
-                color: colorScheme.primary,
+                color: colors.primary,
                 size: 34,
               ),
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: spacing.lg),
             Text(
               AppLocalizations.chatGreetingMessage,
               textAlign: TextAlign.center,
-              style: textTheme.bodyLarge?.copyWith(
-                color: colorScheme.onSurface,
+              style: context.typography.chatMessageBody.copyWith(
+                color: colors.textPrimary,
               ),
             ),
           ],
