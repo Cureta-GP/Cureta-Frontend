@@ -1,3 +1,4 @@
+import 'package:cureta/features/profile/widgets/profile_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
@@ -73,56 +74,45 @@ class ProfileDetailsScreen extends StatelessWidget {
                   ),
                   SizedBox(height: spacing.xl),
 
-                  _buildDetailCard(
-                    context,
+                  ProfileDetailCard(
                     icon: Icons.person_outline,
                     label: "Full Name",
                     value: profile.fullName,
                   ),
                   if (profile.relationship.isNotEmpty)
-                    _buildDetailCard(
-                      context,
+                    ProfileDetailCard(
                       icon: Icons.family_restroom,
                       label: "Relationship",
                       value: profile.relationship,
                     ),
-                  _buildDetailCard(
-                    context,
+                  ProfileDetailCard(
                     icon: Icons.cake_outlined,
                     label: "Age",
                     value: "${profile.age} Years",
                   ),
-                  _buildDetailCard(
-                    context,
-
+                  ProfileDetailCard(
                     icon: profile.gender == "Male" ? Icons.male : Icons.female,
                     label: "Gender",
                     value: profile.gender,
                   ),
-                  _buildDetailCard(
-                    context,
+                  ProfileDetailCard(
                     icon: Icons.bloodtype,
                     label: "Blood Type",
                     value: profile.bloodType,
                   ),
-                  /*  _buildDetailCard(
-                    context,
+                  /*ProfileDetailCard(
                     icon: Icons.event,
                     label: "Created At",
                     value: profile.createdAt,
                   ),*/
-                  _buildDetailCard(
-                    context,
+                  ProfileDetailCard(
                     icon: Icons.health_and_safety,
                     label: "Chronic Conditions",
-                    value: null,
                     items: _extractDisplayItems(profile.chronicDiseases),
                   ),
-                  _buildDetailCard(
-                    context,
+                  ProfileDetailCard(
                     icon: Icons.set_meal,
                     label: "Allergies",
-                    value: null,
                     items: _extractDisplayItems(profile.allergies),
                   ),
                   SizedBox(height: spacing.xxl),
@@ -266,72 +256,5 @@ class ProfileDetailsScreen extends StatelessWidget {
         .toList();
   }
 
-  Widget _buildDetailCard(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    String? value,
-    List<String>? items,
-  }) {
-    final colors = context.colors;
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.background, // تأكدي من وجودها في الـ theme_extensions
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.divider.withValues(alpha: 0.5)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: colors.primary),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  label,
-                  style: TextStyle(color: colors.textSecondary, fontSize: 12),
-                ),
-                const SizedBox(height: 6),
-                if (items != null)
-                  ...items.map(
-                    (item) => Padding(
-                      padding: const EdgeInsets.only(bottom: 4),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('• '),
-                          Expanded(
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                else
-                  Text(
-                    value ?? '',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                    textAlign: TextAlign.start,
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Removed _buildDetailCard, now using ProfileDetailCard widget
 }

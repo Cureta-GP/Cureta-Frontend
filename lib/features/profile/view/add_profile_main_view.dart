@@ -1,3 +1,4 @@
+import '../widgets/step_page_view.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/profile/data/models/allergy_option.dart';
 import 'package:cureta/features/profile/data/models/chronic_disease_option.dart';
@@ -132,7 +133,6 @@ class _AddProfileMainState extends State<AddProfileMain> {
             progress: (state.currentPage + 1) / 7,
             onNext: () async {
               if (state.currentPage == 6) {
-                // آخر خطوة، إنشاء أو تحديث البروفايل
                 showDialog(
                   context: context,
                   barrierDismissible: false,
@@ -155,7 +155,7 @@ class _AddProfileMainState extends State<AddProfileMain> {
                   }
                 } catch (e) {
                   if (!mounted) return;
-                  Navigator.pop(context); // غلق Loading
+                  Navigator.pop(context); 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('Failed to save profile: $e')),
                   );
@@ -171,21 +171,17 @@ class _AddProfileMainState extends State<AddProfileMain> {
                 cubit.previousStep(_pageController);
               }
             },
-            child: SizedBox(
-              height: 450,
-              child: PageView(
-                controller: _pageController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: const [
-                  NameInputStep(),
-                  GenderSelectionStep(),
-                  RelationSelectionStep(),
-                  AgeStep(),
-                  BloodTypeStep(),
-                  MedicalConditionsStep(type: MedicalConditionType.chronic),
-                  MedicalConditionsStep(type: MedicalConditionType.allergy),
-                ],
-              ),
+            child: StepPageView(
+              controller: _pageController,
+              children: const [
+                NameInputStep(),
+                GenderSelectionStep(),
+                RelationSelectionStep(),
+                AgeStep(),
+                BloodTypeStep(),
+                MedicalConditionsStep(type: MedicalConditionType.chronic),
+                MedicalConditionsStep(type: MedicalConditionType.allergy),
+              ],
             ),
           );
         },

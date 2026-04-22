@@ -1,9 +1,10 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
+import 'package:cureta/features/profile/widgets/add_profile_button.dart';
 import 'package:cureta/features/profile/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
-
+import 'package:go_router/go_router.dart';
 
 
 /// Select Profile screen/dialog for choosing between family members
@@ -147,7 +148,25 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
             SizedBox(height: spacing.xl),
 
             // Add profile button
-            _buildAddProfileButton(context),
+            AddProfileButton(
+              onPressed: widget.onAddProfilePressed,
+              backgroundColor: context.colors.primary,
+              foregroundColor: Colors.white,
+              borderRadius: context.radius.md,
+              minHeight: context.spacing.xxl + context.spacing.lg,
+              paddingVertical: context.spacing.md,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.add, color: Colors.white),
+                  SizedBox(width: context.spacing.sm),
+                  Text(
+                    AppLocalizations.selectProfileAddProfile,
+                    style: context.typography.button.copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -182,40 +201,5 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
     );
   }
 
-  Widget _buildAddProfileButton(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final typography = context.typography;
-    final radius = context.radius;
-
-    return SizedBox(
-      width: double.infinity,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: spacing.xxl + spacing.lg),
-        child: ElevatedButton(
-          onPressed: widget.onAddProfilePressed,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colors.primary,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius.md),
-            ),
-            elevation: 0,
-            padding: EdgeInsets.symmetric(vertical: spacing.md),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add, color: Colors.white),
-              SizedBox(width: spacing.sm),
-              Text(
-                AppLocalizations.selectProfileAddProfile,
-                style: typography.button.copyWith(color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Removed _buildAddProfileButton, now using AddProfileButton widget
 }

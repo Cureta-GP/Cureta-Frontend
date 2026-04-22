@@ -1,11 +1,12 @@
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/select_profile_screen.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
+import 'package:cureta/features/profile/widgets/selected_profile_card.dart';
+import 'package:cureta/features/profile/widgets/switch_profile_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -45,6 +46,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
     final spacing = context.spacing;
     final colors = context.colors;
     final typography = context.typography;
+    final radius = context.radius;
 
     return BlocProvider(
       create: (context) =>
@@ -125,17 +127,27 @@ class _AllProfiesViewState extends State<AllProfiesView> {
                         ),
                       ),
                       SizedBox(height: spacing.md),
-
-                      _buildSelectedProfileCard(
-                        context,
+                      SelectedProfileCard(
                         profile: currentProfile,
                         onTap: () => _showProfileSelectionDialog(state),
+                        accentColor: colors.accentCyan,
+                        borderColor: colors.primary,
+                        textColor: colors.textPrimary,
+                        secondaryTextColor: colors.textSecondary,
+                        primaryColor: colors.primary,
+                        borderRadius: radius.md,
+                        avatarSize: spacing.xxl + spacing.lg,
+                        titleStyle: typography.title,
+                        bodyStyle: typography.body,
                       ),
                       SizedBox(height: spacing.xl),
-
-                      _buildSwitchProfileButton(
-                        context,
+                      SwitchProfileButton(
                         onPressed: () => _showProfileSelectionDialog(state),
+                        backgroundColor: colors.primary,
+                        foregroundColor: Colors.white,
+                        borderRadius: radius.md,
+                        minHeight: spacing.xxl + spacing.lg,
+                        paddingVertical: spacing.md,
                       ),
                     ],
                   ),
@@ -148,115 +160,5 @@ class _AllProfiesViewState extends State<AllProfiesView> {
         ),
       ),
     );
-  }
-
-  Widget _buildSelectedProfileCard(
-    BuildContext context, {
-    required ProfileModel profile,
-    required VoidCallback onTap,
-  }) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final typography = context.typography;
-    final radius = context.radius;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.all(spacing.lg),
-        decoration: BoxDecoration(
-          color: colors.accentCyan,
-          borderRadius: BorderRadius.circular(radius.md),
-          border: Border.all(color: colors.primary, width: 2),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: spacing.xxl + spacing.lg,
-              height: spacing.xxl + spacing.lg,
-              decoration: BoxDecoration(
-                color: colors.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  _getInitials(profile.fullName),
-                  style: typography.title.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: spacing.lg),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    profile.fullName,
-                    style: typography.title.copyWith(color: colors.textPrimary),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  Text(
-                    profile.relationship,
-                    style: typography.body.copyWith(
-                      color: colors.textSecondary,
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Icon(
-              Icons.arrow_forward_ios,
-              color: colors.primary,
-              size: spacing.lg,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSwitchProfileButton(
-    BuildContext context, {
-    required VoidCallback onPressed,
-  }) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final radius = context.radius;
-
-    return SizedBox(
-      width: double.infinity,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: spacing.xxl + spacing.lg),
-        child: ElevatedButton.icon(
-          onPressed: onPressed,
-          icon: const Icon(Icons.swap_horiz),
-          label: const Text('Switch Profile'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colors.primary,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius.md),
-            ),
-            elevation: 0,
-            padding: EdgeInsets.symmetric(vertical: spacing.md),
-          ),
-        ),
-      ),
-    );
-  }
-
-  String _getInitials(String name) {
-    final parts = name.split(' ');
-    if (parts.isEmpty) return '?';
-    final initials = parts.take(2).map((e) => e.isNotEmpty ? e[0] : '').join();
-    return initials.toUpperCase();
   }
 }
