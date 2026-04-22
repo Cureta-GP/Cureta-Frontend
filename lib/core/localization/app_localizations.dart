@@ -279,6 +279,36 @@ class AppLocalizations {
       'medical_records.details.edit_record'.tr();
   static String get recordDetailsDeleteRecord =>
       'medical_records.details.delete_record'.tr();
+  static String get recordDetailsConditionRequired =>
+      'medical_records.details.condition_required'.tr();
+  static String get recordDetailsRemoveAttachmentsHint =>
+      'medical_records.details.remove_attachments_hint'.tr();
+  static String get recordDetailsRemoveAttachment =>
+      'medical_records.details.remove_attachment'.tr();
+  static String get recordDetailsFileUrlMissing =>
+      'medical_records.details.file_url_missing'.tr();
+  static String get recordDetailsInvalidFileUrl =>
+      'medical_records.details.invalid_file_url'.tr();
+  static String get recordDetailsOpenAttachmentError =>
+      'medical_records.details.open_attachment_error'.tr();
+  static String get recordDetailsDeleteUnavailable =>
+      'medical_records.details.delete_unavailable'.tr();
+  static String get recordDetailsEditUnavailable =>
+      'medical_records.details.edit_unavailable'.tr();
+  static String get recordDetailsDeleteSuccess =>
+      'medical_records.details.delete_success'.tr();
+  static String get recordDetailsUpdateSuccess =>
+      'medical_records.details.update_success'.tr();
+  static String get recordDetailsDeleteFailed =>
+      'medical_records.details.delete_failed'.tr();
+  static String get recordDetailsUpdateFailed =>
+      'medical_records.details.update_failed'.tr();
+  static String get recordDetailsDeleteConfirmTitle =>
+      'medical_records.details.delete_confirm_title'.tr();
+  static String recordDetailsDeleteConfirmMessage(String condition) =>
+      'medical_records.details.delete_confirm_message'.tr(
+        namedArgs: {'condition': condition},
+      );
 
   static String fieldRequired(String field) =>
       'validation.field_required'.tr(namedArgs: {'field': field});

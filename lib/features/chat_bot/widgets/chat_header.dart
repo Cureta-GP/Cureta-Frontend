@@ -19,9 +19,12 @@ class ChatHeader extends StatelessWidget {
       decoration: BoxDecoration(color: colorScheme.surface),
       child: Row(
         children: [
-          IconButton( onPressed: () { 
-          context.pop();
-           }, icon: Icon(Icons.arrow_back),),
+          IconButton(
+            onPressed: () {
+              context.pop();
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
           //const ChatBotAvatar(size: 40),
           const SizedBox(width: 12),
           Expanded(

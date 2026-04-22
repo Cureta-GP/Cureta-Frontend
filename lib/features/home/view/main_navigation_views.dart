@@ -18,7 +18,13 @@ import 'package:go_router/go_router.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final ProfileState profile;
-  const MainNavigationScreen({super.key, required this.profile});
+  final int initialTabIndex;
+
+  const MainNavigationScreen({
+    super.key,
+    required this.profile,
+    this.initialTabIndex = 0,
+  });
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -27,6 +33,41 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
   final _advancedDrawerController = AdvancedDrawerController();
+
+  int? _tabFromRoute(BuildContext context) {
+    try {
+      final tab = int.tryParse(
+        GoRouterState.of(context).uri.queryParameters['tab'] ?? '',
+      );
+      if (tab == null) return null;
+      return tab.clamp(0, 3);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialTabIndex.clamp(0, 3);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final routedTab = _tabFromRoute(context);
+    if (routedTab != null) {
+      _selectedIndex = routedTab;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant MainNavigationScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTabIndex != widget.initialTabIndex) {
+      _selectedIndex = widget.initialTabIndex.clamp(0, 3);
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -68,7 +109,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           body: IndexedStack(
             index: _selectedIndex,
             children: [
-              HomeView(onMenuPressed: _handleMenuButtonPressed), 
+              HomeView(onMenuPressed: _handleMenuButtonPressed),
               const MedicinesMainView(),
               UserRecordsView(isActive: _selectedIndex == 2),
               const ProfileDetailsScreen(),
@@ -80,7 +121,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             },
             child: const Icon(Icons.chat),
           ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
           bottomNavigationBar: UserRecordsBottomNavigation(
             currentIndex: _selectedIndex,
             homeLabel: AppLocalizations.recordsListNavHome,

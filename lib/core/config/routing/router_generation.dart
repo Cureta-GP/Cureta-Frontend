@@ -1,7 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
-import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
@@ -22,8 +21,9 @@ import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
+import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
@@ -33,7 +33,7 @@ import 'package:go_router/go_router.dart';
 class RoutesGeneration {
   static final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
- /*  redirect: (context, state) async {
+    /*  redirect: (context, state) async {
   final authRepo = getIt.get<AuthRepository>();
   final bool loggedIn = await authRepo.isLoggedIn();
   final String currentLocation = state.matchedLocation;
@@ -108,11 +108,10 @@ class RoutesGeneration {
           GoRoute(
             path: AppRoutes.verifyEmail,
             name: AppRoutes.verifyEmail,
-            pageBuilder: (context, state) =>
-                PageTransitions.fade(
-                  child: VerifyEmailView(email: state.extra as String? ?? ''),
-                  state: state,
-                ),
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: VerifyEmailView(email: state.extra as String? ?? ''),
+              state: state,
+            ),
           ),
           GoRoute(
             path: AppRoutes.resetPassword,
@@ -168,15 +167,14 @@ class RoutesGeneration {
           ),
         ],
       ),
-     // Home Page 
+      // Home Page
       GoRoute(
         path: AppRoutes.home,
         name: AppRoutes.home,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(
-              child: HomeView(onMenuPressed: () {}), 
-              state: state
-            ),
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: HomeView(onMenuPressed: () {}),
+          state: state,
+        ),
       ),
       GoRoute(
         path: AppRoutes.addProfile,
@@ -232,6 +230,10 @@ class RoutesGeneration {
         pageBuilder: (context, state) {
           final extra = state.extra;
           final ProfileState profileModel;
+          final tabFromQuery = int.tryParse(
+            state.uri.queryParameters['tab'] ?? '',
+          );
+          int initialTabIndex = tabFromQuery ?? 0;
 
           if (extra is ProfileState) {
             profileModel = extra;
@@ -244,12 +246,37 @@ class RoutesGeneration {
               bloodType: extra.bloodType,
               isAddingFamilyMember: !extra.isPrimary,
             );
+          } else if (extra is Map) {
+            final profileExtra = extra['profile'];
+            final tabExtra = extra['tabIndex'];
+
+            if (tabExtra is int) {
+              initialTabIndex = tabExtra;
+            }
+
+            if (profileExtra is ProfileState) {
+              profileModel = profileExtra;
+            } else if (profileExtra is ProfileModel) {
+              profileModel = ProfileState(
+                name: profileExtra.fullName,
+                gender: profileExtra.gender,
+                relationship: profileExtra.relationship,
+                age: profileExtra.age,
+                bloodType: profileExtra.bloodType,
+                isAddingFamilyMember: !profileExtra.isPrimary,
+              );
+            } else {
+              profileModel = ProfileState(isAddingFamilyMember: false);
+            }
           } else {
             profileModel = ProfileState(isAddingFamilyMember: false);
           }
 
           return PageTransitions.scale(
-            child: MainNavigationScreen(profile: profileModel),
+            child: MainNavigationScreen(
+              profile: profileModel,
+              initialTabIndex: initialTabIndex,
+            ),
             state: state,
           );
         },
@@ -259,18 +286,23 @@ class RoutesGeneration {
         name: AppRoutes.recordDetails,
         pageBuilder: (context, state) {
           final data = state.extra as Map<String, dynamic>? ?? {};
-          final rawFiles = data['files'];
-          final files = rawFiles is List
-              ? rawFiles.whereType<RecordFile>().toList()
-              : <RecordFile>[];
+          final record = data['record'] as MedicalRecordModel?;
+          final recordsCubit = data['recordsCubit'] as MedicalRecordsCubit?;
+          final page = RecordDetailsView(
+            record: record,
+            conditionName: data['conditionName'] ?? '',
+            isOngoing: data['isOngoing'] ?? false,
+            diagnosedDate: data['diagnosedDate'] ?? '',
+            notes: data['notes'] ?? '',
+          );
+
           return PageTransitions.scale(
-            child: RecordDetailsView(
-              conditionName: data['conditionName'] ?? '',
-              isOngoing: data['isOngoing'] ?? false,
-              diagnosedDate: data['diagnosedDate'] ?? '',
-              notes: data['notes'] ?? '',
-              files: files,
-            ),
+            child: recordsCubit != null
+                ? BlocProvider<MedicalRecordsCubit>.value(
+                    value: recordsCubit,
+                    child: page,
+                  )
+                : page,
             state: state,
           );
         },

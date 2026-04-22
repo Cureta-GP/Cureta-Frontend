@@ -17,9 +17,7 @@ class ChatBotAvatar extends StatelessWidget {
         color: colorScheme.primaryContainer,
         shape: BoxShape.circle,
       ),
-      child: Image(
-        image: AssetImage(AppImages.logo),
-      ),
+      child: Image(image: AssetImage(AppImages.logo)),
     );
   }
 }
