@@ -1,6 +1,7 @@
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
@@ -83,9 +84,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return BlocProvider(
-      create: (context) =>
-          ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+        ),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
+      ],
       child: AdvancedDrawer(
         backdrop: Container(
           width: double.infinity,

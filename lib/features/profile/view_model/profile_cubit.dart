@@ -1,3 +1,5 @@
+import 'package:cureta/features/profile/data/models/allergy_option.dart';
+import 'package:cureta/features/profile/data/models/chronic_disease_option.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +25,10 @@ class ProfileCubit extends Cubit<ProfileState> {
   void updateBloodType(String val) => emit(state.copyWith(bloodType: val));
   void updatePage(int page) => emit(state.copyWith(currentPage: page));
 
-  void updateOtherChronicText(String val) => emit(state.copyWith(otherChronicText: val));
-  void updateOtherAllergyText(String val) => emit(state.copyWith(otherAllergyText: val));
+  void updateOtherChronicText(String val) =>
+      emit(state.copyWith(otherChronicText: val));
+  void updateOtherAllergyText(String val) =>
+      emit(state.copyWith(otherAllergyText: val));
 
   void toggleChronic(String item) {
     final newSet = Set<String>.from(state.chronicConditions);
@@ -74,8 +78,11 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   // 🔹 إنشاء البروفايل
   Future<ProfileModel> createProfile({String? imagePath}) async {
-    final chronicList = _mapConditions(state.chronicConditions, state.otherChronicText);
-    final allergyList = _mapConditions(state.allergies, state.otherAllergyText);
+    final chronicList = _mapChronicConditions(
+      state.chronicConditions,
+      state.otherChronicText,
+    );
+    final allergyList = _mapAllergies(state.allergies, state.otherAllergyText);
 
     if (state.isAddingFamilyMember) {
       return await repository.createFamilyProfile(
@@ -106,8 +113,11 @@ class ProfileCubit extends Cubit<ProfileState> {
     String? imagePath,
     bool removeImage = false,
   }) async {
-    final chronicList = _mapConditions(state.chronicConditions, state.otherChronicText);
-    final allergyList = _mapConditions(state.allergies, state.otherAllergyText);
+    final chronicList = _mapChronicConditions(
+      state.chronicConditions,
+      state.otherChronicText,
+    );
+    final allergyList = _mapAllergies(state.allergies, state.otherAllergyText);
 
     return await repository.updateProfile(
       profileId: profileId,
@@ -123,28 +133,63 @@ class ProfileCubit extends Cubit<ProfileState> {
     );
   }
 
-  List<Map<String, dynamic>> _mapConditions(Set<String> conditions, String otherText) {
-    if (conditions.isEmpty) {
-      // إرجاع list فارغة إذا لم يكن هناك اختيارات
-      return [];
-    }
+  List<Map<String, dynamic>> _mapChronicConditions(
+    Set<String> conditions,
+    String otherText,
+  ) {
+    if (conditions.isEmpty) return [];
 
     return conditions
-        .where((e) {
-          // تخطي 'other' إذا لم يكن هناك نص مخصص
-          // تخطي 'no_allergy' إذا كان هناك اختيارات أخرى
-          if (e == 'other' && otherText.isEmpty) return false;
-          return true;
-        })
-        .map((e) {
-          String value = e;
-          if (e == 'other' && otherText.isNotEmpty) {
-            value = otherText;
+        .where((value) => value != 'other' || otherText.isNotEmpty)
+        .map((value) {
+          final option = ChronicDiseaseOptionX.fromBackendName(value);
+          if (option == null) {
+            return {
+              'id': ChronicDiseaseOption.other.id,
+              'description': value,
+              'name': 'other',
+            };
           }
+
+          final description = option == ChronicDiseaseOption.other
+              ? otherText
+              : option.backendName;
+
           return {
-            'id': 0,
-            'description': value,
-            'name': value,
+            'id': option.id,
+            'description': description,
+            'name': option.backendName,
+          };
+        })
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _mapAllergies(
+    Set<String> allergies,
+    String otherText,
+  ) {
+    if (allergies.isEmpty) return [];
+
+    return allergies
+        .where((value) => value != 'other' || otherText.isNotEmpty)
+        .map((value) {
+          final option = AllergyOptionX.fromBackendName(value);
+          if (option == null) {
+            return {
+              'id': AllergyOption.other.id,
+              'description': value,
+              'name': 'other',
+            };
+          }
+
+          final description = option == AllergyOption.other
+              ? otherText
+              : option.backendName;
+
+          return {
+            'id': option.id,
+            'description': description,
+            'name': option.backendName,
           };
         })
         .toList();

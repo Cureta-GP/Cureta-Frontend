@@ -1,4 +1,6 @@
 import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/features/profile/data/models/allergy_option.dart';
+import 'package:cureta/features/profile/data/models/chronic_disease_option.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/steps/age_step_view.dart';
@@ -27,7 +29,6 @@ class AddProfileMain extends StatefulWidget {
 
   @override
   State<AddProfileMain> createState() => _AddProfileMainState();
-
 }
 
 class _AddProfileMainState extends State<AddProfileMain> {
@@ -148,7 +149,9 @@ class _AddProfileMainState extends State<AddProfileMain> {
                   if (isEditing) {
                     GoRouter.of(context).pop(profile);
                   } else {
-                    GoRouter.of(context).go(AppRoutes.mainNavigation, extra: profile);
+                    GoRouter.of(
+                      context,
+                    ).go(AppRoutes.mainNavigation, extra: profile);
                   }
                 } catch (e) {
                   if (!mounted) return;
@@ -195,24 +198,8 @@ class _AddProfileMainState extends State<AddProfileMain> {
     MedicalConditionType type,
   ) {
     final knownItems = type == MedicalConditionType.chronic
-        ? {
-            'diabetes',
-            'hypertension',
-            'heart_disease',
-            'asthma',
-            'thyroid',
-            'arthritis',
-          }
-        : {
-            'food',
-            'dairy',
-            'drug',
-            'respiratory',
-            'skin',
-            'insect',
-            'pet',
-            'no_allergy',
-          };
+        ? ChronicDiseaseOption.values.map((e) => e.backendName).toSet()
+        : AllergyOption.values.map((e) => e.backendName).toSet();
 
     final selected = <String>{};
     String otherText = '';
@@ -222,7 +209,8 @@ class _AddProfileMainState extends State<AddProfileMain> {
     for (final item in values) {
       String value;
       if (item is Map<String, dynamic>) {
-        value = item['description']?.toString() ?? item['name']?.toString() ?? '';
+        value =
+            item['description']?.toString() ?? item['name']?.toString() ?? '';
       } else {
         value = item.toString();
       }

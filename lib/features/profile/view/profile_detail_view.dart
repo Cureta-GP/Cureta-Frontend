@@ -41,7 +41,9 @@ class ProfileDetailsScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 60,
-                          backgroundColor: colors.primary.withValues(alpha: 0.1),
+                          backgroundColor: colors.primary.withValues(
+                            alpha: 0.1,
+                          ),
                           backgroundImage: profile.imageUrl != null
                               ? NetworkImage(profile.imageUrl!)
                               : null,
@@ -93,7 +95,7 @@ class ProfileDetailsScreen extends StatelessWidget {
                   _buildDetailCard(
                     context,
 
-    icon: profile.gender == "Male" ? Icons.male : Icons.female,
+                    icon: profile.gender == "Male" ? Icons.male : Icons.female,
                     label: "Gender",
                     value: profile.gender,
                   ),
@@ -103,7 +105,7 @@ class ProfileDetailsScreen extends StatelessWidget {
                     label: "Blood Type",
                     value: profile.bloodType,
                   ),
-                /*  _buildDetailCard(
+                  /*  _buildDetailCard(
                     context,
                     icon: Icons.event,
                     label: "Created At",
@@ -113,13 +115,15 @@ class ProfileDetailsScreen extends StatelessWidget {
                     context,
                     icon: Icons.health_and_safety,
                     label: "Chronic Conditions",
-                    value: _listToDisplay(profile.chronicDiseases),
+                    value: null,
+                    items: _extractDisplayItems(profile.chronicDiseases),
                   ),
                   _buildDetailCard(
                     context,
                     icon: Icons.set_meal,
                     label: "Allergies",
-                    value: _listToDisplay(profile.allergies),
+                    value: null,
+                    items: _extractDisplayItems(profile.allergies),
                   ),
                   SizedBox(height: spacing.xxl),
 
@@ -135,8 +139,9 @@ class ProfileDetailsScreen extends StatelessWidget {
                             ),
                           ),
                           onPressed: () async {
-                            final result = await GoRouter.of(context)
-                                .push(AppRoutes.addProfile, extra: profile);
+                            final result = await GoRouter.of(
+                              context,
+                            ).push(AppRoutes.addProfile, extra: profile);
                             if (!context.mounted) return;
                             if (result is ProfileModel) {
                               context.read<ProfilesListCubit>().getProfiles();
@@ -153,7 +158,9 @@ class ProfileDetailsScreen extends StatelessWidget {
                         child: OutlinedButton(
                           style: OutlinedButton.styleFrom(
                             side: BorderSide(
-                              color: profile.isPrimary ? colors.divider : colors.error,
+                              color: profile.isPrimary
+                                  ? colors.divider
+                                  : colors.error,
                             ),
                             padding: const EdgeInsets.symmetric(vertical: 16),
                             shape: RoundedRectangleBorder(
@@ -163,68 +170,72 @@ class ProfileDetailsScreen extends StatelessWidget {
                           onPressed: profile.isPrimary
                               ? null
                               : () async {
-                            final confirmed = await showDialog<bool>(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                title: const Text('Delete Profile'),
-                                content: const Text(
-                                  'Are you sure you want to delete this profile?',
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: const Text('Cancel'),
-                                  ),
-                                  TextButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(true),
-                                    child: const Text('Delete'),
-                                  ),
-                                ],
-                              ),
-                            );
+                                  final confirmed = await showDialog<bool>(
+                                    context: context,
+                                    builder: (context) => AlertDialog(
+                                      title: const Text('Delete Profile'),
+                                      content: const Text(
+                                        'Are you sure you want to delete this profile?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(false),
+                                          child: const Text('Cancel'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: const Text('Delete'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
 
-                            if (confirmed != true) return;
-                            if (!context.mounted) return;
+                                  if (confirmed != true) return;
+                                  if (!context.mounted) return;
 
-                            showDialog(
-                              context: context,
-                              barrierDismissible: false,
-                              builder: (_) => const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                            );
+                                  showDialog(
+                                    context: context,
+                                    barrierDismissible: false,
+                                    builder: (_) => const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
 
-                            try {
-                              await repository.deleteProfile(
-                                profileId: profile.id,
-                              );
-                              if (!context.mounted) return;
-                              await context
-                                  .read<ProfilesListCubit>()
-                                  .getProfiles();
-                              if (!context.mounted) return;
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'Profile deleted successfully.',
-                                  ),
-                                ),
-                              );
-                            } catch (e) {
-                              if (!context.mounted) return;
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Delete failed: $e')),
-                              );
-                            }
-                          },
+                                  try {
+                                    await repository.deleteProfile(
+                                      profileId: profile.id,
+                                    );
+                                    if (!context.mounted) return;
+                                    await context
+                                        .read<ProfilesListCubit>()
+                                        .getProfiles();
+                                    if (!context.mounted) return;
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Profile deleted successfully.',
+                                        ),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    if (!context.mounted) return;
+                                    Navigator.pop(context);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('Delete failed: $e'),
+                                      ),
+                                    );
+                                  }
+                                },
                           child: Text(
                             profile.isPrimary ? 'Cannot Delete' : 'Delete',
                             style: TextStyle(
-                              color: profile.isPrimary ? colors.divider : colors.error,
+                              color: profile.isPrimary
+                                  ? colors.divider
+                                  : colors.error,
                             ),
                           ),
                         ),
@@ -241,8 +252,8 @@ class ProfileDetailsScreen extends StatelessWidget {
     );
   }
 
-  String _listToDisplay(List<dynamic> items) {
-    if (items.isEmpty) return 'None';
+  List<String> _extractDisplayItems(List<dynamic> items) {
+    if (items.isEmpty) return const ['None'];
     return items
         .map((item) {
           if (item is Map<String, dynamic>) {
@@ -251,14 +262,16 @@ class ProfileDetailsScreen extends StatelessWidget {
           }
           return item.toString();
         })
-        .join(', ');
+        .where((text) => text.trim().isNotEmpty)
+        .toList();
   }
 
   Widget _buildDetailCard(
     BuildContext context, {
     required IconData icon,
     required String label,
-    required String value,
+    String? value,
+    List<String>? items,
   }) {
     final colors = context.colors;
     return Container(
@@ -270,24 +283,52 @@ class ProfileDetailsScreen extends StatelessWidget {
         border: Border.all(color: colors.divider.withValues(alpha: 0.5)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: colors.primary),
           const SizedBox(width: 16),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(color: colors.textSecondary, fontSize: 12),
-              ),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: TextStyle(color: colors.textSecondary, fontSize: 12),
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                if (items != null)
+                  ...items.map(
+                    (item) => Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('• '),
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                else
+                  Text(
+                    value ?? '',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                    textAlign: TextAlign.start,
+                  ),
+              ],
+            ),
           ),
         ],
       ),

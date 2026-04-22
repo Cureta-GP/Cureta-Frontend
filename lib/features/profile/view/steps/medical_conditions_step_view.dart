@@ -1,5 +1,7 @@
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/profile/data/models/allergy_option.dart';
+import 'package:cureta/features/profile/data/models/chronic_disease_option.dart';
 import 'package:cureta/features/profile/view_model/profile_cubit.dart';
 import 'package:cureta/shared/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
@@ -33,27 +35,9 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
 
   List<String> get _items {
     if (widget.type == MedicalConditionType.chronic) {
-      return [
-        'diabetes',
-        'hypertension',
-        'heart_disease',
-        'asthma',
-        'thyroid',
-        'arthritis',
-        'other',
-      ];
+      return ChronicDiseaseOption.values.map((e) => e.backendName).toList();
     } else {
-      return [
-        'food',
-        'dairy',
-        'drug',
-        'respiratory',
-        'skin',
-        'insect',
-        'pet',
-        'no_allergy',
-        'other',
-      ];
+      return AllergyOption.values.map((e) => e.backendName).toList();
     }
   }
 
@@ -73,40 +57,10 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
   }
 
   String _getLocalizedItem(String item) {
-    switch (item) {
-      case 'diabetes':
-        return AppLocalizations.profilesMedicalConditionsDiabetes;
-      case 'hypertension':
-        return AppLocalizations.profilesMedicalConditionsHypertension;
-      case 'heart_disease':
-        return AppLocalizations.profilesMedicalConditionsHeartDisease;
-      case 'asthma':
-        return AppLocalizations.profilesMedicalConditionsAsthma;
-      case 'thyroid':
-        return AppLocalizations.profilesMedicalConditionsThyroid;
-      case 'arthritis':
-        return AppLocalizations.profilesMedicalConditionsArthritis;
-      case 'food':
-        return AppLocalizations.profilesMedicalConditionsFood;
-      case 'dairy':
-        return AppLocalizations.profilesMedicalConditionsDairy;
-      case 'drug':
-        return AppLocalizations.profilesMedicalConditionsDrug;
-      case 'respiratory':
-        return AppLocalizations.profilesMedicalConditionsRespiratory;
-      case 'skin':
-        return AppLocalizations.profilesMedicalConditionsSkin;
-      case 'insect':
-        return AppLocalizations.profilesMedicalConditionsInsect;
-      case 'pet':
-        return AppLocalizations.profilesMedicalConditionsPet;
-      case 'no_allergy':
-        return AppLocalizations.profilesMedicalConditionsNoAllergy;
-      case 'other':
-        return AppLocalizations.profilesMedicalConditionsOther;
-      default:
-        return item;
+    if (widget.type == MedicalConditionType.chronic) {
+      return ChronicDiseaseOptionX.fromBackendName(item)?.localizedName ?? item;
     }
+    return AllergyOptionX.fromBackendName(item)?.localizedName ?? item;
   }
 
   @override
