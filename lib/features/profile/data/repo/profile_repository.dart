@@ -54,23 +54,26 @@ class ProfileRepository {
   }
 
   Future<List<ProfileModel>> getProfiles() async {
-    final response = await _service.getProfiles();
+  final response = await _service.getProfiles();
+  final List data = response.data['data'];
+  final profiles = data.map((profile) => ProfileModel.fromJson(profile)).toList();
 
-    final List data = response.data['data'];
-    final profiles = data
-        .map((profile) => ProfileModel.fromJson(profile))
-        .toList();
+  if (profiles.isNotEmpty) {
+    // ✅ لو في cached ID وموجود في الـ list، خليه زي ما هو
+    final cachedId = await getCachedProfileId();
+    final hasCached = cachedId != null && profiles.any((p) => p.id == cachedId);
 
-    if (profiles.isNotEmpty) {
+    if (!hasCached) {
       final selected = profiles.firstWhere(
         (p) => p.isPrimary,
         orElse: () => profiles.first,
       );
       await cacheSelectedProfileId(selected.id);
     }
-
-    return profiles;
   }
+
+  return profiles;
+}
 
   Future<ProfileModel> createPrimaryProfile({
     required String fullName,
@@ -217,14 +220,29 @@ class ProfileRepository {
     }
   }
 
-  Future<void> deleteProfile({required String profileId}) async {
-    await _service.deleteProfile(profileId: profileId);
+ Future<void> deleteProfile({required String profileId}) async {
+  await _service.deleteProfile(profileId: profileId);
 
-    final cachedId = await getCachedProfileId();
-    if (cachedId == profileId) {
+  final cachedId = await getCachedProfileId();
+  if (cachedId == profileId) {
+    // ✅ بدل clearCachedProfileId، نختار البروفايل الأساسي
+    try {
+      final profiles = await getProfiles();
+      final remaining = profiles.where((p) => p.id != profileId).toList();
+      if (remaining.isNotEmpty) {
+        final fallback = remaining.firstWhere(
+          (p) => p.isPrimary,
+          orElse: () => remaining.first,
+        );
+        await cacheSelectedProfileId(fallback.id);
+      } else {
+        await clearCachedProfileId();
+      }
+    } catch (_) {
       await clearCachedProfileId();
     }
   }
+}
 
   Future<void> cacheSelectedProfileId(String profileId) async {
     final prefs = await SharedPreferences.getInstance();

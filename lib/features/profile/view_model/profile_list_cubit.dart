@@ -34,4 +34,38 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
       emit(ProfilesSuccess(currentState.profiles, profileId));
     }
   }
+  Future<void> deleteProfile(String profileId) async {
+  try {
+    await repository.deleteProfile(profileId: profileId);
+
+    if (state is ProfilesSuccess) {
+      final currentState = state as ProfilesSuccess;
+
+      // ✅ شيل البروفايل المحذوف من الـ list
+      final updatedProfiles = currentState.profiles
+          .where((p) => p.id != profileId)
+          .toList();
+
+      if (updatedProfiles.isEmpty) {
+        emit(ProfilesSuccess([], null));
+        return;
+      }
+
+      // ✅ لو المحذوف كان هو المختار، انتقل للـ primary
+      String? newSelectedId = currentState.selectedProfileId;
+      if (newSelectedId == profileId) {
+        final fallback = updatedProfiles.firstWhere(
+          (p) => p.isPrimary,
+          orElse: () => updatedProfiles.first,
+        );
+        newSelectedId = fallback.id;
+        await repository.cacheSelectedProfileId(newSelectedId);
+      }
+
+      emit(ProfilesSuccess(updatedProfiles, newSelectedId));
+    }
+  } catch (e) {
+    emit(ProfilesError(e.toString()));
+  }
+}
 }
