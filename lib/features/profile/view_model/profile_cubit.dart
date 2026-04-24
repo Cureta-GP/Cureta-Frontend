@@ -144,22 +144,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         .map((value) {
           final option = ChronicDiseaseOptionX.fromBackendName(value);
           if (option == null) {
-            return {
-              'id': ChronicDiseaseOption.other.id,
-              'description': value,
-              'name': 'other',
-            };
+            return {'id': ChronicDiseaseOption.other.id, 'description': value};
           }
 
           final description = option == ChronicDiseaseOption.other
               ? otherText
               : option.backendName;
 
-          return {
-            'id': option.id,
-            'description': description,
-            'name': option.backendName,
-          };
+          return {'id': option.id, 'description': description};
         })
         .toList();
   }
@@ -175,22 +167,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         .map((value) {
           final option = AllergyOptionX.fromBackendName(value);
           if (option == null) {
-            return {
-              'id': AllergyOption.other.id,
-              'description': value,
-              'name': 'other',
-            };
+            return {'id': AllergyOption.other.id, 'description': value};
           }
 
           final description = option == AllergyOption.other
               ? otherText
               : option.backendName;
 
-          return {
-            'id': option.id,
-            'description': description,
-            'name': option.backendName,
-          };
+          return {'id': option.id, 'description': description};
         })
         .toList();
   }

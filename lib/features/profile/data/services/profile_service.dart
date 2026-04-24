@@ -7,27 +7,25 @@ import 'package:dio/dio.dart';
 
 class ProfileService {
   Future<Response> getProfiles() async {
-    return await DioHelper.getData(
-      url: ApiEndpoints.profiles, query: {}, 
-    );
+    return await DioHelper.getData(url: ApiEndpoints.profiles, query: {});
   }
 
- Future<Response> createPrimaryProfile({
+  Future<Response> createPrimaryProfile({
     required String fullName,
     required int age,
     required String gender,
     required String bloodType,
     required List<Map<String, dynamic>> chronicDiseases,
     required List<Map<String, dynamic>> allergies,
-    String? imagePath, 
+    String? imagePath,
   }) async {
     final formData = {
       'full_name': fullName,
       'age': age.toString(),
       'gender': gender,
       'blood_type': bloodType,
-      'chronic_diseases': chronicDiseases.toString(),
-      'allergies': allergies.toString(),
+      'chronic_diseases': jsonEncode(chronicDiseases),
+      'allergies': jsonEncode(allergies),
       if (imagePath != null)
         'image': await MultipartFile.fromFile(
           imagePath,
@@ -57,8 +55,8 @@ class ProfileService {
       'gender': gender,
       'relationship': relationship,
       'blood_type': bloodType,
-      'chronic_diseases': chronicDiseases.toString(),
-      'allergies': allergies.toString(),
+      'chronic_diseases': jsonEncode(chronicDiseases),
+      'allergies': jsonEncode(allergies),
       if (imagePath != null)
         'image': await MultipartFile.fromFile(
           imagePath,
@@ -71,6 +69,7 @@ class ProfileService {
       data: formData,
     );
   }
+
   Future<Response> updateProfile({
     required String profileId,
     required String fullName,
@@ -125,11 +124,7 @@ class ProfileService {
     );
   }
 
-  Future<Response> deleteProfile({
-    required String profileId,
-  }) async {
-    return await DioHelper.deleteData(
-      url: ApiEndpoints.profileData(profileId),
-    );
+  Future<Response> deleteProfile({required String profileId}) async {
+    return await DioHelper.deleteData(url: ApiEndpoints.profileData(profileId));
   }
 }
