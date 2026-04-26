@@ -25,9 +25,10 @@ class AppRoutes {
   //home
   static const String home = '/home';
   //meds
-   static const String medicines = '/medicines';
-   static const String chat = '/chat';
+  static const String medicines = '/medicines';
+  static const String chat = '/chat';
   //profil
   static const String profile = '/profile';
-
+  static const String scanPrescription = '/scan-prescription';
+  static const String scannedMedicines = '/scanned-medicines';
 }

@@ -285,6 +285,7 @@
     "welcome_back": "Welcome Back",
     "add_record": "Add Record",
     "add_alert": "Add Alert",
+    "home_scan_prescription": "Scan Prescription",
     "my_qr_code": "My QR Code",
     "upcoming_meds": "Upcoming Meds",
     "see_all": "See All",
@@ -308,6 +309,24 @@
     "greeting_message": "Hello! I can help you understand your medical records or check for drug interactions. What would you like to do today?",
     "user_question": "Can you explain my recent blood test results?",
     "reply_message": "Of course. I can see your fasting glucose was 105 mg/dL. This is slightly above the typical range (70-99 mg/dL). Would you like me to explain what might cause this or suggest some follow-up questions for your doctor?"
+  },
+  "ocr": {
+    "scan_prescription": {
+      "title": "Scan Prescription",
+      "flash": "Flashlight",
+      "camera_preview": "Camera Preview",
+      "gallery": "Gallery",
+      "capture": "Capture",
+      "tips": "Tips",
+      "position_hint": "Align the prescription inside the frame"
+    },
+    "scanned_medicines": {
+      "title": "Scanned Medicines",
+      "add_another": "Add Another",
+      "confirm": "Confirm Medicines",
+      "rescan": "Rescan",
+      "low_confidence": "Low confidence - Please check details",
+      "tablet": "Tablet"
+    }
   }
-
 }

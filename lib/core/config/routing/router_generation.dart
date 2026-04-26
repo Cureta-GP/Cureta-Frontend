@@ -13,6 +13,7 @@ import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_mo
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
 import 'package:cureta/features/medicines/view/medicines_main_view.dart';
+import 'package:cureta/features/ocr/view/scan_prescription_screen.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
@@ -78,6 +79,12 @@ class RoutesGeneration {
         path: AppRoutes.onboarding,
         name: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingView(),
+      ),
+      // OCR Scan Prescription
+      GoRoute(
+        path: AppRoutes.scanPrescription,
+        name: AppRoutes.scanPrescription,
+        builder: (context, state) => const ScanPrescriptionScreen(),
       ),
       // Home Page
       GoRoute(

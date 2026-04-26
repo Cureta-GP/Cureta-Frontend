@@ -416,6 +416,8 @@ class AppLocalizations {
   static String get homeWelcomeBack => 'home.welcome_back'.tr();
   static String get homeAddRecord => 'home.add_record'.tr();
   static String get homeAddAlert => 'home.add_alert'.tr();
+  static String get homeScanPrescription => 'home.home_scan_prescription'.tr();
+
   static String get homeMyQrCode => 'home.my_qr_code'.tr();
   static String get homeUpcomingMeds => 'home.upcoming_meds'.tr();
   static String get homeSeeAll => 'home.see_all'.tr();
@@ -438,4 +440,30 @@ class AppLocalizations {
   static String get chatGreetingMessage => 'chat.greeting_message'.tr();
   static String get chatUserQuestion => 'chat.user_question'.tr();
   static String get chatReplyMessage => 'chat.reply_message'.tr();
+
+  // OCR - Scan Prescription
+  static String get scanPrescriptionTitle => 'ocr.scan_prescription.title'.tr();
+  static String get scanPrescriptionFlash => 'ocr.scan_prescription.flash'.tr();
+  static String get scanPrescriptionCameraPreview =>
+      'ocr.scan_prescription.camera_preview'.tr();
+  static String get scanPrescriptionGallery =>
+      'ocr.scan_prescription.gallery'.tr();
+  static String get scanPrescriptionCapture =>
+      'ocr.scan_prescription.capture'.tr();
+  static String get scanPrescriptionTips => 'ocr.scan_prescription.tips'.tr();
+  static String get scanPrescriptionPositionHint =>
+      'ocr.scan_prescription.position_hint'.tr();
+
+  // OCR - Scanned Medicines
+  static String get scannedMedicinesTitle => 'ocr.scanned_medicines.title'.tr();
+  static String get scannedMedicinesAddAnother =>
+      'ocr.scanned_medicines.add_another'.tr();
+  static String get scannedMedicinesConfirm =>
+      'ocr.scanned_medicines.confirm'.tr();
+  static String get scannedMedicinesRescan =>
+      'ocr.scanned_medicines.rescan'.tr();
+  static String get scannedMedicinesLowConfidence =>
+      'ocr.scanned_medicines.low_confidence'.tr();
+  static String get scannedMedicinesTablet =>
+      'ocr.scanned_medicines.tablet'.tr();
 }

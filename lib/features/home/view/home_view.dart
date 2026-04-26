@@ -9,7 +9,7 @@ import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 
 class HomeView extends StatelessWidget {
-  final VoidCallback onMenuPressed; 
+  final VoidCallback onMenuPressed;
 
   const HomeView({super.key, required this.onMenuPressed});
 
@@ -27,7 +27,7 @@ class HomeView extends StatelessWidget {
         centerTitle: false,
         titleSpacing: 0,
         leading: IconButton(
-          onPressed: onMenuPressed, 
+          onPressed: onMenuPressed,
           icon: Icon(
             Icons.menu,
             size: spacing.xl + spacing.sm,
@@ -62,6 +62,7 @@ class HomeView extends StatelessWidget {
               SizedBox(height: spacing.xl),
               const UpcomingMedsSection(),
               SizedBox(height: spacing.xl),
+
               const RecentActivitySection(),
               SizedBox(height: spacing.xxl),
             ],
