@@ -466,4 +466,6 @@ class AppLocalizations {
       'ocr.scanned_medicines.low_confidence'.tr();
   static String get scannedMedicinesTablet =>
       'ocr.scanned_medicines.tablet'.tr();
+  static String get scannedMedicinesNoResults =>
+      'ocr.scanned_medicines.no_results'.tr();
 }

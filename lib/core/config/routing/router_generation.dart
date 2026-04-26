@@ -14,6 +14,7 @@ import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
 import 'package:cureta/features/medicines/view/medicines_main_view.dart';
 import 'package:cureta/features/ocr/view/scan_prescription_screen.dart';
+import 'package:cureta/features/ocr/view/scanned_medicines_screen.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
@@ -85,6 +86,11 @@ class RoutesGeneration {
         path: AppRoutes.scanPrescription,
         name: AppRoutes.scanPrescription,
         builder: (context, state) => const ScanPrescriptionScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.scannedMedicines,
+        name: AppRoutes.scannedMedicines,
+        builder: (context, state) => const ScannedMedicinesScreen(),
       ),
       // Home Page
       GoRoute(
