@@ -35,6 +35,11 @@ class CustomDrawer extends StatelessWidget {
           const SizedBox(height: 40),
           _buildMenuItem(Icons.dashboard_outlined, 'Dashboard'),
           _buildMenuItem(
+            Icons.medication_outlined,
+            'Medicines',
+            onTap: () => _openMedicines(context),
+          ),
+          _buildMenuItem(
             Icons.chat_bubble_outline,
             'Chat',
             onTap: () => _openChat(context),
@@ -50,13 +55,16 @@ class CustomDrawer extends StatelessWidget {
               if (state is AuthInitial) {
                 Nav.clearAndGo(context, AppRoutes.login);
               } else if (state is AuthError) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message)),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
               }
             },
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
               child: SizedBox(
                 width: double.infinity,
                 child: BlocBuilder<AuthCubit, AuthState>(
@@ -80,8 +88,9 @@ class CustomDrawer extends StatelessWidget {
                               height: 20,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             )
                           : const Row(
@@ -120,6 +129,11 @@ class CustomDrawer extends StatelessWidget {
   void _openChat(BuildContext context) {
     controller.hideDrawer();
     Nav.to(context, AppRoutes.chat);
+  }
+
+  void _openMedicines(BuildContext context) {
+    controller.hideDrawer();
+    Nav.to(context, AppRoutes.medicines);
   }
 
   Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {

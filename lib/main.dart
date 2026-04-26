@@ -3,6 +3,7 @@ import 'package:cureta/core/config/routing/router_generation.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/theme/app_theme_factory.dart';
 import 'package:cureta/core/theme/breakpoints.dart';
+import 'package:cureta/features/medicines/data/services/medicine_local_service.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   setup();
+  await getIt<MedicineLocalService>().init();
   await DioHelper.init();
   runApp(
     EasyLocalization(

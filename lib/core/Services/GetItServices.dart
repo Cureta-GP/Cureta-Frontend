@@ -14,6 +14,11 @@ import 'package:cureta/features/chat_bot/data/services/chat_service.dart';
 import 'package:cureta/features/chat_bot/data/repo/chat_repository.dart';
 import 'package:cureta/features/chat_bot/veiw_model/chat_cubit.dart';
 import 'package:cureta/features/chat_bot/veiw_model/chat_sessions_cubit.dart';
+import 'package:cureta/features/medicines/data/services/medicine_local_service.dart';
+import 'package:cureta/features/medicines/data/services/medicine_service.dart';
+import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
+import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
+import 'package:cureta/features/medicines/veiw_model/user_medicines_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -21,7 +26,7 @@ void setup() {
   // 🧱 Services
   getIt.registerSingleton<AuthService>(AuthService());
   getIt.registerSingleton<MedicalRecordService>(MedicalRecordService());
-  getIt.registerSingleton<ProfileService>(ProfileService()); // ✅
+  getIt.registerSingleton<ProfileService>(ProfileService());
 
   // 📦 Repositories
   getIt.registerSingleton<AuthRepository>(
@@ -31,7 +36,6 @@ void setup() {
     MedicalRecordRepository(getIt.get<MedicalRecordService>()),
   );
   getIt.registerSingleton<ProfileRepository>(
-    // ✅
     ProfileRepository(getIt.get<ProfileService>()),
   );
 
@@ -55,4 +59,28 @@ void setup() {
   );
   getIt.registerFactory<ChatCubit>(() => ChatCubit());
   getIt.registerFactory<ChatSessionsCubit>(() => ChatSessionsCubit());
+
+  // 💊 Medicine Services
+  getIt.registerSingleton<MedicineLocalService>(MedicineLocalService());
+  getIt.registerSingleton<MedicineService>(MedicineService());
+
+  // 💊 Medicine Repository
+  getIt.registerSingleton<MedicineRepository>(
+    MedicineRepository(
+      localService: getIt<MedicineLocalService>(),
+      remoteService: getIt<MedicineService>(),
+    ),
+  );
+
+  // 💊 Medicine Cubits
+  // AddMedicineCubit is a factory so each flow session gets a fresh instance
+  // managed by AddMedicineFlowWrapper (ShellRoute).
+  getIt.registerFactory<AddMedicineCubit>(
+    () => AddMedicineCubit(getIt.get<MedicineRepository>()),
+  );
+
+  // UserMedicinesCubit is a factory — each list screen manages its own instance.
+  getIt.registerFactory<UserMedicinesCubit>(
+    () => UserMedicinesCubit(getIt.get<MedicineRepository>()),
+  );
 }

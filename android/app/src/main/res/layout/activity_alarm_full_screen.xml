@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#0D1117"
+    android:padding="32dp">
+
+    <TextView
+        android:text="⏰"
+        android:textSize="80sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"/>
+
+    <TextView
+        android:text="حان وقت دوائك"
+        android:textSize="24sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="sans-serif-medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/tv_medicine_name"
+        android:text=""
+        android:textSize="36sp"
+        android:textColor="#4E9FFF"
+        android:gravity="center"
+        android:fontFamily="sans-serif-medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="64dp"/>
+
+    <Button
+        android:id="@+id/btn_dismiss"
+        android:text="تم ✓"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#4E9FFF"
+        android:layout_width="200dp"
+        android:layout_height="64dp"/>
+
+</LinearLayout>

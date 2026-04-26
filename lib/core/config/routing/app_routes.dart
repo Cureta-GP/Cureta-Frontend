@@ -25,9 +25,14 @@ class AppRoutes {
   //home
   static const String home = '/home';
   //meds
-   static const String medicines = '/medicines';
-   static const String chat = '/chat';
+  static const String medicines = '/medicines';
+  static const String medicinesAdd = '/medicines/add';
+  static const String medicinesAddStep1 = '/medicines/add/1';
+  static const String medicinesAddStep2 = '/medicines/add/2';
+  static const String medicinesAddStep3 = '/medicines/add/3';
+  static const String medicinesAddStep4 = '/medicines/add/4';
+  static const String medicinesAddStep5 = '/medicines/add/5';
+  static const String chat = '/chat';
   //profil
   static const String profile = '/profile';
-
 }

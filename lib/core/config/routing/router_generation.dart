@@ -12,7 +12,6 @@ import 'package:cureta/features/home/view/main_navigation_views.dart';
 import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
-import 'package:cureta/features/medicines/view/medicines_main_view.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
@@ -20,6 +19,14 @@ import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
+import 'package:cureta/features/medicines/veiw/user_medicines_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_first_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_second_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_third_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_forth_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_fifth_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_flow_wrapper.dart';
+
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
@@ -41,7 +48,7 @@ class RoutesGeneration {
   // 1. لو مش عامل Login
   if (!loggedIn) {
     // لو هو في صفحة الـ Auth (Login/Signup/Splash/Onboarding) سيبيه مكانه
-    final bool isAuthRoute = currentLocation == AppRoutes.login || 
+    final bool isAuthRoute = currentLocation == AppRoutes.login ||
                              currentLocation == AppRoutes.signup ||
                              currentLocation == AppRoutes.splash ||
                              currentLocation == AppRoutes.onboarding;
@@ -50,7 +57,7 @@ class RoutesGeneration {
 
   // 2. لو عامل Login، نتحقق من البروفايل
   final profileRepo = getIt.get<ProfileRepository>();
-  final bool hasProfiles = await profileRepo.hasProfiles(); 
+  final bool hasProfiles = await profileRepo.hasProfiles();
 
   // لو معندوش بروفايل وهو لسه مش في صفحة "إضافة بروفايل" -> واديه يضيف بروفايل
   if (!hasProfiles && currentLocation != AppRoutes.addProfile) {
@@ -58,7 +65,7 @@ class RoutesGeneration {
   }
 
   // لو عنده بروفايل وبيحاول يدخل صفحات الـ Auth (زي اللوجن) -> واديه المين
-  final bool isAuthRoute = currentLocation == AppRoutes.login || 
+  final bool isAuthRoute = currentLocation == AppRoutes.login ||
                            currentLocation == AppRoutes.signup;
   if (hasProfiles && isAuthRoute) {
     return AppRoutes.mainNavigation;
@@ -220,9 +227,58 @@ class RoutesGeneration {
         path: AppRoutes.medicines,
         name: AppRoutes.medicines,
         pageBuilder: (context, state) => PageTransitions.scale(
-          child: const MedicinesMainView(),
+          // UserMedicinesVeiw creates its own BlocProvider internally.
+          child: const UserMedicinesVeiw(),
           state: state,
         ),
+      ),
+      // Medicines Add Flow — ShellRoute provides a single AddMedicineCubit
+      // instance shared across all 5 steps so form state persists on back nav.
+      ShellRoute(
+        builder: (context, state, child) =>
+            AddMedicineFlowWrapper(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.medicinesAddStep1,
+            name: AppRoutes.medicinesAddStep1,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddMedicineFirstStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep2,
+            name: AppRoutes.medicinesAddStep2,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineSecondStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep3,
+            name: AppRoutes.medicinesAddStep3,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineThirdStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep4,
+            name: AppRoutes.medicinesAddStep4,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineFourthStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep5,
+            name: AppRoutes.medicinesAddStep5,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineFifthStepVeiw(),
+              state: state,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.mainNavigation,

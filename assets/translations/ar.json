@@ -1,313 +1,377 @@
 {
-    "app": {
-        "name": "كيوريتا"
+  "app": {
+    "name": "كيوريتا"
+  },
+  "auth": {
+    "login": {
+      "title": "مرحباً بعودتك",
+      "email_label": "البريد الإلكتروني",
+      "email_hint": "أدخل بريدك الإلكتروني",
+      "password_label": "كلمة المرور",
+      "password_hint": "أدخل كلمة المرور",
+      "forgot_password": "نسيت كلمة المرور؟",
+      "login_button": "تسجيل الدخول",
+      "no_account": "ليس لديك حساب؟ ",
+      "signup_link": "إنشاء حساب",
+      "loading_animation": "جاري تحميل الرسوم المتحركة..."
     },
-    "auth": {
-        "login": {
-            "title": "مرحباً بعودتك",
-            "email_label": "البريد الإلكتروني",
-            "email_hint": "أدخل بريدك الإلكتروني",
-            "password_label": "كلمة المرور",
-            "password_hint": "أدخل كلمة المرور",
-            "forgot_password": "نسيت كلمة المرور؟",
-            "login_button": "تسجيل الدخول",
-            "no_account": "ليس لديك حساب؟ ",
-            "signup_link": "إنشاء حساب",
-            "loading_animation": "جاري تحميل الرسوم المتحركة..."
-        },
-        "signup": {
-            "title": "إنشاء حساب",
-            "subtitle": "انضم إلى كيوريتا اليوم",
-            "name_label": "الاسم الكامل",
-            "name_hint": "أدخل اسمك الكامل",
-            "email_label": "البريد الإلكتروني",
-            "email_hint": "أدخل بريدك الإلكتروني",
-            "password_label": "كلمة المرور",
-            "password_hint": "أنشئ كلمة مرور",
-            "phone_label": "رقم الهاتف (اختياري)",
-            "phone_hint": "أدخل رقم هاتفك",
-            "signup_button": "إنشاء حساب",
-            "have_account": "لديك حساب بالفعل؟ ",
-            "login_link": "تسجيل الدخول"
-        },
-        "forgot_password": {
-            "title": "نسيت كلمة المرور؟",
-            "subtitle": "لا تقلق! أدخل عنوان بريدك الإلكتروني وسنرسل لك رمز إعادة تعيين كلمة المرور.",
-            "email_label": "البريد الإلكتروني",
-            "email_hint": "أدخل بريدك الإلكتروني",
-            "send_button": "إرسال رمز التحقق",
-            "remember_password": "تذكرت كلمة المرور؟",
-            "back_to_login": "  العودة لتسجيل الدخول"
-        },
-        "google": {
-            "continue": "المتابعة باستخدام جوجل"
-        },
-        "reset_password": {
-            "title": "إعادة تعيين كلمة المرور",
-            "subtitle": "قم بإنشاء كلمة مرور قوية جديدة لحسابك",
-            "new_password_label": "كلمة المرور الجديدة",
-            "new_password_hint": "أدخل كلمة المرور",
-            "confirm_password_label": "تأكيد كلمة المرور",
-            "confirm_password_hint": "أدخل كلمة المرور",
-            "reset_button": "إعادة تعيين كلمة المرور"
-        },
-        "verify_email": {
-            "title": "التحقق من بريدك الإلكتروني",
-            "subtitle": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
-            "sent": "elbannabosina@gmail.com",
-            "verify_button": "تحقق ومتابعة",
-            "otp_error": "الرجاء إدخال الرمز كاملاً"
-        },
-        "select_profile": {
-            "title": "اختر الملف الشخصي",
-            "subtitle": "التنقل بين أفراد الأسرة لتتبع تقدمهم",
-            "primary_account": "الحساب الرئيسي (أنت)",
-            "secondary": "حساب ثانوي",
-            "spouse": "الزوج/الزوجة",
-            "son": "ابن",
-            "daughter": "ابنة",
-            "parent": "الوالد/الوالدة",
-            "add_profile": "إضافة ملف شخصي جديد"
-        }
+    "signup": {
+      "title": "إنشاء حساب",
+      "subtitle": "انضم إلى كيوريتا اليوم",
+      "name_label": "الاسم الكامل",
+      "name_hint": "أدخل اسمك الكامل",
+      "email_label": "البريد الإلكتروني",
+      "email_hint": "أدخل بريدك الإلكتروني",
+      "password_label": "كلمة المرور",
+      "password_hint": "أنشئ كلمة مرور",
+      "phone_label": "رقم الهاتف (اختياري)",
+      "phone_hint": "أدخل رقم هاتفك",
+      "signup_button": "إنشاء حساب",
+      "have_account": "لديك حساب بالفعل؟ ",
+      "login_link": "تسجيل الدخول"
     },
-    "onboarding": {
-        "screen1": {
-            "title": "صحتك كلها في مكان واحد",
-            "description": "احفظ سجلاتك الطبية، وتنبيهات الأدوية، وملفات عائلتك بسهولة في Cureta."
-        },
-        "screen2": {
-            "title": "حافظ على تاريخك الطبي آمنًا",
-            "description": "سجل أمراضك، ملاحظاتك، الروشتات، التحاليل والأشعة في مكان واحد."
-        },
-        "screen3": {
-            "title": "لا تنسَ موعد دوائك أبدًا",
-            "description": "احصل على تنبيهات بسيطة في الوقت المناسب تمامًا."
-        },
-        "screen4": {
-            "title": "إعداد فوري للأدوية",
-            "description": "قم بمسح الروشتة ضوئيًا لضبط تنبيهات الأدوية وتتبع علاجك تلقائيًا."
-        },
-        "screen5": {
-            "title": "شارك بياناتك الصحية بأمان",
-            "description": "أنشئ رمز QR واختَر البيانات الطبية التي تود مشاركتها."
-        },
-        "screen6": {
-            "title": "اعتنِ بعائلتك",
-            "description": "أضف ملفات شخصية لأفراد عائلتك وتنقل بينهم بكل سهولة."
-        },
-        "screen7": {
-            "title": "مساعدك الصحي الشخصي",
-            "description": "اطرح أسئلتك واحصل على نصائح صحية فورية وموثوقة مخصصة لك فقط."
-        },
-        "get_started": "ابدأ الآن",
-        "skip": "تخطي",
-        "next": "التالي"
+    "forgot_password": {
+      "title": "نسيت كلمة المرور؟",
+      "subtitle": "لا تقلق! أدخل عنوان بريدك الإلكتروني وسنرسل لك رمز إعادة تعيين كلمة المرور.",
+      "email_label": "البريد الإلكتروني",
+      "email_hint": "أدخل بريدك الإلكتروني",
+      "send_button": "إرسال رمز التحقق",
+      "remember_password": "تذكرت كلمة المرور؟",
+      "back_to_login": "  العودة لتسجيل الدخول"
     },
-    "medical_records": {
-        "list": {
-            "title": "سجلاتي الطبية",
-            "search_hint": "ابحث باسم المرض",
-            "filter_all": "الكل",
-            "filter_ongoing": "مستمر",
-            "filter_past": "سابق",
-            "filter_recent": "حديث",
-            "status_ongoing": "مستمر",
-            "status_past": "سابق",
-            "record_type2diabetes": "السكري من النوع الثاني",
-            "record_type2diabetes_meta": "تم التشخيص في 12 يناير 2020",
-            "record_acute_bronchitis": "التهاب الشعب الهوائية الحاد",
-            "record_acute_bronchitis_meta": "05 مارس 2023 - 20 مارس 2023",
-            "record_hypertension": "ارتفاع ضغط الدم",
-            "record_hypertension_meta": "مسجل منذ 2018",
-            "record_seasonal_allergies": "حساسية موسمية",
-            "record_seasonal_allergies_meta": "ربيع 2022",
-            "nav_home": "الرئيسية",
-            "nav_meds": "الأدوية",
-            "nav_scan_rx": "مسح الروشتة",
-            "nav_records": "السجلات",
-            "nav_profile": "الملف الشخصي"
-        },
-        "add_record": {
-            "cancel": "إلغاء",
-            "step_1_label": "الخطوة 1 من 5",
-            "step_2_label": "الخطوة 2 من 5",
-            "step_3_label": "الخطوة 3 من 5",
-            "step_4_label": "الخطوة 4 من 5",
-            "step_5_label": "الخطوة 5 من 5",
-            "progress_20": "20% مكتمل",
-            "progress_40": "40% مكتمل",
-            "progress_60": "60% مكتمل",
-            "progress_80": "80% مكتمل",
-            "progress_100": "100% مكتمل",
-            "basic_information_title": "معلومات أساسية",
-            "condition_question": "ما هو المرض أو الحالة؟",
-            "type_here_hint": "اكتب هنا...",
-            "condition_example": "مثل: السكري، الحساسية، ارتفاع ضغط الدم",
-            "first_symptoms_question": "متى لاحظت الأعراض لأول مرة؟",
-            "select_date": "اختر التاريخ",
-            "ongoing_question": "هل هذه الحالة مستمرة حاليًا؟",
-            "optional": "(اختياري)",
-            "related_files_title": "أضف ملفات ذات صلة",
-            "related_files_description": "اختر فئة أدناه لرفع صورة أو ملف PDF. هذا يساعد الأطباء على فهم تاريخك الصحي بشكل أفضل.",
-            "prescription_title": "روشتة",
-            "prescription_description": "ارفع أوراق الوصفة أو عبوة الدواء",
-            "lab_test_title": "تحليل مختبر",
-            "lab_test_description": "تحاليل الدم أو نتائج المختبر",
-            "scan_title": "أشعة / Scan",
-            "scan_description": "رنين أو مقطعية أو أشعة",
-            "additional_notes_title": "هل هناك شيء آخر تريد إضافته؟",
-            "additional_notes_description": "يمكنك مشاركة أي تفاصيل قد نكون نسيناها.",
-            "optional_notes_hint": "ملاحظات اختيارية...",
-            "data_secure_note": "بياناتك مشفرة وآمنة",
-            "review_details_title": "مراجعة التفاصيل",
-            "review_question": "هل كل شيء صحيح؟",
-            "review_description": "يرجى مراجعة بياناتك قبل الحفظ.",
-            "review_condition": "الحالة",
-            "review_started_on": "تاريخ البداية",
-            "review_documents": "المستندات",
-            "review_reports": "{count} تقارير",
-            "review_documents_attached": "تم الإرفاق بنجاح",
-            "save_record": "حفظ السجل",
-            "continue": "استمرار",
-            "yes": "نعم",
-            "no": "لا",
-            "next": "التالي",
-            "next_step": "الخطوة التالية",
-            "skip_for_now": "تخطي الآن"
-        },
-        "details": {
-            "title": "تفاصيل السجل",
-            "status_ongoing": "مستمر",
-            "diagnosed_on": "تاريخ التشخيص",
-            "notes_title": "ملاحظات",
-            "documents_title": "المستندات والملفات",
-            "view_all": "عرض الكل",
-            "edit_record": "تعديل السجل",
-            "delete_record": "حذف السجل",
-            "condition_required": "اسم الحالة مطلوب",
-            "remove_attachments_hint": "اضغط على أي مرفق لتحديده للحذف عند الحفظ",
-            "remove_attachment": "حذف",
-            "file_url_missing": "رابط الملف غير متاح",
-            "invalid_file_url": "رابط الملف غير صالح",
-            "open_attachment_error": "تعذر فتح المرفق",
-            "delete_unavailable": "لا يمكن حذف هذا السجل الآن",
-            "edit_unavailable": "لا يمكن تعديل هذا السجل الآن",
-            "delete_success": "تم حذف السجل الطبي بنجاح",
-            "update_success": "تم تحديث السجل الطبي بنجاح",
-            "delete_failed": "فشل حذف السجل",
-            "update_failed": "فشل تحديث السجل",
-            "delete_confirm_title": "هل تريد حذف هذا السجل؟",
-            "delete_confirm_message": "سيتم حذف \"{condition}\" وكل المرفقات المرتبطة به نهائيًا."
-        }
+    "google": {
+      "continue": "المتابعة باستخدام جوجل"
     },
-    "profiles": {
-        "common": {
-            "add_profile": "إضافة ملف شخصي",
-            "next_step": "الخطوة التالية",
-            "continue": "استمرار",
-            "skip_for_now": "تخطى الآن",
-            "step_indicator": "الخطوة {} من 7",
-            "review_profile": "مراجعة الملف الشخصي"
-        },
-        "steps": {
-            "name": {
-                "title": "ما هو الاسم الكامل؟",
-                "subtitle": "سنستخدم هذا لتخصيص لوحة البيانات الصحية.",
-                "hint": "أدخل الاسم الكامل"
-            },
-            "gender": {
-                "title": "ما هو الجنس؟",
-                "subtitle": "يساعدنا هذا في تقديم رؤى صحية ذات صلة.",
-                "male": "ذكر",
-                "female": "أنثى",
-                "prefer_not_to_say": "أفضل عدم الإفصاح"
-            },
-            "relation": {
-                "title": "ما هي صلة القرابة؟",
-                "subtitle": "اختر صلة قرابتك بهذا الشخص.",
-                "son": "ابن",
-                "daughter": "ابنة",
-                "mother": "أم",
-                "father": "أب",
-                "spouse": "زوج/زوجة",
-                "other": "أخرى"
-            },
-            "age": {
-                "title": "ما هو العمر؟",
-                "subtitle": "يساعدنا هذا في تصميم الخطة لتناسب المرحلة العمرية المحددة."
-            },
-            "medical_conditions_allergies": {
-                "title": "هل تعاني من أي أنواع حساسية؟",
-                "subtitle": "اختر كل ما ينطبق. يساعد هذا في تخصيص الرؤى الصحية."
-            },
-            "medical_conditions_chronic": {
-                "title": "هل تعاني من أي أمراض مزمنة؟",
-                "subtitle": "اختر كل ما ينطبق. يساعد هذا في تخصيص الرؤى الصحية."
-            },
-            "medical_conditions": {
-                "title": "هل هناك أي أمراض مزمنة أو حساسية؟",
-                "subtitle": "اختر كل ما ينطبق. يساعد هذا في تخصيص الرؤى الصحية.",
-                "diabetes": "مرض السكري",
-                "hypertension": "ارتفاع ضغط الدم",
-                "heart_disease": "أمراض القلب",
-                "asthma": "حساسية الصدر أو الربو",
-                "thyroid": "خمول/نشاط الغدة الدرقية",
-                "arthritis": "التهاب المفاصل",
-                "food": "حساسية الطعام",
-                "dairy": "حساسية الألبان",
-                "drug": "حساسية الأدوية",
-                "respiratory": "حساسية الصدر/ الأنف",
-                "skin": "حساسية الجلد",
-                "insect": "حساسية الحشرات",
-                "pet": "حساسية الحيوانات",
-                "no_allergy": "لا توجد حساسية",
-                "other": "أخرى"
-            },
-            "blood_type": {
-                "title": "ما هي فصيلة الدم؟",
-                "subtitle": "يساعدنا هذا في تقديم رؤى صحية مخصصة ودعم في حالات الطوارئ.",
-                "footer_note": "لا تقلق! يمكنك تحديث هذا لاحقاً في الملف الشخصي"
-            }
-        }
+    "reset_password": {
+      "title": "إعادة تعيين كلمة المرور",
+      "subtitle": "قم بإنشاء كلمة مرور قوية جديدة لحسابك",
+      "new_password_label": "كلمة المرور الجديدة",
+      "new_password_hint": "أدخل كلمة المرور",
+      "confirm_password_label": "تأكيد كلمة المرور",
+      "confirm_password_hint": "أدخل كلمة المرور",
+      "reset_button": "إعادة تعيين كلمة المرور"
     },
-    "validation": {
-        "email_required": "البريد الإلكتروني مطلوب",
-        "email_invalid": "الرجاء إدخال بريد إلكتروني صحيح",
-        "password_required": "كلمة المرور مطلوبة",
-        "password_min_length": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
-        "password_max_length": "يجب أن تكون كلمة المرور أقل من 50 حرفاً",
-        "name_required": "الاسم الكامل مطلوب",
-        "name_min_length": "يجب أن يكون الاسم الكامل حرفين على الأقل",
-        "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
-        "field_required": "{field} مطلوب"
+    "verify_email": {
+      "title": "التحقق من بريدك الإلكتروني",
+      "subtitle": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
+      "sent": "elbannabosina@gmail.com",
+      "verify_button": "تحقق ومتابعة",
+      "otp_error": "الرجاء إدخال الرمز كاملاً"
     },
-    "home": {
-        "welcome_back": "مرحباً بعودتك",
-        "add_record": "إضافة سجل",
-        "add_alert": "إضافة تنبيه",
-        "my_qr_code": "رمز QR الخاص بي",
-        "upcoming_meds": "الأدوية القادمة",
-        "see_all": "عرض الكل",
-        "recent_activity": "النشاط الأخير",
-        "added_yesterday": "أضيف يوم أمس",
-        "added_days_ago": "أضيف منذ {days} أيام",
-        "amoxicillin": "أموكسيسيلين",
-        "amoxicillin_note": "500 ملغ • بعد الوجبة",
-        "vitamin_d": "فيتامين د",
-        "vitamin_d_note": "قرص واحد",
-        "blood_test_results": "نتائج فحص الدم",
-        "vaccination_record": "سجل التطعيم"
-    },
-    "chat": {
-        "input_hint": "اسألني أي شيء...",
-        "assistant_title": "مساعد كوريتا",
-        "online_status": "متصل",
-        "thinking_status": "بيفكر...",
-        "assistant_sender": "المساعد",
-        "user_sender": "أنت",
-        "greeting_message": "مرحباً! أستطيع مساعدتك في فهم السجلات الطبية الخاصة بك أو التحقق من التداخلات الدوائية. ماذا تريد أن تفعل اليوم؟",
-        "user_question": "هل يمكنك شرح نتائج تحليل الدم الأخير؟",
-        "reply_message": "بالتأكيد. أستطيع أن أرى أن مستوى الجلوكوز الصائم لديك كان 105 ملغ/دل. هذا أعلى قليلاً من النطاق المعتاد (70-99 ملغ/دل). هل ترغب أن أشرح ما الذي قد يسبب ذلك أو أقترح بعض الأسئلة المتابعة لطبيبك؟"
+    "select_profile": {
+      "title": "اختر الملف الشخصي",
+      "subtitle": "التنقل بين أفراد الأسرة لتتبع تقدمهم",
+      "primary_account": "الحساب الرئيسي (أنت)",
+      "secondary": "حساب ثانوي",
+      "spouse": "الزوج/الزوجة",
+      "son": "ابن",
+      "daughter": "ابنة",
+      "parent": "الوالد/الوالدة",
+      "add_profile": "إضافة ملف شخصي جديد"
     }
-
+  },
+  "onboarding": {
+    "screen1": {
+      "title": "صحتك كلها في مكان واحد",
+      "description": "احفظ سجلاتك الطبية، وتنبيهات الأدوية، وملفات عائلتك بسهولة في Cureta."
+    },
+    "screen2": {
+      "title": "حافظ على تاريخك الطبي آمنًا",
+      "description": "سجل أمراضك، ملاحظاتك، الروشتات، التحاليل والأشعة في مكان واحد."
+    },
+    "screen3": {
+      "title": "لا تنسَ موعد دوائك أبدًا",
+      "description": "احصل على تنبيهات بسيطة في الوقت المناسب تمامًا."
+    },
+    "screen4": {
+      "title": "إعداد فوري للأدوية",
+      "description": "قم بمسح الروشتة ضوئيًا لضبط تنبيهات الأدوية وتتبع علاجك تلقائيًا."
+    },
+    "screen5": {
+      "title": "شارك بياناتك الصحية بأمان",
+      "description": "أنشئ رمز QR واختَر البيانات الطبية التي تود مشاركتها."
+    },
+    "screen6": {
+      "title": "اعتنِ بعائلتك",
+      "description": "أضف ملفات شخصية لأفراد عائلتك وتنقل بينهم بكل سهولة."
+    },
+    "screen7": {
+      "title": "مساعدك الصحي الشخصي",
+      "description": "اطرح أسئلتك واحصل على نصائح صحية فورية وموثوقة مخصصة لك فقط."
+    },
+    "get_started": "ابدأ الآن",
+    "skip": "تخطي",
+    "next": "التالي"
+  },
+  "medical_records": {
+    "list": {
+      "title": "سجلاتي الطبية",
+      "search_hint": "ابحث باسم المرض",
+      "filter_all": "الكل",
+      "filter_ongoing": "مستمر",
+      "filter_past": "سابق",
+      "filter_recent": "حديث",
+      "status_ongoing": "مستمر",
+      "status_past": "سابق",
+      "record_type2diabetes": "السكري من النوع الثاني",
+      "record_type2diabetes_meta": "تم التشخيص في 12 يناير 2020",
+      "record_acute_bronchitis": "التهاب الشعب الهوائية الحاد",
+      "record_acute_bronchitis_meta": "05 مارس 2023 - 20 مارس 2023",
+      "record_hypertension": "ارتفاع ضغط الدم",
+      "record_hypertension_meta": "مسجل منذ 2018",
+      "record_seasonal_allergies": "حساسية موسمية",
+      "record_seasonal_allergies_meta": "ربيع 2022",
+      "nav_home": "الرئيسية",
+      "nav_meds": "الأدوية",
+      "nav_scan_rx": "مسح الروشتة",
+      "nav_records": "السجلات",
+      "nav_profile": "الملف الشخصي"
+    },
+    "add_record": {
+      "cancel": "إلغاء",
+      "step_1_label": "الخطوة 1 من 5",
+      "step_2_label": "الخطوة 2 من 5",
+      "step_3_label": "الخطوة 3 من 5",
+      "step_4_label": "الخطوة 4 من 5",
+      "step_5_label": "الخطوة 5 من 5",
+      "progress_20": "20% مكتمل",
+      "progress_40": "40% مكتمل",
+      "progress_60": "60% مكتمل",
+      "progress_80": "80% مكتمل",
+      "progress_100": "100% مكتمل",
+      "basic_information_title": "معلومات أساسية",
+      "condition_question": "ما هو المرض أو الحالة؟",
+      "type_here_hint": "اكتب هنا...",
+      "condition_example": "مثل: السكري، الحساسية، ارتفاع ضغط الدم",
+      "first_symptoms_question": "متى لاحظت الأعراض لأول مرة؟",
+      "select_date": "اختر التاريخ",
+      "ongoing_question": "هل هذه الحالة مستمرة حاليًا؟",
+      "optional": "(اختياري)",
+      "related_files_title": "أضف ملفات ذات صلة",
+      "related_files_description": "اختر فئة أدناه لرفع صورة أو ملف PDF. هذا يساعد الأطباء على فهم تاريخك الصحي بشكل أفضل.",
+      "prescription_title": "روشتة",
+      "prescription_description": "ارفع أوراق الوصفة أو عبوة الدواء",
+      "lab_test_title": "تحليل مختبر",
+      "lab_test_description": "تحاليل الدم أو نتائج المختبر",
+      "scan_title": "أشعة / Scan",
+      "scan_description": "رنين أو مقطعية أو أشعة",
+      "additional_notes_title": "هل هناك شيء آخر تريد إضافته؟",
+      "additional_notes_description": "يمكنك مشاركة أي تفاصيل قد نكون نسيناها.",
+      "optional_notes_hint": "ملاحظات اختيارية...",
+      "data_secure_note": "بياناتك مشفرة وآمنة",
+      "review_details_title": "مراجعة التفاصيل",
+      "review_question": "هل كل شيء صحيح؟",
+      "review_description": "يرجى مراجعة بياناتك قبل الحفظ.",
+      "review_condition": "الحالة",
+      "review_started_on": "تاريخ البداية",
+      "review_documents": "المستندات",
+      "review_reports": "{count} تقارير",
+      "review_documents_attached": "تم الإرفاق بنجاح",
+      "save_record": "حفظ السجل",
+      "continue": "استمرار",
+      "yes": "نعم",
+      "no": "لا",
+      "next": "التالي",
+      "next_step": "الخطوة التالية",
+      "skip_for_now": "تخطي الآن"
+    },
+    "details": {
+      "title": "تفاصيل السجل",
+      "status_ongoing": "مستمر",
+      "diagnosed_on": "تاريخ التشخيص",
+      "notes_title": "ملاحظات",
+      "documents_title": "المستندات والملفات",
+      "view_all": "عرض الكل",
+      "edit_record": "تعديل السجل",
+      "delete_record": "حذف السجل",
+      "condition_required": "اسم الحالة مطلوب",
+      "remove_attachments_hint": "اضغط على أي مرفق لتحديده للحذف عند الحفظ",
+      "remove_attachment": "حذف",
+      "file_url_missing": "رابط الملف غير متاح",
+      "invalid_file_url": "رابط الملف غير صالح",
+      "open_attachment_error": "تعذر فتح المرفق",
+      "delete_unavailable": "لا يمكن حذف هذا السجل الآن",
+      "edit_unavailable": "لا يمكن تعديل هذا السجل الآن",
+      "delete_success": "تم حذف السجل الطبي بنجاح",
+      "update_success": "تم تحديث السجل الطبي بنجاح",
+      "delete_failed": "فشل حذف السجل",
+      "update_failed": "فشل تحديث السجل",
+      "delete_confirm_title": "هل تريد حذف هذا السجل؟",
+      "delete_confirm_message": "سيتم حذف \"{condition}\" وكل المرفقات المرتبطة به نهائيًا."
+    }
+  },
+  "profiles": {
+    "common": {
+      "add_profile": "إضافة ملف شخصي",
+      "next_step": "الخطوة التالية",
+      "continue": "استمرار",
+      "skip_for_now": "تخطى الآن",
+      "step_indicator": "الخطوة {} من 7",
+      "review_profile": "مراجعة الملف الشخصي"
+    },
+    "steps": {
+      "name": {
+        "title": "ما هو الاسم الكامل؟",
+        "subtitle": "سنستخدم هذا لتخصيص لوحة البيانات الصحية.",
+        "hint": "أدخل الاسم الكامل"
+      },
+      "gender": {
+        "title": "ما هو الجنس؟",
+        "subtitle": "يساعدنا هذا في تقديم رؤى صحية ذات صلة.",
+        "male": "ذكر",
+        "female": "أنثى",
+        "prefer_not_to_say": "أفضل عدم الإفصاح"
+      },
+      "relation": {
+        "title": "ما هي صلة القرابة؟",
+        "subtitle": "اختر صلة قرابتك بهذا الشخص.",
+        "son": "ابن",
+        "daughter": "ابنة",
+        "mother": "أم",
+        "father": "أب",
+        "spouse": "زوج/زوجة",
+        "other": "أخرى"
+      },
+      "age": {
+        "title": "ما هو العمر؟",
+        "subtitle": "يساعدنا هذا في تصميم الخطة لتناسب المرحلة العمرية المحددة."
+      },
+      "medical_conditions_allergies": {
+        "title": "هل تعاني من أي أنواع حساسية؟",
+        "subtitle": "اختر كل ما ينطبق. يساعد هذا في تخصيص الرؤى الصحية."
+      },
+      "medical_conditions_chronic": {
+        "title": "هل تعاني من أي أمراض مزمنة؟",
+        "subtitle": "اختر كل ما ينطبق. يساعد هذا في تخصيص الرؤى الصحية."
+      },
+      "medical_conditions": {
+        "title": "هل هناك أي أمراض مزمنة أو حساسية؟",
+        "subtitle": "اختر كل ما ينطبق. يساعد هذا في تخصيص الرؤى الصحية.",
+        "diabetes": "مرض السكري",
+        "hypertension": "ارتفاع ضغط الدم",
+        "heart_disease": "أمراض القلب",
+        "asthma": "حساسية الصدر أو الربو",
+        "thyroid": "خمول/نشاط الغدة الدرقية",
+        "arthritis": "التهاب المفاصل",
+        "food": "حساسية الطعام",
+        "dairy": "حساسية الألبان",
+        "drug": "حساسية الأدوية",
+        "respiratory": "حساسية الصدر/ الأنف",
+        "skin": "حساسية الجلد",
+        "insect": "حساسية الحشرات",
+        "pet": "حساسية الحيوانات",
+        "no_allergy": "لا توجد حساسية",
+        "other": "أخرى"
+      },
+      "blood_type": {
+        "title": "ما هي فصيلة الدم؟",
+        "subtitle": "يساعدنا هذا في تقديم رؤى صحية مخصصة ودعم في حالات الطوارئ.",
+        "footer_note": "لا تقلق! يمكنك تحديث هذا لاحقاً في الملف الشخصي"
+      }
+    }
+  },
+  "validation": {
+    "email_required": "البريد الإلكتروني مطلوب",
+    "email_invalid": "الرجاء إدخال بريد إلكتروني صحيح",
+    "password_required": "كلمة المرور مطلوبة",
+    "password_min_length": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
+    "password_max_length": "يجب أن تكون كلمة المرور أقل من 50 حرفاً",
+    "name_required": "الاسم الكامل مطلوب",
+    "name_min_length": "يجب أن يكون الاسم الكامل حرفين على الأقل",
+    "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
+    "field_required": "{field} مطلوب"
+  },
+  "home": {
+    "welcome_back": "مرحباً بعودتك",
+    "add_record": "إضافة سجل",
+    "add_alert": "إضافة تنبيه",
+    "my_qr_code": "رمز QR الخاص بي",
+    "upcoming_meds": "الأدوية القادمة",
+    "see_all": "عرض الكل",
+    "recent_activity": "النشاط الأخير",
+    "added_yesterday": "أضيف يوم أمس",
+    "added_days_ago": "أضيف منذ {days} أيام",
+    "amoxicillin": "أموكسيسيلين",
+    "amoxicillin_note": "500 ملغ • بعد الوجبة",
+    "vitamin_d": "فيتامين د",
+    "vitamin_d_note": "قرص واحد",
+    "blood_test_results": "نتائج فحص الدم",
+    "vaccination_record": "سجل التطعيم"
+  },
+  "chat": {
+    "input_hint": "اسألني أي شيء...",
+    "assistant_title": "مساعد كوريتا",
+    "online_status": "متصل",
+    "thinking_status": "بيفكر...",
+    "assistant_sender": "المساعد",
+    "user_sender": "أنت",
+    "greeting_message": "مرحباً! أستطيع مساعدتك في فهم السجلات الطبية الخاصة بك أو التحقق من التداخلات الدوائية. ماذا تريد أن تفعل اليوم؟",
+    "user_question": "هل يمكنك شرح نتائج تحليل الدم الأخير؟",
+    "reply_message": "بالتأكيد. أستطيع أن أرى أن مستوى الجلوكوز الصائم لديك كان 105 ملغ/دل. هذا أعلى قليلاً من النطاق المعتاد (70-99 ملغ/دل). هل تريد أن أشرح ما الذي قد يسبب ذلك أو أقترح بعض الأسئلة المتابعة لطبيبك؟"
+  },
+  "medicines": {
+    "my_medicines": "أدويتي",
+    "add_medicine": "إضافة دواء",
+    "add_your_first_medicine": "أضف دواءك الأول",
+    "empty_medicines_title": "لا توجد أدوية بعد",
+    "empty_medicines_subtitle": "أضف أدوية لتلقي التذكيرات وتتبع جرعاتك.",
+    "step_1_of_5": "الخطوة 1 من 5",
+    "step_2_of_5": "الخطوة 2 من 5",
+    "step_3_of_5": "الخطوة 3 من 5",
+    "step_4_of_5": "الخطوة 4 من 5",
+    "step_5_of_5": "الخطوة 5 من 5",
+    "step_1_progress": "المعلومات الأساسية",
+    "step_2_progress": "تفاصيل الجرعة",
+    "step_3_progress": "الجدول",
+    "step_4_progress": "المراجعة",
+    "step_1_question": "ما هو اسم الدواء؟",
+    "step_1_subtitle": "أدخل الاسم كما يظهر في الوصفة الطبية.",
+    "step_1_info_hint": "مثال: أموكسيسيلين، فيتامين د",
+    "medicine_name_hint": "اسم الدواء",
+    "step_2_question": "كم مرة وبأي كمية؟",
+    "dose_form_label": "شكل الجرعة",
+    "dose_label": "الجرعة",
+    "dose_form_pill": "حبة",
+    "dose_form_liquid": "سائل",
+    "dose_form_injection": "حقنة",
+    "dose_form_drops": "قطرات",
+    "dose_form_inhaler": "استنشاق",
+    "dose_form_patch": "لاصقة",
+    "frequency_label": "التكرار",
+    "frequency_daily": "يومياً",
+    "frequency_daily_subtitle": "تناول هذا الدواء كل يوم",
+    "frequency_weekly": "أسبوعياً",
+    "frequency_weekly_subtitle": "تناول هذا الدواء مرة كل أسبوع",
+    "frequency_as_needed": "عند الحاجة",
+    "frequency_as_needed_subtitle": "تناول هذا الدواء عند الحاجة فقط",
+    "step_3_question": "متى يجب أن نذكرك؟",
+    "alarm_times_label": "أوقات التذكير",
+    "add_alarm_time": "إضافة وقت تذكير",
+    "notes_label": "ملاحظات (اختياري)",
+    "notes_hint": "أضف أي تعليمات خاصة...",
+    "step4_question": "هذا ملخص التذكير الخاص بك",
+    "step4_helper": "يمكنك تغيير هذا لاحقاً في الإعدادات",
+    "save_reminder": "حفظ التذكير",
+    "success_title": "تمت إضافة الدواء!",
+    "success_subtitle": "تم حفظ دوائك. ستتلقى التذكيرات وفقاً للجدول المحدد.",
+    "go_to_my_medicines": "الذهاب إلى أدويتي",
+    "next": "التالي",
+    "next_step": "الخطوة التالية",
+    "skip": "تخط��",
+    "skip_for_now": "تخطي الآن",
+    "error_medicine_name_required": "اسم الدواء مطلوب",
+    "error_dose_form_required": "الرجاء تحديد شكل الجرعة",
+    "error_frequency_required": "الرجاء تحديد التكرار",
+    "error_medicine_submit_failed": "فشل في حفظ الدواء. الرجاء المحاولة مرة أخرى.",
+    "medicine_name_label": "اسم الدواء",
+    "edit_details": "تعديل التفاصيل",
+    "sync_failed_banner": "فشل مزامنة {} أدوية. انقر لإعادة المحاولة.",
+    "pill": "حبة",
+    "tablet": "حبة",
+    "ml": "ملل",
+    "mg": "ملغ",
+    "dose_amount_hint": "الكمية",
+    "dose_unit_hint": "الوحدة",
+    "retry": "إعادة المحاولة"
+  }
 }

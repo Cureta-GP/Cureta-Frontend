@@ -1,0 +1,202 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cureta/core/Services/notification_service.dart';
+import '../data/models/medicine_model.dart';
+import '../data/models/medicine_enums.dart';
+import '../data/repo/medicine_repository.dart';
+import 'user_medicines_state.dart';
+
+class UserMedicinesCubit extends Cubit<UserMedicinesState> {
+  final MedicineRepository _repository;
+  List<MedicineModel> _allMedicines = [];
+  List<MedicineModel> _filteredMedicines = [];
+  bool? _currentFilter;
+  String _currentSearch = '';
+
+  UserMedicinesCubit(this._repository) : super(const UserMedicinesInitial());
+
+  Future<void> init() async {
+    await loadMedicines();
+    _rescheduleActiveAlarms();
+    await syncPendingMedicines();
+  }
+
+  void _rescheduleActiveAlarms() {
+    final activeMedicines =
+        _allMedicines.where((m) => m.isActive && m.alarmTimes.isNotEmpty);
+    for (final medicine in activeMedicines) {
+      NotificationService.instance.scheduleMedicineAlarms(medicine).ignore();
+    }
+  }
+
+  Future<void> loadMedicines() async {
+    final currentState = state;
+    final isRefresh = currentState is UserMedicinesLoaded;
+    emit(UserMedicinesLoading(isRefresh: isRefresh));
+
+    try {
+      _allMedicines = await _repository.getUserMedicines();
+      _applyFilters();
+    } catch (e) {
+      emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
+    }
+  }
+
+  Future<void> syncPendingMedicines() async {
+    try {
+      await _repository.syncPendingMedicines();
+      final pendingCount = _allMedicines
+          .where((m) => m.syncStatus == SyncStatus.pending)
+          .length;
+      if (pendingCount > 0) {
+        final failedCount = _allMedicines
+            .where((m) => m.syncStatus == SyncStatus.failed)
+            .length;
+        if (failedCount > 0 && state is UserMedicinesLoaded) {
+          emit(
+            UserMedicinesSyncBanner(
+              failedCount: failedCount,
+              previousState: state as UserMedicinesLoaded,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      // Background sync failure is non-blocking
+    }
+  }
+
+  Future<void> deleteMedicine(String localId) async {
+    final currentState = state;
+    if (currentState is! UserMedicinesLoaded) return;
+
+    final deletedIndex = _allMedicines.indexWhere((m) => m.id == localId);
+    if (deletedIndex == -1) return;
+
+    final deleted = _allMedicines[deletedIndex];
+
+    final allCopy = List<MedicineModel>.from(_allMedicines)
+      ..removeAt(deletedIndex);
+    final filteredCopy = List<MedicineModel>.from(_filteredMedicines)
+      ..removeWhere((m) => m.id == localId);
+
+    _allMedicines = allCopy;
+    _filteredMedicines = filteredCopy;
+    emit(
+      UserMedicinesLoaded(
+        allMedicines: allCopy,
+        filteredMedicines: filteredCopy,
+        hasPendingSync: _hasPendingSync(allCopy),
+      ),
+    );
+
+    try {
+      // Cancel native alarms before removing from the repository — best-effort.
+      NotificationService.instance.cancelMedicineAlarms(localId).ignore();
+      await _repository.deleteMedicine(localId);
+    } catch (e) {
+      final allRevert = List<MedicineModel>.from(_allMedicines)
+        ..insert(deletedIndex, deleted);
+      final filteredRevert = List<MedicineModel>.from(_filteredMedicines)
+        ..insert(deletedIndex, deleted);
+      _allMedicines = allRevert;
+      _filteredMedicines = filteredRevert;
+      emit(
+        UserMedicinesLoaded(
+          allMedicines: allRevert,
+          filteredMedicines: filteredRevert,
+          hasPendingSync: _hasPendingSync(allRevert),
+        ),
+      );
+    }
+  }
+
+  Future<void> toggleMedicine(String localId) async {
+    final currentState = state;
+    if (currentState is! UserMedicinesLoaded) return;
+
+    final index = _allMedicines.indexWhere((m) => m.id == localId);
+    if (index == -1) return;
+
+    final medicine = _allMedicines[index];
+    final toggled = medicine.copyWith(isActive: !medicine.isActive);
+
+    final allCopy = List<MedicineModel>.from(_allMedicines)..[index] = toggled;
+    final filteredIndex = _filteredMedicines.indexWhere((m) => m.id == localId);
+    if (filteredIndex != -1) {
+      final filteredCopy = List<MedicineModel>.from(_filteredMedicines)
+        ..[filteredIndex] = toggled;
+      _filteredMedicines = filteredCopy;
+    }
+    _allMedicines = allCopy;
+    emit(
+      currentState.copyWith(
+        allMedicines: allCopy,
+        filteredMedicines: filteredIndex != -1
+            ? _filteredMedicines
+            : _filteredMedicines,
+      ),
+    );
+
+    try {
+      await _repository.toggleMedicineActive(localId);
+      // Sync alarms with the new active state — best-effort.
+      if (toggled.isActive) {
+        NotificationService.instance.scheduleMedicineAlarms(toggled).ignore();
+      } else {
+        NotificationService.instance.cancelMedicineAlarms(localId).ignore();
+      }
+    } catch (e) {
+      final reverted = List<MedicineModel>.from(_allMedicines)
+        ..[index] = medicine;
+      _allMedicines = reverted;
+      if (filteredIndex != -1) {
+        final filteredRevert = List<MedicineModel>.from(_filteredMedicines)
+          ..[filteredIndex] = medicine;
+        _filteredMedicines = filteredRevert;
+      }
+      emit(
+        currentState.copyWith(
+          allMedicines: reverted,
+          filteredMedicines: _filteredMedicines,
+        ),
+      );
+    }
+  }
+
+  void filterByStatus(bool? isActive) {
+    _currentFilter = isActive;
+    _applyFilters();
+  }
+
+  void searchByName(String query) {
+    _currentSearch = query.toLowerCase().trim();
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    var result = List<MedicineModel>.from(_allMedicines);
+
+    if (_currentFilter != null) {
+      result = result.where((m) => m.isActive == _currentFilter).toList();
+    }
+
+    if (_currentSearch.isNotEmpty) {
+      result = result
+          .where((m) => m.name.toLowerCase().contains(_currentSearch))
+          .toList();
+    }
+
+    _filteredMedicines = result;
+    emit(
+      UserMedicinesLoaded(
+        allMedicines: _allMedicines,
+        filteredMedicines: _filteredMedicines,
+        hasPendingSync: _hasPendingSync(_allMedicines),
+      ),
+    );
+  }
+
+  bool _hasPendingSync(List<MedicineModel> medicines) {
+    return medicines.any((m) => m.syncStatus == SyncStatus.pending);
+  }
+}
