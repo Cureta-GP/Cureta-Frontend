@@ -22,27 +22,31 @@ final class UserMedicinesLoaded extends UserMedicinesState {
   final List<MedicineModel> allMedicines;
   final List<MedicineModel> filteredMedicines;
   final bool hasPendingSync;
+  final bool? currentFilter;
 
   const UserMedicinesLoaded({
     required this.allMedicines,
     required this.filteredMedicines,
     required this.hasPendingSync,
+    this.currentFilter,
   });
 
   UserMedicinesLoaded copyWith({
     List<MedicineModel>? allMedicines,
     List<MedicineModel>? filteredMedicines,
     bool? hasPendingSync,
+    bool? currentFilter,
   }) {
     return UserMedicinesLoaded(
       allMedicines: allMedicines ?? this.allMedicines,
       filteredMedicines: filteredMedicines ?? this.filteredMedicines,
       hasPendingSync: hasPendingSync ?? this.hasPendingSync,
+      currentFilter: currentFilter ?? this.currentFilter,
     );
   }
 
   @override
-  List<Object?> get props => [allMedicines, filteredMedicines, hasPendingSync];
+  List<Object?> get props => [allMedicines, filteredMedicines, hasPendingSync, currentFilter];
 }
 
 final class UserMedicinesError extends UserMedicinesState {

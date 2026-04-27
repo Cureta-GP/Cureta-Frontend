@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../models/medicine_model.dart';
@@ -25,6 +26,8 @@ class MedicineLocalService {
   static const String colUpdatedAt = 'updated_at';
 
   Database? _db;
+  final StreamController<List<MedicineModel>> _medicinesController =
+      StreamController<List<MedicineModel>>.broadcast();
 
   Future<void> init() async {
     final dbPath = await getDatabasesPath();
@@ -34,6 +37,7 @@ class MedicineLocalService {
       version: _dbVersion,
       onCreate: _createTables,
     );
+    await _emitAll();
   }
 
   Future<void> _createTables(Database db, int version) async {
@@ -63,6 +67,12 @@ class MedicineLocalService {
       _toMap(medicine),
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
+    await _emitAll();
+  }
+
+  Stream<List<MedicineModel>> watchMedicines() async* {
+    yield await getAll();
+    yield* _medicinesController.stream;
   }
 
   Future<List<MedicineModel>> getAll() async {
@@ -107,6 +117,7 @@ class MedicineLocalService {
       where: '$colId = ?',
       whereArgs: [id],
     );
+    await _emitAll();
   }
 
   Future<void> update(MedicineModel medicine) async {
@@ -116,15 +127,170 @@ class MedicineLocalService {
       where: '$colId = ?',
       whereArgs: [medicine.id],
     );
+    await _emitAll();
+  }
+
+  Future<void> upsertFromRemote(MedicineModel remoteModel) async {
+    final remoteId = remoteModel.remoteId;
+    if (remoteId == null || remoteId.isEmpty) {
+      await insert(remoteModel);
+      return;
+    }
+
+    final matches = await _db!.query(
+      _tableMedicines,
+      where: '$colRemoteId = ?',
+      whereArgs: [remoteId],
+    );
+
+    if (matches.isNotEmpty) {
+      final existing = _fromMap(matches.first);
+      final updated = remoteModel.copyWith(
+        id: existing.id,
+        isActive: existing.isActive,
+        createdAt: existing.createdAt,
+      );
+      for (final duplicate in matches.skip(1)) {
+        final duplicateId = duplicate[colId] as String;
+        await _db!.delete(
+          _tableMedicines,
+          where: '$colId = ?',
+          whereArgs: [duplicateId],
+        );
+      }
+      await _db!.update(
+        _tableMedicines,
+        _toMap(updated),
+        where: '$colId = ?',
+        whereArgs: [existing.id],
+      );
+      await _cleanupLocalGhostCopies(updated, keepId: existing.id);
+      await _emitAll();
+      return;
+    }
+
+    final localCandidates = await _findLocalCandidatesWithoutRemoteId(
+      remoteModel,
+    );
+    if (localCandidates.isNotEmpty) {
+      final candidate = _fromMap(localCandidates.first);
+      for (final duplicate in localCandidates.skip(1)) {
+        final duplicateId = duplicate[colId] as String;
+        await _db!.delete(
+          _tableMedicines,
+          where: '$colId = ?',
+          whereArgs: [duplicateId],
+        );
+      }
+      final linked = remoteModel.copyWith(
+        id: candidate.id,
+        isActive: candidate.isActive,
+        createdAt: candidate.createdAt,
+      );
+      await _db!.update(
+        _tableMedicines,
+        _toMap(linked),
+        where: '$colId = ?',
+        whereArgs: [candidate.id],
+      );
+      await _emitAll();
+      return;
+    }
+
+    await insert(remoteModel);
+  }
+
+  Future<List<Map<String, dynamic>>> _findLocalCandidatesWithoutRemoteId(
+    MedicineModel model,
+  ) async {
+    final rows = await _db!.query(
+      _tableMedicines,
+      where: '$colRemoteId IS NULL',
+    );
+    return rows.where((row) {
+      final local = _fromMap(row);
+      return _isLikelySameMedicine(local, model);
+    }).toList();
+  }
+
+  bool _isLikelySameMedicine(MedicineModel local, MedicineModel remote) {
+    final sameDose =
+        local.doseAmount.trim() == remote.doseAmount.trim() &&
+        local.doseUnit.trim().toLowerCase() ==
+            remote.doseUnit.trim().toLowerCase();
+    final doseMissingOnOneSide =
+        local.doseAmount.trim().isEmpty || remote.doseAmount.trim().isEmpty;
+
+    return local.name.trim().toLowerCase() ==
+            remote.name.trim().toLowerCase() &&
+        local.frequency == remote.frequency &&
+        _sameDate(local.startDate, remote.startDate) &&
+        _sameAlarmTimes(local.alarmTimes, remote.alarmTimes) &&
+        (sameDose || doseMissingOnOneSide);
+  }
+
+  bool _sameDate(DateTime a, DateTime b) {
+    final left = DateTime.utc(a.year, a.month, a.day);
+    final right = DateTime.utc(b.year, b.month, b.day);
+    final dayDiff = left.difference(right).inDays.abs();
+    return dayDiff <= 1;
+  }
+
+  bool _sameAlarmTimes(List<String> a, List<String> b) {
+    if (a.length != b.length) return false;
+    final left = a.map(_normalizeTime).toList()..sort();
+    final right = b.map(_normalizeTime).toList()..sort();
+    for (var i = 0; i < left.length; i++) {
+      if (left[i] != right[i]) return false;
+    }
+    return true;
+  }
+
+  String _normalizeTime(String raw) {
+    final value = raw.trim();
+    final match = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(value);
+    if (match == null) return value;
+    final hour = int.tryParse(match.group(1) ?? '0') ?? 0;
+    final minute = int.tryParse(match.group(2) ?? '0') ?? 0;
+    final hh = hour.toString().padLeft(2, '0');
+    final mm = minute.toString().padLeft(2, '0');
+    return '$hh:$mm';
+  }
+
+  Future<void> _cleanupLocalGhostCopies(
+    MedicineModel model, {
+    required String keepId,
+  }) async {
+    final ghosts = await _findLocalCandidatesWithoutRemoteId(model);
+    for (final ghost in ghosts) {
+      final ghostId = ghost[colId] as String;
+      if (ghostId == keepId) continue;
+      await _db!.delete(
+        _tableMedicines,
+        where: '$colId = ?',
+        whereArgs: [ghostId],
+      );
+    }
+    await _emitAll();
   }
 
   Future<void> delete(String id) async {
     await _db!.delete(_tableMedicines, where: '$colId = ?', whereArgs: [id]);
+    await _emitAll();
   }
 
   Future<void> close() async {
+    await _medicinesController.close();
     await _db?.close();
     _db = null;
+  }
+
+  Future<void> _emitAll() async {
+    if (_db == null || _medicinesController.isClosed) return;
+    final all = await getAll();
+    if (!_medicinesController.isClosed) {
+      _medicinesController.add(all);
+    }
   }
 
   Map<String, dynamic> _toMap(MedicineModel medicine) {

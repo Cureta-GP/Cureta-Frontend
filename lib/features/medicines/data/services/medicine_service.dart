@@ -11,7 +11,7 @@ class MedicineService {
       url: ApiEndpoints.medicines,
       data: payload.toJson(),
     );
-    return MedicineDto.fromJson(response.data as Map<String, dynamic>);
+    return MedicineDto.fromJson(_extractItemMap(response.data));
   }
 
   Future<List<MedicineDto>> getMedicines({
@@ -26,18 +26,9 @@ class MedicineService {
       url: ApiEndpoints.medicines,
       query: query,
     );
-    final data = response.data;
-    if (data is List) {
-      return data
-          .map((e) => MedicineDto.fromJson(e as Map<String, dynamic>))
-          .toList();
-    }
-    if (data is Map<String, dynamic> && data['data'] is List) {
-      return (data['data'] as List)
-          .map((e) => MedicineDto.fromJson(e as Map<String, dynamic>))
-          .toList();
-    }
-    return [];
+    return _extractItemsList(
+      response.data,
+    ).map((e) => MedicineDto.fromJson(e)).toList();
   }
 
   Future<MedicineDto> getMedicineById(String id) async {
@@ -45,7 +36,7 @@ class MedicineService {
       url: ApiEndpoints.medicineData(id),
       query: {},
     );
-    return MedicineDto.fromJson(response.data as Map<String, dynamic>);
+    return MedicineDto.fromJson(_extractItemMap(response.data));
   }
 
   Future<MedicineDto> updateMedicine(String id, MedicinePayload payload) async {
@@ -53,7 +44,7 @@ class MedicineService {
       url: ApiEndpoints.medicineData(id),
       data: payload.toJson(),
     );
-    return MedicineDto.fromJson(response.data as Map<String, dynamic>);
+    return MedicineDto.fromJson(_extractItemMap(response.data));
   }
 
   Future<MedicineDto> archiveMedicine(String id) async {
@@ -62,7 +53,7 @@ class MedicineService {
       query: {},
       data: {},
     );
-    return MedicineDto.fromJson(response.data as Map<String, dynamic>);
+    return MedicineDto.fromJson(_extractItemMap(response.data));
   }
 
   Future<void> deleteMedicine(String id) async {
@@ -77,6 +68,42 @@ class MedicineService {
       url: ApiEndpoints.medicineLogs(medicineId),
       data: payload,
     );
-    return MedicineDto.fromJson(response.data as Map<String, dynamic>);
+    return MedicineDto.fromJson(_extractItemMap(response.data));
+  }
+
+  Map<String, dynamic> _extractItemMap(dynamic raw) {
+    if (raw is Map<String, dynamic>) {
+      final data = raw['data'];
+      if (data is Map<String, dynamic>) return data;
+      return raw;
+    }
+    return const <String, dynamic>{};
+  }
+
+  List<Map<String, dynamic>> _extractItemsList(dynamic raw) {
+    if (raw is List) {
+      return raw.whereType<Map<String, dynamic>>().toList();
+    }
+    if (raw is! Map<String, dynamic>) {
+      return const <Map<String, dynamic>>[];
+    }
+
+    final directData = raw['data'];
+    if (directData is List) {
+      return directData.whereType<Map<String, dynamic>>().toList();
+    }
+    if (directData is Map<String, dynamic>) {
+      final nestedItems = directData['items'] ?? directData['medicines'];
+      if (nestedItems is List) {
+        return nestedItems.whereType<Map<String, dynamic>>().toList();
+      }
+    }
+
+    final topItems = raw['items'] ?? raw['medicines'];
+    if (topItems is List) {
+      return topItems.whereType<Map<String, dynamic>>().toList();
+    }
+
+    return const <Map<String, dynamic>>[];
   }
 }

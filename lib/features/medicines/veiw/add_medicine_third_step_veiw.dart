@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_state.dart';
+import 'package:cureta/features/medicines/veiw_model/add_medicine_state_mapper.dart';
 import 'package:cureta/features/medicines/widgets/time_picker_row_widget.dart';
 import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:cureta/shared/widgets/custom_top_bar.dart';
@@ -30,7 +31,7 @@ class AddMedicineThirdStepVeiw extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final currentData = _getData(state);
+        final currentData = state.formData;
         final colors = context.colors;
         final spacing = context.spacing;
         final typography = context.typography;
@@ -99,7 +100,9 @@ class AddMedicineThirdStepVeiw extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: spacing.md),
-                        ...List.generate(currentData.alarmTimes.length, (index) {
+                        ...List.generate(currentData.alarmTimes.length, (
+                          index,
+                        ) {
                           final time = currentData.alarmTimes[index];
                           return Padding(
                             padding: EdgeInsets.only(bottom: spacing.sm),
@@ -115,9 +118,9 @@ class AddMedicineThirdStepVeiw extends StatelessWidget {
                                   context
                                       .read<AddMedicineCubit>()
                                       .removeAlarmTime(index);
-                                  context
-                                      .read<AddMedicineCubit>()
-                                      .addAlarmTime(picked);
+                                  context.read<AddMedicineCubit>().addAlarmTime(
+                                    picked,
+                                  );
                                 }
                               },
                               onRemove: () {
@@ -135,9 +138,9 @@ class AddMedicineThirdStepVeiw extends StatelessWidget {
                               initialTime: TimeOfDay.now(),
                             );
                             if (picked != null && context.mounted) {
-                              context
-                                  .read<AddMedicineCubit>()
-                                  .addAlarmTime(picked);
+                              context.read<AddMedicineCubit>().addAlarmTime(
+                                picked,
+                              );
                             }
                           },
                           icon: Icon(Icons.add_alarm, color: colors.primary),
@@ -191,17 +194,5 @@ class AddMedicineThirdStepVeiw extends StatelessWidget {
         );
       },
     );
-  }
-
-  AddMedicineStepUpdated _getData(AddMedicineState state) {
-    return switch (state) {
-      AddMedicineInitial() => AddMedicineStepUpdated(startDate: DateTime.now()),
-      AddMedicineStepUpdated data => data,
-      AddMedicineValidated data => data.data,
-      AddMedicineScanRequested data => data.data,
-      AddMedicineLoading data => data.data,
-      AddMedicineFailure data => data.data,
-      AddMedicineSuccess() => AddMedicineStepUpdated(startDate: DateTime.now()),
-    };
   }
 }

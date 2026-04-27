@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_state.dart';
+import 'package:cureta/features/medicines/veiw_model/add_medicine_state_mapper.dart';
 import 'package:cureta/features/medicines/data/models/medicine_model.dart';
 import 'package:cureta/features/medicines/data/models/medicine_enums.dart';
 import 'package:cureta/features/medicines/widgets/medicine_summary_card_widget.dart';
@@ -36,7 +37,7 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
       },
       builder: (context, state) {
         final isLoading = state is AddMedicineLoading;
-        final currentData = _getData(state);
+        final currentData = state.formData;
         final medicineModel = _buildMedicineModel(currentData);
         final colors = context.colors;
         final spacing = context.spacing;
@@ -72,7 +73,6 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
                             textAlign: TextAlign.center,
                             style: typography.medicalRecordScreenTitle.copyWith(
                               color: colors.textPrimary,
-                              fontSize: 24,
                             ),
                           ),
                           SizedBox(height: spacing.xl),
@@ -99,7 +99,9 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
                       isLoading: isLoading,
                       onPressed: isLoading
                           ? null
-                          : () => context.read<AddMedicineCubit>().submitMedicine(),
+                          : () => context
+                                .read<AddMedicineCubit>()
+                                .submitMedicine(),
                     ),
                   ),
                 ],
@@ -109,18 +111,6 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
         );
       },
     );
-  }
-
-  AddMedicineStepUpdated _getData(AddMedicineState state) {
-    return switch (state) {
-      AddMedicineInitial() => AddMedicineStepUpdated(startDate: DateTime.now()),
-      AddMedicineStepUpdated data => data,
-      AddMedicineValidated data => data.data,
-      AddMedicineScanRequested data => data.data,
-      AddMedicineLoading data => data.data,
-      AddMedicineFailure data => data.data,
-      AddMedicineSuccess() => AddMedicineStepUpdated(startDate: DateTime.now()),
-    };
   }
 
   MedicineModel _buildMedicineModel(AddMedicineStepUpdated data) {

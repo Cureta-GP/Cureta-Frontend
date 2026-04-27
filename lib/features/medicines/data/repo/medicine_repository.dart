@@ -63,15 +63,31 @@ class MedicineRepository {
 
     try {
       final remoteDto = await _remoteService.createMedicine(payloadWithProfile);
-      await _localService.updateSyncStatus(
-        localId,
-        SyncStatus.synced,
-        remoteId: remoteDto.id,
-      );
-      return localModel.copyWith(
-        syncStatus: SyncStatus.synced,
-        remoteId: remoteDto.id,
-      );
+      final remoteId = remoteDto.id;
+      if (remoteId != null && remoteId.isNotEmpty) {
+        await _localService.updateSyncStatus(
+          localId,
+          SyncStatus.synced,
+          remoteId: remoteId,
+        );
+        return localModel.copyWith(
+          syncStatus: SyncStatus.synced,
+          remoteId: remoteId,
+        );
+      }
+
+      // Some API responses wrap the id differently; reconcile from list before
+      // leaving this row pending to prevent duplicate create retries.
+      await _refreshFromRemote();
+      final linked = await _localService.getById(localId);
+      if (linked != null &&
+          linked.remoteId != null &&
+          linked.remoteId!.isNotEmpty) {
+        return linked;
+      }
+
+      await _localService.updateSyncStatus(localId, SyncStatus.failed);
+      return localModel.copyWith(syncStatus: SyncStatus.failed);
     } catch (e) {
       developer.log(
         'Failed to sync medicine $localId to server: $e',
@@ -87,6 +103,14 @@ class MedicineRepository {
     return local;
   }
 
+  Stream<List<MedicineModel>> watchUserMedicines() {
+    return _localService.watchMedicines();
+  }
+
+  Future<void> refreshMedicines() async {
+    await _refreshFromRemote();
+  }
+
   Future<void> _refreshFromRemote() async {
     final profileId = await _getProfileId();
     if (profileId.isEmpty) return;
@@ -94,23 +118,13 @@ class MedicineRepository {
     try {
       final dtos = await _remoteService.getMedicines(profileId: profileId);
       for (final dto in dtos) {
-        final existing = await _localService.getById(dto.id ?? '');
-        if (existing != null) {
-          final updated = dto.toDomain(
-            existing.id,
-            syncStatus: SyncStatus.synced,
-            remoteId: dto.id,
-          );
-          await _localService.update(updated);
-        } else {
-          final newId = _uuid.v4();
-          final model = dto.toDomain(
-            newId,
-            syncStatus: SyncStatus.synced,
-            remoteId: dto.id,
-          );
-          await _localService.insert(model);
-        }
+        if (dto.id == null || dto.id!.isEmpty) continue;
+        final model = dto.toDomain(
+          _uuid.v4(),
+          syncStatus: SyncStatus.synced,
+          remoteId: dto.id,
+        );
+        await _localService.upsertFromRemote(model);
       }
     } catch (e) {
       developer.log(
@@ -124,16 +138,30 @@ class MedicineRepository {
     final profileId = await _getProfileId();
     if (profileId.isEmpty) return;
 
+    // First reconcile pending rows against already-created remote rows.
+    await _refreshFromRemote();
     final pending = await _localService.getPending();
     for (final medicine in pending) {
       try {
         final payload = _buildPayload(medicine, profileId);
         final dto = await _remoteService.createMedicine(payload);
-        await _localService.updateSyncStatus(
-          medicine.id,
-          SyncStatus.synced,
-          remoteId: dto.id,
-        );
+        final remoteId = dto.id;
+        if (remoteId != null && remoteId.isNotEmpty) {
+          await _localService.updateSyncStatus(
+            medicine.id,
+            SyncStatus.synced,
+            remoteId: remoteId,
+          );
+          continue;
+        }
+
+        await _refreshFromRemote();
+        final linked = await _localService.getById(medicine.id);
+        if (linked == null ||
+            linked.remoteId == null ||
+            linked.remoteId!.isEmpty) {
+          await _localService.updateSyncStatus(medicine.id, SyncStatus.failed);
+        }
       } catch (e) {
         developer.log(
           'Failed to sync medicine ${medicine.id}: $e',

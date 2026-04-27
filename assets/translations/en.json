@@ -372,6 +372,10 @@
     "mg": "mg",
     "dose_amount_hint": "Amount",
     "dose_unit_hint": "Unit",
+    "search_hint": "Search medicines",
+    "filter_all": "All",
+    "filter_active": "Active",
+    "filter_paused": "Paused",
     "retry": "Retry"
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/Services/notification_service.dart';
 import '../data/models/medicine_model.dart';
@@ -7,22 +9,43 @@ import 'user_medicines_state.dart';
 
 class UserMedicinesCubit extends Cubit<UserMedicinesState> {
   final MedicineRepository _repository;
+  StreamSubscription<List<MedicineModel>>? _medicinesSubscription;
   List<MedicineModel> _allMedicines = [];
   List<MedicineModel> _filteredMedicines = [];
   bool? _currentFilter;
   String _currentSearch = '';
+  bool _didInitialAlarmSync = false;
 
   UserMedicinesCubit(this._repository) : super(const UserMedicinesInitial());
 
   Future<void> init() async {
-    await loadMedicines();
-    _rescheduleActiveAlarms();
+    await _medicinesSubscription?.cancel();
+    _medicinesSubscription = _repository.watchUserMedicines().listen(
+      (medicines) {
+        _allMedicines = medicines;
+        _applyFilters();
+        if (!_didInitialAlarmSync) {
+          _rescheduleActiveAlarms();
+          _didInitialAlarmSync = true;
+        }
+      },
+      onError: (_) {
+        emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
+      },
+    );
+
+    _refreshThenSync().ignore();
+  }
+
+  Future<void> _refreshThenSync() async {
+    await _repository.refreshMedicines();
     await syncPendingMedicines();
   }
 
   void _rescheduleActiveAlarms() {
-    final activeMedicines =
-        _allMedicines.where((m) => m.isActive && m.alarmTimes.isNotEmpty);
+    final activeMedicines = _allMedicines.where(
+      (m) => m.isActive && m.alarmTimes.isNotEmpty,
+    );
     for (final medicine in activeMedicines) {
       NotificationService.instance.scheduleMedicineAlarms(medicine).ignore();
     }
@@ -34,8 +57,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
     emit(UserMedicinesLoading(isRefresh: isRefresh));
 
     try {
-      _allMedicines = await _repository.getUserMedicines();
-      _applyFilters();
+      await _repository.refreshMedicines();
     } catch (e) {
       emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
     }
@@ -86,6 +108,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
         allMedicines: allCopy,
         filteredMedicines: filteredCopy,
         hasPendingSync: _hasPendingSync(allCopy),
+        currentFilter: _currentFilter,
       ),
     );
 
@@ -105,6 +128,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
           allMedicines: allRevert,
           filteredMedicines: filteredRevert,
           hasPendingSync: _hasPendingSync(allRevert),
+          currentFilter: _currentFilter,
         ),
       );
     }
@@ -186,17 +210,34 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
           .toList();
     }
 
+    final hasPending = _hasPendingSync(_allMedicines);
+    final currentState = state;
+    if (currentState is UserMedicinesLoaded &&
+        listEquals(currentState.allMedicines, _allMedicines) &&
+        listEquals(currentState.filteredMedicines, result) &&
+        currentState.hasPendingSync == hasPending &&
+        currentState.currentFilter == _currentFilter) {
+      return;
+    }
+
     _filteredMedicines = result;
     emit(
       UserMedicinesLoaded(
         allMedicines: _allMedicines,
         filteredMedicines: _filteredMedicines,
-        hasPendingSync: _hasPendingSync(_allMedicines),
+        hasPendingSync: hasPending,
+        currentFilter: _currentFilter,
       ),
     );
   }
 
   bool _hasPendingSync(List<MedicineModel> medicines) {
     return medicines.any((m) => m.syncStatus == SyncStatus.pending);
+  }
+
+  @override
+  Future<void> close() async {
+    await _medicinesSubscription?.cancel();
+    return super.close();
   }
 }

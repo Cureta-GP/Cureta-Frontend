@@ -7,6 +7,7 @@ import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
 import 'package:cureta/features/authentcation/veiw_model/auth_state.dart';
+import 'package:go_router/go_router.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key, required this.controller});
@@ -128,12 +129,12 @@ class CustomDrawer extends StatelessWidget {
 
   void _openChat(BuildContext context) {
     controller.hideDrawer();
-    Nav.to(context, AppRoutes.chat);
+   GoRouter.of(context).push(AppRoutes.chat);
   }
 
   void _openMedicines(BuildContext context) {
     controller.hideDrawer();
-    Nav.to(context, AppRoutes.medicines);
+    GoRouter.of(context).push(AppRoutes.medicines);
   }
 
   Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {

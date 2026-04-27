@@ -372,6 +372,10 @@
     "mg": "ملغ",
     "dose_amount_hint": "الكمية",
     "dose_unit_hint": "الوحدة",
+    "search_hint": "ابحث في الأدوية",
+    "filter_all": "الكل",
+    "filter_active": "نشط",
+    "filter_paused": "موقوف",
     "retry": "إعادة المحاولة"
   }
 }

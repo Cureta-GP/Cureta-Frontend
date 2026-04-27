@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:go_router/go_router.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_state.dart';
+import 'package:cureta/features/medicines/veiw_model/add_medicine_state_mapper.dart';
 import 'package:cureta/features/medicines/widgets/dose_form_selector_widget.dart';
 import 'package:cureta/features/medicines/widgets/frequency_selector_widget.dart';
 import 'package:cureta/shared/widgets/add_record_next_button.dart';
@@ -23,7 +24,7 @@ class AddMedicineSecondStepVeiw extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final currentData = _getData(state);
+        final currentData = state.formData;
         final colors = context.colors;
         final spacing = context.spacing;
         final typography = context.typography;
@@ -147,17 +148,5 @@ class AddMedicineSecondStepVeiw extends StatelessWidget {
         );
       },
     );
-  }
-
-  AddMedicineStepUpdated _getData(AddMedicineState state) {
-    return switch (state) {
-      AddMedicineInitial() => AddMedicineStepUpdated(startDate: DateTime.now()),
-      AddMedicineStepUpdated data => data,
-      AddMedicineValidated data => data.data,
-      AddMedicineScanRequested data => data.data,
-      AddMedicineLoading data => data.data,
-      AddMedicineFailure data => data.data,
-      AddMedicineSuccess() => AddMedicineStepUpdated(startDate: DateTime.now()),
-    };
   }
 }
