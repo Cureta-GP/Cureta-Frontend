@@ -19,7 +19,6 @@ import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
-import 'package:cureta/features/medicines/veiw/user_medicines_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_first_step_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_second_step_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_third_step_veiw.dart';
@@ -226,11 +225,7 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.medicines,
         name: AppRoutes.medicines,
-        pageBuilder: (context, state) => PageTransitions.scale(
-          // UserMedicinesVeiw creates its own BlocProvider internally.
-          child: const UserMedicinesVeiw(),
-          state: state,
-        ),
+        redirect: (_, __) => '${AppRoutes.mainNavigation}?tab=1',
       ),
       // Medicines Add Flow — ShellRoute provides a single AddMedicineCubit
       // instance shared across all 5 steps so form state persists on back nav.

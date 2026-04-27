@@ -83,12 +83,14 @@ class MedicineDto {
     String localId, {
     SyncStatus syncStatus = SyncStatus.pending,
     String? remoteId,
+    String profileId = '',
   }) {
     final doseParts = _parseDose(dose);
     final now = DateTime.now();
 
     return MedicineModel(
       id: localId,
+      profileId: profileId,
       name: name,
       doseForm: DoseForm.pill,
       doseAmount: doseParts['amount'] ?? '',

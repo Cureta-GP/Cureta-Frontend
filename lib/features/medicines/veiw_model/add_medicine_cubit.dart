@@ -89,6 +89,11 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     emit(current.copyWith(notes: notes));
   }
 
+  void updateImagePath(String path) {
+    final current = _currentData();
+    emit(current.copyWith(imagePath: path));
+  }
+
   void validateStep1() {
     final current = _currentData();
     if (current.medicineName.trim().isEmpty) {
@@ -179,6 +184,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
       startDate: data.startDate.toIso8601String(),
       notes: data.notes.isEmpty ? null : data.notes,
       doseForm: data.doseForm,
+      imagePath: data.imagePath,
     );
   }
 

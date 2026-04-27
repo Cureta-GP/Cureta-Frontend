@@ -376,6 +376,9 @@
     "filter_all": "الكل",
     "filter_active": "نشط",
     "filter_paused": "موقوف",
-    "retry": "إعادة المحاولة"
+    "retry": "إعادة المحاولة",
+    "pick_image_title": "اختر صورة الدواء",
+    "pick_from_camera": "التقاط صورة",
+    "pick_from_gallery": "اختيار من المعرض"
   }
 }

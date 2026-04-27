@@ -49,9 +49,12 @@ class MainActivity : FlutterActivity() {
 
                     "scheduleAlarm" -> {
                         val id   = call.argument<Int>("id")              ?: 0
+                        val localId = call.argument<String>("local_id") ?: ""
                         val name = call.argument<String>("medicine_name") ?: ""
+                        val dose = call.argument<String>("dose_amount") ?: ""
+                        val imagePath = call.argument<String>("image_path") ?: ""
                         val time = call.argument<Long>("time_millis")    ?: 0L
-                        AlarmScheduler.scheduleAlarm(this, id, name, time)
+                        AlarmScheduler.scheduleAlarm(this, id, localId, name, dose, imagePath, time)
                         result.success(null)
                     }
 

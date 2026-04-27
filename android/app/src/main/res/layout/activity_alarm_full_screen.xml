@@ -8,41 +8,77 @@
     android:background="#0D1117"
     android:padding="32dp">
 
+    <!-- Medicine image (hidden by default, shown programmatically) -->
+    <ImageView
+        android:id="@+id/iv_medicine_image"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Default icon (shown when no image) -->
     <TextView
-        android:text="⏰"
-        android:textSize="80sp"
+        android:id="@+id/tv_alarm_icon"
+        android:text="💊"
+        android:textSize="100sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"/>
 
     <TextView
         android:text="حان وقت دوائك"
-        android:textSize="24sp"
-        android:textColor="#FFFFFF"
-        android:fontFamily="sans-serif-medium"
+        android:textSize="22sp"
+        android:textColor="#8B949E"
+        android:fontFamily="sans-serif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:gravity="center"/>
 
+    <!-- Medicine name -->
     <TextView
         android:id="@+id/tv_medicine_name"
         android:text=""
         android:textSize="36sp"
-        android:textColor="#4E9FFF"
+        android:textColor="#FFFFFF"
         android:gravity="center"
         android:fontFamily="sans-serif-medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"/>
+
+    <!-- Dose amount -->
+    <TextView
+        android:id="@+id/tv_dose_amount"
+        android:text=""
+        android:textSize="20sp"
+        android:textColor="#8B949E"
+        android:gravity="center"
+        android:fontFamily="sans-serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"/>
 
+    <!-- Taken button -->
     <Button
-        android:id="@+id/btn_dismiss"
-        android:text="تم ✓"
+        android:id="@+id/btn_taken"
+        android:text="تم أخذه ✓"
         android:textSize="20sp"
         android:textColor="#FFFFFF"
-        android:backgroundTint="#4E9FFF"
-        android:layout_width="200dp"
+        android:backgroundTint="#2EA043"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Missed button -->
+    <Button
+        android:id="@+id/btn_missed"
+        android:text="فات الموعد ✗"
+        android:textSize="20sp"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#DA3633"
+        android:layout_width="match_parent"
         android:layout_height="64dp"/>
 
 </LinearLayout>

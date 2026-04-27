@@ -5,11 +5,15 @@ import android.content.Context
 import android.content.Intent
 import android.media.*
 import android.os.*
+import android.speech.tts.TextToSpeech
+import java.util.Locale
 
-class AlarmService : Service() {
+class AlarmService : Service(), TextToSpeech.OnInitListener {
 
     private var mediaPlayer: MediaPlayer? = null
     private var vibrator: Vibrator? = null
+    private var tts: TextToSpeech? = null
+    private var pendingMedicineName: String? = null
 
     companion object {
         const val CHANNEL_ID = "cureta_alarm_channel"
@@ -21,6 +25,20 @@ class AlarmService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        tts = TextToSpeech(this, this)
+    }
+
+    override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+            // Try Arabic first, fall back to default
+            val arResult = tts?.setLanguage(Locale("ar"))
+            if (arResult == TextToSpeech.LANG_MISSING_DATA || arResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                tts?.setLanguage(Locale.getDefault())
+            }
+            // If we have a pending name to speak, do it now
+            pendingMedicineName?.let { speakMedicineName(it) }
+            pendingMedicineName = null
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -29,22 +47,55 @@ class AlarmService : Service() {
             return START_NOT_STICKY
         }
         val medicineName = intent?.getStringExtra("medicine_name") ?: "Medicine"
+        val localId = intent?.getStringExtra("local_id") ?: ""
+        val dose = intent?.getStringExtra("dose_amount") ?: ""
+        val imagePath = intent?.getStringExtra("image_path") ?: ""
         val launchFullScreen = intent?.getBooleanExtra("launch_full_screen", false) ?: false
 
-        startForeground(NOTIFICATION_ID, buildNotification(medicineName))
+        startForeground(NOTIFICATION_ID, buildNotification(medicineName, localId, dose, imagePath))
         playAlarmSound()
         startVibration()
 
+        // Speak the medicine name after a short delay so the alarm sound is heard first
+        Handler(Looper.getMainLooper()).postDelayed({
+            pendingMedicineName = medicineName
+            if (tts != null) {
+                speakMedicineName(medicineName)
+                pendingMedicineName = null
+            }
+        }, 2500)
+
         if (launchFullScreen) {
-            launchFullScreenActivity(medicineName)
+            launchFullScreenActivity(medicineName, localId, dose, imagePath)
         }
 
         return START_NOT_STICKY
     }
 
-    private fun launchFullScreenActivity(medicineName: String) {
+    private fun speakMedicineName(name: String) {
+        try {
+            // Lower the alarm volume briefly, speak, then restore
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            val originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, (originalVolume * 0.3).toInt().coerceAtLeast(1), 0)
+
+            tts?.speak("حان وقت دواء $name", TextToSpeech.QUEUE_FLUSH, null, "medicine_tts")
+
+            // Restore volume after speech (approx 3 seconds)
+            Handler(Looper.getMainLooper()).postDelayed({
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0)
+            }, 3000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun launchFullScreenActivity(medicineName: String, localId: String, dose: String, imagePath: String) {
         val intent = Intent(this, AlarmFullScreenActivity::class.java).apply {
             putExtra("medicine_name", medicineName)
+            putExtra("local_id", localId)
+            putExtra("dose_amount", dose)
+            putExtra("image_path", imagePath)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -57,10 +108,13 @@ class AlarmService : Service() {
         mediaPlayer = null
         vibrator?.cancel()
         vibrator = null
+        tts?.stop()
+        tts?.shutdown()
+        tts = null
         super.onDestroy()
     }
 
-    private fun buildNotification(medicineName: String): Notification {
+    private fun buildNotification(medicineName: String, localId: String, dose: String, imagePath: String): Notification {
         val stopIntent = Intent(this, AlarmService::class.java).apply { action = "STOP" }
         val stopPending = PendingIntent.getService(
             this, 1, stopIntent,
@@ -68,6 +122,9 @@ class AlarmService : Service() {
         )
         val fsIntent = Intent(this, AlarmFullScreenActivity::class.java).apply {
             putExtra("medicine_name", medicineName)
+            putExtra("local_id", localId)
+            putExtra("dose_amount", dose)
+            putExtra("image_path", imagePath)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
         val fsPending = PendingIntent.getActivity(

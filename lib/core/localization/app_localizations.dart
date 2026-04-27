@@ -478,5 +478,8 @@ class AppLocalizations {
   static String get medicinesFilterPaused => 'medicines.filter_paused'.tr();
   static String get medicinesRetry => 'medicines.retry'.tr();
   static String get medicinesEditDetails => 'medicines.edit_details'.tr();
+  static String get medicinesPickImageTitle => 'medicines.pick_image_title'.tr();
+  static String get medicinesPickFromCamera => 'medicines.pick_from_camera'.tr();
+  static String get medicinesPickFromGallery => 'medicines.pick_from_gallery'.tr();
   static String dynamicTr(String key) => key.tr();
 }

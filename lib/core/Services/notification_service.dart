@@ -17,7 +17,10 @@ class NotificationService {
       final id = _alarmId(medicine.id, i);
       await _invoke('scheduleAlarm', {
         'id': id,
+        'local_id': medicine.id,
         'medicine_name': medicine.name,
+        'dose_amount': '${medicine.doseAmount} ${medicine.doseUnit}'.trim(),
+        'image_path': medicine.imagePath ?? '',
         'time_millis': scheduled.millisecondsSinceEpoch,
       });
     }

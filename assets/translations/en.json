@@ -376,6 +376,9 @@
     "filter_all": "All",
     "filter_active": "Active",
     "filter_paused": "Paused",
-    "retry": "Retry"
+    "retry": "Retry",
+    "pick_image_title": "Choose Medicine Image",
+    "pick_from_camera": "Take a Photo",
+    "pick_from_gallery": "Choose from Gallery"
   }
 }

@@ -16,6 +16,8 @@ class MedicineModel extends Equatable {
   final String? remoteId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String profileId;
+  final String? imagePath;
 
   const MedicineModel({
     required this.id,
@@ -32,6 +34,8 @@ class MedicineModel extends Equatable {
     this.remoteId,
     required this.createdAt,
     required this.updatedAt,
+    this.profileId = '',
+    this.imagePath,
   });
 
   MedicineModel copyWith({
@@ -49,6 +53,8 @@ class MedicineModel extends Equatable {
     String? remoteId,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? profileId,
+    String? imagePath,
   }) {
     return MedicineModel(
       id: id ?? this.id,
@@ -65,24 +71,28 @@ class MedicineModel extends Equatable {
       remoteId: remoteId ?? this.remoteId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      profileId: profileId ?? this.profileId,
+      imagePath: imagePath ?? this.imagePath,
     );
   }
 
   @override
   List<Object?> get props => [
-    id,
-    name,
-    doseForm,
-    doseAmount,
-    doseUnit,
-    frequency,
-    alarmTimes,
-    startDate,
-    notes,
-    isActive,
-    syncStatus,
-    remoteId,
-    createdAt,
-    updatedAt,
-  ];
+        id,
+        name,
+        doseForm,
+        doseAmount,
+        doseUnit,
+        frequency,
+        alarmTimes,
+        startDate,
+        notes,
+        isActive,
+        syncStatus,
+        remoteId,
+        createdAt,
+        updatedAt,
+        profileId,
+        imagePath,
+      ];
 }

@@ -27,10 +27,22 @@ class MedicineListStateRendererWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserMedicinesCubit, UserMedicinesState>(
+      buildWhen: (prev, curr) {
+        // Don't rebuild the entire list for a loading refresh —
+        // only rebuild when data actually changed or we transition
+        // to/from error/initial.
+        if (prev is UserMedicinesLoaded &&
+            curr is UserMedicinesLoading &&
+            curr.isRefresh) {
+          return false;
+        }
+        return true;
+      },
       builder: (context, state) {
         return switch (state) {
           UserMedicinesInitial() => const MedicineListShimmerWidget(),
-          UserMedicinesLoading() => const MedicineListShimmerWidget(),
+          UserMedicinesLoading(:final isRefresh) =>
+            isRefresh ? const SizedBox.shrink() : const MedicineListShimmerWidget(),
           UserMedicinesLoaded() => MedicineListContentWidget(
             state: state,
             onRefresh: onRefresh,

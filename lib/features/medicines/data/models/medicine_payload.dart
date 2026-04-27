@@ -11,6 +11,7 @@ class MedicinePayload extends Equatable {
   final String? endDate;
   final String? notes;
   final DoseForm? doseForm;
+  final String? imagePath;
 
   const MedicinePayload({
     this.profileId,
@@ -22,6 +23,7 @@ class MedicinePayload extends Equatable {
     this.endDate,
     this.notes,
     this.doseForm,
+    this.imagePath,
   });
 
   Map<String, dynamic> toJson() {
@@ -35,6 +37,7 @@ class MedicinePayload extends Equatable {
       'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
       if (notes != null && notes!.isNotEmpty) 'notes': notes,
+      if (imagePath != null && imagePath!.isNotEmpty) 'image_path': imagePath,
     };
   }
 
@@ -49,5 +52,6 @@ class MedicinePayload extends Equatable {
     endDate,
     notes,
     doseForm,
+    imagePath,
   ];
 }

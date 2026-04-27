@@ -17,19 +17,19 @@ class UserMedicinesVeiw extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => GetIt.I<UserMedicinesCubit>()..init(),
-      child: const _UserMedicinesVeiwBody(),
+      child: const _UserMedicinesBody(),
     );
   }
 }
 
-class _UserMedicinesVeiwBody extends StatefulWidget {
-  const _UserMedicinesVeiwBody();
+class _UserMedicinesBody extends StatefulWidget {
+  const _UserMedicinesBody();
 
   @override
-  State<_UserMedicinesVeiwBody> createState() => _UserMedicinesVeiwBodyState();
+  State<_UserMedicinesBody> createState() => _UserMedicinesBodyState();
 }
 
-class _UserMedicinesVeiwBodyState extends State<_UserMedicinesVeiwBody> {
+class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -54,15 +54,11 @@ class _UserMedicinesVeiwBodyState extends State<_UserMedicinesVeiwBody> {
       appBar: const MedicineScreenAppBarWidget(),
       body: Column(
         children: [
-          BlocBuilder<UserMedicinesCubit, UserMedicinesState>(
-            buildWhen: (previous, current) {
-              if (previous is UserMedicinesLoaded && current is UserMedicinesLoaded) {
-                return previous.currentFilter != current.currentFilter;
-              }
-              return true;
-            },
-            builder: (context, state) {
-              final selectedFilter = state is UserMedicinesLoaded ? state.currentFilter : null;
+          // Only rebuilds when currentFilter changes
+          BlocSelector<UserMedicinesCubit, UserMedicinesState, bool?>(
+            selector: (state) =>
+                state is UserMedicinesLoaded ? state.currentFilter : null,
+            builder: (context, selectedFilter) {
               return MedicineListControlsWidget(
                 searchController: _searchController,
                 selectedFilter: selectedFilter,
@@ -75,6 +71,7 @@ class _UserMedicinesVeiwBodyState extends State<_UserMedicinesVeiwBody> {
               );
             },
           ),
+          // Only rebuilds when medicines list or sync state changes
           Expanded(
             child: MedicineListStateRendererWidget(
               onRefresh: () {

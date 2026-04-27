@@ -53,13 +53,22 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
 
   Future<void> loadMedicines() async {
     final currentState = state;
-    final isRefresh = currentState is UserMedicinesLoaded;
-    emit(UserMedicinesLoading(isRefresh: isRefresh));
+    final hasData = currentState is UserMedicinesLoaded ||
+        currentState is UserMedicinesSyncBanner;
+
+    // Only show spinner when the list is genuinely empty.
+    // If we already have data, let the stream update it silently.
+    if (!hasData) {
+      emit(const UserMedicinesLoading());
+    }
 
     try {
       await _repository.refreshMedicines();
     } catch (e) {
-      emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
+      // Only show error if there is no data to display.
+      if (!hasData) {
+        emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:easy_localization/easy_localization.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
@@ -39,13 +40,13 @@ class AddMedicineFifthStepVeiw extends StatelessWidget {
               ),
               SizedBox(height: spacing.xxl),
               Text(
-                'medicines.success_title'.tr(),
+                AppLocalizations.medicinesSuccessTitle,
                 style: typography.title.copyWith(color: colors.textPrimary),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: spacing.md),
               Text(
-                'medicines.success_subtitle'.tr(),
+                AppLocalizations.medicinesSuccessSubtitle,
                 style: typography.body.copyWith(color: colors.textSecondary),
                 textAlign: TextAlign.center,
               ),
@@ -53,10 +54,14 @@ class AddMedicineFifthStepVeiw extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: AddRecordNextButton(
-                  label: 'medicines.go_to_my_medicines'.tr(),
+                  label: AppLocalizations.medicinesGoToMyMedicines,
                   onPressed: () {
                     context.read<AddMedicineCubit>().resetForm();
-                    context.go('/medicines');
+                    // Navigate to main screen with medicines tab selected.
+                    // Using go() clears the entire stack so back goes to home.
+                    context.go(
+                      '${AppRoutes.mainNavigation}?tab=1',
+                    );
                   },
                 ),
               ),

@@ -15,6 +15,7 @@ final class AddMedicineInitial extends AddMedicineState {
 
 final class AddMedicineStepUpdated extends AddMedicineState {
   final String medicineName;
+  final String? imagePath;
   final DoseForm? doseForm;
   final String doseAmount;
   final String doseUnit;
@@ -26,6 +27,7 @@ final class AddMedicineStepUpdated extends AddMedicineState {
 
   const AddMedicineStepUpdated({
     this.medicineName = '',
+    this.imagePath,
     this.doseForm,
     this.doseAmount = '',
     this.doseUnit = '',
@@ -38,6 +40,7 @@ final class AddMedicineStepUpdated extends AddMedicineState {
 
   AddMedicineStepUpdated copyWith({
     String? medicineName,
+    String? imagePath,
     DoseForm? doseForm,
     String? doseAmount,
     String? doseUnit,
@@ -49,6 +52,7 @@ final class AddMedicineStepUpdated extends AddMedicineState {
   }) {
     return AddMedicineStepUpdated(
       medicineName: medicineName ?? this.medicineName,
+      imagePath: imagePath ?? this.imagePath,
       doseForm: doseForm ?? this.doseForm,
       doseAmount: doseAmount ?? this.doseAmount,
       doseUnit: doseUnit ?? this.doseUnit,
@@ -69,6 +73,7 @@ final class AddMedicineStepUpdated extends AddMedicineState {
   @override
   List<Object?> get props => [
     medicineName,
+    imagePath,
     doseForm,
     doseAmount,
     doseUnit,

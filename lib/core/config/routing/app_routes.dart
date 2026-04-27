@@ -35,4 +35,5 @@ class AppRoutes {
   static const String chat = '/chat';
   //profil
   static const String profile = '/profile';
+  static const String medicineAlarm = '/medicines/alarm';
 }

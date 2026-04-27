@@ -15,11 +15,17 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28"/>
+
+    <uses-feature android:name="android.hardware.camera" android:required="false"/>
 
     <application
         android:label="cureta"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:largeHeap="true">
 
         <!-- Main Flutter Activity -->
         <activity
@@ -40,15 +46,15 @@
             </intent-filter>
         </activity>
 
-        <!-- Full-screen alarm UI -->
+        <!-- Full-screen alarm UI — separate process keeps it alive -->
         <activity
             android:name=".AlarmFullScreenActivity"
-            android:exported="true"
-            android:launchMode="singleInstance"
+            android:exported="false"
+            android:launchMode="singleTop"
             android:showOnLockScreen="true"
             android:turnScreenOn="true"
             android:excludeFromRecents="true"
-            android:taskAffinity=".alarm"/>
+            android:process=":alarm"/>
 
         <!-- Fires when AlarmManager triggers -->
         <receiver
@@ -65,11 +71,12 @@
             </intent-filter>
         </receiver>
 
-        <!-- Foreground service: looping sound + vibration -->
+        <!-- Foreground service: looping sound + vibration — same process as alarm UI -->
         <service
             android:name=".AlarmService"
             android:exported="false"
-            android:foregroundServiceType="specialUse">
+            android:foregroundServiceType="specialUse"
+            android:process=":alarm">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="alarm"/>

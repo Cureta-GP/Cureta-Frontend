@@ -60,15 +60,11 @@ class MedicineService {
     await DioHelper.deleteData(url: ApiEndpoints.medicineData(id));
   }
 
-  Future<MedicineDto> trackDose(
-    String medicineId,
-    Map<String, dynamic> payload,
-  ) async {
-    final response = await DioHelper.postData(
+  Future<void> trackDose(String medicineId, String status) async {
+    await DioHelper.postData(
       url: ApiEndpoints.medicineLogs(medicineId),
-      data: payload,
+      data: {'status': status, 'scheduled_at': DateTime.now().toIso8601String()},
     );
-    return MedicineDto.fromJson(_extractItemMap(response.data));
   }
 
   Map<String, dynamic> _extractItemMap(dynamic raw) {

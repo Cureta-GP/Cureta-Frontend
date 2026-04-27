@@ -6,44 +6,41 @@ import '../models/medicine_model.dart';
 import '../models/medicine_enums.dart';
 
 class MedicineLocalService {
-  static const String _dbName = 'cureta_medicines.db';
-  static const int _dbVersion = 1;
-  static const String _tableMedicines = 'medicines';
+  static const _dbName = 'cureta_medicines.db';
+  static const _dbVersion = 2;
+  static const _table = 'medicines';
 
-  static const String colId = 'id';
-  static const String colName = 'name';
-  static const String colDoseForm = 'dose_form';
-  static const String colDoseAmount = 'dose_amount';
-  static const String colDoseUnit = 'dose_unit';
-  static const String colFrequency = 'frequency';
-  static const String colAlarmTimes = 'alarm_times';
-  static const String colStartDate = 'start_date';
-  static const String colNotes = 'notes';
-  static const String colIsActive = 'is_active';
-  static const String colSyncStatus = 'sync_status';
-  static const String colRemoteId = 'remote_id';
-  static const String colCreatedAt = 'created_at';
-  static const String colUpdatedAt = 'updated_at';
+  static const colId = 'id';
+  static const colName = 'name';
+  static const colDoseForm = 'dose_form';
+  static const colDoseAmount = 'dose_amount';
+  static const colDoseUnit = 'dose_unit';
+  static const colFrequency = 'frequency';
+  static const colAlarmTimes = 'alarm_times';
+  static const colStartDate = 'start_date';
+  static const colNotes = 'notes';
+  static const colIsActive = 'is_active';
+  static const colSyncStatus = 'sync_status';
+  static const colRemoteId = 'remote_id';
+  static const colCreatedAt = 'created_at';
+  static const colUpdatedAt = 'updated_at';
+  static const colProfileId = 'profile_id';
+  static const colImagePath = 'image_path';
 
   Database? _db;
-  final StreamController<List<MedicineModel>> _medicinesController =
-      StreamController<List<MedicineModel>>.broadcast();
+  final _controller = StreamController<List<MedicineModel>>.broadcast();
 
   Future<void> init() async {
-    final dbPath = await getDatabasesPath();
-    final path = join(dbPath, _dbName);
-    _db = await openDatabase(
-      path,
-      version: _dbVersion,
-      onCreate: _createTables,
-    );
-    await _emitAll();
+    final path = join(await getDatabasesPath(), _dbName);
+    _db = await openDatabase(path, version: _dbVersion, onCreate: _create, onUpgrade: _upgrade);
+    await _emitAll('');
   }
 
-  Future<void> _createTables(Database db, int version) async {
+  Future<void> _create(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE $_tableMedicines (
+      CREATE TABLE $_table (
         $colId TEXT PRIMARY KEY,
+        $colProfileId TEXT NOT NULL,
         $colName TEXT NOT NULL,
         $colDoseForm TEXT NOT NULL,
         $colDoseAmount TEXT NOT NULL,
@@ -52,6 +49,7 @@ class MedicineLocalService {
         $colAlarmTimes TEXT NOT NULL,
         $colStartDate TEXT NOT NULL,
         $colNotes TEXT,
+        $colImagePath TEXT,
         $colIsActive INTEGER NOT NULL DEFAULT 1,
         $colSyncStatus TEXT NOT NULL DEFAULT 'pending',
         $colRemoteId TEXT,
@@ -61,281 +59,117 @@ class MedicineLocalService {
     ''');
   }
 
-  Future<void> insert(MedicineModel medicine) async {
-    await _db!.insert(
-      _tableMedicines,
-      _toMap(medicine),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-    await _emitAll();
+  Future<void> _upgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('ALTER TABLE $_table ADD COLUMN $colProfileId TEXT NOT NULL DEFAULT \'\'');
+      await db.execute('ALTER TABLE $_table ADD COLUMN $colImagePath TEXT');
+    }
   }
 
-  Stream<List<MedicineModel>> watchMedicines() async* {
-    yield await getAll();
-    yield* _medicinesController.stream;
+  Future<void> insert(MedicineModel m) async {
+    await _db!.insert(_table, _toMap(m), conflictAlgorithm: ConflictAlgorithm.replace);
+    await _emitAll(m.profileId);
   }
 
-  Future<List<MedicineModel>> getAll() async {
-    final maps = await _db!.query(_tableMedicines);
+  Stream<List<MedicineModel>> watchAll(String profileId) async* {
+    yield await getAll(profileId);
+    yield* _controller.stream;
+  }
+
+  Future<List<MedicineModel>> getAll(String profileId) async {
+    final maps = await _db!.query(_table, where: '$colProfileId = ?', whereArgs: [profileId]);
     return maps.map(_fromMap).toList();
   }
 
   Future<MedicineModel?> getById(String id) async {
-    final maps = await _db!.query(
-      _tableMedicines,
-      where: '$colId = ?',
-      whereArgs: [id],
-    );
-    if (maps.isEmpty) return null;
-    return _fromMap(maps.first);
+    final maps = await _db!.query(_table, where: '$colId = ?', whereArgs: [id]);
+    return maps.isEmpty ? null : _fromMap(maps.first);
   }
 
-  Future<List<MedicineModel>> getPending() async {
+  Future<List<MedicineModel>> getPending(String profileId) async {
     final maps = await _db!.query(
-      _tableMedicines,
-      where: '$colSyncStatus = ?',
-      whereArgs: [SyncStatus.pending.toJson()],
+      _table,
+      where: '$colSyncStatus = ? AND $colProfileId = ?',
+      whereArgs: [SyncStatus.pending.toJson(), profileId],
     );
     return maps.map(_fromMap).toList();
   }
 
-  Future<void> updateSyncStatus(
-    String id,
-    SyncStatus status, {
-    String? remoteId,
-  }) async {
-    final values = <String, dynamic>{
-      colSyncStatus: status.toJson(),
-      colUpdatedAt: DateTime.now().toIso8601String(),
-    };
-    if (remoteId != null) {
-      values[colRemoteId] = remoteId;
-    }
-    await _db!.update(
-      _tableMedicines,
-      values,
-      where: '$colId = ?',
-      whereArgs: [id],
-    );
-    await _emitAll();
+  Future<void> updateSyncStatus(String id, SyncStatus status, {String? remoteId}) async {
+    final v = <String, dynamic>{colSyncStatus: status.toJson(), colUpdatedAt: DateTime.now().toIso8601String()};
+    if (remoteId != null) v[colRemoteId] = remoteId;
+    await _db!.update(_table, v, where: '$colId = ?', whereArgs: [id]);
   }
 
-  Future<void> update(MedicineModel medicine) async {
-    await _db!.update(
-      _tableMedicines,
-      _toMap(medicine),
-      where: '$colId = ?',
-      whereArgs: [medicine.id],
-    );
-    await _emitAll();
+  Future<void> update(MedicineModel m) async {
+    await _db!.update(_table, _toMap(m), where: '$colId = ?', whereArgs: [m.id]);
+    await _emitAll(m.profileId);
   }
 
-  Future<void> upsertFromRemote(MedicineModel remoteModel) async {
-    final remoteId = remoteModel.remoteId;
-    if (remoteId == null || remoteId.isEmpty) {
-      await insert(remoteModel);
+  Future<void> upsertFromRemote(MedicineModel remote) async {
+    if (remote.remoteId == null || remote.remoteId!.isEmpty) {
+      await insert(remote);
       return;
     }
-
     final matches = await _db!.query(
-      _tableMedicines,
-      where: '$colRemoteId = ?',
-      whereArgs: [remoteId],
+      _table,
+      where: '$colRemoteId = ? AND $colProfileId = ?',
+      whereArgs: [remote.remoteId, remote.profileId],
     );
-
     if (matches.isNotEmpty) {
       final existing = _fromMap(matches.first);
-      final updated = remoteModel.copyWith(
-        id: existing.id,
-        isActive: existing.isActive,
-        createdAt: existing.createdAt,
-      );
-      for (final duplicate in matches.skip(1)) {
-        final duplicateId = duplicate[colId] as String;
-        await _db!.delete(
-          _tableMedicines,
-          where: '$colId = ?',
-          whereArgs: [duplicateId],
-        );
-      }
-      await _db!.update(
-        _tableMedicines,
-        _toMap(updated),
-        where: '$colId = ?',
-        whereArgs: [existing.id],
-      );
-      await _cleanupLocalGhostCopies(updated, keepId: existing.id);
-      await _emitAll();
+      final preserved = remote.copyWith(id: existing.id, imagePath: existing.imagePath,
+          isActive: existing.isActive, createdAt: existing.createdAt);
+      await _db!.update(_table, _toMap(preserved), where: '$colId = ?', whereArgs: [existing.id]);
+      await _emitAll(remote.profileId);
       return;
     }
-
-    final localCandidates = await _findLocalCandidatesWithoutRemoteId(
-      remoteModel,
-    );
-    if (localCandidates.isNotEmpty) {
-      final candidate = _fromMap(localCandidates.first);
-      for (final duplicate in localCandidates.skip(1)) {
-        final duplicateId = duplicate[colId] as String;
-        await _db!.delete(
-          _tableMedicines,
-          where: '$colId = ?',
-          whereArgs: [duplicateId],
-        );
-      }
-      final linked = remoteModel.copyWith(
-        id: candidate.id,
-        isActive: candidate.isActive,
-        createdAt: candidate.createdAt,
-      );
-      await _db!.update(
-        _tableMedicines,
-        _toMap(linked),
-        where: '$colId = ?',
-        whereArgs: [candidate.id],
-      );
-      await _emitAll();
-      return;
-    }
-
-    await insert(remoteModel);
-  }
-
-  Future<List<Map<String, dynamic>>> _findLocalCandidatesWithoutRemoteId(
-    MedicineModel model,
-  ) async {
-    final rows = await _db!.query(
-      _tableMedicines,
-      where: '$colRemoteId IS NULL',
-    );
-    return rows.where((row) {
-      final local = _fromMap(row);
-      return _isLikelySameMedicine(local, model);
-    }).toList();
-  }
-
-  bool _isLikelySameMedicine(MedicineModel local, MedicineModel remote) {
-    final sameDose =
-        local.doseAmount.trim() == remote.doseAmount.trim() &&
-        local.doseUnit.trim().toLowerCase() ==
-            remote.doseUnit.trim().toLowerCase();
-    final doseMissingOnOneSide =
-        local.doseAmount.trim().isEmpty || remote.doseAmount.trim().isEmpty;
-
-    return local.name.trim().toLowerCase() ==
-            remote.name.trim().toLowerCase() &&
-        local.frequency == remote.frequency &&
-        _sameDate(local.startDate, remote.startDate) &&
-        _sameAlarmTimes(local.alarmTimes, remote.alarmTimes) &&
-        (sameDose || doseMissingOnOneSide);
-  }
-
-  bool _sameDate(DateTime a, DateTime b) {
-    final left = DateTime.utc(a.year, a.month, a.day);
-    final right = DateTime.utc(b.year, b.month, b.day);
-    final dayDiff = left.difference(right).inDays.abs();
-    return dayDiff <= 1;
-  }
-
-  bool _sameAlarmTimes(List<String> a, List<String> b) {
-    if (a.length != b.length) return false;
-    final left = a.map(_normalizeTime).toList()..sort();
-    final right = b.map(_normalizeTime).toList()..sort();
-    for (var i = 0; i < left.length; i++) {
-      if (left[i] != right[i]) return false;
-    }
-    return true;
-  }
-
-  String _normalizeTime(String raw) {
-    final value = raw.trim();
-    final match = RegExp(r'^(\d{1,2}):(\d{2})').firstMatch(value);
-    if (match == null) return value;
-    final hour = int.tryParse(match.group(1) ?? '0') ?? 0;
-    final minute = int.tryParse(match.group(2) ?? '0') ?? 0;
-    final hh = hour.toString().padLeft(2, '0');
-    final mm = minute.toString().padLeft(2, '0');
-    return '$hh:$mm';
-  }
-
-  Future<void> _cleanupLocalGhostCopies(
-    MedicineModel model, {
-    required String keepId,
-  }) async {
-    final ghosts = await _findLocalCandidatesWithoutRemoteId(model);
-    for (final ghost in ghosts) {
-      final ghostId = ghost[colId] as String;
-      if (ghostId == keepId) continue;
-      await _db!.delete(
-        _tableMedicines,
-        where: '$colId = ?',
-        whereArgs: [ghostId],
-      );
-    }
-    await _emitAll();
+    await insert(remote);
   }
 
   Future<void> delete(String id) async {
-    await _db!.delete(_tableMedicines, where: '$colId = ?', whereArgs: [id]);
-    await _emitAll();
+    await _db!.delete(_table, where: '$colId = ?', whereArgs: [id]);
   }
 
   Future<void> close() async {
-    await _medicinesController.close();
+    await _controller.close();
     await _db?.close();
     _db = null;
   }
 
-  Future<void> _emitAll() async {
-    if (_db == null || _medicinesController.isClosed) return;
-    final all = await getAll();
-    if (!_medicinesController.isClosed) {
-      _medicinesController.add(all);
-    }
+  Future<void> _emitAll(String profileId) async {
+    if (_db == null || _controller.isClosed) return;
+    final items = profileId.isNotEmpty ? await getAll(profileId) : <MedicineModel>[];
+    if (!_controller.isClosed) _controller.add(items);
   }
 
-  Map<String, dynamic> _toMap(MedicineModel medicine) {
-    return {
-      colId: medicine.id,
-      colName: medicine.name,
-      colDoseForm: medicine.doseForm.toJson(),
-      colDoseAmount: medicine.doseAmount,
-      colDoseUnit: medicine.doseUnit,
-      colFrequency: medicine.frequency.toJson(),
-      colAlarmTimes: jsonEncode(medicine.alarmTimes),
-      colStartDate: medicine.startDate.toIso8601String(),
-      colNotes: medicine.notes,
-      colIsActive: medicine.isActive ? 1 : 0,
-      colSyncStatus: medicine.syncStatus.toJson(),
-      colRemoteId: medicine.remoteId,
-      colCreatedAt: medicine.createdAt.toIso8601String(),
-      colUpdatedAt: medicine.updatedAt.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> _toMap(MedicineModel m) => {
+        colId: m.id, colProfileId: m.profileId, colName: m.name,
+        colDoseForm: m.doseForm.toJson(), colDoseAmount: m.doseAmount,
+        colDoseUnit: m.doseUnit, colFrequency: m.frequency.toJson(),
+        colAlarmTimes: jsonEncode(m.alarmTimes),
+        colStartDate: m.startDate.toIso8601String(), colNotes: m.notes,
+        colImagePath: m.imagePath, colIsActive: m.isActive ? 1 : 0,
+        colSyncStatus: m.syncStatus.toJson(), colRemoteId: m.remoteId,
+        colCreatedAt: m.createdAt.toIso8601String(), colUpdatedAt: m.updatedAt.toIso8601String(),
+      };
 
-  MedicineModel _fromMap(Map<String, dynamic> map) {
-    return MedicineModel(
-      id: map[colId] as String,
-      name: map[colName] as String,
-      doseForm: DoseForm.fromJson(map[colDoseForm] as String),
-      doseAmount: map[colDoseAmount] as String,
-      doseUnit: map[colDoseUnit] as String,
-      frequency: Frequency.fromJson(map[colFrequency] as String),
-      alarmTimes: _decodeAlarmTimes(map[colAlarmTimes] as String),
-      startDate: DateTime.parse(map[colStartDate] as String),
-      notes: map[colNotes] as String?,
-      isActive: (map[colIsActive] as int) == 1,
-      syncStatus: SyncStatus.fromJson(map[colSyncStatus] as String),
-      remoteId: map[colRemoteId] as String?,
-      createdAt: DateTime.parse(map[colCreatedAt] as String),
-      updatedAt: DateTime.parse(map[colUpdatedAt] as String),
-    );
-  }
+  MedicineModel _fromMap(Map<String, dynamic> m) => MedicineModel(
+        id: m[colId] as String, profileId: m[colProfileId] as String,
+        name: m[colName] as String, doseForm: DoseForm.fromJson(m[colDoseForm] as String),
+        doseAmount: m[colDoseAmount] as String, doseUnit: m[colDoseUnit] as String,
+        frequency: Frequency.fromJson(m[colFrequency] as String),
+        alarmTimes: _decodeAlarmTimes(m[colAlarmTimes] as String),
+        startDate: DateTime.parse(m[colStartDate] as String), notes: m[colNotes] as String?,
+        imagePath: m[colImagePath] as String?,
+        isActive: (m[colIsActive] as int) == 1,
+        syncStatus: SyncStatus.fromJson(m[colSyncStatus] as String),
+        remoteId: m[colRemoteId] as String?,
+        createdAt: DateTime.parse(m[colCreatedAt] as String), updatedAt: DateTime.parse(m[colUpdatedAt] as String),
+      );
 
   List<String> _decodeAlarmTimes(String json) {
     final decoded = jsonDecode(json);
-    if (decoded is List) {
-      return decoded.map((e) => e.toString()).toList();
-    }
-    return [];
+    return decoded is List ? decoded.map((e) => e.toString()).toList() : [];
   }
 }
