@@ -22,6 +22,7 @@ class NotificationService {
         'dose_amount': '${medicine.doseAmount} ${medicine.doseUnit}'.trim(),
         'image_path': medicine.imagePath ?? '',
         'time_millis': scheduled.millisecondsSinceEpoch,
+        'frequency': medicine.frequency.name,
       });
     }
   }

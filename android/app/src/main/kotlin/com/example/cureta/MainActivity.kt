@@ -54,7 +54,8 @@ class MainActivity : FlutterActivity() {
                         val dose = call.argument<String>("dose_amount") ?: ""
                         val imagePath = call.argument<String>("image_path") ?: ""
                         val time = call.argument<Long>("time_millis")    ?: 0L
-                        AlarmScheduler.scheduleAlarm(this, id, localId, name, dose, imagePath, time)
+                        val frequency = call.argument<String>("frequency") ?: "daily"
+                        AlarmScheduler.scheduleAlarm(this, id, localId, name, dose, imagePath, time, frequency)
                         result.success(null)
                     }
 

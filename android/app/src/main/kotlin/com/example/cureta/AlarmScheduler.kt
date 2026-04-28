@@ -17,6 +17,7 @@ class AlarmScheduler : BroadcastReceiver() {
         val localId = intent.getStringExtra("local_id") ?: ""
         val dose = intent.getStringExtra("dose_amount") ?: ""
         val imagePath = intent.getStringExtra("image_path") ?: ""
+        val frequency = intent.getStringExtra("frequency") ?: "daily"
 
         val serviceIntent = Intent(context, AlarmService::class.java).apply {
             putExtra("medicine_name", medicineName)
@@ -32,13 +33,13 @@ class AlarmScheduler : BroadcastReceiver() {
             context.startService(serviceIntent)
         }
 
-        rescheduleAlarmForNextDay(context, alarmId, localId, medicineName, dose, imagePath, timeMillis)
+        rescheduleAlarmForNextOccurence(context, alarmId, localId, medicineName, dose, imagePath, timeMillis, frequency)
     }
 
     companion object {
         private const val PREFS_NAME = "cureta_alarms"
 
-        fun scheduleAlarm(context: Context, id: Int, localId: String, medicineName: String, dose: String, imagePath: String, triggerTimeMillis: Long) {
+        fun scheduleAlarm(context: Context, id: Int, localId: String, medicineName: String, dose: String, imagePath: String, triggerTimeMillis: Long, frequency: String = "daily") {
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             val intent = Intent(context, AlarmScheduler::class.java).apply {
                 putExtra("medicine_name", medicineName)
@@ -47,6 +48,7 @@ class AlarmScheduler : BroadcastReceiver() {
                 putExtra("dose_amount", dose)
                 putExtra("image_path", imagePath)
                 putExtra("time_millis", triggerTimeMillis)
+                putExtra("frequency", frequency)
             }
             val pendingIntent = PendingIntent.getBroadcast(
                 context, id, intent,
@@ -62,7 +64,7 @@ class AlarmScheduler : BroadcastReceiver() {
                     AlarmManager.RTC_WAKEUP, triggerTimeMillis, pendingIntent
                 )
             }
-            saveAlarmToPrefs(context, id, localId, medicineName, dose, imagePath, triggerTimeMillis)
+            saveAlarmToPrefs(context, id, localId, medicineName, dose, imagePath, triggerTimeMillis, frequency)
         }
 
         fun cancelAlarm(context: Context, id: Int) {
@@ -76,7 +78,11 @@ class AlarmScheduler : BroadcastReceiver() {
             removeAlarmFromPrefs(context, id)
         }
 
-        fun rescheduleAlarmForNextDay(context: Context, alarmId: Int, localId: String, medicineName: String, dose: String, imagePath: String, originalTimeMillis: Long) {
+        fun rescheduleAlarmForNextOccurence(context: Context, alarmId: Int, localId: String, medicineName: String, dose: String, imagePath: String, originalTimeMillis: Long, frequency: String) {
+            if (frequency == "asNeeded") {
+                removeAlarmFromPrefs(context, alarmId)
+                return
+            }
             val originalCalendar = Calendar.getInstance().apply {
                 timeInMillis = originalTimeMillis
             }
@@ -87,9 +93,10 @@ class AlarmScheduler : BroadcastReceiver() {
                 set(Calendar.MILLISECOND, 0)
             }
             if (nextCalendar.timeInMillis <= System.currentTimeMillis()) {
-                nextCalendar.add(Calendar.DAY_OF_YEAR, 1)
+                val daysToAdd = if (frequency == "weekly") 7 else 1
+                nextCalendar.add(Calendar.DAY_OF_YEAR, daysToAdd)
             }
-            scheduleAlarm(context, alarmId, localId, medicineName, dose, imagePath, nextCalendar.timeInMillis)
+            scheduleAlarm(context, alarmId, localId, medicineName, dose, imagePath, nextCalendar.timeInMillis, frequency)
         }
 
         fun rescheduleAllFromPrefs(context: Context) {
@@ -97,7 +104,7 @@ class AlarmScheduler : BroadcastReceiver() {
             for ((key, value) in prefs.all) {
                 if (!key.startsWith("alarm_")) continue
                 try {
-                    val parts = (value as String).split("|", limit = 6)
+                    val parts = (value as String).split("|", limit = 7)
                     if (parts.size < 6) continue
                     val id = parts[0].toInt()
                     val medicineName = parts[1]
@@ -105,11 +112,14 @@ class AlarmScheduler : BroadcastReceiver() {
                     val localId = parts[3]
                     val dose = parts[4]
                     val imagePath = parts[5]
+                    val frequency = if (parts.size >= 7) parts[6] else "daily"
+
+                    if (frequency == "asNeeded") continue
 
                     if (timeMillis < System.currentTimeMillis()) {
-                        rescheduleAlarmForNextDay(context, id, localId, medicineName, dose, imagePath, timeMillis)
+                        rescheduleAlarmForNextOccurence(context, id, localId, medicineName, dose, imagePath, timeMillis, frequency)
                     } else {
-                        scheduleAlarm(context, id, localId, medicineName, dose, imagePath, timeMillis)
+                        scheduleAlarm(context, id, localId, medicineName, dose, imagePath, timeMillis, frequency)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -117,10 +127,10 @@ class AlarmScheduler : BroadcastReceiver() {
             }
         }
 
-        fun saveAlarmToPrefs(context: Context, id: Int, localId: String, name: String, dose: String, imagePath: String, timeMillis: Long) {
+        fun saveAlarmToPrefs(context: Context, id: Int, localId: String, name: String, dose: String, imagePath: String, timeMillis: Long, frequency: String) {
             context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .edit()
-                .putString("alarm_$id", "$id|$name|$timeMillis|$localId|$dose|$imagePath")
+                .putString("alarm_$id", "$id|$name|$timeMillis|$localId|$dose|$imagePath|$frequency")
                 .apply()
         }
 
