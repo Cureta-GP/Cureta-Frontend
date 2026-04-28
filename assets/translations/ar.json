@@ -379,6 +379,9 @@
     "retry": "إعادة المحاولة",
     "pick_image_title": "اختر صورة الدواء",
     "pick_from_camera": "التقاط صورة",
-    "pick_from_gallery": "اختيار من المعرض"
+    "pick_from_gallery": "اختيار من المعرض",
+    "alarm_taken": "تم أخذ الدواء",
+    "alarm_missed": "تخطي الدواء",
+    "alarm_subtitle": "حان وقت تناول الدواء الخاص بك"
   }
 }

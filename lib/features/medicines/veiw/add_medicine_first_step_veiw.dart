@@ -75,9 +75,9 @@ class AddMedicineFirstStepVeiw extends StatelessWidget {
     try {
       final picked = await ImagePicker().pickImage(
         source: source,
-        maxWidth: 512,
-        maxHeight: 512,
-        imageQuality: 60,
+        maxWidth: 1024,
+        maxHeight: 1024,
+        imageQuality: 85,
       );
       if (picked != null) cubit.updateImagePath(picked.path);
     } catch (_) {

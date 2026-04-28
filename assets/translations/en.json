@@ -379,6 +379,9 @@
     "retry": "Retry",
     "pick_image_title": "Choose Medicine Image",
     "pick_from_camera": "Take a Photo",
-    "pick_from_gallery": "Choose from Gallery"
+    "pick_from_gallery": "Choose from Gallery",
+    "alarm_taken": "Taken",
+    "alarm_missed": "Missed",
+    "alarm_subtitle": "It's time to take your medication"
   }
 }

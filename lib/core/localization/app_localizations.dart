@@ -481,5 +481,8 @@ class AppLocalizations {
   static String get medicinesPickImageTitle => 'medicines.pick_image_title'.tr();
   static String get medicinesPickFromCamera => 'medicines.pick_from_camera'.tr();
   static String get medicinesPickFromGallery => 'medicines.pick_from_gallery'.tr();
+  static String get medicinesAlarmTaken => 'medicines.alarm_taken'.tr();
+  static String get medicinesAlarmMissed => 'medicines.alarm_missed'.tr();
+  static String get medicinesAlarmSubtitle => 'medicines.alarm_subtitle'.tr();
   static String dynamicTr(String key) => key.tr();
 }
