@@ -1,10 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/Services/notification_service.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/features/medicines/widgets/alarm_pulse_image_widget.dart';
+import 'package:cureta/features/medicines/widgets/alarm_action_buttons_widget.dart';
 import '../data/repo/medicine_repository.dart';
 
 class MedicineAlarmVeiw extends StatefulWidget {
@@ -25,10 +26,11 @@ class MedicineAlarmVeiw extends StatefulWidget {
   State<MedicineAlarmVeiw> createState() => _MedicineAlarmVeiwState();
 }
 
-class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
-  late Animation<double> _fadeAnimation;
+class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final Animation<double> _scaleAnimation;
+  late final Animation<double> _fadeAnimation;
 
   @override
   void initState() {
@@ -36,12 +38,11 @@ class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw> with SingleTicker
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: false);
+    )..repeat();
 
     _scaleAnimation = Tween<double>(begin: 0.8, end: 1.5).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
-
     _fadeAnimation = Tween<double>(begin: 0.8, end: 0.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
     );
@@ -54,11 +55,9 @@ class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw> with SingleTicker
   }
 
   Future<void> _logAction(String status) async {
-    // Stop the alarm sound FIRST
     await NotificationService.instance.stopAlarm();
-    // Log the dose
-    await getIt<MedicineRepository>().logMedicationAction(widget.localId, status);
-    // Close the alarm full screen activity safely
+    await getIt<MedicineRepository>()
+        .logMedicationAction(widget.localId, status);
     SystemNavigator.pop();
   }
 
@@ -73,45 +72,24 @@ class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw> with SingleTicker
       backgroundColor: colors.background,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: spacing.xl, vertical: spacing.xl),
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: spacing.xl,
+            vertical: spacing.xl,
+          ),
           child: Column(
             children: [
-              const Spacer(flex: 1),
-              // Glowing Image
-              SizedBox(
-                height: 240,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    AnimatedBuilder(
-                      animation: _animationController,
-                      builder: (context, child) {
-                        return Transform.scale(
-                          scale: _scaleAnimation.value,
-                          child: Opacity(
-                            opacity: _fadeAnimation.value,
-                            child: Container(
-                              width: 160,
-                              height: 160,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: colors.primary.withValues(alpha: 0.3),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    _buildImage(context),
-                  ],
-                ),
+              const Spacer(),
+              AlarmPulseImageWidget(
+                animation: _animationController,
+                scaleAnimation: _scaleAnimation,
+                fadeAnimation: _fadeAnimation,
+                imagePath: widget.imagePath,
               ),
               SizedBox(height: spacing.xl),
               Text(
                 widget.name,
                 style: typography.title.copyWith(
                   color: colors.textPrimary,
-                  fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.center,
@@ -119,14 +97,15 @@ class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw> with SingleTicker
               SizedBox(height: spacing.sm),
               Text(
                 AppLocalizations.medicinesAlarmSubtitle,
-                style: typography.body.copyWith(
-                  color: colors.textSecondary,
-                ),
+                style: typography.body.copyWith(color: colors.textSecondary),
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: spacing.lg),
               Container(
-                padding: EdgeInsets.symmetric(horizontal: spacing.xl, vertical: spacing.sm),
+                padding: EdgeInsetsDirectional.symmetric(
+                  horizontal: spacing.xl,
+                  vertical: spacing.sm,
+                ),
                 decoration: BoxDecoration(
                   color: colors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(radius.full),
@@ -141,109 +120,14 @@ class _MedicineAlarmVeiwState extends State<MedicineAlarmVeiw> with SingleTicker
                 ),
               ),
               const Spacer(flex: 2),
-              
-              // Taken Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => _logAction('TAKEN'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: colors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(radius.full),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: spacing.lg),
-                    elevation: 4,
-                  ),
-                  child: Text(
-                    AppLocalizations.medicinesAlarmTaken,
-                    style: typography.button.copyWith(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: spacing.md),
-              
-              // Missed Button
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton(
-                  onPressed: () => _logAction('MISSED'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: colors.error,
-                    side: BorderSide(color: colors.error, width: 2),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(radius.full),
-                    ),
-                    padding: EdgeInsets.symmetric(vertical: spacing.lg),
-                  ),
-                  child: Text(
-                    AppLocalizations.medicinesAlarmMissed,
-                    style: typography.button.copyWith(
-                      color: colors.error,
-                      fontSize: 18,
-                    ),
-                  ),
-                ),
+              AlarmActionButtonsWidget(
+                onTaken: () => _logAction('TAKEN'),
+                onMissed: () => _logAction('MISSED'),
               ),
               SizedBox(height: spacing.md),
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildImage(BuildContext context) {
-    final colors = context.colors;
-    
-    if (widget.imagePath != null && widget.imagePath!.isNotEmpty) {
-      final file = File(widget.imagePath!);
-      if (file.existsSync()) {
-        return Container(
-          width: 160,
-          height: 160,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: colors.surface, width: 4),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.1),
-                blurRadius: 10,
-                spreadRadius: 2,
-              )
-            ],
-            image: DecorationImage(
-              image: FileImage(file),
-              fit: BoxFit.cover,
-            ),
-          ),
-        );
-      }
-    }
-    
-    return Container(
-      width: 160,
-      height: 160,
-      decoration: BoxDecoration(
-        color: colors.surface,
-        shape: BoxShape.circle,
-        border: Border.all(color: colors.primary, width: 4),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 10,
-            spreadRadius: 2,
-          )
-        ],
-      ),
-      child: Icon(
-        Icons.medication,
-        size: 80,
-        color: colors.primary,
       ),
     );
   }

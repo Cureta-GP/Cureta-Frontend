@@ -13,7 +13,6 @@ import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 class UserMedicinesVeiw extends StatelessWidget {
   const UserMedicinesVeiw({super.key});
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -22,14 +21,11 @@ class UserMedicinesVeiw extends StatelessWidget {
     );
   }
 }
-
 class _UserMedicinesBody extends StatefulWidget {
   const _UserMedicinesBody();
-
   @override
   State<_UserMedicinesBody> createState() => _UserMedicinesBodyState();
 }
-
 class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
   final TextEditingController _searchController = TextEditingController();
 

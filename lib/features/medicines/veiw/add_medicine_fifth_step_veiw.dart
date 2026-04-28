@@ -15,7 +15,6 @@ class AddMedicineFifthStepVeiw extends StatelessWidget {
     final colors = context.colors;
     final spacing = context.spacing;
     final typography = context.typography;
-
     return Scaffold(
       backgroundColor: colors.background,
       body: SafeArea(

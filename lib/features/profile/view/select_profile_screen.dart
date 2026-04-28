@@ -4,9 +4,6 @@ import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/widgets/add_profile_button.dart';
 import 'package:cureta/features/profile/widgets/profile_card.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-
-
 /// Select Profile screen/dialog for choosing between family members
 /// Can be displayed as a bottom sheet or dialog
 class SelectProfileScreen extends StatefulWidget {
