@@ -5,7 +5,7 @@ class OcrMedicineMatch {
 
   OcrMedicineMatch({
     required this.original,
-    required this.corrected,
+    this.corrected,
     required this.found,
   });
 

@@ -11,9 +11,11 @@ class OcrCreatedMedicine {
 
   factory OcrCreatedMedicine.fromJson(Map<String, dynamic> json) {
     return OcrCreatedMedicine(
-      id: json['id'],
-      name: json['name'],
-      createdAt: DateTime.parse(json['created_at']),
+      id: json['id'] ?? '',
+      name: json['name'] ?? '',
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : DateTime.now(),
     );
   }
 }

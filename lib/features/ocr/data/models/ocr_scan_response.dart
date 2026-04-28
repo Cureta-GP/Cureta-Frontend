@@ -14,9 +14,11 @@ class OcrScanResponse {
   factory OcrScanResponse.fromJson(Map<String, dynamic> json) {
     return OcrScanResponse(
       success: json['success'] ?? false,
-      extractedMedicines: (json['extractedMedicines'] as List)
-          .map((e) => OcrMedicineMatch.fromJson(e))
-          .toList(),
+      extractedMedicines:
+          (json['extractedMedicines'] as List?)
+              ?.map((e) => OcrMedicineMatch.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       message: json['message'],
     );
   }

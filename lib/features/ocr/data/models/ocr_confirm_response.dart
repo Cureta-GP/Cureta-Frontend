@@ -1,4 +1,3 @@
-
 import 'ocr_created_medicine.dart';
 
 class OcrConfirmResponse {
@@ -21,9 +20,13 @@ class OcrConfirmResponse {
       success: json['success'] ?? false,
       checked: List<String>.from(json['checked'] ?? []),
       duplicates: List<String>.from(json['duplicates'] ?? []),
-      created: (json['created'] as List)
-          .map((e) => OcrCreatedMedicine.fromJson(e))
-          .toList(),
+      created:
+          (json['created'] as List?)
+              ?.map(
+                (e) => OcrCreatedMedicine.fromJson(e as Map<String, dynamic>),
+              )
+              .toList() ??
+          [],
       message: json['message'],
     );
   }

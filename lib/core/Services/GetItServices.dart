@@ -1,4 +1,5 @@
 import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
+import 'package:cureta/features/ocr/data/repo/ocr_repository.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:get_it/get_it.dart';
@@ -14,6 +15,8 @@ import 'package:cureta/features/chat_bot/data/services/chat_service.dart';
 import 'package:cureta/features/chat_bot/data/repo/chat_repository.dart';
 import 'package:cureta/features/chat_bot/veiw_model/chat_cubit.dart';
 import 'package:cureta/features/chat_bot/veiw_model/chat_sessions_cubit.dart';
+import 'package:cureta/features/ocr/data/service/ocr_service.dart';
+import 'package:cureta/features/ocr/view_model/ocr_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -55,4 +58,13 @@ void setup() {
   );
   getIt.registerFactory<ChatCubit>(() => ChatCubit());
   getIt.registerFactory<ChatSessionsCubit>(() => ChatSessionsCubit());
+
+  // OCR
+  getIt.registerSingleton<OcrService>(OcrService());
+  getIt.registerSingleton<OcrRepository>(
+    OcrRepository(getIt.get<OcrService>()),
+  );
+  getIt.registerFactory<OcrCubit>(
+    () => OcrCubit(repository: getIt.get<OcrRepository>()),
+  );
 }
