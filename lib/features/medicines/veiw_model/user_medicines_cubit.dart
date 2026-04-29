@@ -123,7 +123,9 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
 
     try {
       // Cancel native alarms before removing from the repository — best-effort.
-      NotificationService.instance.cancelMedicineAlarms(localId).ignore();
+      NotificationService.instance
+          .cancelMedicineAlarms(localId, profileId: deleted.profileId)
+          .ignore();
       await _repository.deleteMedicine(localId);
     } catch (e) {
       final allRevert = List<MedicineModel>.from(_allMedicines)
@@ -176,7 +178,9 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
       if (toggled.isActive) {
         NotificationService.instance.scheduleMedicineAlarms(toggled).ignore();
       } else {
-        NotificationService.instance.cancelMedicineAlarms(localId).ignore();
+        NotificationService.instance
+            .cancelMedicineAlarms(localId, profileId: medicine.profileId)
+            .ignore();
       }
     } catch (e) {
       final reverted = List<MedicineModel>.from(_allMedicines)

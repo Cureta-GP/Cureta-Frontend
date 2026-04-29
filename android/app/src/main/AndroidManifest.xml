@@ -61,13 +61,15 @@
             android:name=".AlarmScheduler"
             android:exported="false"/>
 
-        <!-- Receives BOOT_COMPLETED from system — must be exported=true -->
+        <!-- Receives BOOT_COMPLETED + clock/timezone changes from system -->
         <receiver
             android:name=".BootReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.TIME_SET"/>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
             </intent-filter>
         </receiver>
 

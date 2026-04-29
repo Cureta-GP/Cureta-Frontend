@@ -14,6 +14,7 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
     private var vibrator: Vibrator? = null
     private var tts: TextToSpeech? = null
     private var pendingMedicineName: String? = null
+    private var originalAlarmVolume: Int = -1  // لحفظ الـ volume الأصلي
 
     companion object {
         const val CHANNEL_ID = "cureta_alarm_channel"
@@ -30,12 +31,10 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
 
     override fun onInit(status: Int) {
         if (status == TextToSpeech.SUCCESS) {
-            // Try Arabic first, fall back to default
             val arResult = tts?.setLanguage(Locale("ar"))
             if (arResult == TextToSpeech.LANG_MISSING_DATA || arResult == TextToSpeech.LANG_NOT_SUPPORTED) {
                 tts?.setLanguage(Locale.getDefault())
             }
-            // If we have a pending name to speak, do it now
             pendingMedicineName?.let { speakMedicineName(it) }
             pendingMedicineName = null
         }
@@ -46,17 +45,25 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
             stopSelf()
             return START_NOT_STICKY
         }
+
+        mediaPlayer?.apply { if (isPlaying) stop(); release() }
+        mediaPlayer = null
+        vibrator?.cancel()
+        vibrator = null
+
         val medicineName = intent?.getStringExtra("medicine_name") ?: "Medicine"
-        val localId = intent?.getStringExtra("local_id") ?: ""
-        val dose = intent?.getStringExtra("dose_amount") ?: ""
-        val imagePath = intent?.getStringExtra("image_path") ?: ""
+        val localId      = intent?.getStringExtra("local_id")      ?: ""
+        val dose         = intent?.getStringExtra("dose_amount")    ?: ""
+        val imagePath    = intent?.getStringExtra("image_path")     ?: ""
         val launchFullScreen = intent?.getBooleanExtra("launch_full_screen", false) ?: false
+
+        // ✅ ارفع الـ alarm volume للـ maximum قبل ما يبدأ الصوت
+        forceMaxAlarmVolume()
 
         startForeground(NOTIFICATION_ID, buildNotification(medicineName, localId, dose, imagePath))
         playAlarmSound()
         startVibration()
 
-        // Speak the medicine name after a short delay so the alarm sound is heard first
         Handler(Looper.getMainLooper()).postDelayed({
             pendingMedicineName = medicineName
             if (tts != null) {
@@ -72,19 +79,60 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         return START_NOT_STICKY
     }
 
+    // ✅ ارفع الـ volume للـ max وخزّن الأصلي عشان نرجعه لما الإنذار يتوقف
+    private fun forceMaxAlarmVolume() {
+        try {
+            val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+            originalAlarmVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    // ✅ رجّع الـ volume للقيمة الأصلية لما الإنذار يتوقف
+    private fun restoreAlarmVolume() {
+        try {
+            if (originalAlarmVolume >= 0) {
+                val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
+                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalAlarmVolume, 0)
+                originalAlarmVolume = -1
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
     private fun speakMedicineName(name: String) {
         try {
-            // Lower the alarm volume briefly, speak, then restore
             val audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-            val originalVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
-            audioManager.setStreamVolume(AudioManager.STREAM_ALARM, (originalVolume * 0.3).toInt().coerceAtLeast(1), 0)
+            val currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_ALARM)
+            // خفّض الصوت للـ 40% أثناء الكلام
+            audioManager.setStreamVolume(
+                AudioManager.STREAM_ALARM,
+                (currentVolume * 0.4).toInt().coerceAtLeast(1),
+                0
+            )
 
             tts?.speak("حان وقت دواء $name", TextToSpeech.QUEUE_FLUSH, null, "medicine_tts")
 
-            // Restore volume after speech (approx 3 seconds)
-            Handler(Looper.getMainLooper()).postDelayed({
-                audioManager.setStreamVolume(AudioManager.STREAM_ALARM, originalVolume, 0)
-            }, 3000)
+            // ✅ رجّع الصوت بعد ما الـ TTS يخلص مش بعد وقت ثابت
+            tts?.setOnUtteranceProgressListener(object : android.speech.tts.UtteranceProgressListener() {
+                override fun onStart(utteranceId: String?) {}
+                override fun onDone(utteranceId: String?) {
+                    Handler(Looper.getMainLooper()).post {
+                        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
+                    }
+                }
+                override fun onError(utteranceId: String?) {
+                    Handler(Looper.getMainLooper()).post {
+                        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_ALARM)
+                        audioManager.setStreamVolume(AudioManager.STREAM_ALARM, maxVolume, 0)
+                    }
+                }
+            })
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -111,6 +159,8 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         tts?.stop()
         tts?.shutdown()
         tts = null
+        // ✅ رجّع الـ volume للأصلي لما الإنذار يتوقف
+        restoreAlarmVolume()
         super.onDestroy()
     }
 
