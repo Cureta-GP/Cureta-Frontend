@@ -10,8 +10,15 @@ import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:cureta/features/ocr/data/models/ocr_medicine_match.dart';
+
 class ScannedMedicinesScreen extends StatelessWidget {
-  const ScannedMedicinesScreen({super.key});
+  final List<OcrMedicineMatch> medicines;
+
+  const ScannedMedicinesScreen({
+    super.key,
+    required this.medicines,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,10 +49,7 @@ class ScannedMedicinesScreen extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              List meds = [];
-              if (state is OcrScanSuccess) {
-                meds = state.response.extractedMedicines;
-              }
+              List meds = medicines;
 
               return Column(
                 children: [

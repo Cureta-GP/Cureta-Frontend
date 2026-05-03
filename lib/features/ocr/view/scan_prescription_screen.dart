@@ -6,6 +6,7 @@ import 'package:cureta/features/ocr/view_model/ocr_cubit.dart';
 import 'package:cureta/features/ocr/view_model/ocr_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
@@ -45,7 +46,10 @@ class ScanPrescriptionScreen extends StatelessWidget {
         listener: (context, state) {
           if (state is OcrScanSuccess) {
             // navigate to scanned medicines screen on success
-            Nav.pushNamed(context, AppRoutes.scannedMedicines);
+            context.pushNamed(
+              AppRoutes.scannedMedicines,
+              extra: state.response.extractedMedicines,
+            );
           } else if (state is OcrFailure) {
             ScaffoldMessenger.of(
               context,

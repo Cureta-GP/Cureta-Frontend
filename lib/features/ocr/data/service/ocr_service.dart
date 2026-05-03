@@ -19,6 +19,9 @@ class OcrService {
 
       return OcrScanResponse.fromJson(response.data);
     } catch (e) {
+      if (e is DioException) {
+        throw Exception("OCR Scan Failed: ${e.response?.data ?? e.message}");
+      }
       throw Exception("OCR Scan Failed: $e");
     }
   }
