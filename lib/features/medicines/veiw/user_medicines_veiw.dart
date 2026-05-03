@@ -107,6 +107,7 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
           bottom: MediaQuery.of(context).padding.bottom,
         ),
         child: FloatingActionButton.extended(
+          heroTag: 'medicines_fab',
           onPressed: _openAddMedicine,
           backgroundColor: colors.primary,
           foregroundColor: colors.background,

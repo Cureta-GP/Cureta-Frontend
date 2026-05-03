@@ -58,55 +58,6 @@
       "verify_button": "تحقق ومتابعة",
       "otp_error": "الرجاء إدخال الرمز كاملاً"
     },
-
-    "home": {
-        "welcome_back": "مرحباً بعودتك",
-        "add_record": "إضافة سجل",
-        "add_alert": "إضافة تنبيه",
-        "my_qr_code": "رمز QR الخاص بي",
-        "home_scan_prescription": "مسح الوصفة الطبية",
-        "upcoming_meds": "الأدوية القادمة",
-        "see_all": "عرض الكل",
-        "recent_activity": "النشاط الأخير",
-        "added_yesterday": "أضيف يوم أمس",
-        "added_days_ago": "أضيف منذ {days} أيام",
-        "amoxicillin": "أموكسيسيلين",
-        "amoxicillin_note": "500 ملغ • بعد الوجبة",
-        "vitamin_d": "فيتامين د",
-        "vitamin_d_note": "قرص واحد",
-        "blood_test_results": "نتائج فحص الدم",
-        "vaccination_record": "سجل التطعيم"
-    },
-    "chat": {
-        "input_hint": "اسألني أي شيء...",
-        "assistant_title": "مساعد كوريتا",
-        "online_status": "متصل",
-        "thinking_status": "بيفكر...",
-        "assistant_sender": "المساعد",
-        "user_sender": "أنت",
-        "greeting_message": "مرحباً! أستطيع مساعدتك في فهم السجلات الطبية الخاصة بك أو التحقق من التداخلات الدوائية. ماذا تريد أن تفعل اليوم؟",
-        "user_question": "هل يمكنك شرح نتائج تحليل الدم الأخير؟",
-        "reply_message": "بالتأكيد. أستطيع أن أرى أن مستوى الجلوكوز الصائم لديك كان 105 ملغ/دل. هذا أعلى قليلاً من النطاق المعتاد (70-99 ملغ/دل). هل ترغب أن أشرح ما الذي قد يسبب ذلك أو أقترح بعض الأسئلة المتابعة لطبيبك؟"
-    },
-    "ocr": {
-        "scan_prescription": {
-            "title": "مسح الروشتة",
-            "flash": "فلاش",
-            "camera_preview": "معاينة الكاميرا",
-            "gallery": "المعرض",
-            "capture": "التقاط",
-            "tips": "نصائح",
-            "position_hint": "ضع الروشتة داخل الإطار"
-        },
-        "scanned_medicines": {
-            "title": "الأدوية المكتشفة",
-            "add_another": "إضافة دواء آخر",
-            "confirm": "تأكيد الأدوية",
-            "rescan": "إعادة المسح",
-            "low_confidence": "دقة منخفضة - يرجى التحقق من التفاصيل",
-            "tablet": "قرص"
-        }
-    },
     "select_profile": {
       "title": "اختر الملف الشخصي",
       "subtitle": "التنقل بين أفراد الأسرة لتتبع تقدمهم",
@@ -117,6 +68,53 @@
       "daughter": "ابنة",
       "parent": "الوالد/الوالدة",
       "add_profile": "إضافة ملف شخصي جديد"
+    }
+  },
+  "home": {
+    "welcome_back": "مرحباً بعودتك",
+    "add_record": "إضافة سجل",
+    "add_alert": "إضافة تنبيه",
+    "my_qr_code": "رمز QR الخاص بي",
+    "upcoming_meds": "الأدوية القادمة",
+    "see_all": "عرض الكل",
+    "recent_activity": "النشاط الأخير",
+    "added_yesterday": "أضيف يوم أمس",
+    "added_days_ago": "أضيف منذ {days} أيام",
+    "amoxicillin": "أموكسيسيلين",
+    "amoxicillin_note": "500 ملغ • بعد الوجبة",
+    "vitamin_d": "فيتامين د",
+    "vitamin_d_note": "قرص واحد",
+    "blood_test_results": "نتائج فحص الدم",
+    "vaccination_record": "سجل التطعيم"
+  },
+  "chat": {
+    "input_hint": "اسألني أي شيء...",
+    "assistant_title": "مساعد كوريتا",
+    "online_status": "متصل",
+    "thinking_status": "بيفكر...",
+    "assistant_sender": "المساعد",
+    "user_sender": "أنت",
+    "greeting_message": "مرحباً! أستطيع مساعدتك في فهم السجلات الطبية الخاصة بك أو التحقق من التداخلات الدوائية. ماذا تريد أن تفعل اليوم؟",
+    "user_question": "هل يمكنك شرح نتائج تحليل الدم الأخير؟",
+    "reply_message": "بالتأكيد. أستطيع أن أرى أن مستوى الجلوكوز الصائم لديك كان 105 ملغ/دل. هذا أعلى قليلاً من النطاق المعتاد (70-99 ملغ/دل). هل تريد أن أشرح ما الذي قد يسبب ذلك أو أقترح بعض الأسئلة المتابعة لطبيبك؟"
+  },
+  "ocr": {
+    "scan_prescription": {
+      "title": "مسح الروشتة",
+      "flash": "فلاش",
+      "camera_preview": "معاينة الكاميرا",
+      "gallery": "المعرض",
+      "capture": "التقاط",
+      "tips": "نصائح",
+      "position_hint": "ضع الروشتة داخل الإطار"
+    },
+    "scanned_medicines": {
+      "title": "الأدوية المكتشفة",
+      "add_another": "إضافة دواء آخر",
+      "confirm": "تأكيد الأدوية",
+      "rescan": "إعادة المسح",
+      "low_confidence": "دقة منخفضة - يرجى التحقق من التفاصيل",
+      "tablet": "قرص"
     }
   },
   "onboarding": {
@@ -329,34 +327,6 @@
     "name_min_length": "يجب أن يكون الاسم الكامل حرفين على الأقل",
     "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
     "field_required": "{field} مطلوب"
-  },
-  "home": {
-    "welcome_back": "مرحباً بعودتك",
-    "add_record": "إضافة سجل",
-    "add_alert": "إضافة تنبيه",
-    "my_qr_code": "رمز QR الخاص بي",
-    "upcoming_meds": "الأدوية القادمة",
-    "see_all": "عرض الكل",
-    "recent_activity": "النشاط الأخير",
-    "added_yesterday": "أضيف يوم أمس",
-    "added_days_ago": "أضيف منذ {days} أيام",
-    "amoxicillin": "أموكسيسيلين",
-    "amoxicillin_note": "500 ملغ • بعد الوجبة",
-    "vitamin_d": "فيتامين د",
-    "vitamin_d_note": "قرص واحد",
-    "blood_test_results": "نتائج فحص الدم",
-    "vaccination_record": "سجل التطعيم"
-  },
-  "chat": {
-    "input_hint": "اسألني أي شيء...",
-    "assistant_title": "مساعد كوريتا",
-    "online_status": "متصل",
-    "thinking_status": "بيفكر...",
-    "assistant_sender": "المساعد",
-    "user_sender": "أنت",
-    "greeting_message": "مرحباً! أستطيع مساعدتك في فهم السجلات الطبية الخاصة بك أو التحقق من التداخلات الدوائية. ماذا تريد أن تفعل اليوم؟",
-    "user_question": "هل يمكنك شرح نتائج تحليل الدم الأخير؟",
-    "reply_message": "بالتأكيد. أستطيع أن أرى أن مستوى الجلوكوز الصائم لديك كان 105 ملغ/دل. هذا أعلى قليلاً من النطاق المعتاد (70-99 ملغ/دل). هل تريد أن أشرح ما الذي قد يسبب ذلك أو أقترح بعض الأسئلة المتابعة لطبيبك؟"
   },
   "medicines": {
     "my_medicines": "أدويتي",

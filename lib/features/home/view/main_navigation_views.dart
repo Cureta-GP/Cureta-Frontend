@@ -142,6 +142,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ],
           ),
           floatingActionButton: FloatingActionButton(
+            heroTag: 'chat_fab',
             onPressed: () {
               context.pushNamed(AppRoutes.chat);
             },
