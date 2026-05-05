@@ -1,4 +1,5 @@
 import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/core/Services/notification_service.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
@@ -90,6 +91,28 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   void initState() {
     super.initState();
     _selectedIndex = widget.initialTabIndex.clamp(0, 3);
+    _checkAlarmPermissions();
+  }
+
+  Future<void> _checkAlarmPermissions() async {
+    final canSchedule = await NotificationService.instance
+        .canScheduleExactAlarms();
+    if (!canSchedule && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'برجاء تفعيل إذن "التنبيهات والمواعيد" (Alarms & Reminders) لكي تعمل تنبيهات الدواء.',
+          ),
+          action: SnackBarAction(
+            label: 'تفعيل',
+            onPressed: () {
+              NotificationService.instance.openExactAlarmSettings();
+            },
+          ),
+          duration: const Duration(seconds: 10),
+        ),
+      );
+    }
   }
 
   @override

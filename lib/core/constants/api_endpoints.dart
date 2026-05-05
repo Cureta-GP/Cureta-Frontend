@@ -11,4 +11,15 @@ class ApiEndpoints {
   static const String primaryProfile = 'profile/user-profile';
   static const String familyProfile = 'profile/family-profile';
   static String profileData(String id) => "profile/$id";
+
+  //OCR
+  static const String scanPrescription = 'ocr/scan';
+  static const String scannedMedicines = 'ocr/confirm';
+
+  //Medicines
+  static const String medicines = 'medicines';
+  static String medicineData(String id) => "medicines/$id";
+  static String medicineArchive(String id) => "medicines/$id/archive";
+  static String medicineLogs(String id) => "medicines/$id/logs";
+
 }
