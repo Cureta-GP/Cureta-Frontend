@@ -35,6 +35,45 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
   final _advancedDrawerController = AdvancedDrawerController();
 
+  ({IconData icon, VoidCallback onPressed, String tooltip}) _fabConfig() {
+    switch (_selectedIndex) {
+      case 1:
+        return (
+          icon: Icons.medication_rounded,
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Add medicine is coming soon')),
+            );
+          },
+          tooltip: 'Add medicine',
+        );
+      case 2:
+        return (
+          icon: Icons.note_add_rounded,
+          onPressed: () {
+            context.pushNamed(AppRoutes.medicalRecordsStepOne);
+          },
+          tooltip: 'Add record',
+        );
+      case 3:
+        return (
+          icon: Icons.person_add_alt_1_rounded,
+          onPressed: () {
+            context.pushNamed(AppRoutes.addProfile, extra: true);
+          },
+          tooltip: 'Add profile',
+        );
+      default:
+        return (
+          icon: Icons.chat,
+          onPressed: () {
+            context.pushNamed(AppRoutes.chat);
+          },
+          tooltip: 'Chat',
+        );
+    }
+  }
+
   int? _tabFromRoute(BuildContext context) {
     try {
       final tab = int.tryParse(
@@ -83,6 +122,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final fabConfig = _fabConfig();
 
     return MultiBlocProvider(
       providers: [
@@ -122,10 +162,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              context.pushNamed(AppRoutes.chat);
-            },
-            child: const Icon(Icons.chat),
+            onPressed: fabConfig.onPressed,
+            tooltip: fabConfig.tooltip,
+            child: Icon(fabConfig.icon),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
