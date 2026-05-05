@@ -12,6 +12,7 @@ class MedicineModel extends Equatable {
   final DateTime startDate;
   final String? notes;
   final bool isActive;
+  final bool isPaused;
   final SyncStatus syncStatus;
   final String? remoteId;
   final DateTime createdAt;
@@ -30,6 +31,7 @@ class MedicineModel extends Equatable {
     required this.startDate,
     this.notes,
     this.isActive = true,
+    this.isPaused = false,
     this.syncStatus = SyncStatus.pending,
     this.remoteId,
     required this.createdAt,
@@ -49,6 +51,7 @@ class MedicineModel extends Equatable {
     DateTime? startDate,
     String? notes,
     bool? isActive,
+    bool? isPaused,
     SyncStatus? syncStatus,
     String? remoteId,
     DateTime? createdAt,
@@ -67,6 +70,7 @@ class MedicineModel extends Equatable {
       startDate: startDate ?? this.startDate,
       notes: notes ?? this.notes,
       isActive: isActive ?? this.isActive,
+      isPaused: isPaused ?? this.isPaused,
       syncStatus: syncStatus ?? this.syncStatus,
       remoteId: remoteId ?? this.remoteId,
       createdAt: createdAt ?? this.createdAt,
@@ -78,21 +82,22 @@ class MedicineModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        doseForm,
-        doseAmount,
-        doseUnit,
-        frequency,
-        alarmTimes,
-        startDate,
-        notes,
-        isActive,
-        syncStatus,
-        remoteId,
-        createdAt,
-        updatedAt,
-        profileId,
-        imagePath,
-      ];
+    id,
+    name,
+    doseForm,
+    doseAmount,
+    doseUnit,
+    frequency,
+    alarmTimes,
+    startDate,
+    notes,
+    isActive,
+    isPaused,
+    syncStatus,
+    remoteId,
+    createdAt,
+    updatedAt,
+    profileId,
+    imagePath,
+  ];
 }

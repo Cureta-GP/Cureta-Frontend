@@ -44,7 +44,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
 
   void _rescheduleActiveAlarms() {
     final activeMedicines = _allMedicines.where(
-      (m) => m.isActive && m.alarmTimes.isNotEmpty,
+      (m) => m.isActive && !m.isPaused && m.alarmTimes.isNotEmpty,
     );
     for (final medicine in activeMedicines) {
       NotificationService.instance.scheduleMedicineAlarms(medicine).ignore();
@@ -153,7 +153,10 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
     if (index == -1) return;
 
     final medicine = _allMedicines[index];
-    final toggled = medicine.copyWith(isActive: !medicine.isActive);
+    final toggled = medicine.copyWith(
+      isActive: !medicine.isActive,
+      isPaused: false,
+    );
 
     final allCopy = List<MedicineModel>.from(_allMedicines)..[index] = toggled;
     final filteredIndex = _filteredMedicines.indexWhere((m) => m.id == localId);

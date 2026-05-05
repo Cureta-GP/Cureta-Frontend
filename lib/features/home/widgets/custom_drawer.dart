@@ -48,7 +48,11 @@ class CustomDrawer extends StatelessWidget {
           _buildMenuItem(Icons.qr_code_outlined, 'QR Code'),
           _buildMenuItem(Icons.calendar_today_outlined, 'Calendar'),
           _buildMenuItem(Icons.person_outline, 'Family Profiles'),
-          _buildMenuItem(Icons.settings_outlined, 'Settings'),
+          _buildMenuItem(
+            Icons.settings_outlined,
+            'Settings',
+            onTap: () => _openSettings(context),
+          ),
 
           const Spacer(),
           BlocListener<AuthCubit, AuthState>(
@@ -135,6 +139,11 @@ class CustomDrawer extends StatelessWidget {
   void _openMedicines(BuildContext context) {
     controller.hideDrawer();
     GoRouter.of(context).push(AppRoutes.medicines);
+  }
+
+  void _openSettings(BuildContext context) {
+    controller.hideDrawer();
+    GoRouter.of(context).push(AppRoutes.settings);
   }
 
   Widget _buildMenuItem(IconData icon, String title, {VoidCallback? onTap}) {

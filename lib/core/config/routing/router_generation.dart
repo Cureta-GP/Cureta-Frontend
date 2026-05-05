@@ -28,6 +28,7 @@ import 'package:cureta/features/medicines/veiw/add_medicine_third_step_veiw.dart
 import 'package:cureta/features/medicines/veiw/add_medicine_forth_step_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_fifth_step_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_flow_wrapper.dart';
+import 'package:cureta/features/medicines/veiw/medicine_details_veiw.dart';
 
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -99,7 +100,8 @@ class RoutesGeneration {
         name: AppRoutes.scannedMedicines,
         builder: (context, state) {
           final extra = state.extra;
-          final meds = (extra as List<dynamic>?)
+          final meds =
+              (extra as List<dynamic>?)
                   ?.whereType<OcrMedicineMatch>()
                   .toList() ??
               [];
@@ -247,6 +249,17 @@ class RoutesGeneration {
         path: AppRoutes.medicines,
         name: AppRoutes.medicines,
         redirect: (_, __) => '${AppRoutes.mainNavigation}?tab=1',
+      ),
+      GoRoute(
+        path: AppRoutes.medicineDetails,
+        name: AppRoutes.medicineDetails,
+        pageBuilder: (context, state) {
+          final medicineId = state.extra as String? ?? '';
+          return PageTransitions.slideRight(
+            child: MedicineDetailsVeiw(medicineId: medicineId),
+            state: state,
+          );
+        },
       ),
       // Medicines Add Flow — ShellRoute provides a single AddMedicineCubit
       // instance shared across all 5 steps so form state persists on back nav.

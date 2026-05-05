@@ -36,15 +36,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
   final _advancedDrawerController = AdvancedDrawerController();
 
+  Future<void> _openAddMedicine() async {
+    await context.pushNamed(AppRoutes.medicinesAddStep1);
+  }
+
   ({IconData icon, VoidCallback onPressed, String tooltip}) _fabConfig() {
     switch (_selectedIndex) {
       case 1:
         return (
           icon: Icons.medication_rounded,
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Add medicine is coming soon')),
-            );
+            _openAddMedicine();
           },
           tooltip: 'Add medicine',
         );

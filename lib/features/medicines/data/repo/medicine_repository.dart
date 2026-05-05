@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 import 'package:uuid/uuid.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
+import '../models/dose_log_model.dart';
 import '../models/medicine_model.dart';
 import '../models/medicine_payload.dart';
 import '../models/medicine_enums.dart';
@@ -120,10 +121,44 @@ class MedicineRepository {
 
   Future<MedicineModel> updateMedicine(MedicineModel m) async { await _local.update(m); return m; }
 
+  Future<MedicineModel?> getMedicineById(String localId) async {
+    return _local.getById(localId);
+  }
+
   Future<void> toggleMedicineActive(String localId) async {
     final m = await _local.getById(localId);
     if (m == null) return;
-    await _local.update(m.copyWith(isActive: !m.isActive, updatedAt: DateTime.now()));
+    await _local.update(
+      m.copyWith(
+        isActive: !m.isActive,
+        isPaused: false,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> setMedicineActive(String localId, bool isActive) async {
+    final m = await _local.getById(localId);
+    if (m == null) return;
+    await _local.update(
+      m.copyWith(
+        isActive: isActive,
+        isPaused: isActive ? m.isPaused : false,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> setMedicinePaused(String localId, bool isPaused) async {
+    final m = await _local.getById(localId);
+    if (m == null) return;
+    await _local.update(
+      m.copyWith(
+        isPaused: isPaused,
+        isActive: isPaused ? true : m.isActive,
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   Future<void> logMedicationAction(String localId, String status) async {
@@ -131,6 +166,23 @@ class MedicineRepository {
     if (m == null) return;
     final now = DateTime.now();
     await _local.update(m.copyWith(updatedAt: now));
+    final statusLower = status.toLowerCase();
+    final parsedStatus = DoseStatus.values.firstWhere(
+      (e) => e.name == statusLower,
+      orElse: () => DoseStatus.pending,
+    );
+    final log = DoseLogModel(
+      id: _uuid.v4(),
+      medicineId: m.id,
+      scheduledAt: now,
+      status: parsedStatus,
+      takenAt: parsedStatus == DoseStatus.taken ? now : null,
+      remoteId: m.remoteId,
+    );
+    await _local.insertDoseLog({
+      ...log.toJson(),
+      'created_at': now.toIso8601String(),
+    });
     if (m.remoteId != null && m.remoteId!.isNotEmpty) {
       try {
         await _remote.trackDose(m.remoteId!, status);
@@ -138,6 +190,11 @@ class MedicineRepository {
         developer.log('Failed to log dose: $e', name: 'MedicineRepository');
       }
     }
+  }
+
+  Future<List<DoseLogModel>> getDoseLogs(String localId) async {
+    final rows = await _local.getDoseLogs(localId);
+    return rows.map(DoseLogModel.fromJson).toList();
   }
 
   MedicinePayload _buildPayload(MedicineModel m, String pid) => MedicinePayload(

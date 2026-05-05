@@ -7,8 +7,9 @@ import '../models/medicine_enums.dart';
 
 class MedicineLocalService {
   static const _dbName = 'cureta_medicines.db';
-  static const _dbVersion = 2;
+  static const _dbVersion = 3;
   static const _table = 'medicines';
+  static const _doseLogsTable = 'medicine_dose_logs';
 
   static const colId = 'id';
   static const colName = 'name';
@@ -20,6 +21,7 @@ class MedicineLocalService {
   static const colStartDate = 'start_date';
   static const colNotes = 'notes';
   static const colIsActive = 'is_active';
+  static const colIsPaused = 'is_paused';
   static const colSyncStatus = 'sync_status';
   static const colRemoteId = 'remote_id';
   static const colCreatedAt = 'created_at';
@@ -51,10 +53,23 @@ class MedicineLocalService {
         $colNotes TEXT,
         $colImagePath TEXT,
         $colIsActive INTEGER NOT NULL DEFAULT 1,
+        $colIsPaused INTEGER NOT NULL DEFAULT 0,
         $colSyncStatus TEXT NOT NULL DEFAULT 'pending',
         $colRemoteId TEXT,
         $colCreatedAt TEXT NOT NULL,
         $colUpdatedAt TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE $_doseLogsTable (
+        id TEXT PRIMARY KEY,
+        medicine_id TEXT NOT NULL,
+        scheduled_at TEXT NOT NULL,
+        status TEXT NOT NULL,
+        notes TEXT,
+        taken_at TEXT,
+        remote_id TEXT,
+        created_at TEXT NOT NULL
       )
     ''');
   }
@@ -63,6 +78,23 @@ class MedicineLocalService {
     if (oldVersion < 2) {
       await db.execute('ALTER TABLE $_table ADD COLUMN $colProfileId TEXT NOT NULL DEFAULT \'\'');
       await db.execute('ALTER TABLE $_table ADD COLUMN $colImagePath TEXT');
+    }
+    if (oldVersion < 3) {
+      await db.execute(
+        'ALTER TABLE $_table ADD COLUMN $colIsPaused INTEGER NOT NULL DEFAULT 0',
+      );
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS $_doseLogsTable (
+          id TEXT PRIMARY KEY,
+          medicine_id TEXT NOT NULL,
+          scheduled_at TEXT NOT NULL,
+          status TEXT NOT NULL,
+          notes TEXT,
+          taken_at TEXT,
+          remote_id TEXT,
+          created_at TEXT NOT NULL
+        )
+      ''');
     }
   }
 
@@ -129,6 +161,28 @@ class MedicineLocalService {
 
   Future<void> delete(String id) async {
     await _db!.delete(_table, where: '$colId = ?', whereArgs: [id]);
+    await _db!.delete(
+      _doseLogsTable,
+      where: 'medicine_id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<void> insertDoseLog(Map<String, dynamic> log) async {
+    await _db!.insert(
+      _doseLogsTable,
+      log,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
+
+  Future<List<Map<String, dynamic>>> getDoseLogs(String medicineId) async {
+    return _db!.query(
+      _doseLogsTable,
+      where: 'medicine_id = ?',
+      whereArgs: [medicineId],
+      orderBy: 'scheduled_at DESC',
+    );
   }
 
   Future<void> close() async {
@@ -150,6 +204,7 @@ class MedicineLocalService {
         colAlarmTimes: jsonEncode(m.alarmTimes),
         colStartDate: m.startDate.toIso8601String(), colNotes: m.notes,
         colImagePath: m.imagePath, colIsActive: m.isActive ? 1 : 0,
+        colIsPaused: m.isPaused ? 1 : 0,
         colSyncStatus: m.syncStatus.toJson(), colRemoteId: m.remoteId,
         colCreatedAt: m.createdAt.toIso8601String(), colUpdatedAt: m.updatedAt.toIso8601String(),
       };
@@ -163,6 +218,7 @@ class MedicineLocalService {
         startDate: DateTime.parse(m[colStartDate] as String), notes: m[colNotes] as String?,
         imagePath: m[colImagePath] as String?,
         isActive: (m[colIsActive] as int) == 1,
+        isPaused: (m[colIsPaused] as int? ?? 0) == 1,
         syncStatus: SyncStatus.fromJson(m[colSyncStatus] as String),
         remoteId: m[colRemoteId] as String?,
         createdAt: DateTime.parse(m[colCreatedAt] as String), updatedAt: DateTime.parse(m[colUpdatedAt] as String),
