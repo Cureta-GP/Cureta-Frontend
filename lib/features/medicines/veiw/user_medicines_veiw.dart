@@ -42,6 +42,13 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
     }
   }
 
+  Future<void> _openMedicineDetails(String id) async {
+    await context.push<bool>('/medicines/details/$id');
+    if (mounted) {
+      context.read<UserMedicinesCubit>().loadMedicines();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -85,6 +92,7 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
                   return context.read<UserMedicinesCubit>().loadMedicines();
                 },
                 onAddTap: _openAddMedicine,
+                onMedicineTap: _openMedicineDetails,
                 onToggleMedicine: (id) {
                   context.read<UserMedicinesCubit>().toggleMedicine(id);
                 },

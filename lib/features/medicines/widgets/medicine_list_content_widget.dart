@@ -12,6 +12,7 @@ class MedicineListContentWidget extends StatelessWidget {
     required this.state,
     required this.onRefresh,
     required this.onAddTap,
+    required this.onMedicineTap,
     required this.onToggleMedicine,
     required this.onDeleteMedicine,
     required this.onRetrySync,
@@ -21,6 +22,7 @@ class MedicineListContentWidget extends StatelessWidget {
   final UserMedicinesLoaded state;
   final Future<void> Function() onRefresh;
   final VoidCallback onAddTap;
+  final ValueChanged<String> onMedicineTap;
   final ValueChanged<String> onToggleMedicine;
   final ValueChanged<String> onDeleteMedicine;
   final VoidCallback onRetrySync;
@@ -72,7 +74,7 @@ class MedicineListContentWidget extends StatelessWidget {
                     state.filteredMedicines[index - offset];
                 return MedicineCardWidget(
                   medicine: medicine,
-                  onTap: () {},
+                  onTap: () => onMedicineTap(medicine.id),
                   onToggle: (_) => onToggleMedicine(medicine.id),
                   onDelete: () => onDeleteMedicine(medicine.id),
                 );

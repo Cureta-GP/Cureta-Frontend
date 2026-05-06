@@ -2,10 +2,10 @@ import 'package:cureta/core/Services/dio_helper.dart';
 import 'package:cureta/core/constants/api_endpoints.dart';
 import '../models/medicine_dto.dart';
 import '../models/medicine_payload.dart';
+import '../models/dose_log_model.dart';
 
 class MedicineService {
   MedicineService();
-
   Future<MedicineDto> createMedicine(MedicinePayload payload) async {
     final response = await DioHelper.postData(
       url: ApiEndpoints.medicines,
@@ -40,9 +40,11 @@ class MedicineService {
   }
 
   Future<MedicineDto> updateMedicine(String id, MedicinePayload payload) async {
+    final data = payload.toJson();
+    data.remove('reminders');
     final response = await DioHelper.putData(
       url: ApiEndpoints.medicineData(id),
-      data: payload.toJson(),
+      data: data,
     );
     return MedicineDto.fromJson(_extractItemMap(response.data));
   }
@@ -65,6 +67,32 @@ class MedicineService {
       url: ApiEndpoints.medicineLogs(medicineId),
       data: {'status': status, 'scheduled_at': DateTime.now().toIso8601String()},
     );
+  }
+
+  Future<List<DoseLogModel>> getProfileLogs({
+    required String profileId,
+    String? medicineId,
+    String? status,
+    String? fromDate,
+    String? toDate,
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final query = <String, dynamic>{
+      if (medicineId != null && medicineId.isNotEmpty) 'medicine_id': medicineId,
+      if (status != null && status.isNotEmpty) 'status': status,
+      if (fromDate != null && fromDate.isNotEmpty) 'from_date': fromDate,
+      if (toDate != null && toDate.isNotEmpty) 'to_date': toDate,
+      'page': page,
+      'limit': limit,
+    };
+    final response = await DioHelper.getData(
+      url: ApiEndpoints.profileLogs(profileId),
+      query: query,
+    );
+    return _extractItemsList(response.data)
+        .map((e) => DoseLogModel.fromJson(e))
+        .toList();
   }
 
   Map<String, dynamic> _extractItemMap(dynamic raw) {

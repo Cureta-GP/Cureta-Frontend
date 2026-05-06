@@ -21,7 +21,7 @@ class AlarmPulseImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     return SizedBox(
-      height: 240,
+      height: 300,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -33,8 +33,8 @@ class AlarmPulseImageWidget extends StatelessWidget {
               child: Opacity(
                 opacity: fadeAnimation.value,
                 child: Container(
-                  width: 160,
-                  height: 160,
+                  width: 210,
+                  height: 210,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: colors.primary.withValues(alpha: 0.3),
@@ -54,8 +54,8 @@ class AlarmPulseImageWidget extends StatelessWidget {
       final file = File(imagePath!);
       if (file.existsSync()) {
         return Container(
-          width: 160,
-          height: 160,
+          width: 200,
+          height: 200,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(color: colors.surface, width: 4),
@@ -75,8 +75,8 @@ class AlarmPulseImageWidget extends StatelessWidget {
       }
     }
     return Container(
-      width: 160,
-      height: 160,
+      width: 200,
+      height: 200,
       decoration: BoxDecoration(
         color: colors.surface,
         shape: BoxShape.circle,
@@ -89,7 +89,7 @@ class AlarmPulseImageWidget extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(Icons.medication, size: 80, color: colors.primary),
+      child: Icon(Icons.medication, size: 96, color: colors.primary),
     );
   }
 }

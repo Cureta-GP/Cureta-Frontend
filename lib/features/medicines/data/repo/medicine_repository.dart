@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import '../models/medicine_model.dart';
+import '../models/dose_log_model.dart';
 import '../models/medicine_payload.dart';
 import '../models/medicine_enums.dart';
 import '../services/medicine_local_service.dart';
@@ -72,6 +73,10 @@ class MedicineRepository {
     yield* _local.watchAll(pid);
   }
 
+  Future<MedicineModel?> getMedicineById(String localId) async {
+    return await _local.getById(localId);
+  }
+
   Future<void> refreshMedicines() async => _refreshFromRemote(await _pid());
 
   Future<void> _refreshFromRemote(String pid) async {
@@ -93,18 +98,26 @@ class MedicineRepository {
     await _refreshFromRemote(pid);
     for (final m in await _local.getPending(pid)) {
       try {
-        final dto = await _remote.createMedicine(_buildPayload(m, pid));
-        if (dto.id != null && dto.id!.isNotEmpty) {
-          await _local.updateSyncStatus(m.id, SyncStatus.synced, remoteId: dto.id);
-          continue;
-        }
-        await _refreshFromRemote(pid);
-        final linked = await _local.getById(m.id);
-        if (linked == null || linked.remoteId == null || linked.remoteId!.isEmpty) {
-          await _local.updateSyncStatus(m.id, SyncStatus.failed);
+        if (m.remoteId != null && m.remoteId!.isNotEmpty) {
+          // It's an update
+          await _remote.updateMedicine(m.remoteId!, _buildPayload(m, pid));
+          await _local.updateSyncStatus(m.id, SyncStatus.synced);
+        } else {
+          // It's a create
+          final dto = await _remote.createMedicine(_buildPayload(m, pid));
+          if (dto.id != null && dto.id!.isNotEmpty) {
+            await _local.updateSyncStatus(m.id, SyncStatus.synced, remoteId: dto.id);
+            continue;
+          }
+          await _refreshFromRemote(pid);
+          final linked = await _local.getById(m.id);
+          if (linked == null || linked.remoteId == null || linked.remoteId!.isEmpty) {
+            await _local.updateSyncStatus(m.id, SyncStatus.failed);
+          }
         }
       } catch (e) {
         developer.log('Failed to sync medicine ${m.id}: $e', name: 'MedicineRepository');
+        await _local.updateSyncStatus(m.id, SyncStatus.failed);
       }
     }
   }
@@ -118,7 +131,25 @@ class MedicineRepository {
     }
   }
 
-  Future<MedicineModel> updateMedicine(MedicineModel m) async { await _local.update(m); return m; }
+  Future<MedicineModel> updateMedicine(MedicineModel m) async { 
+    final updating = m.copyWith(syncStatus: SyncStatus.pending);
+    await _local.update(updating); 
+    if (updating.remoteId != null && updating.remoteId!.isNotEmpty) {
+      try {
+        final pid = await _pid();
+        await _remote.updateMedicine(updating.remoteId!, _buildPayload(updating, pid));
+        final synced = updating.copyWith(syncStatus: SyncStatus.synced);
+        await _local.update(synced);
+        return synced;
+      } catch (e) {
+        developer.log('Failed to update medicine on remote: $e', name: 'MedicineRepository');
+        final failed = updating.copyWith(syncStatus: SyncStatus.failed);
+        await _local.update(failed);
+        return failed;
+      }
+    }
+    return updating; 
+  }
 
   Future<void> toggleMedicineActive(String localId) async {
     final m = await _local.getById(localId);
@@ -128,15 +159,53 @@ class MedicineRepository {
 
   Future<void> logMedicationAction(String localId, String status) async {
     final m = await _local.getById(localId);
-    if (m == null) return;
+    if (m == null) {
+      developer.log(
+        'Skip logMedicationAction: local medicine not found for id=$localId',
+        name: 'MedicineRepository',
+      );
+      return;
+    }
     final now = DateTime.now();
     await _local.update(m.copyWith(updatedAt: now));
+    final normalizedStatus = status.trim().toUpperCase();
     if (m.remoteId != null && m.remoteId!.isNotEmpty) {
       try {
-        await _remote.trackDose(m.remoteId!, status);
+        developer.log(
+          'Sending dose log: localId=${m.id}, remoteId=${m.remoteId}, status=$normalizedStatus',
+          name: 'MedicineRepository',
+        );
+        await _remote.trackDose(m.remoteId!, normalizedStatus);
+        developer.log(
+          'Dose log sent successfully for remoteId=${m.remoteId}',
+          name: 'MedicineRepository',
+        );
       } catch (e) {
         developer.log('Failed to log dose: $e', name: 'MedicineRepository');
       }
+    } else {
+      developer.log(
+        'Skip remote dose log: medicine has no remoteId (localId=${m.id})',
+        name: 'MedicineRepository',
+      );
+    }
+  }
+
+  Future<List<DoseLogModel>> getMedicineLogs(String localId) async {
+    try {
+      final pid = await _pid();
+      if (pid.isEmpty) return [];
+      
+      final m = await _local.getById(localId);
+      if (m == null || m.remoteId == null || m.remoteId!.isEmpty) return [];
+
+      return await _remote.getProfileLogs(
+        profileId: pid,
+        medicineId: m.remoteId,
+      );
+    } catch (e) {
+      developer.log('Failed to fetch medicine logs for $localId: $e', name: 'MedicineRepository');
+      return [];
     }
   }
 

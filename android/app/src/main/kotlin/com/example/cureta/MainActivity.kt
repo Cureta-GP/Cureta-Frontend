@@ -14,6 +14,13 @@ class MainActivity : FlutterActivity() {
 
     private val CHANNEL = "medicine_alarm"
     private var fullScreenPermissionRequested = false
+    private var methodChannel: MethodChannel? = null
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleAlarmIntent(intent)
+    }
 
     override fun onResume() {
         super.onResume()
@@ -43,8 +50,8 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
 
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
-            .setMethodCallHandler { call, result ->
+        methodChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
+        methodChannel?.setMethodCallHandler { call, result ->
                 when (call.method) {
 
                     "scheduleAlarm" -> {
@@ -122,5 +129,17 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+            
+        handleAlarmIntent(intent)
+    }
+
+    private fun handleAlarmIntent(intent: Intent) {
+        val action = intent.getStringExtra("alarm_action")
+        val localId = intent.getStringExtra("local_id")
+        if (action != null && localId != null) {
+            methodChannel?.invokeMethod("onAlarmAction", mapOf("action" to action, "local_id" to localId))
+            intent.removeExtra("alarm_action")
+            intent.removeExtra("local_id")
+        }
     }
 }

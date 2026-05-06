@@ -98,7 +98,9 @@ class MedicineLocalService {
   Future<void> updateSyncStatus(String id, SyncStatus status, {String? remoteId}) async {
     final v = <String, dynamic>{colSyncStatus: status.toJson(), colUpdatedAt: DateTime.now().toIso8601String()};
     if (remoteId != null) v[colRemoteId] = remoteId;
+    final m = await getById(id);
     await _db!.update(_table, v, where: '$colId = ?', whereArgs: [id]);
+    if (m != null) await _emitAll(m.profileId);
   }
 
   Future<void> update(MedicineModel m) async {
@@ -118,8 +120,23 @@ class MedicineLocalService {
     );
     if (matches.isNotEmpty) {
       final existing = _fromMap(matches.first);
-      final preserved = remote.copyWith(id: existing.id, imagePath: existing.imagePath,
-          isActive: existing.isActive, createdAt: existing.createdAt);
+      if (existing.syncStatus == SyncStatus.pending || existing.syncStatus == SyncStatus.failed) {
+        return; // Preserve local unsynced changes
+      }
+      if (existing.updatedAt.isAfter(remote.updatedAt)) {
+        return; // Preserve newer local changes against cached/laggy server responses
+      }
+      final preserved = remote.copyWith(
+        id: existing.id,
+        imagePath: existing.imagePath,
+        isActive: existing.isActive,
+        createdAt: existing.createdAt,
+        doseForm: existing.doseForm,
+        doseAmount: remote.doseAmount.isEmpty ? existing.doseAmount : remote.doseAmount,
+        doseUnit: remote.doseUnit.isEmpty ? existing.doseUnit : remote.doseUnit,
+        alarmTimes: remote.alarmTimes.isEmpty ? existing.alarmTimes : remote.alarmTimes,
+        notes: (remote.notes == null || remote.notes!.isEmpty) ? existing.notes : remote.notes,
+      );
       await _db!.update(_table, _toMap(preserved), where: '$colId = ?', whereArgs: [existing.id]);
       await _emitAll(remote.profileId);
       return;
@@ -128,7 +145,9 @@ class MedicineLocalService {
   }
 
   Future<void> delete(String id) async {
+    final m = await getById(id);
     await _db!.delete(_table, where: '$colId = ?', whereArgs: [id]);
+    if (m != null) await _emitAll(m.profileId);
   }
 
   Future<void> close() async {

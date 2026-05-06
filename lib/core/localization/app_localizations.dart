@@ -509,6 +509,14 @@ class AppLocalizations {
   static String get medicinesFilterPaused => 'medicines.filter_paused'.tr();
   static String get medicinesRetry => 'medicines.retry'.tr();
   static String get medicinesEditDetails => 'medicines.edit_details'.tr();
+  static String get medicinesEditMedicine => 'medicines.edit_medicine'.tr();
+  static String get medicinesDeleteMedicine => 'medicines.delete_medicine'.tr();
+  static String get medicinesDeleteConfirmTitle => 'medicines.delete_confirm_title'.tr();
+  static String medicinesDeleteConfirmMessage(String medicine) => 'medicines.delete_confirm_message'.tr(namedArgs: {'medicine': medicine});
+  static String get medicinesSaveChanges => 'medicines.save_changes'.tr();
+  static String get medicinesCancel => 'medicines.cancel'.tr();
+  static String get medicinesUpdateSuccess => 'medicines.update_success'.tr();
+  static String get medicinesDeleteSuccess => 'medicines.delete_success'.tr();
   static String get medicinesPickImageTitle => 'medicines.pick_image_title'.tr();
   static String get medicinesPickFromCamera => 'medicines.pick_from_camera'.tr();
   static String get medicinesPickFromGallery => 'medicines.pick_from_gallery'.tr();

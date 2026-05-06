@@ -1,14 +1,34 @@
 import 'dart:developer' as developer;
 import 'package:flutter/services.dart';
 import 'package:cureta/features/medicines/data/models/medicine_model.dart';
+import 'package:cureta/core/Services/GetItServices.dart' as GetItServices;
 import 'alarm_id_helper.dart';
 import 'tz_helper.dart';
+import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
 
 class NotificationService {
   NotificationService._();
   static final NotificationService instance = NotificationService._();
 
   static const _channel = MethodChannel('medicine_alarm');
+
+  void initCallHandler() {
+    _channel.setMethodCallHandler((call) async {
+      if (call.method == 'onAlarmAction') {
+        final args = Map<String, dynamic>.from(call.arguments as Map);
+        final action = args['action'] as String?;
+        final localId = args['local_id'] as String?;
+        if (action != null && localId != null) {
+          try {
+            final repo = GetItServices.getIt<MedicineRepository>();
+            await repo.logMedicationAction(localId, action);
+          } catch (e) {
+            developer.log('Failed to handle alarm action: $e', name: 'NotificationService');
+          }
+        }
+      }
+    });
+  }
 
   Future<void> scheduleMedicineAlarms(MedicineModel medicine) async {
     for (var i = 0; i < medicine.alarmTimes.length; i++) {

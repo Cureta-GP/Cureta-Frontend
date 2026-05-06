@@ -23,6 +23,7 @@ import 'package:cureta/features/medicines/data/services/medicine_service.dart';
 import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/user_medicines_cubit.dart';
+import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart';
 
 final getIt = GetIt.instance;
 
@@ -95,5 +96,12 @@ void setup() {
   // UserMedicinesCubit is a factory — each list screen manages its own instance.
   getIt.registerFactory<UserMedicinesCubit>(
     () => UserMedicinesCubit(getIt.get<MedicineRepository>()),
+  );
+
+  getIt.registerFactoryParam<MedicineDetailsCubit, String, void>(
+    (medicineId, _) => MedicineDetailsCubit(
+      getIt.get<MedicineRepository>(),
+      medicineId: medicineId,
+    ),
   );
 }

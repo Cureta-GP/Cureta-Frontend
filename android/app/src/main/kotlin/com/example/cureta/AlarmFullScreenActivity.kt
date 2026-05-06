@@ -72,12 +72,24 @@ class AlarmFullScreenActivity : Activity() {
             }
         }
 
-        findViewById<Button>(R.id.btn_taken)?.setOnClickListener  { stopAlarmAndFinish() }
-        findViewById<Button>(R.id.btn_missed)?.setOnClickListener { stopAlarmAndFinish() }
+        findViewById<Button>(R.id.btn_taken)?.setOnClickListener  { stopAlarmAndFinish("TAKEN") }
+        findViewById<Button>(R.id.btn_missed)?.setOnClickListener { stopAlarmAndFinish("MISSED") }
     }
 
-    private fun stopAlarmAndFinish() {
+    private fun stopAlarmAndFinish(action: String) {
+        val localId = intent.getStringExtra("local_id") ?: ""
+
         stopService(Intent(this, AlarmService::class.java))
+        
+        val mainIntent = Intent(this, MainActivity::class.java).apply {
+            putExtra("alarm_action", action)
+            putExtra("local_id", localId)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        startActivity(mainIntent)
+
         finishAndRemoveTask()
     }
 

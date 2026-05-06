@@ -11,6 +11,7 @@ class MedicineListStateRendererWidget extends StatelessWidget {
     super.key,
     required this.onRefresh,
     required this.onAddTap,
+    required this.onMedicineTap,
     required this.onToggleMedicine,
     required this.onDeleteMedicine,
     required this.onRetrySync,
@@ -19,6 +20,7 @@ class MedicineListStateRendererWidget extends StatelessWidget {
 
   final Future<void> Function() onRefresh;
   final VoidCallback onAddTap;
+  final ValueChanged<String> onMedicineTap;
   final ValueChanged<String> onToggleMedicine;
   final ValueChanged<String> onDeleteMedicine;
   final VoidCallback onRetrySync;
@@ -47,6 +49,7 @@ class MedicineListStateRendererWidget extends StatelessWidget {
             state: state,
             onRefresh: onRefresh,
             onAddTap: onAddTap,
+            onMedicineTap: onMedicineTap,
             onToggleMedicine: onToggleMedicine,
             onDeleteMedicine: onDeleteMedicine,
             onRetrySync: onRetrySync,
@@ -60,6 +63,7 @@ class MedicineListStateRendererWidget extends StatelessWidget {
             failedCount: state.failedCount,
             onRefresh: onRefresh,
             onAddTap: onAddTap,
+            onMedicineTap: onMedicineTap,
             onToggleMedicine: onToggleMedicine,
             onDeleteMedicine: onDeleteMedicine,
             onRetrySync: onRetrySync,

@@ -9,6 +9,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.background,
     required this.surface,
     required this.error,
+    required this.success,
     required this.textPrimary,
     required this.textSecondary,
     required this.textHint,
@@ -30,6 +31,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color background;
   final Color surface;
   final Color error;
+  final Color success;
   final Color textPrimary;
   final Color textSecondary;
   final Color textHint;
@@ -52,6 +54,7 @@ class AppColors extends ThemeExtension<AppColors> {
     background: Colors.white,
     surface: const Color(0xFFFAFAFA),
     error: const Color(0xFFB00020),
+    success: const Color(0xFF10B981),
     textPrimary: const Color(0xFF212121),
     textSecondary: const Color(0xFF757575),
     textHint: const Color(0xFFBDBDBD),
@@ -75,6 +78,7 @@ class AppColors extends ThemeExtension<AppColors> {
     background: const Color(0xFF133A3E),
     surface: const Color(0xFF1C2328),
     error: const Color(0xFFCF6679),
+    success: const Color(0xFF34D399),
     textPrimary: const Color(0xFFF5F5F5),
     textSecondary: const Color(0xFFB0BEC5),
     textHint: const Color(0xFF90A4AE),
@@ -93,7 +97,6 @@ class AppColors extends ThemeExtension<AppColors> {
   static AppColors fromBrightness(Brightness brightness) =>
       brightness == Brightness.dark ? dark : light;
 
- 
   @override
   AppColors copyWith({
     Color? primary,
@@ -102,6 +105,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? background,
     Color? surface,
     Color? error,
+    Color? success,
     Color? textPrimary,
     Color? textSecondary,
     Color? textHint,
@@ -123,6 +127,7 @@ class AppColors extends ThemeExtension<AppColors> {
       background: background ?? this.background,
       surface: surface ?? this.surface,
       error: error ?? this.error,
+      success: success ?? this.success,
       textPrimary: textPrimary ?? this.textPrimary,
       textSecondary: textSecondary ?? this.textSecondary,
       textHint: textHint ?? this.textHint,
@@ -132,11 +137,9 @@ class AppColors extends ThemeExtension<AppColors> {
       accentOrange: accentOrange ?? this.accentOrange,
       accentBlue: accentBlue ?? this.accentBlue,
       accentPurple: accentPurple ?? this.accentPurple,
-      chatBackground:
-          chatBackground ?? this.chatBackground,
+      chatBackground: chatBackground ?? this.chatBackground,
       statusOnline: statusOnline ?? this.statusOnline,
-      chatAssistantLabel:
-          chatAssistantLabel ?? this.chatAssistantLabel,
+      chatAssistantLabel: chatAssistantLabel ?? this.chatAssistantLabel,
       chatQuickActionBorder:
           chatQuickActionBorder ?? this.chatQuickActionBorder,
     );
@@ -152,6 +155,7 @@ class AppColors extends ThemeExtension<AppColors> {
       background: Color.lerp(background, other.background, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       error: Color.lerp(error, other.error, t)!,
+      success: Color.lerp(success, other.success, t)!,
       textPrimary: Color.lerp(textPrimary, other.textPrimary, t)!,
       textSecondary: Color.lerp(textSecondary, other.textSecondary, t)!,
       textHint: Color.lerp(textHint, other.textHint, t)!,
@@ -161,16 +165,8 @@ class AppColors extends ThemeExtension<AppColors> {
       accentOrange: Color.lerp(accentOrange, other.accentOrange, t)!,
       accentBlue: Color.lerp(accentBlue, other.accentBlue, t)!,
       accentPurple: Color.lerp(accentPurple, other.accentPurple, t)!,
-      chatBackground: Color.lerp(
-        chatBackground,
-        other.chatBackground,
-        t,
-      )!,
-      statusOnline: Color.lerp(
-        statusOnline,
-        other.statusOnline,
-        t,
-      )!,
+      chatBackground: Color.lerp(chatBackground, other.chatBackground, t)!,
+      statusOnline: Color.lerp(statusOnline, other.statusOnline, t)!,
       chatAssistantLabel: Color.lerp(
         chatAssistantLabel,
         other.chatAssistantLabel,

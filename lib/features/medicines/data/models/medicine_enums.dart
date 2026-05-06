@@ -10,7 +10,7 @@ enum DoseForm {
 
   static DoseForm fromJson(String json) {
     return DoseForm.values.firstWhere(
-      (e) => e.name == json,
+      (e) => e.name.toLowerCase() == json.toLowerCase(),
       orElse: () => DoseForm.pill,
     );
   }
@@ -25,7 +25,7 @@ enum Frequency {
 
   static Frequency fromJson(String json) {
     return Frequency.values.firstWhere(
-      (e) => e.name == json,
+      (e) => e.name.toLowerCase() == json.toLowerCase(),
       orElse: () => Frequency.daily,
     );
   }
@@ -40,7 +40,7 @@ enum SyncStatus {
 
   static SyncStatus fromJson(String json) {
     return SyncStatus.values.firstWhere(
-      (e) => e.name == json,
+      (e) => e.name.toLowerCase() == json.toLowerCase(),
       orElse: () => SyncStatus.pending,
     );
   }
@@ -56,7 +56,7 @@ enum DoseStatus {
 
   static DoseStatus fromJson(String json) {
     return DoseStatus.values.firstWhere(
-      (e) => e.name == json,
+      (e) => e.name.toLowerCase() == json.toLowerCase(),
       orElse: () => DoseStatus.pending,
     );
   }

@@ -33,6 +33,8 @@ import 'package:cureta/features/medical_records/veiw/record_details_screen.dart'
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
 import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
+import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart';
+import 'package:cureta/features/medicines/veiw/medicine_details_veiw.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
@@ -247,6 +249,24 @@ class RoutesGeneration {
         path: AppRoutes.medicines,
         name: AppRoutes.medicines,
         redirect: (_, __) => '${AppRoutes.mainNavigation}?tab=1',
+      ),
+      GoRoute(
+        path: AppRoutes.medicineDetails,
+        name: AppRoutes.medicineDetails,
+        pageBuilder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return PageTransitions.scale(
+            child: BlocProvider<MedicineDetailsCubit>(
+              create: (context) => getIt<MedicineDetailsCubit>(param1: id)..loadDetails(),
+              child: MedicineDetailsVeiw(
+                onEditTap: () {
+                 
+                },
+              ),
+            ),
+            state: state,
+          );
+        },
       ),
       // Medicines Add Flow — ShellRoute provides a single AddMedicineCubit
       // instance shared across all 5 steps so form state persists on back nav.
