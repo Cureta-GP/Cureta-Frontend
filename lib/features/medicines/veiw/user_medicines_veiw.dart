@@ -46,18 +46,15 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
   }
 
   Future<void> _openMedicineDetails(String medicineId) async {
-    await context.pushNamed(AppRoutes.medicineDetails, extra: medicineId);
+    await context.pushNamed(
+      AppRoutes.medicineDetails,
+      pathParameters: {'id': medicineId},
+    );
     if (mounted) {
       context.read<UserMedicinesCubit>().loadMedicines();
     }
   }
 
-  Future<void> _openMedicineDetails(String id) async {
-    await context.push<bool>('/medicines/details/$id');
-    if (mounted) {
-      context.read<UserMedicinesCubit>().loadMedicines();
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +106,6 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
                 onDeleteMedicine: (id) {
                   context.read<UserMedicinesCubit>().deleteMedicine(id);
                 },
-                onMedicineTap: _openMedicineDetails,
                 onRetrySync: () {
                   context.read<UserMedicinesCubit>().syncPendingMedicines();
                 },

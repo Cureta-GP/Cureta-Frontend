@@ -40,7 +40,7 @@ class AppRoutes {
   static const String medicinesAddStep3 = '/medicines/add/3';
   static const String medicinesAddStep4 = '/medicines/add/4';
   static const String medicinesAddStep5 = '/medicines/add/5';
-  static const String medicineDetails = '/medicines/details';
+  static const String medicineDetails = '/medicines/details/:id';
 
   //profil
 

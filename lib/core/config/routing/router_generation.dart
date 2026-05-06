@@ -260,7 +260,7 @@ class RoutesGeneration {
           return PageTransitions.scale(
             child: BlocProvider<MedicineDetailsCubit>(
               create: (context) => getIt<MedicineDetailsCubit>(param1: id)..loadDetails(),
-              child: MedicineDetailsVeiw(medicineId: id),
+              child: MedicineDetailsVeiw(onEditTap: () {  },),
             ),
             state: state,
           );
