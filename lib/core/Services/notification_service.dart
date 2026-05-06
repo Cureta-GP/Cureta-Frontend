@@ -18,16 +18,62 @@ class NotificationService {
         final args = Map<String, dynamic>.from(call.arguments as Map);
         final action = args['action'] as String?;
         final localId = args['local_id'] as String?;
+        final remoteId = args['remote_id'] as String?;
         if (action != null && localId != null) {
-          try {
-            final repo = GetItServices.getIt<MedicineRepository>();
-            await repo.logMedicationAction(localId, action);
-          } catch (e) {
-            developer.log('Failed to handle alarm action: $e', name: 'NotificationService');
-          }
+          await _handleAlarmAction(localId, action, remoteId: remoteId);
         }
       }
     });
+    _consumePendingAlarmActions().ignore();
+  }
+
+  Future<void> _handleAlarmAction(
+    String localId,
+    String action, {
+    String? remoteId,
+  }) async {
+    try {
+      final repo = GetItServices.getIt<MedicineRepository>();
+      await repo.logMedicationAction(localId, action, remoteId: remoteId);
+    } catch (e) {
+      developer.log('Failed to handle alarm action: $e', name: 'NotificationService');
+    }
+  }
+
+  Future<void> _consumePendingAlarmActions() async {
+    try {
+      final pending =
+          await _channel.invokeMethod<List<dynamic>>('consumePendingAlarmActions');
+      if (pending == null || pending.isEmpty) return;
+      developer.log(
+        'Found ${pending.length} pending alarm action(s) to sync',
+        name: 'NotificationService',
+      );
+      for (final item in pending) {
+        if (item is! Map) continue;
+        final map = Map<String, dynamic>.from(item);
+        final action = map['action'] as String?;
+        final localId = map['local_id'] as String?;
+        final remoteId = map['remote_id'] as String?;
+        if (action == null || localId == null) continue;
+        developer.log(
+          'Sync pending alarm action: action=$action, local_id=$localId, remote_id=$remoteId',
+          name: 'NotificationService',
+        );
+        await _handleAlarmAction(localId, action, remoteId: remoteId);
+      }
+    } on PlatformException catch (e) {
+      developer.log(
+        'consumePendingAlarmActions failed: ${e.code} — ${e.message}',
+        name: 'NotificationService',
+      );
+    } on MissingPluginException {
+      // Running on iOS or a test environment — ignore silently.
+    }
+  }
+
+  Future<void> syncPendingAlarmActions() async {
+    await _consumePendingAlarmActions();
   }
 
   Future<void> scheduleMedicineAlarms(MedicineModel medicine) async {
@@ -39,6 +85,7 @@ class NotificationService {
       await _invoke('scheduleAlarm', {
         'id': id,
         'local_id': medicine.id,
+        'remote_id': medicine.remoteId ?? '',
         'medicine_name': medicine.name,
         'dose_amount':
             '${medicine.doseAmount} ${medicine.doseUnit}'.trim(),

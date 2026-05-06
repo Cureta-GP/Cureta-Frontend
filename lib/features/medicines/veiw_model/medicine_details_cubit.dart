@@ -15,6 +15,7 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
   Future<void> loadDetails() async {
     emit(const MedicineDetailsLoading());
     try {
+      await NotificationService.instance.syncPendingAlarmActions();
       final medicine = await _repository.getMedicineById(medicineId);
       if (medicine != null) {
         final logs = await _repository.getMedicineLogs(medicineId);

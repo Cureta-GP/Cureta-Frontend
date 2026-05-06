@@ -53,6 +53,7 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
 
         val medicineName = intent?.getStringExtra("medicine_name") ?: "Medicine"
         val localId      = intent?.getStringExtra("local_id")      ?: ""
+        val remoteId     = intent?.getStringExtra("remote_id")     ?: ""
         val dose         = intent?.getStringExtra("dose_amount")    ?: ""
         val imagePath    = intent?.getStringExtra("image_path")     ?: ""
         val launchFullScreen = intent?.getBooleanExtra("launch_full_screen", false) ?: false
@@ -60,7 +61,7 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         // ✅ ارفع الـ alarm volume للـ maximum قبل ما يبدأ الصوت
         forceMaxAlarmVolume()
 
-        startForeground(NOTIFICATION_ID, buildNotification(medicineName, localId, dose, imagePath))
+        startForeground(NOTIFICATION_ID, buildNotification(medicineName, localId, remoteId, dose, imagePath))
         playAlarmSound()
         startVibration()
 
@@ -73,7 +74,7 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         }, 2500)
 
         if (launchFullScreen) {
-            launchFullScreenActivity(medicineName, localId, dose, imagePath)
+            launchFullScreenActivity(medicineName, localId, remoteId, dose, imagePath)
         }
 
         return START_NOT_STICKY
@@ -138,10 +139,11 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         }
     }
 
-    private fun launchFullScreenActivity(medicineName: String, localId: String, dose: String, imagePath: String) {
+    private fun launchFullScreenActivity(medicineName: String, localId: String, remoteId: String, dose: String, imagePath: String) {
         val intent = Intent(this, AlarmFullScreenActivity::class.java).apply {
             putExtra("medicine_name", medicineName)
             putExtra("local_id", localId)
+            putExtra("remote_id", remoteId)
             putExtra("dose_amount", dose)
             putExtra("image_path", imagePath)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -164,7 +166,7 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         super.onDestroy()
     }
 
-    private fun buildNotification(medicineName: String, localId: String, dose: String, imagePath: String): Notification {
+    private fun buildNotification(medicineName: String, localId: String, remoteId: String, dose: String, imagePath: String): Notification {
         val stopIntent = Intent(this, AlarmService::class.java).apply { action = "STOP" }
         val stopPending = PendingIntent.getService(
             this, 1, stopIntent,
@@ -173,6 +175,7 @@ class AlarmService : Service(), TextToSpeech.OnInitListener {
         val fsIntent = Intent(this, AlarmFullScreenActivity::class.java).apply {
             putExtra("medicine_name", medicineName)
             putExtra("local_id", localId)
+            putExtra("remote_id", remoteId)
             putExtra("dose_amount", dose)
             putExtra("image_path", imagePath)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)

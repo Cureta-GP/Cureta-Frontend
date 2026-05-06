@@ -188,27 +188,32 @@ class MedicineRepository {
     );
   }
 
-  Future<void> logMedicationAction(String localId, String status) async {
+  Future<void> logMedicationAction(
+    String localId,
+    String status, {
+    String? remoteId,
+  }) async {
     final m = await _local.getById(localId);
-    if (m == null) {
-      developer.log(
-        'Skip logMedicationAction: local medicine not found for id=$localId',
-        name: 'MedicineRepository',
-      );
-      return;
-    }
     final now = DateTime.now();
-    await _local.update(m.copyWith(updatedAt: now));
     final normalizedStatus = status.trim().toUpperCase();
-    if (m.remoteId != null && m.remoteId!.isNotEmpty) {
+    String? effectiveRemoteId = remoteId;
+
+    if (m != null) {
+      await _local.update(m.copyWith(updatedAt: now));
+      if (m.remoteId != null && m.remoteId!.isNotEmpty) {
+        effectiveRemoteId = m.remoteId;
+      }
+    }
+
+    if (effectiveRemoteId != null && effectiveRemoteId.isNotEmpty) {
       try {
         developer.log(
-          'Sending dose log: localId=${m.id}, remoteId=${m.remoteId}, status=$normalizedStatus',
+          'Sending dose log: localId=$localId, remoteId=$effectiveRemoteId, status=$normalizedStatus',
           name: 'MedicineRepository',
         );
-        await _remote.trackDose(m.remoteId!, normalizedStatus);
+        await _remote.trackDose(effectiveRemoteId, normalizedStatus);
         developer.log(
-          'Dose log sent successfully for remoteId=${m.remoteId}',
+          'Dose log sent successfully for remoteId=$effectiveRemoteId',
           name: 'MedicineRepository',
         );
       } catch (e) {
@@ -216,7 +221,7 @@ class MedicineRepository {
       }
     } else {
       developer.log(
-        'Skip remote dose log: medicine has no remoteId (localId=${m.id})',
+        'Skip remote dose log: no remoteId found (localId=$localId)',
         name: 'MedicineRepository',
       );
     }

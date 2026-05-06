@@ -78,17 +78,16 @@ class AlarmFullScreenActivity : Activity() {
 
     private fun stopAlarmAndFinish(action: String) {
         val localId = intent.getStringExtra("local_id") ?: ""
+        val remoteId = intent.getStringExtra("remote_id") ?: ""
 
         stopService(Intent(this, AlarmService::class.java))
-        
-        val mainIntent = Intent(this, MainActivity::class.java).apply {
-            putExtra("alarm_action", action)
-            putExtra("local_id", localId)
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        }
-        startActivity(mainIntent)
+        sendBroadcast(
+            Intent(this, AlarmActionReceiver::class.java).apply {
+                putExtra("alarm_action", action)
+                putExtra("local_id", localId)
+                putExtra("remote_id", remoteId)
+            }
+        )
 
         finishAndRemoveTask()
     }

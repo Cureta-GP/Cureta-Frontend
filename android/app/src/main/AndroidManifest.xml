@@ -25,6 +25,7 @@
         android:label="cureta"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
         android:largeHeap="true">
 
         <!-- Main Flutter Activity -->
@@ -60,6 +61,10 @@
         <receiver
             android:name=".AlarmScheduler"
             android:exported="false"/>
+
+        <receiver
+            android:name=".AlarmActionReceiver"
+            android:exported="false" />
 
         <!-- Receives BOOT_COMPLETED + clock/timezone changes from system -->
         <receiver

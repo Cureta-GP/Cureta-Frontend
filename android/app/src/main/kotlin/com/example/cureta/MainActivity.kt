@@ -6,9 +6,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import org.json.JSONArray
 
 class MainActivity : FlutterActivity() {
 
@@ -57,12 +59,13 @@ class MainActivity : FlutterActivity() {
                     "scheduleAlarm" -> {
                         val id   = call.argument<Int>("id")              ?: 0
                         val localId = call.argument<String>("local_id") ?: ""
+                        val remoteId = call.argument<String>("remote_id") ?: ""
                         val name = call.argument<String>("medicine_name") ?: ""
                         val dose = call.argument<String>("dose_amount") ?: ""
                         val imagePath = call.argument<String>("image_path") ?: ""
                         val time = call.argument<Long>("time_millis")    ?: 0L
                         val frequency = call.argument<String>("frequency") ?: "daily"
-                        AlarmScheduler.scheduleAlarm(this, id, localId, name, dose, imagePath, time, frequency)
+                        AlarmScheduler.scheduleAlarm(this, id, localId, remoteId, name, dose, imagePath, time, frequency)
                         result.success(null)
                     }
 
@@ -126,6 +129,10 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
 
+                    "consumePendingAlarmActions" -> {
+                        result.success(consumePendingAlarmActions())
+                    }
+
                     else -> result.notImplemented()
                 }
             }
@@ -136,10 +143,38 @@ class MainActivity : FlutterActivity() {
     private fun handleAlarmIntent(intent: Intent) {
         val action = intent.getStringExtra("alarm_action")
         val localId = intent.getStringExtra("local_id")
+        val remoteId = intent.getStringExtra("remote_id")
         if (action != null && localId != null) {
-            methodChannel?.invokeMethod("onAlarmAction", mapOf("action" to action, "local_id" to localId))
+            methodChannel?.invokeMethod(
+                "onAlarmAction",
+                mapOf("action" to action, "local_id" to localId, "remote_id" to (remoteId ?: ""))
+            )
             intent.removeExtra("alarm_action")
             intent.removeExtra("local_id")
+            intent.removeExtra("remote_id")
         }
+    }
+
+    private fun consumePendingAlarmActions(): List<Map<String, String>> {
+        val prefs = getSharedPreferences("cureta_alarm_events", Context.MODE_PRIVATE)
+        val raw = prefs.getString("pending_actions", "[]") ?: "[]"
+        val parsed = mutableListOf<Map<String, String>>()
+        try {
+            val arr = JSONArray(raw)
+            for (i in 0 until arr.length()) {
+                val item = arr.optJSONObject(i) ?: continue
+                val action = item.optString("action", "")
+                val localId = item.optString("local_id", "")
+                val remoteId = item.optString("remote_id", "")
+                if (action.isNotBlank() && localId.isNotBlank()) {
+                    parsed.add(mapOf("action" to action, "local_id" to localId, "remote_id" to remoteId))
+                }
+            }
+        } catch (_: Exception) {
+            // Ignore malformed payload and clear it below.
+        }
+        Log.d("MainActivity", "consumePendingAlarmActions -> ${parsed.size} item(s)")
+        prefs.edit().remove("pending_actions").apply()
+        return parsed
     }
 }

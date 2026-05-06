@@ -65,6 +65,7 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
       backgroundColor: colors.chatBackground,
       appBar: const MedicineScreenAppBarWidget(),
       floatingActionButton: FloatingActionButton.extended(
+        heroTag: 'medicines_add_fab',
         onPressed: _openAddMedicine,
         icon: const Icon(Icons.add),
         label: Text('medicines.add_medicine'.tr(), style: context.typography.button),
