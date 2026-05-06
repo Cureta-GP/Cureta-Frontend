@@ -6,7 +6,14 @@ import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 
 /// "Add alarm time" button — stateless, no rebuild needed.
 class AddAlarmTimeButtonWidget extends StatelessWidget {
-  const AddAlarmTimeButtonWidget({super.key});
+  const AddAlarmTimeButtonWidget({
+    super.key,
+    this.onTimePicked,
+    this.initialTime,
+  });
+
+  final ValueChanged<TimeOfDay>? onTimePicked;
+  final TimeOfDay? initialTime;
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +24,14 @@ class AddAlarmTimeButtonWidget extends StatelessWidget {
       onPressed: () async {
         final picked = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.now(),
+          initialTime: initialTime ?? TimeOfDay.now(),
         );
         if (picked != null && context.mounted) {
-          context.read<AddMedicineCubit>().addAlarmTime(picked);
+          if (onTimePicked != null) {
+            onTimePicked!(picked);
+          } else {
+            context.read<AddMedicineCubit>().addAlarmTime(picked);
+          }
         }
       },
       icon: Icon(Icons.add_alarm, color: colors.primary),

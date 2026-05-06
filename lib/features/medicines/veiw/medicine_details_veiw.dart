@@ -1,28 +1,20 @@
-import 'dart:io';
-
-import 'package:cureta/shared/widgets/custom_text_field.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/medicine_details_state.dart';
 import 'package:cureta/features/medicines/widgets/medicine_details_grid_widget.dart';
+import 'package:cureta/features/medicines/widgets/medicine_details_edit_form_widget.dart';
 import 'package:cureta/features/medicines/widgets/medicine_info_card_widget.dart';
 import 'package:cureta/features/medicines/widgets/medicine_logs_list_widget.dart';
 import 'package:cureta/features/medicines/widgets/medicine_list_error_widget.dart';
 import 'package:cureta/features/medicines/data/models/medicine_model.dart';
-import 'package:cureta/features/medicines/data/models/dose_log_model.dart';
-
 import 'package:cureta/features/medicines/widgets/medicine_details_overlay.dart';
 import 'package:cureta/features/medicines/widgets/medicine_delete_confirm_dialog.dart';
 import 'package:cureta/core/error_handling/error_handler.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_editable_field.dart';
-import 'package:cureta/features/medicines/widgets/time_picker_row_widget.dart';
 
 class MedicineDetailsVeiw extends StatefulWidget {
   const MedicineDetailsVeiw({super.key, required this.onEditTap});
@@ -38,8 +30,8 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
   final _doseAmountController = TextEditingController();
   final _doseUnitController = TextEditingController();
   final _notesController = TextEditingController();
-  List<String> _alarmTimes = [];
-  String? _imagePath;
+  final ValueNotifier<List<String>> _alarmTimesNotifier = ValueNotifier<List<String>>([]);
+  final ValueNotifier<String?> _imagePathNotifier = ValueNotifier<String?>(null);
 
   @override
   void initState() {
@@ -66,6 +58,8 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
     _doseAmountController.dispose();
     _doseUnitController.dispose();
     _notesController.dispose();
+    _alarmTimesNotifier.dispose();
+    _imagePathNotifier.dispose();
     super.dispose();
   }
 
@@ -74,8 +68,8 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
     _doseAmountController.text = medicine.doseAmount;
     _doseUnitController.text = medicine.doseUnit;
     _notesController.text = medicine.notes ?? '';
-    _alarmTimes = List<String>.from(medicine.alarmTimes);
-    _imagePath = medicine.imagePath;
+    _alarmTimesNotifier.value = List<String>.from(medicine.alarmTimes);
+    _imagePathNotifier.value = medicine.imagePath;
   }
 
   Future<void> _handleSave(BuildContext context, MedicineDetailsCubit cubit) async {
@@ -86,8 +80,8 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
         doseAmount: _doseAmountController.text.trim(),
         doseUnit: _doseUnitController.text.trim(),
         notes: _notesController.text.trim(),
-        alarmTimes: _alarmTimes,
-        imagePath: _imagePath,
+        alarmTimes: _alarmTimesNotifier.value,
+        imagePath: _imagePathNotifier.value,
       );
     } catch (e) {
       if (mounted) ErrorHandler.show(context, AppException.server(msg: 'Failed to update'));
@@ -130,198 +124,6 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
         ),
       ),
     );
-  }
-
-  Widget _buildEditForm(BuildContext context, MedicineModel medicine, MedicineDetailsCubit cubit) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final typography = context.typography;
-    return Form(
-      key: _formKey,
-      child: SingleChildScrollView(
-        padding: EdgeInsets.all(spacing.xl),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Center(
-              child: GestureDetector(
-                onTap: () => _showImagePickerSheet(context),
-                child: CircleAvatar(
-                  radius: 38,
-                  backgroundColor: colors.surface,
-                  backgroundImage: (_imagePath != null && _imagePath!.isNotEmpty)
-                      ? FileImage(File(_imagePath!))
-                      : null,
-                  child: (_imagePath == null || _imagePath!.isEmpty)
-                      ? Icon(Icons.photo_camera, color: colors.primary, size: 28)
-                      : null,
-                ),
-              ),
-            ),
-            SizedBox(height: spacing.sm),
-            Center(
-              child: TextButton.icon(
-                onPressed: () => _showImagePickerSheet(context),
-                icon: Icon(Icons.edit, color: colors.primary),
-                label: Text(
-                  AppLocalizations.medicinesPickImageTitle,
-                  style: TextStyle(color: colors.primary, fontWeight: FontWeight.w600),
-                ),
-              ),
-            ),
-            SizedBox(height: spacing.md),
-            RecordDetailsEditableField(
-              controller: _nameController,
-              label: 'medicines.medicine_name_label'.tr(),
-            ),
-            SizedBox(height: spacing.md),
-            Row(
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: RecordDetailsEditableField(
-                    controller: _doseAmountController,
-                    label: 'medicines.dose_amount_hint'.tr(),
-                  ),
-                ),
-                SizedBox(width: spacing.md),
-                Expanded(
-                  flex: 1,
-                  child: RecordDetailsEditableField(
-                    controller: _doseUnitController,
-                    label: 'medicines.dose_unit_hint'.tr(),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: spacing.md),
-            RecordDetailsEditableField(
-              controller: _notesController,
-              label: 'medicines.details_notes_label'.tr(),
-              minLines: 3,
-              maxLines: 5,
-            ),
-            SizedBox(height: spacing.xl),
-            Text(
-              'medicines.alarm_times_label'.tr(),
-              style: typography.medicalRecordDetailLabel.copyWith(
-                color: colors.textPrimary,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: spacing.sm),
-            ...List.generate(_alarmTimes.length, (i) {
-              return Padding(
-                padding: EdgeInsetsDirectional.only(bottom: spacing.sm),
-                child: TimePickerRowWidget(
-                  time: _alarmTimes[i],
-                  canRemove: true,
-                  onTap: () async {
-                    final parts = _alarmTimes[i].split(':');
-                    final initial = TimeOfDay(
-                      hour: int.tryParse(parts[0]) ?? 8,
-                      minute: parts.length > 1 ? (int.tryParse(parts[1]) ?? 0) : 0,
-                    );
-                    final picked = await showTimePicker(
-                      context: context,
-                      initialTime: initial,
-                    );
-                    if (picked != null && mounted) {
-                      setState(() {
-                        _alarmTimes[i] = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
-                      });
-                    }
-                  },
-                  onRemove: () {
-                    setState(() {
-                      _alarmTimes.removeAt(i);
-                    });
-                  },
-                ),
-              );
-            }),
-            TextButton.icon(
-              icon: Icon(Icons.add_alarm, color: colors.primary),
-              label: Text('medicines.add_alarm_time'.tr(), style: TextStyle(color: colors.primary, fontWeight: FontWeight.bold)),
-              onPressed: () async {
-                final picked = await showTimePicker(
-                  context: context,
-                  initialTime: const TimeOfDay(hour: 8, minute: 0),
-                );
-                if (picked != null && mounted) {
-                  setState(() {
-                    _alarmTimes.add('${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}');
-                  });
-                }
-              },
-            ),
-            SizedBox(height: spacing.xl),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primary,
-                foregroundColor: colors.background,
-                padding: EdgeInsets.symmetric(vertical: spacing.md),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.radius.full)),
-              ),
-              onPressed: () => _handleSave(context, cubit),
-              child: Text(AppLocalizations.medicinesSaveChanges, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            ),
-            SizedBox(height: spacing.sm),
-            TextButton(
-              onPressed: () => cubit.cancelEdit(),
-              child: Text(AppLocalizations.medicinesCancel, style: TextStyle(color: colors.textSecondary, fontSize: 16, fontWeight: FontWeight.bold)),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _showImagePickerSheet(BuildContext context) async {
-    final colors = context.colors;
-    await showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: colors.surface,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (_) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: Icon(Icons.camera_alt, color: colors.primary),
-              title: Text(AppLocalizations.medicinesPickFromCamera),
-              onTap: () async {
-                Navigator.pop(context);
-                await _pickImage(ImageSource.camera);
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.photo_library, color: colors.primary),
-              title: Text(AppLocalizations.medicinesPickFromGallery),
-              onTap: () async {
-                Navigator.pop(context);
-                await _pickImage(ImageSource.gallery);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Future<void> _pickImage(ImageSource source) async {
-    final picked = await ImagePicker().pickImage(
-      source: source,
-      maxWidth: 1200,
-      imageQuality: 85,
-    );
-    if (picked != null && mounted) {
-      setState(() {
-        _imagePath = picked.path;
-      });
-    }
   }
 
   @override
@@ -379,7 +181,17 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
                 )
               else if (state is MedicineDetailsLoaded)
                 isEditing
-                    ? _buildEditForm(context, state.medicine, cubit)
+                    ? MedicineDetailsEditFormWidget(
+                        formKey: _formKey,
+                        nameController: _nameController,
+                        doseAmountController: _doseAmountController,
+                        doseUnitController: _doseUnitController,
+                        notesController: _notesController,
+                        alarmTimesNotifier: _alarmTimesNotifier,
+                        imagePathNotifier: _imagePathNotifier,
+                        onSave: () => _handleSave(context, cubit),
+                        onCancel: cubit.cancelEdit,
+                      )
                     : SingleChildScrollView(
                         padding: EdgeInsetsDirectional.only(start: spacing.xl, end: spacing.xl, top: spacing.lg, bottom: spacing.xxl),
                         child: Column(

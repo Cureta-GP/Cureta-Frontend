@@ -1,4 +1,5 @@
 import 'package:cureta/features/medicines/widgets/medicine_list_state_renderer_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
@@ -63,6 +64,11 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
     return Scaffold(
       backgroundColor: colors.chatBackground,
       appBar: const MedicineScreenAppBarWidget(),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: _openAddMedicine,
+        icon: const Icon(Icons.add),
+        label: Text('medicines.add_medicine'.tr(), style: context.typography.button),
+      ),
       body: BlocListener<ProfilesListCubit, ProfilesListState>(
         listenWhen: (previous, current) {
           if (previous is ProfilesSuccess && current is ProfilesSuccess) {
