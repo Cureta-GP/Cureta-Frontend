@@ -8,9 +8,10 @@ import 'package:cureta/features/medicines/widgets/medicine_screen_app_bar_widget
 import 'package:cureta/features/medicines/veiw_model/user_medicines_state.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
+
 class UserMedicinesVeiw extends StatelessWidget {
   const UserMedicinesVeiw({super.key});
   @override
@@ -21,11 +22,13 @@ class UserMedicinesVeiw extends StatelessWidget {
     );
   }
 }
+
 class _UserMedicinesBody extends StatefulWidget {
   const _UserMedicinesBody();
   @override
   State<_UserMedicinesBody> createState() => _UserMedicinesBodyState();
 }
+
 class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
   final TextEditingController _searchController = TextEditingController();
 
@@ -36,7 +39,14 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
   }
 
   Future<void> _openAddMedicine() async {
-    await context.push<void>('/medicines/add/1');
+    await context.pushNamed(AppRoutes.medicinesAddStep1);
+    if (mounted) {
+      context.read<UserMedicinesCubit>().loadMedicines();
+    }
+  }
+
+  Future<void> _openMedicineDetails(String medicineId) async {
+    await context.pushNamed(AppRoutes.medicineDetails, extra: medicineId);
     if (mounted) {
       context.read<UserMedicinesCubit>().loadMedicines();
     }
@@ -99,6 +109,7 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
                 onDeleteMedicine: (id) {
                   context.read<UserMedicinesCubit>().deleteMedicine(id);
                 },
+                onMedicineTap: _openMedicineDetails,
                 onRetrySync: () {
                   context.read<UserMedicinesCubit>().syncPendingMedicines();
                 },
@@ -108,22 +119,6 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
               ),
             ),
           ],
-        ),
-      ),
-      floatingActionButton: Padding(
-        padding: EdgeInsetsDirectional.only(
-          bottom: MediaQuery.of(context).padding.bottom,
-        ),
-        child: FloatingActionButton.extended(
-          heroTag: 'medicines_fab',
-          onPressed: _openAddMedicine,
-          backgroundColor: colors.primary,
-          foregroundColor: colors.background,
-          label: Text(
-            AppLocalizations.medicinesAddMedicine,
-            style: context.typography.medicalRecordButton,
-          ),
-          icon: const Icon(Icons.add),
         ),
       ),
     );

@@ -36,6 +36,47 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
   final _advancedDrawerController = AdvancedDrawerController();
 
+  Future<void> _openAddMedicine() async {
+    await context.pushNamed(AppRoutes.medicinesAddStep1);
+  }
+
+  ({IconData icon, VoidCallback onPressed, String tooltip}) _fabConfig() {
+    switch (_selectedIndex) {
+      case 1:
+        return (
+          icon: Icons.medication_rounded,
+          onPressed: () {
+            _openAddMedicine();
+          },
+          tooltip: 'Add medicine',
+        );
+      case 2:
+        return (
+          icon: Icons.note_add_rounded,
+          onPressed: () {
+            context.pushNamed(AppRoutes.medicalRecordsStepOne);
+          },
+          tooltip: 'Add record',
+        );
+      case 3:
+        return (
+          icon: Icons.person_add_alt_1_rounded,
+          onPressed: () {
+            context.pushNamed(AppRoutes.addProfile, extra: true);
+          },
+          tooltip: 'Add profile',
+        );
+      default:
+        return (
+          icon: Icons.chat,
+          onPressed: () {
+            context.pushNamed(AppRoutes.chat);
+          },
+          tooltip: 'Chat',
+        );
+    }
+  }
+
   int? _tabFromRoute(BuildContext context) {
     try {
       final tab = int.tryParse(
@@ -56,11 +97,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   }
 
   Future<void> _checkAlarmPermissions() async {
-    final canSchedule = await NotificationService.instance.canScheduleExactAlarms();
+    final canSchedule = await NotificationService.instance
+        .canScheduleExactAlarms();
     if (!canSchedule && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('برجاء تفعيل إذن "التنبيهات والمواعيد" (Alarms & Reminders) لكي تعمل تنبيهات الدواء.'),
+          content: const Text(
+            'برجاء تفعيل إذن "التنبيهات والمواعيد" (Alarms & Reminders) لكي تعمل تنبيهات الدواء.',
+          ),
           action: SnackBarAction(
             label: 'تفعيل',
             onPressed: () {
@@ -103,6 +147,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final fabConfig = _fabConfig();
 
     return MultiBlocProvider(
       providers: [
@@ -142,11 +187,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ],
           ),
           floatingActionButton: FloatingActionButton(
-            heroTag: 'chat_fab',
-            onPressed: () {
-              context.pushNamed(AppRoutes.chat);
-            },
-            child: const Icon(Icons.chat),
+            onPressed: fabConfig.onPressed,
+            tooltip: fabConfig.tooltip,
+            child: Icon(fabConfig.icon),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

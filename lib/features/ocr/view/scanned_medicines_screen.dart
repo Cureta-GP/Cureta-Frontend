@@ -15,10 +15,7 @@ import 'package:cureta/features/ocr/data/models/ocr_medicine_match.dart';
 class ScannedMedicinesScreen extends StatelessWidget {
   final List<OcrMedicineMatch> medicines;
 
-  const ScannedMedicinesScreen({
-    super.key,
-    required this.medicines,
-  });
+  const ScannedMedicinesScreen({super.key, required this.medicines});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +33,7 @@ class ScannedMedicinesScreen extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.response.message ?? '')),
               );
-              Nav.pushNamed(context, AppRoutes.home);
+              Nav.pushNamed(context, AppRoutes.medicines);
             } else if (state is OcrFailure) {
               ScaffoldMessenger.of(
                 context,

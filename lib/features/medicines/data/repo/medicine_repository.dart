@@ -2,6 +2,7 @@ import 'dart:developer' as developer;
 import 'package:uuid/uuid.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
+import '../models/dose_log_model.dart';
 import '../models/medicine_model.dart';
 import '../models/dose_log_model.dart';
 import '../models/medicine_payload.dart';
@@ -154,7 +155,37 @@ class MedicineRepository {
   Future<void> toggleMedicineActive(String localId) async {
     final m = await _local.getById(localId);
     if (m == null) return;
-    await _local.update(m.copyWith(isActive: !m.isActive, updatedAt: DateTime.now()));
+    await _local.update(
+      m.copyWith(
+        isActive: !m.isActive,
+        isPaused: false,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> setMedicineActive(String localId, bool isActive) async {
+    final m = await _local.getById(localId);
+    if (m == null) return;
+    await _local.update(
+      m.copyWith(
+        isActive: isActive,
+        isPaused: isActive ? m.isPaused : false,
+        updatedAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> setMedicinePaused(String localId, bool isPaused) async {
+    final m = await _local.getById(localId);
+    if (m == null) return;
+    await _local.update(
+      m.copyWith(
+        isPaused: isPaused,
+        isActive: isPaused ? true : m.isActive,
+        updatedAt: DateTime.now(),
+      ),
+    );
   }
 
   Future<void> logMedicationAction(String localId, String status) async {

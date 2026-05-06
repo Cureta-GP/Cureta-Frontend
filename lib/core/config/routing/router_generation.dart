@@ -28,6 +28,7 @@ import 'package:cureta/features/medicines/veiw/add_medicine_third_step_veiw.dart
 import 'package:cureta/features/medicines/veiw/add_medicine_forth_step_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_fifth_step_veiw.dart';
 import 'package:cureta/features/medicines/veiw/add_medicine_flow_wrapper.dart';
+import 'package:cureta/features/medicines/veiw/medicine_details_veiw.dart';
 
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -101,7 +102,8 @@ class RoutesGeneration {
         name: AppRoutes.scannedMedicines,
         builder: (context, state) {
           final extra = state.extra;
-          final meds = (extra as List<dynamic>?)
+          final meds =
+              (extra as List<dynamic>?)
                   ?.whereType<OcrMedicineMatch>()
                   .toList() ??
               [];
@@ -258,11 +260,7 @@ class RoutesGeneration {
           return PageTransitions.scale(
             child: BlocProvider<MedicineDetailsCubit>(
               create: (context) => getIt<MedicineDetailsCubit>(param1: id)..loadDetails(),
-              child: MedicineDetailsVeiw(
-                onEditTap: () {
-                 
-                },
-              ),
+              child: MedicineDetailsVeiw(medicineId: id),
             ),
             state: state,
           );

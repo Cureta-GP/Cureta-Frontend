@@ -15,6 +15,7 @@ class MedicineListContentWidget extends StatelessWidget {
     required this.onMedicineTap,
     required this.onToggleMedicine,
     required this.onDeleteMedicine,
+    required this.onMedicineTap,
     required this.onRetrySync,
     this.failedCount,
   });
@@ -25,6 +26,7 @@ class MedicineListContentWidget extends StatelessWidget {
   final ValueChanged<String> onMedicineTap;
   final ValueChanged<String> onToggleMedicine;
   final ValueChanged<String> onDeleteMedicine;
+  final ValueChanged<String> onMedicineTap;
   final VoidCallback onRetrySync;
   final int? failedCount;
 
