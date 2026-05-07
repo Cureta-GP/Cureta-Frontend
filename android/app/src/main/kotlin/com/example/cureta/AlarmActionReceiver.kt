@@ -12,8 +12,9 @@ class AlarmActionReceiver : BroadcastReceiver() {
         val action = intent.getStringExtra("alarm_action") ?: return
         val localId = intent.getStringExtra("local_id") ?: return
         val remoteId = intent.getStringExtra("remote_id") ?: ""
+        val scheduledAtMillis = intent.getLongExtra("scheduled_at_millis", 0L)
         if (action.isBlank() || localId.isBlank()) return
-        Log.d("AlarmActionReceiver", "Received action=$action local_id=$localId remote_id=$remoteId")
+        Log.d("AlarmActionReceiver", "Received action=$action local_id=$localId remote_id=$remoteId scheduled_at_millis=$scheduledAtMillis")
 
         val prefs = context.getSharedPreferences("cureta_alarm_events", Context.MODE_PRIVATE)
         val currentRaw = prefs.getString("pending_actions", "[]") ?: "[]"
@@ -27,6 +28,7 @@ class AlarmActionReceiver : BroadcastReceiver() {
                 put("action", action)
                 put("local_id", localId)
                 put("remote_id", remoteId)
+                put("scheduled_at_millis", scheduledAtMillis)
                 put("timestamp", System.currentTimeMillis())
             }
         )

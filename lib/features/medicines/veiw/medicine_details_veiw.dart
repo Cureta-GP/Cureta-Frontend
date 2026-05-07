@@ -34,26 +34,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
   final ValueNotifier<String?> _imagePathNotifier = ValueNotifier<String?>(null);
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(_lifecycleObserver);
-  }
-
-  late final _MedicineDetailsLifecycleObserver _lifecycleObserver =
-      _MedicineDetailsLifecycleObserver(
-        onResumed: () {
-          if (!mounted) return;
-          final state = context.read<MedicineDetailsCubit>().state;
-          final isEditing = state is MedicineDetailsLoaded && state.isEditing;
-          if (!isEditing) {
-            context.read<MedicineDetailsCubit>().loadDetails();
-          }
-        },
-      );
-
-  @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(_lifecycleObserver);
     _nameController.dispose();
     _doseAmountController.dispose();
     _doseUnitController.dispose();
@@ -248,18 +229,5 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
         );
       },
     );
-  }
-}
-
-class _MedicineDetailsLifecycleObserver with WidgetsBindingObserver {
-  _MedicineDetailsLifecycleObserver({required this.onResumed});
-
-  final VoidCallback onResumed;
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      onResumed();
-    }
   }
 }

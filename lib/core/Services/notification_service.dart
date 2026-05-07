@@ -19,8 +19,20 @@ class NotificationService {
         final action = args['action'] as String?;
         final localId = args['local_id'] as String?;
         final remoteId = args['remote_id'] as String?;
+        final scheduledAtMillis = (args['scheduled_at_millis'] as num?)?.toInt();
+        final scheduledAt = scheduledAtMillis == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+                scheduledAtMillis,
+                isUtc: true,
+              );
         if (action != null && localId != null) {
-          await _handleAlarmAction(localId, action, remoteId: remoteId);
+          await _handleAlarmAction(
+            localId,
+            action,
+            remoteId: remoteId,
+            scheduledAt: scheduledAt,
+          );
         }
       }
     });
@@ -31,10 +43,16 @@ class NotificationService {
     String localId,
     String action, {
     String? remoteId,
+    DateTime? scheduledAt,
   }) async {
     try {
       final repo = GetItServices.getIt<MedicineRepository>();
-      await repo.logMedicationAction(localId, action, remoteId: remoteId);
+      await repo.logMedicationAction(
+        localId,
+        action,
+        remoteId: remoteId,
+        scheduledAt: scheduledAt,
+      );
     } catch (e) {
       developer.log('Failed to handle alarm action: $e', name: 'NotificationService');
     }
@@ -55,12 +73,24 @@ class NotificationService {
         final action = map['action'] as String?;
         final localId = map['local_id'] as String?;
         final remoteId = map['remote_id'] as String?;
+        final scheduledAtMillis = (map['scheduled_at_millis'] as num?)?.toInt();
+        final scheduledAt = scheduledAtMillis == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+                scheduledAtMillis,
+                isUtc: true,
+              );
         if (action == null || localId == null) continue;
         developer.log(
-          'Sync pending alarm action: action=$action, local_id=$localId, remote_id=$remoteId',
+          'Sync pending alarm action: action=$action, local_id=$localId, remote_id=$remoteId, scheduled_at_millis=$scheduledAtMillis',
           name: 'NotificationService',
         );
-        await _handleAlarmAction(localId, action, remoteId: remoteId);
+        await _handleAlarmAction(
+          localId,
+          action,
+          remoteId: remoteId,
+          scheduledAt: scheduledAt,
+        );
       }
     } on PlatformException catch (e) {
       developer.log(

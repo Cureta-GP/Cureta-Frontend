@@ -192,6 +192,7 @@ class MedicineRepository {
     String localId,
     String status, {
     String? remoteId,
+    DateTime? scheduledAt,
   }) async {
     final m = await _local.getById(localId);
     final now = DateTime.now();
@@ -211,7 +212,11 @@ class MedicineRepository {
           'Sending dose log: localId=$localId, remoteId=$effectiveRemoteId, status=$normalizedStatus',
           name: 'MedicineRepository',
         );
-        await _remote.trackDose(effectiveRemoteId, normalizedStatus);
+        await _remote.trackDose(
+          effectiveRemoteId,
+          normalizedStatus,
+          scheduledAt: scheduledAt,
+        );
         developer.log(
           'Dose log sent successfully for remoteId=$effectiveRemoteId',
           name: 'MedicineRepository',

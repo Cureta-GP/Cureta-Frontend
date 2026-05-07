@@ -62,10 +62,16 @@ class MedicineService {
     await DioHelper.deleteData(url: ApiEndpoints.medicineData(id));
   }
 
-  Future<void> trackDose(String medicineId, String status) async {
+  Future<void> trackDose(
+    String medicineId,
+    String status, {
+    DateTime? scheduledAt,
+  }) async {
+    final scheduled =
+        (scheduledAt ?? DateTime.now()).toUtc().toIso8601String();
     await DioHelper.postData(
       url: ApiEndpoints.medicineLogs(medicineId),
-      data: {'status': status, 'scheduled_at': DateTime.now().toIso8601String()},
+      data: {'status': status, 'scheduled_at': scheduled},
     );
   }
 

@@ -144,21 +144,28 @@ class MainActivity : FlutterActivity() {
         val action = intent.getStringExtra("alarm_action")
         val localId = intent.getStringExtra("local_id")
         val remoteId = intent.getStringExtra("remote_id")
+        val scheduledAtMillis = intent.getLongExtra("scheduled_at_millis", 0L)
         if (action != null && localId != null) {
             methodChannel?.invokeMethod(
                 "onAlarmAction",
-                mapOf("action" to action, "local_id" to localId, "remote_id" to (remoteId ?: ""))
+                mapOf(
+                    "action" to action,
+                    "local_id" to localId,
+                    "remote_id" to (remoteId ?: ""),
+                    "scheduled_at_millis" to scheduledAtMillis
+                )
             )
             intent.removeExtra("alarm_action")
             intent.removeExtra("local_id")
             intent.removeExtra("remote_id")
+            intent.removeExtra("scheduled_at_millis")
         }
     }
 
-    private fun consumePendingAlarmActions(): List<Map<String, String>> {
+    private fun consumePendingAlarmActions(): List<Map<String, Any>> {
         val prefs = getSharedPreferences("cureta_alarm_events", Context.MODE_PRIVATE)
         val raw = prefs.getString("pending_actions", "[]") ?: "[]"
-        val parsed = mutableListOf<Map<String, String>>()
+        val parsed = mutableListOf<Map<String, Any>>()
         try {
             val arr = JSONArray(raw)
             for (i in 0 until arr.length()) {
@@ -166,8 +173,16 @@ class MainActivity : FlutterActivity() {
                 val action = item.optString("action", "")
                 val localId = item.optString("local_id", "")
                 val remoteId = item.optString("remote_id", "")
+                val scheduledAtMillis = item.optLong("scheduled_at_millis", 0L)
                 if (action.isNotBlank() && localId.isNotBlank()) {
-                    parsed.add(mapOf("action" to action, "local_id" to localId, "remote_id" to remoteId))
+                    parsed.add(
+                        mapOf(
+                            "action" to action,
+                            "local_id" to localId,
+                            "remote_id" to remoteId,
+                            "scheduled_at_millis" to scheduledAtMillis
+                        )
+                    )
                 }
             }
         } catch (_: Exception) {

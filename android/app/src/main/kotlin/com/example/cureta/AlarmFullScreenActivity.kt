@@ -79,6 +79,7 @@ class AlarmFullScreenActivity : Activity() {
     private fun stopAlarmAndFinish(action: String) {
         val localId = intent.getStringExtra("local_id") ?: ""
         val remoteId = intent.getStringExtra("remote_id") ?: ""
+        val scheduledAtMillis = intent.getLongExtra("scheduled_at_millis", 0L)
 
         stopService(Intent(this, AlarmService::class.java))
         sendBroadcast(
@@ -86,6 +87,7 @@ class AlarmFullScreenActivity : Activity() {
                 putExtra("alarm_action", action)
                 putExtra("local_id", localId)
                 putExtra("remote_id", remoteId)
+                putExtra("scheduled_at_millis", scheduledAtMillis)
             }
         )
 

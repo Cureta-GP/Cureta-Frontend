@@ -16,6 +16,7 @@ class AlarmScheduler : BroadcastReceiver() {
         val timeMillis = intent.getLongExtra("time_millis", 0L)
         val localId = intent.getStringExtra("local_id") ?: ""
         val remoteId = intent.getStringExtra("remote_id") ?: ""
+        val scheduledAtMillis = intent.getLongExtra("time_millis", 0L)
         val dose = intent.getStringExtra("dose_amount") ?: ""
         val imagePath = intent.getStringExtra("image_path") ?: ""
         val frequency = intent.getStringExtra("frequency") ?: "daily"
@@ -25,6 +26,7 @@ class AlarmScheduler : BroadcastReceiver() {
             putExtra("alarm_id", alarmId)
             putExtra("local_id", localId)
             putExtra("remote_id", remoteId)
+            putExtra("scheduled_at_millis", scheduledAtMillis)
             putExtra("dose_amount", dose)
             putExtra("image_path", imagePath)
             putExtra("launch_full_screen", true)
