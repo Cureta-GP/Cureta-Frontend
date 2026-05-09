@@ -2,6 +2,7 @@ import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_mo
 import 'package:cureta/features/ocr/data/repo/ocr_repository.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/features/settings/data/app_settings_notifier.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cureta/features/authentcation/data/services/auth_service.dart';
 import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
@@ -17,7 +18,6 @@ import 'package:cureta/features/chat_bot/veiw_model/chat_cubit.dart';
 import 'package:cureta/features/chat_bot/veiw_model/chat_sessions_cubit.dart';
 import 'package:cureta/features/ocr/data/service/ocr_service.dart';
 import 'package:cureta/features/ocr/view_model/ocr_cubit.dart';
-
 import 'package:cureta/features/medicines/data/services/medicine_local_service.dart';
 import 'package:cureta/features/medicines/data/services/medicine_service.dart';
 import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
@@ -27,7 +27,7 @@ import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart
 
 final getIt = GetIt.instance;
 
-void setup() {
+Future<void> setup() async {
   // 🧱 Services
   getIt.registerSingleton<AuthService>(AuthService());
   getIt.registerSingleton<MedicalRecordService>(MedicalRecordService());
@@ -87,13 +87,10 @@ void setup() {
   );
 
   // 💊 Medicine Cubits
-  // AddMedicineCubit is a factory so each flow session gets a fresh instance
-  // managed by AddMedicineFlowWrapper (ShellRoute).
   getIt.registerFactory<AddMedicineCubit>(
     () => AddMedicineCubit(getIt.get<MedicineRepository>()),
   );
 
-  // UserMedicinesCubit is a factory — each list screen manages its own instance.
   getIt.registerFactory<UserMedicinesCubit>(
     () => UserMedicinesCubit(getIt.get<MedicineRepository>()),
   );
@@ -103,5 +100,10 @@ void setup() {
       getIt.get<MedicineRepository>(),
       medicineId: medicineId,
     ),
+  );
+
+  // ⚙️ Settings
+  getIt.registerSingleton<AppSettingsNotifier>(
+    await AppSettingsNotifier.load(),
   );
 }

@@ -6,6 +6,8 @@ import 'package:cureta/core/theme/app_theme_factory.dart';
 import 'package:cureta/core/theme/breakpoints.dart';
 import 'package:cureta/features/medicines/data/services/medicine_local_service.dart';
 import 'package:cureta/core/Services/notification_service.dart';
+import 'package:cureta/features/settings/data/app_settings_notifier.dart';
+import 'package:cureta/features/settings/data/model/app_settings.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +15,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await EasyLocalization.ensureInitialized();
   await initializeTimezone();
-  setup();
+  await setup();
   await getIt<MedicineLocalService>().init();
   NotificationService.instance.initCallHandler();
   await DioHelper.init();
@@ -31,41 +33,53 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   static const double _minTextScaleFactor = 0.8;
   static const double _maxTextScaleFactor = 1.5;
+
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final screenWidth = constraints.maxWidth;
-        final screenHeight = constraints.maxHeight;
-        final deviceType = _deviceTypeFromWidth(screenWidth);
-        final lightTheme = AppThemeFactory.create(
-          brightness: Brightness.light,
-          device: deviceType,
-          screenWidth: screenWidth,
-          screenHeight: screenHeight,
-        );
-        final darkTheme = AppThemeFactory.create(
-          brightness: Brightness.dark,
-          device: deviceType,
-          screenWidth: screenWidth,
-          screenHeight: screenHeight,
-        );
-        return MediaQuery.withClampedTextScaling(
-          minScaleFactor: _minTextScaleFactor,
-          maxScaleFactor: _maxTextScaleFactor,
-          child: MaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            theme: lightTheme,
-            darkTheme: darkTheme,
-            themeMode: ThemeMode.system,
-            routerConfig: RoutesGeneration.router,
-            themeAnimationDuration: const Duration(milliseconds: 300),
-            themeAnimationCurve: Curves.easeInOut,
-            // Localization configuration
-            localizationsDelegates: context.localizationDelegates,
-            supportedLocales: context.supportedLocales,
-            locale: context.locale,
-          ),
+    return ValueListenableBuilder<AppSettings>(
+      valueListenable: getIt<AppSettingsNotifier>(),
+      builder: (context, settings, _) {
+        // sync EasyLocalization when user changes language
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.locale != settings.locale) {
+            context.setLocale(settings.locale);
+          }
+        });
+
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = constraints.maxWidth;
+            final screenHeight = constraints.maxHeight;
+            final deviceType = _deviceTypeFromWidth(screenWidth);
+            final lightTheme = AppThemeFactory.create(
+              brightness: Brightness.light,
+              device: deviceType,
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+            );
+            final darkTheme = AppThemeFactory.create(
+              brightness: Brightness.dark,
+              device: deviceType,
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+            );
+            return MediaQuery.withClampedTextScaling(
+              minScaleFactor: _minTextScaleFactor,
+              maxScaleFactor: _maxTextScaleFactor,
+              child: MaterialApp.router(
+                debugShowCheckedModeBanner: false,
+                theme: lightTheme,
+                darkTheme: darkTheme,
+                themeMode: settings.themeMode, // ← was: ThemeMode.system
+                routerConfig: RoutesGeneration.router,
+                themeAnimationDuration: const Duration(milliseconds: 300),
+                themeAnimationCurve: Curves.easeInOut,
+                localizationsDelegates: context.localizationDelegates,
+                supportedLocales: context.supportedLocales,
+                locale: context.locale,
+              ),
+            );
+          },
         );
       },
     );

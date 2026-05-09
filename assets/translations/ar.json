@@ -422,5 +422,24 @@
     "alarm_taken": "تم أخذ الدواء",
     "alarm_missed": "تخطي الدواء",
     "alarm_subtitle": "حان وقت تناول الدواء الخاص بك"
+  },
+  "settings": {
+    "title": "إعدادات التطبيق",
+    "section": {
+      "preferences": "التفضيلات",
+      "account": "الحساب",
+      "legal": "قانوني"
+    },
+    "theme": {
+      "light": "فاتح",
+      "dark": "الوضع الداكن",
+      "system": "إعداد النظام"
+    },
+    "language": "اللغة",
+    "change_password": "تغيير كلمة المرور",
+    "notification_settings": "إعدادات الإشعارات",
+    "privacy_policy": "سياسة الخصوصية",
+    "terms_of_service": "شروط الخدمة",
+    "app_version": "إصدار التطبيق {}"
   }
 }

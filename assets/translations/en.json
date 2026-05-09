@@ -310,7 +310,6 @@
     "user_question": "Can you explain my recent blood test results?",
     "reply_message": "Of course. I can see your fasting glucose was 105 mg/dL. This is slightly above the typical range (70-99 mg/dL). Would you like me to explain what might cause this or suggest some follow-up questions for your doctor?"
   },
-
   "ocr": {
     "scan_prescription": {
       "title": "Scan Prescription",
@@ -423,5 +422,24 @@
     "alarm_taken": "Taken",
     "alarm_missed": "Missed",
     "alarm_subtitle": "It's time to take your medication"
+  },
+  "settings": {
+    "title": "App Settings",
+    "section": {
+      "preferences": "Preferences",
+      "account": "Account",
+      "legal": "Legal"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark Mode",
+      "system": "System default"
+    },
+    "language": "Language",
+    "change_password": "Change Password",
+    "notification_settings": "Notification Settings",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "app_version": "App Version {}"
   }
 }
