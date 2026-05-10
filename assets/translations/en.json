@@ -388,6 +388,7 @@
     "next_step": "Next Step",
     "skip": "Skip",
     "skip_for_now": "Skip for now",
+    "error_loading_medicines": "Failed to load medicines. Please try again.",
     "error_medicine_name_required": "Medicine name is required",
     "error_dose_form_required": "Please select a dose form",
     "error_frequency_required": "Please select a frequency",
@@ -423,5 +424,19 @@
     "alarm_taken": "Taken",
     "alarm_missed": "Missed",
     "alarm_subtitle": "It's time to take your medication"
-  }
+  },
+  "copilot_explain": "Explain Screen",
+  "copilot_voice": "Voice Chat",
+  "copilot_dismiss": "Dismiss",
+  "copilot_you": "You",
+  "copilot_assistant": "Assistant",
+  "copilot_thinking": "Thinking...",
+  "copilot_tap_to_speak": "Tap mic to speak",
+  "copilot_listening": "Listening...",
+  "chat_mic_permission_required": "Please allow microphone permission",
+  "chat_mic_error": "Error: {error}",
+  "chat_mic_init_failed": "Failed to initialize microphone",
+  "chat_speak_now": "Speak now...",
+  "chat_cancel": "Cancel",
+  "chat_send": "Send"
 }

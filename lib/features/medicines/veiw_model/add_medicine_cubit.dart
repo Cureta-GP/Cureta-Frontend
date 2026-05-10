@@ -98,7 +98,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     final current = _currentData();
     if (current.medicineName.trim().isEmpty) {
       final errors = Map<String, String>.from(current.validationErrors);
-      errors['medicineName'] = 'error_medicine_name_required';
+      errors['medicineName'] = 'medicines.error_medicine_name_required';
       emit(current.copyWith(validationErrors: errors));
       return;
     }
@@ -109,10 +109,10 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     final current = _currentData();
     final errors = <String, String>{};
     if (current.doseForm == null) {
-      errors['doseForm'] = 'error_dose_form_required';
+      errors['doseForm'] = 'medicines.error_dose_form_required';
     }
     if (current.frequency == null) {
-      errors['frequency'] = 'error_frequency_required';
+      errors['frequency'] = 'medicines.error_frequency_required';
     }
     if (errors.isNotEmpty) {
       emit(current.copyWith(validationErrors: errors));
@@ -161,7 +161,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     } catch (e) {
       emit(
         AddMedicineFailure(
-          errorMessage: 'error_medicine_submit_failed',
+          errorMessage: 'medicines.error_medicine_submit_failed',
           data: current,
         ),
       );

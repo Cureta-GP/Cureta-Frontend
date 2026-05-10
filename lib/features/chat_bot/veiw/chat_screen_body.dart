@@ -10,6 +10,7 @@ import '../veiw_model/chat_sessions_cubit.dart';
 import '../veiw_model/chat_state.dart';
 import '../widgets/chat_screen_content.dart';
 import '../widgets/chat_sessions_drawer.dart';
+import '../widgets/chat_voice_input_modal.dart';
 
 class ChatScreenBody extends StatefulWidget {
   const ChatScreenBody({super.key});
@@ -60,6 +61,19 @@ class _ChatScreenBodyState extends State<ChatScreenBody>
     unawaited(context.read<ChatCubit>().startNewChat());
   }
 
+  Future<void> _openVoiceModal() async {
+    final text = await showModalBottomSheet<String>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) => const ChatVoiceInputModal(),
+    );
+
+    if (text != null && text.trim().isNotEmpty) {
+      _sendMessage(text.trim());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ChatCubit, ChatState>(
@@ -80,6 +94,7 @@ class _ChatScreenBodyState extends State<ChatScreenBody>
             isUserScrolledAway: isUserScrolledAway,
             onScrollNotification: handleScrollNotification,
             onSend: _sendMessage,
+            onMic: _openVoiceModal,
             onJumpToBottom: jumpToBottom,
             onOpenMenu: () {
               context.read<ChatSessionsCubit>().fetchSessions();

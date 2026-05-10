@@ -422,5 +422,38 @@
     "alarm_taken": "تم أخذ الدواء",
     "alarm_missed": "تخطي الدواء",
     "alarm_subtitle": "حان وقت تناول الدواء الخاص بك"
-  }
+  },
+  "settings": {
+    "title": "إعدادات التطبيق",
+    "section": {
+      "preferences": "التفضيلات",
+      "account": "الحساب",
+      "legal": "قانوني"
+    },
+    "theme": {
+      "light": "فاتح",
+      "dark": "الوضع الداكن",
+      "system": "إعداد النظام"
+    },
+    "language": "اللغة",
+    "change_password": "تغيير كلمة المرور",
+    "notification_settings": "إعدادات الإشعارات",
+    "privacy_policy": "سياسة الخصوصية",
+    "terms_of_service": "شروط الخدمة",
+    "app_version": "إصدار التطبيق {}"
+  },
+  "copilot_explain": "شرح الشاشة",
+  "copilot_voice": "الدردشة الصوتية",
+  "copilot_dismiss": "إغلاق",
+  "copilot_you": "أنت",
+  "copilot_assistant": "المساعد",
+  "copilot_thinking": "يفكر...",
+  "copilot_tap_to_speak": "اضغط على الميكروفون للتحدث",
+  "copilot_listening": "يستمع...",
+  "chat_mic_permission_required": "يرجى السماح بصلاحية الميكروفون",
+  "chat_mic_error": "خطأ: {error}",
+  "chat_mic_init_failed": "فشل تهيئة الميكروفون",
+  "chat_speak_now": "تحدث الآن...",
+  "chat_cancel": "إلغاء",
+  "chat_send": "إرسال"
 }

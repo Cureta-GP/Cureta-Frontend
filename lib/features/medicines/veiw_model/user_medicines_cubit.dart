@@ -30,7 +30,11 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
         }
       },
       onError: (_) {
-        emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
+        emit(
+          const UserMedicinesError(
+            messageKey: 'medicines.error_loading_medicines',
+          ),
+        );
       },
     );
 
@@ -53,7 +57,8 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
 
   Future<void> loadMedicines() async {
     final currentState = state;
-    final hasData = currentState is UserMedicinesLoaded ||
+    final hasData =
+        currentState is UserMedicinesLoaded ||
         currentState is UserMedicinesSyncBanner;
 
     // Only show spinner when the list is genuinely empty.
@@ -67,7 +72,11 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
     } catch (e) {
       // Only show error if there is no data to display.
       if (!hasData) {
-        emit(const UserMedicinesError(messageKey: 'error_loading_medicines'));
+        emit(
+          const UserMedicinesError(
+            messageKey: 'medicines.error_loading_medicines',
+          ),
+        );
       }
     }
   }

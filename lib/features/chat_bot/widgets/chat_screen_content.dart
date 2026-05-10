@@ -20,6 +20,7 @@ class ChatScreenContent extends StatelessWidget {
     required this.onSend,
     required this.onJumpToBottom,
     required this.onOpenMenu,
+    required this.onMic,
   });
 
   final bool compact;
@@ -31,6 +32,7 @@ class ChatScreenContent extends StatelessWidget {
   final ValueChanged<String> onSend;
   final VoidCallback onJumpToBottom;
   final VoidCallback onOpenMenu;
+  final VoidCallback onMic;
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +63,7 @@ class ChatScreenContent extends StatelessWidget {
               isLoading: chatState.isLoading,
               onSend: onSend,
               onAttach: null,
-              onMic: null,
+              onMic: onMic,
             ),
           ],
         ),
