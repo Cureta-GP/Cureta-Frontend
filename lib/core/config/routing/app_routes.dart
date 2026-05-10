@@ -45,5 +45,5 @@ class AppRoutes {
   //profil
 
   static const String medicineAlarm = '/medicines/alarm';
-
+  //setting
 }

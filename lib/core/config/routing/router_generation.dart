@@ -31,6 +31,7 @@ import 'package:cureta/features/medicines/veiw/add_medicine_flow_wrapper.dart';
 import 'package:cureta/features/medicines/veiw/medicine_details_veiw.dart';
 
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
+import 'package:cureta/features/settings/view/settings_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
 import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
@@ -259,8 +260,9 @@ class RoutesGeneration {
           final id = state.pathParameters['id'] ?? '';
           return PageTransitions.scale(
             child: BlocProvider<MedicineDetailsCubit>(
-              create: (context) => getIt<MedicineDetailsCubit>(param1: id)..loadDetails(),
-              child: MedicineDetailsVeiw(onEditTap: () {  },),
+              create: (context) =>
+                  getIt<MedicineDetailsCubit>(param1: id)..loadDetails(),
+              child: MedicineDetailsVeiw(onEditTap: () {}),
             ),
             state: state,
           );
@@ -402,6 +404,12 @@ class RoutesGeneration {
         name: AppRoutes.chat,
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: const ChatScreen(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        name: AppRoutes.settings,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const SettingsScreen(), state: state),
       ),
     ],
   );
