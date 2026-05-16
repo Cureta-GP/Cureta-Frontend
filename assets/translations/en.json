@@ -287,8 +287,6 @@
     "add_alert": "Add Alert",
     "home_scan_prescription": "Scan Prescription",
     "my_qr_code": "My QR Code",
-    "upcoming_meds": "Upcoming Meds",
-    "see_all": "See All",
     "recent_activity": "Recent Activity",
     "added_yesterday": "Added Yesterday",
     "added_days_ago": "Added {days} days ago",
@@ -297,7 +295,19 @@
     "vitamin_d": "Vitamin D",
     "vitamin_d_note": "1 Tablet",
     "blood_test_results": "Blood Test Results",
-    "vaccination_record": "Vaccination Record"
+    "vaccination_record": "Vaccination Record",
+    "stats": {
+      "today_meds": "Today's meds",
+      "next_dose": "Next dose",
+      "all_done": "All done!",
+      "remaining": "{} remaining",
+      "no_pending": "No pending"
+    },
+    "upcoming_meds": "Upcoming meds",
+    "see_all": "See all",
+    "missed": "Missed",
+    "taken": "Taken",
+    "no_meds_today": "No medicines scheduled today"
   },
   "chat": {
     "input_hint": "Ask me anything...",
@@ -423,5 +433,35 @@
     "alarm_taken": "Taken",
     "alarm_missed": "Missed",
     "alarm_subtitle": "It's time to take your medication"
+  },
+  "settings": {
+    "title": "App Settings",
+    "section": {
+      "preferences": "Preferences",
+      "account": "Account",
+      "legal": "Legal"
+    },
+    "theme": {
+      "light": "Light",
+      "dark": "Dark Mode",
+      "system": "System default"
+    },
+    "language": "Language",
+    "change_password": "Change Password",
+    "notification_settings": "Notification Settings",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_service": "Terms of Service",
+    "app_version": "App Version {}"
+  },
+  "drawer": {
+    "dashboard": "Dashboard",
+    "medicines": "Medicines",
+    "chat": "Chat",
+    "qr_code": "QR Code",
+    "calendar": "Calendar",
+    "family_profiles": "Family Profiles",
+    "settings": "Settings",
+    "logout": "Logout",
+    "footer": "Terms of Service | Privacy Policy"
   }
 }

@@ -21,6 +21,9 @@ class ApiEndpoints {
   static String medicineData(String id) => "medicines/$id";
   static String medicineArchive(String id) => "medicines/$id/archive";
   static String medicineLogs(String id) => "medicines/$id/logs";
-  static String profileLogs(String profileId) => "medicines/profile/$profileId/logs";
+  static String profileLogs(String profileId) =>
+      "medicines/profile/$profileId/logs";
 
+  //Schedule
+  static const String schedule = 'schedule';
 }

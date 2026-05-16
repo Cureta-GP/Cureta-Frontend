@@ -26,7 +26,7 @@ class HomeHeader extends StatelessWidget {
                 ),
               ),
               Text(
-                'Bosina Elbanna', // Replace with real name later
+                '', // Replace with real name later
                 style: typography.homeUserName.copyWith(
                   color: colors.textPrimary,
                 ),

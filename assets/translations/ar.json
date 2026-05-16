@@ -76,8 +76,6 @@
     "add_alert": "إضافة تنبيه",
     "home_scan_prescription": "مسح الروشتة",
     "my_qr_code": "رمز QR الخاص بي",
-    "upcoming_meds": "الأدوية القادمة",
-    "see_all": "عرض الكل",
     "recent_activity": "النشاط الأخير",
     "added_yesterday": "أضيف يوم أمس",
     "added_days_ago": "أضيف منذ {days} أيام",
@@ -86,7 +84,19 @@
     "vitamin_d": "فيتامين د",
     "vitamin_d_note": "قرص واحد",
     "blood_test_results": "نتائج فحص الدم",
-    "vaccination_record": "سجل التطعيم"
+    "vaccination_record": "سجل التطعيم",
+    "stats": {
+      "today_meds": "أدوية اليوم",
+      "next_dose": "الجرعة القادمة",
+      "all_done": "تم الكل!",
+      "remaining": "متبقي {}",
+      "no_pending": "لا يوجد جرعات"
+    },
+    "upcoming_meds": "الأدوية القادمة",
+    "see_all": "عرض الكل",
+    "missed": "فاتت",
+    "taken": "تم",
+    "no_meds_today": "لا توجد أدوية مجدولة اليوم"
   },
   "chat": {
     "input_hint": "اسألني أي شيء...",
@@ -441,6 +451,17 @@
     "privacy_policy": "سياسة الخصوصية",
     "terms_of_service": "شروط الخدمة",
     "app_version": "إصدار التطبيق {}"
+  },
+  "drawer": {
+    "dashboard": "الرئيسية",
+    "medicines": "الأدوية",
+    "chat": "المحادثة",
+    "qr_code": "رمز QR",
+    "calendar": "التقويم",
+    "family_profiles": "ملفات العائلة",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج",
+    "footer": "شروط الخدمة | سياسة الخصوصية"
   },
   "copilot_explain": "شرح الشاشة",
   "copilot_voice": "الدردشة الصوتية",

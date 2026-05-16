@@ -1,4 +1,7 @@
 import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
+import 'package:cureta/features/home/data/repo/schedule_repo.dart';
+import 'package:cureta/features/home/data/service/schedule_service.dart';
+import 'package:cureta/features/home/view_model/home_schedule_cubit.dart';
 import 'package:cureta/features/ocr/data/repo/ocr_repository.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
@@ -105,5 +108,18 @@ Future<void> setup() async {
   // ⚙️ Settings
   getIt.registerSingleton<AppSettingsNotifier>(
     await AppSettingsNotifier.load(),
+  );
+
+  // Services
+  getIt.registerSingleton<ScheduleService>(const ScheduleService());
+
+  // Repositories
+  getIt.registerSingleton<ScheduleRepository>(
+    ScheduleRepository(getIt<ScheduleService>()),
+  );
+
+  // Cubits
+  getIt.registerFactory<HomeScheduleCubit>(
+    () => HomeScheduleCubit(getIt<ScheduleRepository>()),
   );
 }

@@ -23,6 +23,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.statusOnline,
     required this.chatAssistantLabel,
     required this.chatQuickActionBorder,
+    required this.warning,
   });
 
   final Color primary;
@@ -45,7 +46,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color statusOnline;
   final Color chatAssistantLabel;
   final Color chatQuickActionBorder;
-
+  final Color warning;
   // --- Light Theme Setup ---
   static final light = AppColors(
     primary: const Color(0xFF00A1A9),
@@ -68,6 +69,7 @@ class AppColors extends ThemeExtension<AppColors> {
     statusOnline: const Color(0xFF10B981),
     chatAssistantLabel: const Color(0xFF33B3B9),
     chatQuickActionBorder: const Color(0xFFCCECED),
+    warning: const Color(0xFFE65100),
   );
 
   // --- Dark Theme Setup ---
@@ -92,6 +94,7 @@ class AppColors extends ThemeExtension<AppColors> {
     statusOnline: const Color(0xFF34D399),
     chatAssistantLabel: const Color(0xFF5DD5DB),
     chatQuickActionBorder: const Color(0xFF3A5456),
+    warning: const Color(0xFFFB923C),
   );
 
   static AppColors fromBrightness(Brightness brightness) =>
@@ -119,6 +122,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? statusOnline,
     Color? chatAssistantLabel,
     Color? chatQuickActionBorder,
+    Color? warning,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -142,6 +146,7 @@ class AppColors extends ThemeExtension<AppColors> {
       chatAssistantLabel: chatAssistantLabel ?? this.chatAssistantLabel,
       chatQuickActionBorder:
           chatQuickActionBorder ?? this.chatQuickActionBorder,
+      warning: warning ?? this.warning,
     );
   }
 
@@ -177,6 +182,7 @@ class AppColors extends ThemeExtension<AppColors> {
         other.chatQuickActionBorder,
         t,
       )!,
+      warning: Color.lerp(warning, other.warning, t)!,
     );
   }
 }
