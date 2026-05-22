@@ -30,8 +30,8 @@ class HomeView extends StatelessWidget {
           final profileId = _resolveProfileId(profileState);
           if (profileId == null) return;
 
-          // Load schedule only when we have a valid profileId
-          context.read<HomeScheduleCubit>().load(profileId);
+          // Start auto-refresh from medicines stream for live home updates.
+          context.read<HomeScheduleCubit>().startAutoRefresh(profileId);
         },
         // Also trigger immediately if profiles already loaded
         listenWhen: (_, current) => current is ProfilesSuccess,

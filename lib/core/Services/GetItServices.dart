@@ -120,6 +120,6 @@ Future<void> setup() async {
 
   // Cubits
   getIt.registerFactory<HomeScheduleCubit>(
-    () => HomeScheduleCubit(getIt<ScheduleRepository>()),
+    () => HomeScheduleCubit(getIt<MedicineRepository>()),
   );
 }

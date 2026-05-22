@@ -5,7 +5,6 @@ import 'package:cureta/features/home/view_model/home_schedule_state.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class UpcomingMedsSection extends StatelessWidget {
   const UpcomingMedsSection({super.key, this.onSeeAll});
@@ -41,7 +40,6 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final typography = context.typography;
-    final spacing = context.spacing;
     final colors = context.colors;
 
     return Row(
@@ -82,6 +80,7 @@ class _MedList extends StatelessWidget {
           .take(_maxVisible)
           .map(
             (e) => Padding(
+              key: ValueKey('${e.medicineId}_${e.scheduledAt.toIso8601String()}_${e.status.raw}'),
               padding: EdgeInsets.only(bottom: context.spacing.xs),
               child: _MedCard(entry: e),
             ),
@@ -103,9 +102,9 @@ class _MedCard extends StatelessWidget {
 
     // ── icon background ───────────────────────────────────────────────────
     final iconBg = isMissed
-        ? colors.warning.withOpacity(0.15) // ✅ was accentOrange
+        ? colors.warning.withValues(alpha: 0.15) // ✅ was accentOrange
         : isTaken
-        ? colors.accentCyan.withOpacity(0.4)
+        ? colors.accentCyan.withValues(alpha: 0.4)
         : colors.accentCyan;
 
     final iconColor = isMissed
@@ -117,7 +116,7 @@ class _MedCard extends StatelessWidget {
 
     // ── time badge ────────────────────────────────────────────────────────
     final timeBadgeBg = isMissed
-        ? colors.warning.withOpacity(0.15) // ✅ was accentOrange
+        ? colors.warning.withValues(alpha: 0.15) // ✅ was accentOrange
         : isTaken
         ? colors.surface
         : colors.accentCyan;
@@ -131,7 +130,7 @@ class _MedCard extends StatelessWidget {
 
     // ── card border ───────────────────────────────────────────────────────
     final borderColor = isMissed
-        ? colors.warning.withOpacity(0.4) // ✅ was accentOrange.withOpacity
+        ? colors.warning.withValues(alpha: 0.4) // ✅ was accentOrange.withOpacity
         : colors.divider;
 
     final timeLabel = isMissed

@@ -1,7 +1,8 @@
 import 'dart:developer' as developer;
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:cureta/features/medicines/data/models/medicine_model.dart';
-import 'package:cureta/core/Services/GetItServices.dart' as GetItServices;
+import 'package:cureta/core/Services/GetItServices.dart' as get_it_services;
 import 'alarm_id_helper.dart';
 import 'tz_helper.dart';
 import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
@@ -11,6 +12,9 @@ class NotificationService {
   static final NotificationService instance = NotificationService._();
 
   static const _channel = MethodChannel('medicine_alarm');
+  final _alarmActionsSyncedController = StreamController<void>.broadcast();
+
+  Stream<void> get alarmActionsSynced => _alarmActionsSyncedController.stream;
 
   void initCallHandler() {
     _channel.setMethodCallHandler((call) async {
@@ -19,7 +23,8 @@ class NotificationService {
         final action = args['action'] as String?;
         final localId = args['local_id'] as String?;
         final remoteId = args['remote_id'] as String?;
-        final scheduledAtMillis = (args['scheduled_at_millis'] as num?)?.toInt();
+        final scheduledAtMillis = (args['scheduled_at_millis'] as num?)
+            ?.toInt();
         final scheduledAt = scheduledAtMillis == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(
@@ -46,22 +51,29 @@ class NotificationService {
     DateTime? scheduledAt,
   }) async {
     try {
-      final repo = GetItServices.getIt<MedicineRepository>();
+      final repo = get_it_services.getIt<MedicineRepository>();
       await repo.logMedicationAction(
         localId,
         action,
         remoteId: remoteId,
         scheduledAt: scheduledAt,
       );
+      if (!_alarmActionsSyncedController.isClosed) {
+        _alarmActionsSyncedController.add(null);
+      }
     } catch (e) {
-      developer.log('Failed to handle alarm action: $e', name: 'NotificationService');
+      developer.log(
+        'Failed to handle alarm action: $e',
+        name: 'NotificationService',
+      );
     }
   }
 
   Future<void> _consumePendingAlarmActions() async {
     try {
-      final pending =
-          await _channel.invokeMethod<List<dynamic>>('consumePendingAlarmActions');
+      final pending = await _channel.invokeMethod<List<dynamic>>(
+        'consumePendingAlarmActions',
+      );
       if (pending == null || pending.isEmpty) return;
       developer.log(
         'Found ${pending.length} pending alarm action(s) to sync',
@@ -117,8 +129,7 @@ class NotificationService {
         'local_id': medicine.id,
         'remote_id': medicine.remoteId ?? '',
         'medicine_name': medicine.name,
-        'dose_amount':
-            '${medicine.doseAmount} ${medicine.doseUnit}'.trim(),
+        'dose_amount': '${medicine.doseAmount} ${medicine.doseUnit}'.trim(),
         'image_path': medicine.imagePath ?? '',
         'time_millis': scheduled.millisecondsSinceEpoch,
         'frequency': medicine.frequency.name,
@@ -131,10 +142,7 @@ class NotificationService {
     String profileId = '',
   }) async {
     for (var i = 0; i < maxAlarmsPerMedicine; i++) {
-      await _invoke(
-        'cancelAlarm',
-        {'id': alarmId(medicineId, profileId, i)},
-      );
+      await _invoke('cancelAlarm', {'id': alarmId(medicineId, profileId, i)});
     }
   }
 
@@ -148,12 +156,15 @@ class NotificationService {
 
   Future<bool> canScheduleExactAlarms() async {
     try {
-      final result =
-          await _channel.invokeMethod<bool>('canScheduleExactAlarms');
+      final result = await _channel.invokeMethod<bool>(
+        'canScheduleExactAlarms',
+      );
       return result ?? true;
     } on PlatformException catch (e) {
-      developer.log('canScheduleExactAlarms error: $e',
-          name: 'NotificationService');
+      developer.log(
+        'canScheduleExactAlarms error: $e',
+        name: 'NotificationService',
+      );
       return true;
     }
   }
