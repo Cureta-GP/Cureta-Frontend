@@ -40,11 +40,9 @@ class MedicineService {
   }
 
   Future<MedicineDto> updateMedicine(String id, MedicinePayload payload) async {
-    final data = payload.toJson();
-    data.remove('reminders');
     final response = await DioHelper.putData(
       url: ApiEndpoints.medicineData(id),
-      data: data,
+      data: payload.toJson(),
     );
     return MedicineDto.fromJson(_extractItemMap(response.data));
   }
@@ -67,8 +65,7 @@ class MedicineService {
     String status, {
     DateTime? scheduledAt,
   }) async {
-    final scheduled =
-        (scheduledAt ?? DateTime.now()).toUtc().toIso8601String();
+    final scheduled = (scheduledAt ?? DateTime.now()).toUtc().toIso8601String();
     await DioHelper.postData(
       url: ApiEndpoints.medicineLogs(medicineId),
       data: {'status': status, 'scheduled_at': scheduled},
@@ -85,7 +82,8 @@ class MedicineService {
     int limit = 20,
   }) async {
     final query = <String, dynamic>{
-      if (medicineId != null && medicineId.isNotEmpty) 'medicine_id': medicineId,
+      if (medicineId != null && medicineId.isNotEmpty)
+        'medicine_id': medicineId,
       if (status != null && status.isNotEmpty) 'status': status,
       if (fromDate != null && fromDate.isNotEmpty) 'from_date': fromDate,
       if (toDate != null && toDate.isNotEmpty) 'to_date': toDate,
@@ -96,9 +94,9 @@ class MedicineService {
       url: ApiEndpoints.profileLogs(profileId),
       query: query,
     );
-    return _extractItemsList(response.data)
-        .map((e) => DoseLogModel.fromJson(e))
-        .toList();
+    return _extractItemsList(
+      response.data,
+    ).map((e) => DoseLogModel.fromJson(e)).toList();
   }
 
   Map<String, dynamic> _extractItemMap(dynamic raw) {

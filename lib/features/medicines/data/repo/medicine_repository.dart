@@ -4,7 +4,6 @@ import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import '../models/dose_log_model.dart';
 import '../models/medicine_model.dart';
-import '../models/dose_log_model.dart';
 import '../models/medicine_payload.dart';
 import '../models/medicine_enums.dart';
 import '../services/medicine_local_service.dart';
@@ -20,7 +19,9 @@ class MedicineRepository {
     required MedicineLocalService localService,
     required MedicineService remoteService,
     ProfileRepository? profileRepo,
-  })  : _local = localService, _remote = remoteService, _profileRepo = profileRepo;
+  }) : _local = localService,
+       _remote = remoteService,
+       _profileRepo = profileRepo;
 
   Future<String> _pid() async {
     final repo = _profileRepo ?? getIt<ProfileRepository>();
@@ -31,33 +32,59 @@ class MedicineRepository {
     final pid = await _pid();
     final now = DateTime.now();
     final model = MedicineModel(
-      id: _uuid.v4(), profileId: pid, name: payload.name,
+      id: _uuid.v4(),
+      profileId: pid,
+      name: payload.name,
       doseForm: payload.doseForm ?? DoseForm.pill,
-      doseAmount: _extractDoseAmount(payload.dose), doseUnit: _extractDoseUnit(payload.dose),
-      frequency: payload.frequency, alarmTimes: payload.reminders,
+      doseAmount: _extractDoseAmount(payload.dose),
+      doseUnit: _extractDoseUnit(payload.dose),
+      frequency: payload.frequency,
+      alarmTimes: payload.reminders,
       startDate: DateTime.tryParse(payload.startDate) ?? now,
-      notes: payload.notes, isActive: true, syncStatus: SyncStatus.pending,
-      createdAt: now, updatedAt: now, imagePath: payload.imagePath,
+      notes: payload.notes,
+      isActive: true,
+      syncStatus: SyncStatus.pending,
+      createdAt: now,
+      updatedAt: now,
+      imagePath: payload.imagePath,
     );
     await _local.insert(model);
     try {
-      final dto = await _remote.createMedicine(MedicinePayload(
-        profileId: pid, name: payload.name, dose: payload.dose,
-        frequency: payload.frequency, reminders: payload.reminders,
-        startDate: payload.startDate, endDate: payload.endDate,
-        notes: payload.notes, doseForm: payload.doseForm,
-      ));
+      final dto = await _remote.createMedicine(
+        MedicinePayload(
+          profileId: pid,
+          name: payload.name,
+          dose: payload.dose,
+          frequency: payload.frequency,
+          reminders: payload.reminders,
+          startDate: payload.startDate,
+          endDate: payload.endDate,
+          notes: payload.notes,
+          doseForm: payload.doseForm,
+        ),
+      );
       if (dto.id != null && dto.id!.isNotEmpty) {
-        await _local.updateSyncStatus(model.id, SyncStatus.synced, remoteId: dto.id);
+        await _local.updateSyncStatus(
+          model.id,
+          SyncStatus.synced,
+          remoteId: dto.id,
+        );
         return model.copyWith(syncStatus: SyncStatus.synced, remoteId: dto.id);
       }
       await _refreshFromRemote(pid);
       final linked = await _local.getById(model.id);
-      if (linked != null && linked.remoteId != null && linked.remoteId!.isNotEmpty) return linked;
+      if (linked != null &&
+          linked.remoteId != null &&
+          linked.remoteId!.isNotEmpty) {
+        return linked;
+      }
       await _local.updateSyncStatus(model.id, SyncStatus.failed);
       return model.copyWith(syncStatus: SyncStatus.failed);
     } catch (e) {
-      developer.log('Failed to sync medicine ${model.id}: $e', name: 'MedicineRepository');
+      developer.log(
+        'Failed to sync medicine ${model.id}: $e',
+        name: 'MedicineRepository',
+      );
       return model;
     }
   }
@@ -85,11 +112,19 @@ class MedicineRepository {
     try {
       for (final dto in await _remote.getMedicines(profileId: pid)) {
         if (dto.id == null || dto.id!.isEmpty) continue;
-        final model = dto.toDomain(_uuid.v4(), syncStatus: SyncStatus.synced, remoteId: dto.id, profileId: pid);
+        final model = dto.toDomain(
+          _uuid.v4(),
+          syncStatus: SyncStatus.synced,
+          remoteId: dto.id,
+          profileId: pid,
+        );
         await _local.upsertFromRemote(model);
       }
     } catch (e) {
-      developer.log('Failed to refresh medicines: $e', name: 'MedicineRepository');
+      developer.log(
+        'Failed to refresh medicines: $e',
+        name: 'MedicineRepository',
+      );
     }
   }
 
@@ -107,17 +142,26 @@ class MedicineRepository {
           // It's a create
           final dto = await _remote.createMedicine(_buildPayload(m, pid));
           if (dto.id != null && dto.id!.isNotEmpty) {
-            await _local.updateSyncStatus(m.id, SyncStatus.synced, remoteId: dto.id);
+            await _local.updateSyncStatus(
+              m.id,
+              SyncStatus.synced,
+              remoteId: dto.id,
+            );
             continue;
           }
           await _refreshFromRemote(pid);
           final linked = await _local.getById(m.id);
-          if (linked == null || linked.remoteId == null || linked.remoteId!.isEmpty) {
+          if (linked == null ||
+              linked.remoteId == null ||
+              linked.remoteId!.isEmpty) {
             await _local.updateSyncStatus(m.id, SyncStatus.failed);
           }
         }
       } catch (e) {
-        developer.log('Failed to sync medicine ${m.id}: $e', name: 'MedicineRepository');
+        developer.log(
+          'Failed to sync medicine ${m.id}: $e',
+          name: 'MedicineRepository',
+        );
         await _local.updateSyncStatus(m.id, SyncStatus.failed);
       }
     }
@@ -127,29 +171,60 @@ class MedicineRepository {
     final m = await _local.getById(localId);
     await _local.delete(localId);
     if (m?.remoteId != null) {
-      try { await _remote.deleteMedicine(m!.remoteId!); }
-      catch (e) { developer.log('Failed to delete medicine: $e', name: 'MedicineRepository'); }
+      try {
+        await _remote.deleteMedicine(m!.remoteId!);
+      } catch (e) {
+        developer.log(
+          'Failed to delete medicine: $e',
+          name: 'MedicineRepository',
+        );
+      }
     }
   }
 
-  Future<MedicineModel> updateMedicine(MedicineModel m) async { 
+  Future<MedicineModel> updateMedicine(MedicineModel m) async {
     final updating = m.copyWith(syncStatus: SyncStatus.pending);
-    await _local.update(updating); 
+    await _local.update(updating);
     if (updating.remoteId != null && updating.remoteId!.isNotEmpty) {
       try {
         final pid = await _pid();
-        await _remote.updateMedicine(updating.remoteId!, _buildPayload(updating, pid));
-        final synced = updating.copyWith(syncStatus: SyncStatus.synced);
+        final dto = await _remote.updateMedicine(
+          updating.remoteId!,
+          _buildPayload(updating, pid),
+        );
+        final remoteModel = dto.toDomain(
+          updating.id,
+          syncStatus: SyncStatus.synced,
+          remoteId: updating.remoteId,
+          profileId: updating.profileId,
+        );
+        final synced = updating.copyWith(
+          syncStatus: SyncStatus.synced,
+          // Keep local-only fields while trusting backend canonical medicine fields.
+          name: remoteModel.name,
+          doseAmount: remoteModel.doseAmount,
+          doseUnit: remoteModel.doseUnit,
+          frequency: remoteModel.frequency,
+          alarmTimes: remoteModel.alarmTimes,
+          startDate: remoteModel.startDate,
+          notes: remoteModel.notes,
+          updatedAt: remoteModel.updatedAt.isAfter(updating.updatedAt)
+              ? remoteModel.updatedAt
+              : DateTime.now(),
+        );
         await _local.update(synced);
         return synced;
       } catch (e) {
-        developer.log('Failed to update medicine on remote: $e', name: 'MedicineRepository');
+        developer.log(
+          'Failed to update medicine on remote: $e',
+          name: 'MedicineRepository',
+        );
         final failed = updating.copyWith(syncStatus: SyncStatus.failed);
         await _local.update(failed);
         return failed;
       }
     }
-    return updating; 
+    return updating;
   }
 
   Future<void> toggleMedicineActive(String localId) async {
@@ -236,7 +311,7 @@ class MedicineRepository {
     try {
       final pid = await _pid();
       if (pid.isEmpty) return [];
-      
+
       final m = await _local.getById(localId);
       if (m == null || m.remoteId == null || m.remoteId!.isEmpty) return [];
 
@@ -245,17 +320,26 @@ class MedicineRepository {
         medicineId: m.remoteId,
       );
     } catch (e) {
-      developer.log('Failed to fetch medicine logs for $localId: $e', name: 'MedicineRepository');
+      developer.log(
+        'Failed to fetch medicine logs for $localId: $e',
+        name: 'MedicineRepository',
+      );
       return [];
     }
   }
 
   MedicinePayload _buildPayload(MedicineModel m, String pid) => MedicinePayload(
-    profileId: pid, name: m.name,
-    dose: m.doseAmount.isNotEmpty && m.doseUnit.isNotEmpty ? '${m.doseAmount} ${m.doseUnit}'
-        : m.doseAmount.isNotEmpty ? m.doseAmount : m.doseUnit,
-    frequency: m.frequency, reminders: m.alarmTimes,
-    startDate: m.startDate.toIso8601String(), notes: m.notes,
+    profileId: pid,
+    name: m.name,
+    dose: m.doseAmount.isNotEmpty && m.doseUnit.isNotEmpty
+        ? '${m.doseAmount} ${m.doseUnit}'
+        : m.doseAmount.isNotEmpty
+        ? m.doseAmount
+        : m.doseUnit,
+    frequency: m.frequency,
+    reminders: m.alarmTimes,
+    startDate: m.startDate.toIso8601String(),
+    notes: m.notes,
   );
 
   String _extractDoseAmount(String dose) {
@@ -265,6 +349,9 @@ class MedicineRepository {
 
   String _extractDoseUnit(String dose) {
     if (dose.isEmpty) return '';
-    return RegExp(r'^([\d.]+)\s*(.*)$').firstMatch(dose.trim())?.group(2)?.trim() ?? '';
+    return RegExp(
+          r'^([\d.]+)\s*(.*)$',
+        ).firstMatch(dose.trim())?.group(2)?.trim() ??
+        '';
   }
 }

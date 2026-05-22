@@ -38,12 +38,15 @@ class MedicineDto {
     //   • [{"time": "08:00"}, ...]  (current server contract)
     //   • ["08:00", ...]            (legacy / fallback)
     final raw = json['reminders'] as List<dynamic>? ?? [];
-    final remindersList = raw.map((e) {
-      if (e is Map<String, dynamic>) {
-        return e['time']?.toString() ?? '';
-      }
-      return e.toString();
-    }).where((t) => t.isNotEmpty).toList();
+    final remindersList = raw
+        .map((e) {
+          if (e is Map<String, dynamic>) {
+            return e['time']?.toString() ?? '';
+          }
+          return e.toString();
+        })
+        .where((t) => t.isNotEmpty)
+        .toList();
 
     return MedicineDto(
       id: json['id']?.toString(),
@@ -87,6 +90,14 @@ class MedicineDto {
   }) {
     final doseParts = _parseDose(dose);
     final now = DateTime.now();
+    final parsedCreatedAt = DateTime.tryParse(createdAt ?? '');
+    final parsedUpdatedAt = DateTime.tryParse(updatedAt ?? '');
+    final fallbackCreatedAt = parsedCreatedAt ?? now;
+    // If server omits updated_at, avoid "now" to prevent remote stale data overriding local edits.
+    final fallbackUpdatedAt =
+        parsedUpdatedAt ??
+        parsedCreatedAt ??
+        DateTime.fromMillisecondsSinceEpoch(0);
 
     return MedicineModel(
       id: localId,
@@ -102,8 +113,8 @@ class MedicineDto {
       isActive: true,
       syncStatus: syncStatus,
       remoteId: remoteId ?? id,
-      createdAt: createdAt != null ? DateTime.tryParse(createdAt!) ?? now : now,
-      updatedAt: updatedAt != null ? DateTime.tryParse(updatedAt!) ?? now : now,
+      createdAt: fallbackCreatedAt,
+      updatedAt: fallbackUpdatedAt,
     );
   }
 
