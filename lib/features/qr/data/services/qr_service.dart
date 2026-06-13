@@ -8,7 +8,7 @@ class QrService {
     try {
       final response = await DioHelper.getData(
         url: ApiEndpoints.recordsCategories,
-        query: {'profileId': profileId},
+        query: {'profile_id': profileId},
       );
       return response;
     } catch (e) {

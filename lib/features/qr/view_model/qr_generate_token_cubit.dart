@@ -11,8 +11,8 @@ class QrGenerateTokenCubit extends Cubit<QrGenerateTokenState> {
   Future<void> generate(QrShareTokenRequest request) async {
     emit(QrGenerateTokenLoading());
     try {
-      final token = await _repository.generateToken(request);
-      emit(QrGenerateTokenSuccess(token));
+      final shareUrl = await _repository.generateShareUrl(request);
+      emit(QrGenerateTokenSuccess(shareUrl));
     } catch (e) {
       emit(QrGenerateTokenError(e.toString()));
     }

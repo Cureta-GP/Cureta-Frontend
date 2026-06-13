@@ -1,47 +1,79 @@
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/features/qr/data/models/qr_share_filters.dart';
+import 'package:cureta/features/qr/data/models/qr_share_token_request.dart';
+import 'package:cureta/features/qr/view/qr_share_result_view.dart';
+import 'package:cureta/features/qr/view_model/qr_categories_cubit.dart';
+import 'package:cureta/features/qr/view_model/qr_generate_token_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class FilterDataView extends StatefulWidget {
-  const FilterDataView({super.key});
+import 'widgets/category_dropdown_card.dart';
+import 'widgets/date_range_card.dart';
+import 'widgets/record_types_card.dart';
+import 'widgets/extra_options_card.dart';
+import 'widgets/generate_share_button.dart';
+import 'widgets/share_result_sheet.dart';
+
+class FilterDataView extends StatelessWidget {
+  final String profileId;
+
+  const FilterDataView({super.key, required this.profileId});
 
   @override
-  State<FilterDataView> createState() => _FilterDataViewState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) =>
+              getIt<QrCategoriesCubit>()..fetchCategories(profileId: profileId),
+        ),
+        BlocProvider(create: (_) => getIt<QrGenerateTokenCubit>()),
+      ],
+      child: _FilterDataViewBody(profileId: profileId),
+    );
+  }
 }
 
-class _FilterDataViewState extends State<FilterDataView> {
-  String selectedCategory = 'Medications';
-  TimeOfDay startTime = const TimeOfDay(hour: 8, minute: 0);
-  TimeOfDay endTime = const TimeOfDay(hour: 18, minute: 0);
+class _FilterDataViewBody extends StatefulWidget {
+  final String profileId;
+  const _FilterDataViewBody({required this.profileId});
 
-  final List<String> categories = [
-    'Medications',
-    'Allergies',
-    'Conditions',
-    'Emergency contacts',
+  @override
+  State<_FilterDataViewBody> createState() => _FilterDataViewBodyState();
+}
+
+class _FilterDataViewBodyState extends State<_FilterDataViewBody> {
+  String? selectedCategory;
+  DateTime startDate = DateTime.now().subtract(const Duration(days: 30));
+  DateTime endDate = DateTime.now();
+  bool includeHistory = false;
+  int expiryMinutes = 15;
+
+  final List<String> availableTypes = const [
+    'X-ray',
+    'Lab_Test',
+    'Prescription',
+    'Report',
+    'Other',
   ];
 
-  final Map<String, bool> checkboxes = {
-    'Show medications': true,
-    'Show allergies': true,
-    'Show conditions': true,
-    'Show emergency contacts': false,
-  };
+  final Set<String> selectedTypes = {};
 
-  Future<void> _pickTime(BuildContext context, bool isStart) async {
-    final picked = await showTimePicker(
-      context: context,
-      initialTime: isStart ? startTime : endTime,
+  void _onApply() {
+    final request = QrShareTokenRequest(
+      profileId: widget.profileId,
+      filters: QrShareFilters(
+        types: selectedTypes.isNotEmpty ? selectedTypes.toList() : null,
+        category: selectedCategory,
+        startDate: startDate,
+        endDate: endDate,
+        includeHistory: includeHistory,
+      ),
+      expiryMinutes: expiryMinutes,
     );
 
-    if (picked != null) {
-      setState(() {
-        if (isStart) {
-          startTime = picked;
-        } else {
-          endTime = picked;
-        }
-      });
-    }
+    context.read<QrGenerateTokenCubit>().generate(request);
   }
 
   @override
@@ -63,145 +95,59 @@ class _FilterDataViewState extends State<FilterDataView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Choose what to show in your QR summary',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: colors.textPrimary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(height: spacing.xs),
-              Text(
-                'Select a category, time range, and the sections you want to share.',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(color: colors.textSecondary),
-              ),
-              SizedBox(height: spacing.lg),
               Expanded(
                 child: ListView(
                   children: [
-                    _buildCard(
-                      context,
-                      child: DropdownButtonFormField<String>(
-                        initialValue: selectedCategory,
-                        decoration: const InputDecoration(
-                          labelText: 'Data category',
-                          border: OutlineInputBorder(),
-                        ),
-                        items: categories
-                            .map(
-                              (item) => DropdownMenuItem(
-                                value: item,
-                                child: Text(item),
-                              ),
-                            )
-                            .toList(),
-                        onChanged: (value) {
-                          if (value != null) {
-                            setState(() => selectedCategory = value);
-                          }
-                        },
-                      ),
+                    CategoryDropdownCard(
+                      selectedCategory: selectedCategory,
+                      onChanged: (value) =>
+                          setState(() => selectedCategory = value),
                     ),
                     SizedBox(height: spacing.md),
-                    _buildCard(
-                      context,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Time range',
-                            style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(height: spacing.sm),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () => _pickTime(context, true),
-                                  icon: const Icon(Icons.access_time),
-                                  label: Text(
-                                    'Start: ${startTime.format(context)}',
-                                  ),
-                                ),
-                              ),
-                              SizedBox(width: spacing.sm),
-                              Expanded(
-                                child: OutlinedButton.icon(
-                                  onPressed: () => _pickTime(context, false),
-                                  icon: const Icon(Icons.access_time_filled),
-                                  label: Text(
-                                    'End: ${endTime.format(context)}',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                    DateRangeCard(
+                      startDate: startDate,
+                      endDate: endDate,
+                      onStartChanged: (date) =>
+                          setState(() => startDate = date),
+                      onEndChanged: (date) => setState(() => endDate = date),
                     ),
                     SizedBox(height: spacing.md),
-                    _buildCard(
-                      context,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Select sections',
-                            style: Theme.of(context).textTheme.titleSmall
-                                ?.copyWith(fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(height: spacing.xs),
-                          ...checkboxes.entries.map(
-                            (entry) => CheckboxListTile(
-                              value: entry.value,
-                              onChanged: (value) {
-                                setState(
-                                  () => checkboxes[entry.key] = value ?? false,
-                                );
-                              },
-                              title: Text(entry.key),
-                              controlAffinity: ListTileControlAffinity.leading,
-                              activeColor: colors.primary,
-                              contentPadding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ],
-                      ),
+                    RecordTypesCard(
+                      availableTypes: availableTypes,
+                      selectedTypes: selectedTypes,
+                      onChanged: (updated) => setState(() {
+                        selectedTypes
+                          ..clear()
+                          ..addAll(updated);
+                      }),
+                    ),
+                    SizedBox(height: spacing.md),
+                    ExtraOptionsCard(
+                      includeHistory: includeHistory,
+                      expiryMinutes: expiryMinutes,
+                      onIncludeHistoryChanged: (value) =>
+                          setState(() => includeHistory = value),
+                      onExpiryChanged: (value) =>
+                          setState(() => expiryMinutes = value),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: spacing.md),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () => Navigator.of(context).maybePop(),
-                  icon: const Icon(Icons.check_rounded),
-                  label: const Text('Apply filters'),
-                ),
+              GenerateShareButton(
+                onPressed: _onApply,
+                onTokenGenerated: (shareUrl) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => QrShareResultView(shareUrl: shareUrl),
+                    ),
+                  );
+                },
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildCard(BuildContext context, {required Widget child}) {
-    final colors = context.colors;
-    final radius = context.radius;
-    final spacing = context.spacing;
-
-    return Card(
-      color: colors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(radius.lg),
-        side: BorderSide(color: colors.divider),
-      ),
-      child: Padding(padding: EdgeInsets.all(spacing.md), child: child),
     );
   }
 }

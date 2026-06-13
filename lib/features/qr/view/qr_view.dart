@@ -1,8 +1,10 @@
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/constants/app_images.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 
@@ -55,8 +57,16 @@ class QrView extends StatelessWidget {
 
               CustomButton(
                 text: AppLocalizations.qrButton,
-                onPressed: () {
-                  Nav.pushNamed(context, AppRoutes.qrFilterData);
+                onPressed: () async {
+                  final profileId = await getIt<ProfileRepository>()
+                      .getResolvedSelectedProfileId();
+                  if (!context.mounted) return;
+
+                  Nav.pushNamed(
+                    context,
+                    AppRoutes.qrFilterData,
+                    extra: profileId ?? '',
+                  );
                 },
               ),
             ],
