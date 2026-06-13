@@ -46,6 +46,11 @@ class CustomDrawer extends StatelessWidget {
             onTap: () => _openMedicines(context),
           ),
           _DrawerItem(
+            icon: Icons.insert_chart_outlined_rounded,
+            label: 'drawer.reports'.tr(),
+            onTap: () => _openReports(context),
+          ),
+          _DrawerItem(
             icon: Icons.chat_bubble_outline,
             label: 'drawer.chat'.tr(),
             onTap: () => _openChat(context),
@@ -150,6 +155,11 @@ class CustomDrawer extends StatelessWidget {
   void _openMedicines(BuildContext context) {
     controller.hideDrawer();
     GoRouter.of(context).push(AppRoutes.medicines);
+  }
+
+  void _openReports(BuildContext context) {
+    controller.hideDrawer();
+    GoRouter.of(context).push(AppRoutes.reportsHistory);
   }
 
   void _openSettings(BuildContext context) {

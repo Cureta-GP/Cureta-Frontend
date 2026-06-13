@@ -456,6 +456,7 @@
   "drawer": {
     "dashboard": "Dashboard",
     "medicines": "Medicines",
+    "reports": "Health Reports",
     "chat": "Chat",
     "qr_code": "QR Code",
     "calendar": "Calendar",
@@ -463,5 +464,34 @@
     "settings": "Settings",
     "logout": "Logout",
     "footer": "Terms of Service | Privacy Policy"
+  },
+  "reports": {
+    "my_reports": "My Reports",
+    "new_report": "New Report",
+    "generate_report": "Generate Health Report",
+    "generate": "Generate Report",
+    "generate_first": "Generate Your First Report",
+    "select_profile": "Select Profile",
+    "select_period": "Select Time Period",
+    "select_language": "Report Language",
+    "period_week": "Last Week",
+    "period_month": "Last Month",
+    "period_3months": "Last 3 Months",
+    "period_all_time": "All Time",
+    "report_details": "Report Details",
+    "adherence_summary": "Adherence Summary",
+    "adherence_rate": "Adherence Rate",
+    "active_meds": "Active Medicines",
+    "ai_insights": "AI Insights",
+    "top_conditions": "Top Conditions",
+    "medications_timeline": "Medications Timeline",
+    "age_label": "Age",
+    "status_stable": "Stable",
+    "status_alert": "Alert",
+    "empty_title": "No Reports Yet",
+    "empty_subtitle": "Generate your first health report to track your progress.",
+    "error_loading_history": "Failed to load reports. Please try again.",
+    "error_loading_profiles": "Failed to load profiles. Please try again.",
+    "error_generating": "Failed to generate report. Please try again."
   }
 }

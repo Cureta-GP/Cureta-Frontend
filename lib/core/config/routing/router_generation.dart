@@ -36,11 +36,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
 import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart';
-import 'package:cureta/features/medicines/veiw/medicine_details_veiw.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
+import 'package:cureta/features/reports/veiw/Report_history.dart';
+import 'package:cureta/features/reports/veiw/Report_setup.dart';
+import 'package:cureta/features/reports/veiw/Report_datails.dart';
+import 'package:cureta/features/reports/data/models/health_report_model.dart';
 import 'package:go_router/go_router.dart';
 
 class RoutesGeneration {
@@ -404,6 +407,34 @@ class RoutesGeneration {
         name: AppRoutes.chat,
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: const ChatScreen(), state: state),
+      ),
+      // 📊 Reports
+      GoRoute(
+        path: AppRoutes.reportsHistory,
+        name: AppRoutes.reportsHistory,
+        pageBuilder: (context, state) => PageTransitions.scale(
+          child: const ReportHistoryView(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.reportSetup,
+        name: AppRoutes.reportSetup,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: const ReportSetupView(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.reportDetails,
+        name: AppRoutes.reportDetails,
+        pageBuilder: (context, state) {
+          final report = state.extra as HealthReportModel;
+          return PageTransitions.slideRight(
+            child: ReportDetailsView(report: report),
+            state: state,
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.settings,

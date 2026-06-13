@@ -455,6 +455,7 @@
   "drawer": {
     "dashboard": "الرئيسية",
     "medicines": "الأدوية",
+    "reports": "التقارير الصحية",
     "chat": "المحادثة",
     "qr_code": "رمز QR",
     "calendar": "التقويم",
@@ -476,5 +477,34 @@
   "chat_mic_init_failed": "فشل تهيئة الميكروفون",
   "chat_speak_now": "تحدث الآن...",
   "chat_cancel": "إلغاء",
-  "chat_send": "إرسال"
+  "chat_send": "إرسال",
+  "reports": {
+    "my_reports": "تقاريري",
+    "new_report": "تقرير جديد",
+    "generate_report": "إنشاء تقرير صحي",
+    "generate": "إنشاء التقرير",
+    "generate_first": "أنشئ تقريرك الأول",
+    "select_profile": "اختر الملف الشخصي",
+    "select_period": "اختر الفترة الزمنية",
+    "select_language": "لغة التقرير",
+    "period_week": "الأسبوع الماضي",
+    "period_month": "الشهر الماضي",
+    "period_3months": "آخر 3 أشهر",
+    "period_all_time": "كل الوقت",
+    "report_details": "تفاصيل التقرير",
+    "adherence_summary": "ملخص الالتزام",
+    "adherence_rate": "نسبة الالتزام",
+    "active_meds": "أدوية نشطة",
+    "ai_insights": "تحليلات الذكاء الاصطناعي",
+    "top_conditions": "أبرز الحالات",
+    "medications_timeline": "جدول الأدوية",
+    "age_label": "العمر",
+    "status_stable": "مستقر",
+    "status_alert": "تحذير",
+    "empty_title": "لا توجد تقارير بعد",
+    "empty_subtitle": "أنشئ تقريرك الصحي الأول لمتابعة تقدمك.",
+    "error_loading_history": "فشل تحميل التقارير. الرجاء المحاولة مرة أخرى.",
+    "error_loading_profiles": "فشل تحميل الملفات الشخصية. الرجاء المحاولة مرة أخرى.",
+    "error_generating": "فشل إنشاء التقرير. الرجاء المحاولة مرة أخرى."
+  }
 }

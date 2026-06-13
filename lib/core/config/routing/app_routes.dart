@@ -45,5 +45,8 @@ class AppRoutes {
   //profil
 
   static const String medicineAlarm = '/medicines/alarm';
-  //setting
+  // 📊 Reports
+  static const String reportsHistory = '/reports';
+  static const String reportSetup = '/reports/setup';
+  static const String reportDetails = '/reports/details';
 }
