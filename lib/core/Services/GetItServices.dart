@@ -27,7 +27,8 @@ import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/user_medicines_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart';
-
+import 'package:cureta/features/reports/data/repo/report_repo.dart';
+import 'package:cureta/features/reports/data/services/report_service.dart';
 final getIt = GetIt.instance;
 
 Future<void> setup() async {
@@ -112,10 +113,13 @@ Future<void> setup() async {
 
   // Services
   getIt.registerSingleton<ScheduleService>(const ScheduleService());
-
+  getIt.registerSingleton<ReportService>(ReportService());
   // Repositories
   getIt.registerSingleton<ScheduleRepository>(
     ScheduleRepository(getIt<ScheduleService>()),
+  );
+  getIt.registerSingleton<ReportRepo>(
+    ReportRepo(getIt<ReportService>()),
   );
 
   // Cubits
