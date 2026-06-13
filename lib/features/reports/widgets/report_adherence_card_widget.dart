@@ -4,15 +4,19 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import '../data/models/adherence_summary_model.dart';
 
 class ReportAdherenceCardWidget extends StatelessWidget {
-  const ReportAdherenceCardWidget({super.key, required this.adherence});
+  const ReportAdherenceCardWidget({
+    super.key,
+    required this.adherence,
+    this.status,
+  });
 
   final AdherenceSummaryModel adherence;
+  final String? status;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final spacing = context.spacing;
-    final typography = context.typography;
     final radius = context.radius;
 
     return Container(
@@ -22,50 +26,82 @@ class ReportAdherenceCardWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius.lg),
         border: Border.all(color: colors.divider, width: spacing.hairline),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 80,
-            height: 80,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CircularProgressIndicator(
-                  value: adherence.overallPercentage / 100,
-                  strokeWidth: 8,
-                  valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
-                  backgroundColor: colors.divider,
-                ),
-                Text(
-                  '${adherence.overallPercentage}%',
-                  style: typography.medicalRecordStep.copyWith(
-                    color: colors.textPrimary,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
+          ClipRRect(
+            borderRadius: BorderRadius.circular(radius.full),
+            child: LinearProgressIndicator(
+              value: adherence.overallPercentage / 100,
+              minHeight: spacing.xs,
+              valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+              backgroundColor: colors.divider,
             ),
           ),
-          SizedBox(width: spacing.xl),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'reports.adherence_rate'.tr(),
-                  style: typography.medicalRecordDetailLabel.copyWith(
-                    color: colors.textSecondary,
-                  ),
+          SizedBox(height: spacing.lg),
+          Row(
+            children: [
+              Expanded(
+                child: _MetricTile(
+                  label: 'reports.active_meds'.tr(),
+                  value: '${adherence.activeMeds}',
                 ),
-                SizedBox(height: spacing.xs),
-                Text(
-                  '${adherence.activeMeds} ${'reports.active_meds'.tr()}',
-                  style: typography.medicalRecordScreenTitle.copyWith(
-                    color: colors.textPrimary,
-                  ),
+              ),
+              SizedBox(width: spacing.md),
+              Expanded(
+                child: _MetricTile(
+                  label: 'reports.lab_results'.tr(),
+                  value: status?.isNotEmpty == true
+                      ? status!
+                      : '${adherence.overallPercentage}%',
                 ),
-              ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MetricTile extends StatelessWidget {
+  const _MetricTile({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final spacing = context.spacing;
+    final typography = context.typography;
+    final radius = context.radius;
+
+    return Container(
+      padding: EdgeInsets.all(spacing.md),
+      decoration: BoxDecoration(
+        color: colors.secondary,
+        borderRadius: BorderRadius.circular(radius.md),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: typography.medicalRecordDetailLabel.copyWith(
+              color: colors.textSecondary,
             ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          SizedBox(height: spacing.xs),
+          Text(
+            value,
+            style: typography.medicalRecordScreenTitle.copyWith(
+              color: colors.textPrimary,
+            ),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

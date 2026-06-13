@@ -25,7 +25,21 @@ class ReportAiInsightsCardWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Container(
+                padding: EdgeInsets.all(spacing.xs),
+                decoration: BoxDecoration(
+                  color: colors.accentOrange,
+                  borderRadius: BorderRadius.circular(radius.full),
+                ),
+                child: Icon(
+                  Icons.auto_awesome,
+                  color: colors.textPrimary,
+                  size: spacing.lg,
+                ),
+              ),
+              SizedBox(width: spacing.sm),
               ReportStatusBadgeWidget(status: insights.status),
               const Spacer(),
             ],

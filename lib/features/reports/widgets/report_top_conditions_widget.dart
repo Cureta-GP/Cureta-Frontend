@@ -12,13 +12,16 @@ class ReportTopConditionsWidget extends StatelessWidget {
     if (conditions.isEmpty) return const SizedBox.shrink();
 
     final items = conditions.take(5).toList();
+    final maxCount = items
+        .map((condition) => condition.count)
+        .fold<int>(0, (previous, count) => count > previous ? count : previous);
 
     return Column(
       children: List.generate(items.length, (i) {
         final condition = items[i];
         return Column(
           children: [
-            _ConditionRow(condition: condition),
+            _ConditionRow(condition: condition, maxCount: maxCount),
             if (i < items.length - 1)
               Divider(
                 color: context.colors.divider,
@@ -32,8 +35,9 @@ class ReportTopConditionsWidget extends StatelessWidget {
 }
 
 class _ConditionRow extends StatelessWidget {
-  const _ConditionRow({required this.condition});
+  const _ConditionRow({required this.condition, required this.maxCount});
   final TopConditionModel condition;
+  final int maxCount;
 
   @override
   Widget build(BuildContext context) {
@@ -46,29 +50,33 @@ class _ConditionRow extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: spacing.sm),
       child: Row(
         children: [
-          Container(
-            width: spacing.xxl,
-            height: spacing.xl,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: colors.accentBlue,
-              borderRadius: BorderRadius.circular(radius.sm),
-            ),
+          SizedBox(
+            width: 120,
             child: Text(
-              '${condition.count}',
-              style: typography.medicalRecordStep.copyWith(
-                color: colors.primary,
+              condition.name,
+              style: typography.medicalRecordDetailLabel.copyWith(
+                color: colors.textPrimary,
               ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           SizedBox(width: spacing.md),
           Expanded(
-            child: Text(
-              condition.name,
-              style: typography.medicalRecordDetailBody.copyWith(
-                color: colors.textPrimary,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(radius.full),
+              child: LinearProgressIndicator(
+                value: maxCount == 0 ? 0 : condition.count / maxCount,
+                minHeight: spacing.xs,
+                valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
+                backgroundColor: colors.secondary,
               ),
             ),
+          ),
+          SizedBox(width: spacing.md),
+          Text(
+            '${condition.count}',
+            style: typography.medicalRecordStep.copyWith(color: colors.primary),
           ),
         ],
       ),

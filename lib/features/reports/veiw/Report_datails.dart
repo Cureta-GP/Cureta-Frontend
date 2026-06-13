@@ -47,7 +47,10 @@ class ReportDetailsView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ReportPatientHeaderWidget(patient: report.patientInfo),
+              ReportPatientHeaderWidget(
+                patient: report.patientInfo,
+                status: report.aiInsights.status,
+              ),
               SizedBox(height: spacing.xl),
 
               ReportSectionHeaderWidget(
@@ -55,7 +58,10 @@ class ReportDetailsView extends StatelessWidget {
                 icon: Icons.medication_outlined,
               ),
               SizedBox(height: spacing.md),
-              ReportAdherenceCardWidget(adherence: report.adherenceSummary),
+              ReportAdherenceCardWidget(
+                adherence: report.adherenceSummary,
+                status: report.aiInsights.status,
+              ),
               SizedBox(height: spacing.xl),
 
               ReportSectionHeaderWidget(
@@ -87,8 +93,34 @@ class ReportDetailsView extends StatelessWidget {
                 ),
               ],
 
-              SizedBox(height: spacing.xxl),
+              SizedBox(height: spacing.xxl * 3),
             ],
+          ),
+        ),
+      ),
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(spacing.xl),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: colors.primary,
+                foregroundColor: colors.background,
+                padding: EdgeInsets.symmetric(vertical: spacing.md),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(context.radius.full),
+                ),
+              ),
+              icon: Icon(Icons.ios_share, color: colors.background),
+              label: Text(
+                'Share PDF',
+                style: typography.medicalRecordButton.copyWith(
+                  color: colors.background,
+                ),
+              ),
+            ),
           ),
         ),
       ),
