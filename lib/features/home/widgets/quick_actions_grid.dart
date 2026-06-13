@@ -30,7 +30,7 @@ class QuickActionsGrid extends StatelessWidget {
         _QuickActionCard(
           icon: Icons.qr_code_2_outlined,
           label: AppLocalizations.homeMyQrCode,
-          onTap: () {},
+          onTap: () => Nav.pushNamed(context, AppRoutes.qr),
           backgroundColor: colors.accentPurple,
           foregroundColor: const Color(0xFF6366F1),
         ),

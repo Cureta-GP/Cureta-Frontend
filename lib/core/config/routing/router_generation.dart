@@ -17,6 +17,9 @@ import 'package:cureta/features/ocr/view/scanned_medicines_screen.dart';
 import 'package:cureta/features/ocr/data/models/ocr_medicine_match.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
+import 'package:cureta/features/qr/view/filter_data_view.dart';
+import 'package:cureta/features/qr/view/qr_view.dart';
+import 'package:cureta/features/qr/view/share_health_data_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
@@ -405,6 +408,28 @@ class RoutesGeneration {
         pageBuilder: (context, state) =>
             PageTransitions.fade(child: const ChatScreen(), state: state),
       ),
+      GoRoute(
+        path: AppRoutes.qr,
+        name: AppRoutes.qr,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const QrView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.qrFilterData,
+        name: AppRoutes.qrFilterData,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: const FilterDataView(),
+          state: state,
+        ),
+      ),
+      /*GoRoute(
+        path: AppRoutes.qrShareHealthData,
+        name: AppRoutes.qrShareHealthData,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: const ShareHealthDataView(),
+          state: state,
+        ),
+      ),*/
       GoRoute(
         path: AppRoutes.settings,
         name: AppRoutes.settings,

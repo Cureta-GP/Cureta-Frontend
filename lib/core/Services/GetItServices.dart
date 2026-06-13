@@ -5,6 +5,8 @@ import 'package:cureta/features/home/view_model/home_schedule_cubit.dart';
 import 'package:cureta/features/ocr/data/repo/ocr_repository.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/features/qr/data/repo/qr_repo.dart';
+import 'package:cureta/features/qr/data/services/qr_service.dart';
 import 'package:cureta/features/settings/data/app_settings_notifier.dart';
 import 'package:get_it/get_it.dart';
 import 'package:cureta/features/authentcation/data/services/auth_service.dart';
@@ -122,4 +124,8 @@ Future<void> setup() async {
   getIt.registerFactory<HomeScheduleCubit>(
     () => HomeScheduleCubit(getIt<MedicineRepository>()),
   );
+
+  //QR
+  getIt.registerSingleton<QrService>(QrService());
+  getIt.registerSingleton<QrRepository>(QrRepository(getIt.get<QrService>()));
 }

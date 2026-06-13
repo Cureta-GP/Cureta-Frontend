@@ -281,6 +281,12 @@
     "phone_invalid": "Please enter a valid phone number",
     "field_required": "{field} is required"
   },
+  "qr": {
+    "title": "My QR Code",
+    "heading": "Share Health Data via QR Code",
+    "description": "Generate a secure QR code to share your health information with doctors, caregivers, or emergency contacts.",
+    "button": "Create QR Code"
+  },
   "home": {
     "welcome_back": "Welcome Back",
     "add_record": "Add Record",

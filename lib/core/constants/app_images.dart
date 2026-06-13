@@ -11,4 +11,6 @@ class AppImages {
   static const String google = 'assets/images/google.png';
   static const String doctorAvatar =
       'assets/images/portrait-3d-male-doctor.png';
+  static const String secureQr = 'assets/images/secure_qr.png';
+  static const String qr_code = 'assets/images/qr_code_2.png';
 }
