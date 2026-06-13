@@ -157,11 +157,10 @@ class CustomDrawer extends StatelessWidget {
     controller.hideDrawer();
     GoRouter.of(context).push(AppRoutes.medicines);
   }
-
-
-  void _openReports(BuildContext context) {
+    void _openReports(BuildContext context) {
     controller.hideDrawer();
     GoRouter.of(context).push(AppRoutes.reportsHistory);
+  }
 
   void _openQr(BuildContext context) {
     controller.hideDrawer();
