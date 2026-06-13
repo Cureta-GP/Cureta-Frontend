@@ -1,244 +1,378 @@
-# Chat Bot API Integration — MVVM with Cubit, Repository, Service & GetIt
+# Flutter Reports Feature — Data Layer Plan
 
-## Goal
-
-Wire the 3 chat API endpoints into the existing `chat_bot` feature using the **exact same MVVM pattern** already established in the codebase (Service → Repository → Cubit → View), with GetIt DI registration.
-
-All new files must stay **under 100 lines**.
+Plan for creating Models, Service, and Repository for the health reports feature following [Cureta Clean Architecture](file:///C:/Users/compumarts/.gemini/antigravity-ide/knowledge/cureta-styling-guidelines/artifacts/STYLING_GUIDELINES.md#L463-L495).
 
 ---
 
-## API Endpoints Summary
+## API Response Reference
 
-| Method | Path | Purpose |
-|--------|------|---------|
-| `GET` | `/api/chats/profile/{profile_id}` | List chat sessions for a profile |
-| `GET` | `/api/chats/session/{session_id}/messages` | Get messages for a chat session |
-| `POST` | `/api/chat` | Send a message (creates session if `session_id` omitted) |
+### `POST /api/reports/generate` Response
+```json
+{
+  "status": "success",
+  "data": {
+    "patient_info": {
+      "name": "Abdallah Ali",
+      "age": 24,
+      "blood_type": "O+"
+    },
+    "adherence_summary": {
+      "active_meds": 3,
+      "overall_percentage": 85
+    },
+    "top_conditions": [
+      { "name": "Headache", "count": 5 },
+      { "name": "Fatigue", "count": 3 }
+    ],
+    "medications_timeline": [
+      { "name": "Vitamin D", "instruction": "1000 IU", "progress": 90 },
+      { "name": "Aspirin", "instruction": "100mg", "progress": 60 }
+    ],
+    "ai_insights": {
+      "status": "STABLE",
+      "summary": ["Bullet 1", "Bullet 2", "Bullet 3"],
+      "correlation_warning": "Some correlation text..."
+    }
+  }
+}
+```
+
+### `GET /api/reports/:profile_id` Response
+Same structure as above but wrapped in an **array**, with extra `id`, `profile_id`, `time_period`, and `created_at` fields per item.
 
 ---
 
-## Existing Patterns Followed
+## Proposed File Structure
 
-Based on [AuthService](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/services/auth_service.dart), [AuthRepository](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/data/repo/auth_repository.dart), [AuthCubit](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_view_model.dart), and [AuthState](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/authentcation/veiw_model/auth_state.dart):
-
-- **Service**: Thin `DioHelper` wrapper, returns raw `Response`
-- **Repository**: Constructor-injected service, parses JSON → models, wraps errors with `ErrorHandler.handle(e)`
-- **Cubit**: Constructor-injected repository, `sealed` state classes with `Equatable`, catches `AppException`
-- **GetIt**: Services as singletons → Repos as singletons (injected with service) → Cubits as factories (injected with repo)
-- **Profile ID**: Resolved via `ProfileRepository.getResolvedSelectedProfileId()`
+```
+lib/features/reports/
+├── data/
+│   ├── models/
+│   │   ├── health_report_model.dart        # Main report model
+│   │   ├── patient_info_model.dart         # patient_info sub-model
+│   │   ├── adherence_summary_model.dart    # adherence_summary sub-model
+│   │   ├── top_condition_model.dart        # top_conditions item model
+│   │   ├── medication_timeline_model.dart  # medications_timeline item model
+│   │   └── ai_insights_model.dart          # ai_insights sub-model
+│   ├── services/
+│   │   └── report_service.dart             # Raw API calls
+│   └── repo/
+│       └── report_repo.dart                # Repository layer
+├── veiw_model/                             # (Cubit + States — not in scope here)
+├── veiw/                                   # (Screens — not in scope here)
+└── widgets/                                # (UI components — not in scope here)
+```
 
 ---
 
 ## Proposed Changes
 
-### Component 1: Data Models (`data/models/`)
+### Models
 
-#### [NEW] chat_session_model.dart
-`lib/features/chat_bot/data/models/chat_session_model.dart`
-
+#### [NEW] `patient_info_model.dart`
 ```dart
-class ChatSessionModel {
-  final String id;
-  final String title;
-  final DateTime createdAt;
-  // factory fromJson(Map<String, dynamic>)
-  // Map<String, dynamic> toJson()
-}
-```
+class PatientInfoModel {
+  final String name;
+  final int age;
+  final String? bloodType;
 
-#### [NEW] chat_message_model.dart
-`lib/features/chat_bot/data/models/chat_message_model.dart`
+  const PatientInfoModel({
+    required this.name,
+    required this.age,
+    this.bloodType,
+  });
 
-```dart
-class ChatMessageModel {
-  final String id;
-  final String role;   // "user" | "assistant"
-  final String content;
-  final DateTime createdAt;
-  // factory fromJson(Map<String, dynamic>)
-}
-```
-
-#### [NEW] send_message_request.dart
-`lib/features/chat_bot/data/models/send_message_request.dart`
-
-```dart
-class SendMessageRequest {
-  final String message;
-  final String profileId;
-  final String? sessionId;  // null → creates new session
-  final String appLanguage;
-  // Map<String, dynamic> toJson()
-}
-```
-
-#### [NEW] send_message_response.dart
-`lib/features/chat_bot/data/models/send_message_response.dart`
-
-```dart
-class SendMessageResponse {
-  final String sessionId;
-  final String answer;
-  // factory fromJson(Map<String, dynamic>)
+  factory PatientInfoModel.fromJson(Map<String, dynamic> json) {
+    return PatientInfoModel(
+      name: json['name'] as String,
+      age: json['age'] as int,
+      bloodType: json['blood_type'] as String?,
+    );
+  }
 }
 ```
 
 ---
 
-### Component 2: Service Layer (`data/services/`)
-
-#### [NEW] chat_service.dart
-`lib/features/chat_bot/data/services/chat_service.dart`
-
-Three methods wrapping `DioHelper`:
-
-| Method | DioHelper Call | Endpoint |
-|--------|---------------|----------|
-| `getSessions(profileId)` | `DioHelper.getData` | `chats/profile/$profileId` |
-| `getMessages(sessionId)` | `DioHelper.getData` | `chats/session/$sessionId/messages` |
-| `sendMessage(data)` | `DioHelper.postData` | `chat` |
-
----
-
-### Component 3: Repository Layer (`data/repo/`)
-
-#### [NEW] chat_repository.dart
-`lib/features/chat_bot/data/repo/chat_repository.dart`
-
-Constructor-injected with `ChatService`. Three methods:
-
-| Method | Returns | Error handling |
-|--------|---------|----------------|
-| `fetchSessions(profileId)` | `List<ChatSessionModel>` | `ErrorHandler.handle(e)` |
-| `fetchMessages(sessionId)` | `List<ChatMessageModel>` | `ErrorHandler.handle(e)` |
-| `sendMessage(request)` | `SendMessageResponse` | `ErrorHandler.handle(e)` |
-
-Each method follows the same pattern as `AuthRepository.login()`:
-try → call service → check `status == "success"` → parse `data` → return model, catch → throw `ErrorHandler.handle(e)`.
-
----
-
-### Component 4: ViewModel / Cubit Layer (`veiw_model/`)
-
-> [!IMPORTANT]
-> Two separate cubits to keep files under 100 lines and responsibilities clean.
-
-#### [NEW] chat_sessions_state.dart
-`lib/features/chat_bot/veiw_model/chat_sessions_state.dart`
-
+#### [NEW] `adherence_summary_model.dart`
 ```dart
-sealed class ChatSessionsState extends Equatable { }
-class ChatSessionsInitial    // no data
-class ChatSessionsLoading    // loading spinner
-class ChatSessionsSuccess    // List<ChatSessionModel>
-class ChatSessionsError      // String message, AppException?
-```
+class AdherenceSummaryModel {
+  final int activeMeds;
+  final int overallPercentage;
 
-#### [NEW] chat_sessions_cubit.dart
-`lib/features/chat_bot/veiw_model/chat_sessions_cubit.dart`
+  const AdherenceSummaryModel({
+    required this.activeMeds,
+    required this.overallPercentage,
+  });
 
-- `fetchSessions(profileId)` — loads session list
-- Injected with `ChatRepository`
-
----
-
-#### [NEW] chat_state.dart
-`lib/features/chat_bot/veiw_model/chat_state.dart`
-
-```dart
-sealed class ChatState extends Equatable { }
-class ChatInitial           // empty conversation
-class ChatLoading           // waiting for assistant response
-class ChatMessagesLoaded    // List<ChatMessageModel>, String? sessionId
-class ChatError             // String message, AppException?
-```
-
-#### [NEW] chat_cubit.dart
-`lib/features/chat_bot/veiw_model/chat_cubit.dart`
-
-- `loadMessages(sessionId)` — fetches history for an existing session
-- `sendMessage(text, profileId, appLanguage)` — sends user message, appends both user + assistant messages to state, tracks `sessionId`
-- `startNewChat()` — resets to `ChatInitial`
-- Injected with `ChatRepository`
-
----
-
-### Component 5: DI Registration
-
-#### [MODIFY] [GetItServices.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/core/Services/GetItServices.dart)
-
-Add at the end of `setup()`:
-
-```dart
-// 🤖 Chat Bot
-getIt.registerSingleton<ChatService>(ChatService());
-getIt.registerSingleton<ChatRepository>(
-  ChatRepository(getIt.get<ChatService>()),
-);
-getIt.registerFactory<ChatCubit>(
-  () => ChatCubit(getIt.get<ChatRepository>()),
-);
-getIt.registerFactory<ChatSessionsCubit>(
-  () => ChatSessionsCubit(getIt.get<ChatRepository>()),
-);
+  factory AdherenceSummaryModel.fromJson(Map<String, dynamic> json) {
+    return AdherenceSummaryModel(
+      activeMeds: json['active_meds'] as int,
+      overallPercentage: json['overall_percentage'] as int,
+    );
+  }
+}
 ```
 
 ---
 
-### Component 6: View Layer Updates
+#### [NEW] `top_condition_model.dart`
+```dart
+class TopConditionModel {
+  final String name;
+  final int count;
 
-#### [MODIFY] [Chat_screen.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/veiw/Chat_screen.dart)
+  const TopConditionModel({
+    required this.name,
+    required this.count,
+  });
 
-- Wrap with `MultiBlocProvider` providing `ChatCubit` and `ChatSessionsCubit` from GetIt
-- Replace static `_sampleMessages` with `BlocBuilder<ChatCubit, ChatState>`
-- Connect `ChatInputBar.onSend` to `chatCubit.sendMessage()`
-- Resolve `profileId` from `ProfileListCubit` state or `ProfileRepository`
-- Resolve `appLanguage` from `context.locale`
-
-#### [MODIFY] [chat_message.dart](file:///d:/Flutter_Projects/Cureta-Frontend/lib/features/chat_bot/widgets/chat_message.dart)
-
-- Update `ChatMessage` widget model to be constructible from `ChatMessageModel` (add `factory ChatMessage.fromModel(ChatMessageModel)`)
+  factory TopConditionModel.fromJson(Map<String, dynamic> json) {
+    return TopConditionModel(
+      name: json['name'] as String,
+      count: json['count'] as int,
+    );
+  }
+}
+```
 
 ---
 
-## File Inventory (all under 100 lines)
+#### [NEW] `medication_timeline_model.dart`
+```dart
+class MedicationTimelineModel {
+  final String name;
+  final String? instruction;
+  final int progress;
 
-| File | Est. Lines | Layer |
-|------|-----------|-------|
-| `data/models/chat_session_model.dart` | ~30 | Model |
-| `data/models/chat_message_model.dart` | ~30 | Model |
-| `data/models/send_message_request.dart` | ~30 | Model |
-| `data/models/send_message_response.dart` | ~25 | Model |
-| `data/services/chat_service.dart` | ~40 | Service |
-| `data/repo/chat_repository.dart` | ~80 | Repository |
-| `veiw_model/chat_sessions_state.dart` | ~35 | State |
-| `veiw_model/chat_sessions_cubit.dart` | ~35 | Cubit |
-| `veiw_model/chat_state.dart` | ~40 | State |
-| `veiw_model/chat_cubit.dart` | ~75 | Cubit |
+  const MedicationTimelineModel({
+    required this.name,
+    this.instruction,
+    required this.progress,
+  });
+
+  factory MedicationTimelineModel.fromJson(Map<String, dynamic> json) {
+    return MedicationTimelineModel(
+      name: json['name'] as String,
+      instruction: json['instruction'] as String?,
+      progress: json['progress'] as int,
+    );
+  }
+}
+```
+
+---
+
+#### [NEW] `ai_insights_model.dart`
+```dart
+class AiInsightsModel {
+  final String status;             // 'STABLE' or 'ALERT'
+  final List<String> summary;     // 3 bullet points
+  final String correlationWarning;
+
+  const AiInsightsModel({
+    required this.status,
+    required this.summary,
+    required this.correlationWarning,
+  });
+
+  factory AiInsightsModel.fromJson(Map<String, dynamic> json) {
+    return AiInsightsModel(
+      status: json['status'] as String,
+      summary: List<String>.from(json['summary'] as List),
+      correlationWarning: json['correlation_warning'] as String? ?? '',
+    );
+  }
+}
+```
+
+---
+
+#### [NEW] `health_report_model.dart`
+The main model — used for **both** generate response and history items.
+
+```dart
+class HealthReportModel {
+  final String? id;                // null on generate, present on history
+  final String? profileId;         // null on generate, present on history
+  final String? timePeriod;        // null on generate, present on history
+  final PatientInfoModel patientInfo;
+  final AdherenceSummaryModel adherenceSummary;
+  final List<TopConditionModel> topConditions;
+  final List<MedicationTimelineModel> medicationsTimeline;
+  final AiInsightsModel aiInsights;
+  final DateTime? createdAt;       // null on generate, present on history
+
+  const HealthReportModel({
+    this.id,
+    this.profileId,
+    this.timePeriod,
+    required this.patientInfo,
+    required this.adherenceSummary,
+    required this.topConditions,
+    required this.medicationsTimeline,
+    required this.aiInsights,
+    this.createdAt,
+  });
+
+  factory HealthReportModel.fromJson(Map<String, dynamic> json) {
+    return HealthReportModel(
+      id: json['id'] as String?,
+      profileId: json['profile_id'] as String?,
+      timePeriod: json['time_period'] as String?,
+      patientInfo: PatientInfoModel.fromJson(
+        json['patient_info'] as Map<String, dynamic>,
+      ),
+      adherenceSummary: AdherenceSummaryModel.fromJson(
+        json['adherence_summary'] as Map<String, dynamic>,
+      ),
+      topConditions: (json['top_conditions'] as List)
+          .map((e) => TopConditionModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      medicationsTimeline: (json['medications_timeline'] as List)
+          .map((e) =>
+              MedicationTimelineModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      aiInsights: AiInsightsModel.fromJson(
+        json['ai_insights'] as Map<String, dynamic>,
+      ),
+      createdAt: json['created_at'] != null
+          ? DateTime.parse(json['created_at'] as String)
+          : null,
+    );
+  }
+}
+```
+
+---
+
+### Service
+
+#### [NEW] `report_service.dart`
+Raw API calls via `DioHelper`.
+
+```dart
+class ReportService {
+  /// POST /api/reports/generate
+  Future<Response> generateReport({
+    required String profileId,
+    required String timePeriod,
+    String language = 'en',
+  }) async {
+    return await DioHelper.postData(
+      path: 'reports/generate',
+      data: {
+        'profile_id': profileId,
+        'time_period': timePeriod,
+        'language': language,
+      },
+    );
+  }
+
+  /// GET /api/reports/:profileId
+  Future<Response> getReportsHistory({
+    required String profileId,
+  }) async {
+    return await DioHelper.getData(
+      path: 'reports/$profileId',
+    );
+  }
+}
+```
+
+---
+
+### Repository
+
+#### [NEW] `report_repo.dart`
+Handles error mapping and JSON → Model conversion.
+
+```dart
+class ReportRepo {
+  final ReportService _service;
+
+  ReportRepo(this._service);
+
+  /// Generate a new health report
+  Future<HealthReportModel> generateReport({
+    required String profileId,
+    required String timePeriod,
+    String language = 'en',
+  }) async {
+    try {
+      final response = await _service.generateReport(
+        profileId: profileId,
+        timePeriod: timePeriod,
+        language: language,
+      );
+      final data = response.data['data'] as Map<String, dynamic>;
+      return HealthReportModel.fromJson(data);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  /// Fetch all past reports for a profile
+  Future<List<HealthReportModel>> getReportsHistory({
+    required String profileId,
+  }) async {
+    try {
+      final response = await _service.getReportsHistory(
+        profileId: profileId,
+      );
+      final list = response.data['data'] as List;
+      return list
+          .map((e) =>
+              HealthReportModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  Exception _handleError(dynamic e) {
+    // Follow existing project error handling pattern
+    // (e.g., ServerException, map DioException → user-friendly message)
+    return e is Exception ? e : Exception(e.toString());
+  }
+}
+```
+
+---
+
+### Dependency Injection
+
+#### [MODIFY] `GetItServices.dart`
+Add the following registrations in the existing registration order (Services → Repos → Cubits):
+
+```dart
+// ── Reports ──
+getIt.registerSingleton<ReportService>(ReportService());
+getIt.registerSingleton<ReportRepo>(ReportRepo(getIt<ReportService>()));
+// Cubit registration will be added when building the veiw_model layer
+```
 
 ---
 
 ## Open Questions
 
 > [!IMPORTANT]
-> **`appLanguage` value**: The API expects a string like `"Egyptian Arabic"`. Should this be derived from `context.locale` (e.g., `ar` → `"Egyptian Arabic"`, `en` → `"English"`) or hardcoded? Please confirm the mapping.
+> 1. **أسماء الملفات والمجلدات:** لاحظت أن المشروع يستخدم `veiw_model` و `veiw` (وليس `view_model` / `view`). هل تريدني أتبع نفس الأسلوب؟
+> 2. **Error Handling:** هل المشروع يستخدم كلاس خطأ معين (مثل `ServerException` أو `ApiException`)؟ لو ممكن تقولي اسمه عشان أستخدمه في الـ `_handleError` في الريبو.
+> 3. **أسماء الـ methods في `DioHelper`:** هل أسماء الميثودز هي `postData` و `getData` ولا أسماء مختلفة؟ عشان أعدل الـ Service لو فيه اختلاف.
 
-> [!IMPORTANT]
-> **Chat sessions list screen**: The API supports listing sessions per profile (`GET /api/chats/profile/{profile_id}`). Do you want a **chat sessions list screen** (to pick or resume old conversations) built as part of this work, or only the single active-chat screen?
+## Allowed `time_period` Values (for enum/constants)
 
----
+| Value             | Description   |
+|-------------------|---------------|
+| `last_7_days`     | آخر 7 أيام   |
+| `last_month`      | آخر شهر      |
+| `last_3_months`   | آخر 3 أشهر   |
+| `all_time`        | طوال الوقت    |
 
-## Verification Plan
+## Allowed `language` Values
 
-### Automated Tests
-```shell
-flutter analyze lib/features/chat_bot/ lib/core/Services/GetItServices.dart
-```
-
-### Manual Verification
-1. Open the Chat screen → verify it starts with `ChatInitial` (empty state)
-2. Type a message and tap send → verify loading indicator while waiting for API
-3. Verify the assistant response appears as a new bubble
-4. Close and re-open the chat → verify messages reload from `GET /messages`
-5. Test error states: turn off network → verify error snackbar appears
+| Value | Description       |
+|-------|-------------------|
+| `ar`  | عربي (عامية مصرية)|
+| `en`  | English (default) |
