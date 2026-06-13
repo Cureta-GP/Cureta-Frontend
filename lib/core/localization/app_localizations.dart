@@ -419,6 +419,10 @@ class AppLocalizations {
   static String get homeScanPrescription => 'home.home_scan_prescription'.tr();
 
   static String get homeMyQrCode => 'home.my_qr_code'.tr();
+  static String get qrTitle => 'qr.title'.tr();
+  static String get qrHeading => 'qr.heading'.tr();
+  static String get qrDescription => 'qr.description'.tr();
+  static String get qrButton => 'qr.button'.tr();
   static String get homeUpcomingMeds => 'home.upcoming_meds'.tr();
   static String get homeSeeAll => 'home.see_all'.tr();
   static String get homeRecentActivity => 'home.recent_activity'.tr();
@@ -440,7 +444,6 @@ class AppLocalizations {
   static String get chatGreetingMessage => 'chat.greeting_message'.tr();
   static String get chatUserQuestion => 'chat.user_question'.tr();
   static String get chatReplyMessage => 'chat.reply_message'.tr();
-
 
   // OCR - Scan Prescription
   static String get scanPrescriptionTitle => 'ocr.scan_prescription.title'.tr();
@@ -472,13 +475,16 @@ class AppLocalizations {
 
   // Medicines
   static String get medicinesSuccessTitle => 'medicines.success_title'.tr();
-  static String get medicinesSuccessSubtitle => 'medicines.success_subtitle'.tr();
-  static String get medicinesGoToMyMedicines => 'medicines.go_to_my_medicines'.tr();
+  static String get medicinesSuccessSubtitle =>
+      'medicines.success_subtitle'.tr();
+  static String get medicinesGoToMyMedicines =>
+      'medicines.go_to_my_medicines'.tr();
   static String get medicinesStep1Of5 => 'medicines.step_1_of_5'.tr();
   static String get medicinesStep1Progress => 'medicines.step_1_progress'.tr();
   static String get medicinesStep1Question => 'medicines.step_1_question'.tr();
   static String get medicinesStep1Subtitle => 'medicines.step_1_subtitle'.tr();
-  static String get medicinesMedicineNameHint => 'medicines.medicine_name_hint'.tr();
+  static String get medicinesMedicineNameHint =>
+      'medicines.medicine_name_hint'.tr();
   static String get medicinesStep1InfoHint => 'medicines.step_1_info_hint'.tr();
   static String get medicinesAddMedicine => 'medicines.add_medicine'.tr();
   static String get medicinesStep4Of5 => 'medicines.step_4_of_5'.tr();
@@ -495,14 +501,18 @@ class AppLocalizations {
   static String get medicinesStep3Of5 => 'medicines.step_3_of_5'.tr();
   static String get medicinesStep3Progress => 'medicines.step_3_progress'.tr();
   static String get medicinesStep3Question => 'medicines.step_3_question'.tr();
-  static String get medicinesAlarmTimesLabel => 'medicines.alarm_times_label'.tr();
+  static String get medicinesAlarmTimesLabel =>
+      'medicines.alarm_times_label'.tr();
   static String get medicinesAddAlarmTime => 'medicines.add_alarm_time'.tr();
   static String get medicinesNotesLabel => 'medicines.notes_label'.tr();
   static String get medicinesNotesHint => 'medicines.notes_hint'.tr();
   static String get medicinesMyMedicines => 'medicines.my_medicines'.tr();
-  static String get medicinesEmptyMedicinesTitle => 'medicines.empty_medicines_title'.tr();
-  static String get medicinesEmptyMedicinesSubtitle => 'medicines.empty_medicines_subtitle'.tr();
-  static String get medicinesAddYourFirstMedicine => 'medicines.add_your_first_medicine'.tr();
+  static String get medicinesEmptyMedicinesTitle =>
+      'medicines.empty_medicines_title'.tr();
+  static String get medicinesEmptyMedicinesSubtitle =>
+      'medicines.empty_medicines_subtitle'.tr();
+  static String get medicinesAddYourFirstMedicine =>
+      'medicines.add_your_first_medicine'.tr();
   static String get medicinesSearchHint => 'medicines.search_hint'.tr();
   static String get medicinesFilterAll => 'medicines.filter_all'.tr();
   static String get medicinesFilterActive => 'medicines.filter_active'.tr();
@@ -511,15 +521,20 @@ class AppLocalizations {
   static String get medicinesEditDetails => 'medicines.edit_details'.tr();
   static String get medicinesEditMedicine => 'medicines.edit_medicine'.tr();
   static String get medicinesDeleteMedicine => 'medicines.delete_medicine'.tr();
-  static String get medicinesDeleteConfirmTitle => 'medicines.delete_confirm_title'.tr();
-  static String medicinesDeleteConfirmMessage(String medicine) => 'medicines.delete_confirm_message'.tr(namedArgs: {'medicine': medicine});
+  static String get medicinesDeleteConfirmTitle =>
+      'medicines.delete_confirm_title'.tr();
+  static String medicinesDeleteConfirmMessage(String medicine) =>
+      'medicines.delete_confirm_message'.tr(namedArgs: {'medicine': medicine});
   static String get medicinesSaveChanges => 'medicines.save_changes'.tr();
   static String get medicinesCancel => 'medicines.cancel'.tr();
   static String get medicinesUpdateSuccess => 'medicines.update_success'.tr();
   static String get medicinesDeleteSuccess => 'medicines.delete_success'.tr();
-  static String get medicinesPickImageTitle => 'medicines.pick_image_title'.tr();
-  static String get medicinesPickFromCamera => 'medicines.pick_from_camera'.tr();
-  static String get medicinesPickFromGallery => 'medicines.pick_from_gallery'.tr();
+  static String get medicinesPickImageTitle =>
+      'medicines.pick_image_title'.tr();
+  static String get medicinesPickFromCamera =>
+      'medicines.pick_from_camera'.tr();
+  static String get medicinesPickFromGallery =>
+      'medicines.pick_from_gallery'.tr();
   static String get medicinesAlarmTaken => 'medicines.alarm_taken'.tr();
   static String get medicinesAlarmMissed => 'medicines.alarm_missed'.tr();
   static String get medicinesAlarmSubtitle => 'medicines.alarm_subtitle'.tr();

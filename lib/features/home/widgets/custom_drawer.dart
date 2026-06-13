@@ -58,6 +58,7 @@ class CustomDrawer extends StatelessWidget {
           _DrawerItem(
             icon: Icons.qr_code_outlined,
             label: 'drawer.qr_code'.tr(),
+            onTap: () => _openQr(context),
           ),
           _DrawerItem(
             icon: Icons.calendar_today_outlined,
@@ -157,9 +158,14 @@ class CustomDrawer extends StatelessWidget {
     GoRouter.of(context).push(AppRoutes.medicines);
   }
 
+
   void _openReports(BuildContext context) {
     controller.hideDrawer();
     GoRouter.of(context).push(AppRoutes.reportsHistory);
+
+  void _openQr(BuildContext context) {
+    controller.hideDrawer();
+    GoRouter.of(context).push(AppRoutes.qr);
   }
 
   void _openSettings(BuildContext context) {

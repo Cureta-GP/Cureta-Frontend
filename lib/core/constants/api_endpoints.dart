@@ -26,4 +26,9 @@ class ApiEndpoints {
 
   //Schedule
   static const String schedule = 'schedule';
+
+  //QR
+  static const String recordsCategories = 'qr-share/categories';
+  static const String filteredRecords = 'qr-share/token';
+  static String qrShare(String token) => "qr-share/$token";
 }

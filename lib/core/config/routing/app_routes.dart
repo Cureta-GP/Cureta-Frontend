@@ -28,6 +28,9 @@ class AppRoutes {
   static const String medicines = '/medicines';
 
   static const String chat = '/chat';
+  static const String qr = '/qr';
+  static const String qrFilterData = '/qr/filter-data';
+  static const String qrShareHealthData = '/qr/share-health-data';
   static const String settings = '/settings';
   //profil
   static const String profile = '/profile';
