@@ -9,7 +9,7 @@ class ProfileModel {
   final String gender;
   final String bloodType;
   final String? imageUrl;
-  final String createdAt;
+  final String? createdAt;
   final List<dynamic> chronicDiseases;
   final List<dynamic> allergies;
 
@@ -24,24 +24,28 @@ class ProfileModel {
     required this.gender,
     required this.bloodType,
     this.imageUrl,
-    required this.createdAt,
+    this.createdAt,
     required this.chronicDiseases,
     required this.allergies,
   });
 
   factory ProfileModel.fromJson(Map<String, dynamic> json) {
     return ProfileModel(
-      id: json['id'],
-      primaryOwnerId: json['primary_owner_id'],
-      parentProfileId: json['parent_profile_id'],
-      isPrimary: json['is_primary'],
-      fullName: json['full_name'],
-      relationship: json['relationship'],
-      age: json['age'],
-      gender: json['gender'],
-      bloodType: json['blood_type'],
-      imageUrl: json['image_url'],
-      createdAt: json['created_at'],
+      id: json['id']?.toString() ?? '',
+      primaryOwnerId: json['primary_owner_id'] is int
+          ? json['primary_owner_id']
+          : int.tryParse(json['primary_owner_id']?.toString() ?? '') ?? 0,
+      parentProfileId: json['parent_profile_id']?.toString(),
+      isPrimary: json['is_primary'] ?? false,
+      fullName: json['full_name']?.toString() ?? '',
+      relationship: json['relationship']?.toString() ?? 'Self',
+      age: json['age'] is int
+          ? json['age']
+          : int.tryParse(json['age']?.toString() ?? '') ?? 0,
+      gender: json['gender']?.toString() ?? '',
+      bloodType: json['blood_type']?.toString() ?? '',
+      imageUrl: json['image_url']?.toString(),
+      createdAt: json['created_at']?.toString(),
       chronicDiseases: json['chronic_diseases'] ?? [],
       allergies: json['allergies'] ?? [],
     );
@@ -59,11 +63,13 @@ class ProfileModel {
       'gender': gender,
       'blood_type': bloodType,
       'image_url': imageUrl,
-      'created_at': createdAt,
+      if (createdAt != null) 'created_at': createdAt,
       'chronic_diseases': chronicDiseases,
       'allergies': allergies,
     };
   }
+
+  void operator [](String other) {}
 }
 /// Model class for profile data
 /*class ProfileModel {

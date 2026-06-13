@@ -1,36 +1,32 @@
-<<<<<<< HEAD
 import 'package:cureta/core/Services/GetItServices.dart';
-=======
-import 'package:cureta/features/medical_records/veiw/User%E2%80%98s_Records.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
->>>>>>> temp
+import 'package:cureta/core/Services/notification_service.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
+import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/profile_detail_view.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
-import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/Meds/view/medicines_main_view.dart';
+import 'package:cureta/features/medicines/view/medicines_main_view.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/widgets/custom_drawer.dart';
-import 'package:cureta/features/home/widgets/top_header.dart';
-<<<<<<< HEAD
 import 'package:flutter_advanced_drawer/flutter_advanced_drawer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-=======
-import 'package:cureta/features/medical_records/widgets/user_records_bottom_navigation.dart';
-import 'package:cureta/features/profile/view/all_profies_view.dart';
-import 'package:cureta/features/profile/model/profile_model.dart';
->>>>>>> temp
+import 'package:go_router/go_router.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   final ProfileState profile;
-  const MainNavigationScreen({super.key, required this.profile});
+  final int initialTabIndex;
+
+  const MainNavigationScreen({
+    super.key,
+    required this.profile,
+    this.initialTabIndex = 0,
+  });
 
   @override
   State<MainNavigationScreen> createState() => _MainNavigationScreenState();
@@ -40,34 +36,104 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
   final _advancedDrawerController = AdvancedDrawerController();
 
-<<<<<<< HEAD
-=======
-  List<ProfileModel> profiles = [
-    ProfileModel(
-      id: '1',
-      name: 'Steve Lin',
-      relationship: 'Self',
-      avatarUrl: '',
-    ),
-    ProfileModel(
-      id: '2',
-      name: 'Alice Lin',
-      relationship: 'Daughter',
-      avatarUrl: '',
-    ),
-    ProfileModel(id: '3', name: 'Bob Lin', relationship: 'Son', avatarUrl: ''),
-  ];
+  Future<void> _openAddMedicine() async {
+    await context.pushNamed(AppRoutes.medicinesAddStep1);
+  }
 
-  String selectedProfileId = '1'; 
+  ({IconData icon, VoidCallback onPressed, String tooltip}) _fabConfig() {
+    switch (_selectedIndex) {
+      case 1:
+        return (
+          icon: Icons.medication_rounded,
+          onPressed: () {
+            _openAddMedicine();
+          },
+          tooltip: 'Add medicine',
+        );
+      case 2:
+        return (
+          icon: Icons.note_add_rounded,
+          onPressed: () {
+            context.pushNamed(AppRoutes.medicalRecordsStepOne);
+          },
+          tooltip: 'Add record',
+        );
+      case 3:
+        return (
+          icon: Icons.person_add_alt_1_rounded,
+          onPressed: () {
+            context.pushNamed(AppRoutes.addProfile, extra: true);
+          },
+          tooltip: 'Add profile',
+        );
+      default:
+        return (
+          icon: Icons.chat,
+          onPressed: () {
+            context.pushNamed(AppRoutes.chat);
+          },
+          tooltip: 'Chat',
+        );
+    }
+  }
 
-  final List<Widget> _screens = [
-    const HomeView(),
-    const MedicinesMainView(),
-    const UserRecordsView(),
-    const AllProfiesView(),
-  ];
+  int? _tabFromRoute(BuildContext context) {
+    try {
+      final tab = int.tryParse(
+        GoRouterState.of(context).uri.queryParameters['tab'] ?? '',
+      );
+      if (tab == null) return null;
+      return tab.clamp(0, 3);
+    } catch (_) {
+      return null;
+    }
+  }
 
->>>>>>> temp
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialTabIndex.clamp(0, 3);
+    _checkAlarmPermissions();
+  }
+
+  Future<void> _checkAlarmPermissions() async {
+    final canSchedule = await NotificationService.instance
+        .canScheduleExactAlarms();
+    if (!canSchedule && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            'برجاء تفعيل إذن "التنبيهات والمواعيد" (Alarms & Reminders) لكي تعمل تنبيهات الدواء.',
+          ),
+          action: SnackBarAction(
+            label: 'تفعيل',
+            onPressed: () {
+              NotificationService.instance.openExactAlarmSettings();
+            },
+          ),
+          duration: const Duration(seconds: 10),
+        ),
+      );
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final routedTab = _tabFromRoute(context);
+    if (routedTab != null) {
+      _selectedIndex = routedTab;
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant MainNavigationScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.initialTabIndex != widget.initialTabIndex) {
+      _selectedIndex = widget.initialTabIndex.clamp(0, 3);
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -81,12 +147,16 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final spacing = context.spacing;
+    final fabConfig = _fabConfig();
 
-<<<<<<< HEAD
-    return BlocProvider(
-      create: (context) =>
-          ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+        ),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
+      ],
       child: AdvancedDrawer(
         backdrop: Container(
           width: double.infinity,
@@ -94,77 +164,32 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           decoration: BoxDecoration(color: colors.primary),
         ),
         controller: _advancedDrawerController,
+        animationCurve: Curves.easeInOut,
+        animationDuration: const Duration(milliseconds: 300),
+        animateChildDecoration: true,
+        rtlOpening: false,
+        disabledGestures: false,
+        childDecoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(32)),
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+        ),
         drawer: CustomDrawer(controller: _advancedDrawerController),
         child: Scaffold(
-=======
-    return AdvancedDrawer(
-      backdrop: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(color: colors.primary),
-      ),
-      controller: _advancedDrawerController,
-      animationCurve: Curves.easeInOut,
-      animationDuration: const Duration(milliseconds: 300),
-      animateChildDecoration: true,
-      rtlOpening: false,
-      disabledGestures: false,
-      childDecoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(32)),
-        boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
-      ),
-      drawer: const CustomDrawer(),
-      child: Scaffold(
-        backgroundColor: colors.background,
-        appBar: AppBar(
->>>>>>> temp
           backgroundColor: colors.background,
-          appBar: AppBar(
-            backgroundColor: colors.background,
-            scrolledUnderElevation: 0,
-            elevation: 0,
-            centerTitle: false,
-            titleSpacing: 0,
-            leading: IconButton(
-              onPressed: _handleMenuButtonPressed,
-              icon: ValueListenableBuilder<AdvancedDrawerValue>(
-                valueListenable: _advancedDrawerController,
-                builder: (context, value, child) {
-                  return AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 250),
-                    child: Icon(
-                      value.visible ? Icons.clear : Icons.menu,
-                      size: spacing.xl + spacing.sm,
-                      key: ValueKey<bool>(value.visible),
-                      color: colors.textPrimary,
-                    ),
-                  );
-                },
-              ),
-            ),
-            title: BlocBuilder<ProfilesListCubit, ProfilesListState>(
-              builder: (context, state) {
-                String name = "Loading...";
-                if (state is ProfilesSuccess) {
-                  final selectedProfile = state.profiles.firstWhere(
-                    (p) => p.id == state.selectedProfileId,
-                    orElse: () => state.profiles.first,
-                  );
-                  name = selectedProfile.fullName;
-                }
-                return TopHeader(userName: name);
-              },
-            ),
-          ),
-<<<<<<< HEAD
+          // الـ AppBar تم حذفه من هنا ليصبح التحكم لكل صفحة على حدة
           body: IndexedStack(
             index: _selectedIndex,
             children: [
-              const HomeView(),
+              HomeView(onMenuPressed: _handleMenuButtonPressed),
               const MedicinesMainView(),
               UserRecordsView(isActive: _selectedIndex == 2),
               const ProfileDetailsScreen(),
             ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: fabConfig.onPressed,
+            tooltip: fabConfig.tooltip,
+            child: Icon(fabConfig.icon),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
@@ -175,54 +200,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             scanRxLabel: AppLocalizations.recordsListNavScanRx,
             recordsLabel: AppLocalizations.recordsListNavRecords,
             profileLabel: AppLocalizations.recordsListNavProfile,
-            onHomePressed: () {
-              _onItemTapped(0);
-            },
-            onMedsPressed: () {
-              _onItemTapped(1);
-            },
-
-            onRecordsPressed: () {
-              _onItemTapped(2);
-            },
-            onProfilePressed: () {
-              _onItemTapped(3);
-            },
+            onHomePressed: () => _onItemTapped(0),
+            onMedsPressed: () => _onItemTapped(1),
+            onRecordsPressed: () => _onItemTapped(2),
+            onProfilePressed: () => _onItemTapped(3),
           ),
-=======
-
-          title: TopHeader(
-            profiles: profiles,
-            selectedProfileId: selectedProfileId,
-            onAddProfilePressed: () {
-              print('Add profile pressed');
-            },
-            onProfileSelected: (ProfileModel profile) {
-              setState(() {
-                selectedProfileId = profile.id;
-              });
-            },
-          ),
-        ),
-        body: IndexedStack(index: _selectedIndex, children: _screens),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          backgroundColor: colors.primary,
-          child: const Icon(Icons.document_scanner, color: Colors.white),
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar: UserRecordsBottomNavigation(
-          currentIndex: _selectedIndex,
-          homeLabel: AppLocalizations.recordsListNavHome,
-          medsLabel: AppLocalizations.recordsListNavMeds,
-          scanRxLabel: AppLocalizations.recordsListNavScanRx,
-          recordsLabel: AppLocalizations.recordsListNavRecords,
-          profileLabel: AppLocalizations.recordsListNavProfile,
-          onHomePressed: () => _onItemTapped(0),
-          onMedsPressed: () => _onItemTapped(1),
-          onRecordsPressed: () => _onItemTapped(2),
-          onProfilePressed: () => _onItemTapped(3),
->>>>>>> temp
         ),
       ),
     );

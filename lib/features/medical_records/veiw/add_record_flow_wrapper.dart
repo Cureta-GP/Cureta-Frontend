@@ -7,27 +7,51 @@ import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-/// A wrapper widget that provides shared cubits for the entire add record flow.
-/// This ensures AddRecordFormCubit, AddRecordStepFourCubit, and CreateRecordCubit survive
-/// across step navigations and share state.
-class AddRecordFlowWrapper extends StatelessWidget {
+/// A wrapper widget that provides shared cubits for one add-record flow session.
+/// Cubits are created once per flow and disposed when the shell route is removed.
+class AddRecordFlowWrapper extends StatefulWidget {
   const AddRecordFlowWrapper({super.key, required this.child});
 
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final formCubit = getIt<AddRecordFormCubit>();
+  State<AddRecordFlowWrapper> createState() => _AddRecordFlowWrapperState();
+}
 
+class _AddRecordFlowWrapperState extends State<AddRecordFlowWrapper> {
+  late final AddRecordFormCubit _formCubit;
+  late final AddRecordStepFourCubit _stepFourCubit;
+  late final CreateRecordCubit _createRecordCubit;
+
+  @override
+  void initState() {
+    super.initState();
+    _formCubit = getIt<AddRecordFormCubit>();
+    _stepFourCubit = getIt<AddRecordStepFourCubit>();
+    _createRecordCubit = getIt<CreateRecordCubit>();
+  }
+
+  @override
+  void dispose() {
+    _formCubit.close();
+    _stepFourCubit.close();
+    _createRecordCubit.close();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final profilesCubit = context.read<ProfilesListCubit?>();
+
     if (profilesCubit != null) {
       final state = profilesCubit.state;
       if (state is ProfilesSuccess && state.selectedProfileId != null) {
-        formCubit.setProfileIdIfAbsent(state.selectedProfileId!);
+        _formCubit.setProfileIdIfAbsent(state.selectedProfileId!);
       }
     }
 
-    Widget wrappedChild = child;
+    Widget wrappedChild = widget.child;
+
     if (profilesCubit != null) {
       wrappedChild = BlocListener<ProfilesListCubit, ProfilesListState>(
         listenWhen: (prev, curr) {
@@ -41,24 +65,18 @@ class AddRecordFlowWrapper extends StatelessWidget {
         },
         listener: (context, state) {
           if (state is ProfilesSuccess && state.selectedProfileId != null) {
-            context.read<AddRecordFormCubit>().setProfileId(
-              state.selectedProfileId!,
-            );
+            _formCubit.setProfileId(state.selectedProfileId!);
           }
         },
-        child: child,
+        child: wrappedChild,
       );
     }
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider<AddRecordFormCubit>.value(value: formCubit),
-        BlocProvider<AddRecordStepFourCubit>.value(
-          value: getIt<AddRecordStepFourCubit>(),
-        ),
-        BlocProvider<CreateRecordCubit>.value(
-          value: getIt<CreateRecordCubit>(),
-        ),
+        BlocProvider<AddRecordFormCubit>.value(value: _formCubit),
+        BlocProvider<AddRecordStepFourCubit>.value(value: _stepFourCubit),
+        BlocProvider<CreateRecordCubit>.value(value: _createRecordCubit),
       ],
       child: wrappedChild,
     );

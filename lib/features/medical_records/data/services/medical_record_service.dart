@@ -52,4 +52,26 @@ class MedicalRecordService {
 
     return await DioHelper.postFormData(url: 'medical-records', data: formData);
   }
+
+  Future<Response> updateRecord({
+    required String id,
+    required String diseaseName,
+    String? notes,
+    required String recordDate,
+    List<String> removeAttachmentIds = const [],
+  }) async {
+    return await DioHelper.putData(
+      url: 'medical-records/$id',
+      data: {
+        'disease_name': diseaseName,
+        'notes': notes ?? '',
+        'record_date': recordDate,
+        'remove_attachment_ids': removeAttachmentIds,
+      },
+    );
+  }
+
+  Future<Response> deleteRecord({required String id}) async {
+    return await DioHelper.deleteData(url: 'medical-records/$id');
+  }
 }

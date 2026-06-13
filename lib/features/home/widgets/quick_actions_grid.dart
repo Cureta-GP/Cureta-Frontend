@@ -14,8 +14,9 @@ class QuickActionsGrid extends StatelessWidget {
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      padding: EdgeInsets.symmetric(horizontal: spacing.md),
+      crossAxisCount: 2,
+      childAspectRatio: 1.2, // Provides more vertical space for text labels
+      padding: EdgeInsetsDirectional.symmetric(horizontal: spacing.md),
       mainAxisSpacing: spacing.sm,
       crossAxisSpacing: spacing.sm,
       children: [
@@ -23,22 +24,30 @@ class QuickActionsGrid extends StatelessWidget {
           icon: Icons.add_box_outlined,
           label: AppLocalizations.homeAddRecord,
           onTap: () => Nav.pushNamed(context, AppRoutes.medicalRecordsStepOne),
-          baseColor: const Color(0xFF00A3AD),
-          circleColor: colors.primary,
-        ),
-        _QuickActionCard(
-          icon: Icons.notifications_none_outlined,
-          label: AppLocalizations.homeAddAlert,
-          onTap: () {},
-          baseColor: const Color(0xFFFF8C00),
-          circleColor: const Color(0xFFF97316), 
+          backgroundColor: colors.accentCyan,
+          foregroundColor: colors.primary,
         ),
         _QuickActionCard(
           icon: Icons.qr_code_2_outlined,
           label: AppLocalizations.homeMyQrCode,
           onTap: () {},
-          baseColor: const Color(0xFF007AFF),
-          circleColor: Color(0xff6366F1), 
+          backgroundColor: colors.accentPurple,
+          foregroundColor: const Color(0xFF6366F1),
+        ),
+
+        _QuickActionCard(
+          icon: Icons.document_scanner_outlined,
+          label: AppLocalizations.homeScanPrescription,
+          onTap: () => Nav.pushNamed(context, AppRoutes.scanPrescription),
+          backgroundColor: colors.accentBlue,
+          foregroundColor: const Color(0xFF4338CA),
+        ),
+        _QuickActionCard(
+          icon: Icons.notifications_none_outlined,
+          label: AppLocalizations.homeAddAlert,
+          onTap: () {},
+          backgroundColor: colors.accentOrange,
+          foregroundColor: const Color(0xFFF97316),
         ),
       ],
     );
@@ -48,63 +57,55 @@ class QuickActionsGrid extends StatelessWidget {
 class _QuickActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
-  final Color baseColor;
-  final Color circleColor;
+  final Color backgroundColor;
+  final Color foregroundColor;
   final VoidCallback onTap;
 
   const _QuickActionCard({
     required this.icon,
     required this.label,
     required this.onTap,
-    required this.baseColor,
-    required this.circleColor,
+    required this.backgroundColor,
+    required this.foregroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = baseColor.withOpacity(0.12);
-
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(32),
+      borderRadius: BorderRadius.circular(context.radius.xl),
       child: Container(
-        width: 112,
-        height: 112,
-        decoration: ShapeDecoration(
+        padding: EdgeInsetsDirectional.symmetric(
+          vertical: context.spacing.md,
+          horizontal: context.spacing.md,
+        ),
+        decoration: BoxDecoration(
           color: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32),
-          ),
+          borderRadius: BorderRadius.circular(context.radius.xl),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // 🔵 Icon Circle
             Container(
-              width: 40,
-              height: 40,
-              decoration: ShapeDecoration(
-                color: circleColor, 
-                shape: CircleBorder(),
+              width: 46, // Reduced size to fit in narrow columns
+              height: 46,
+              decoration: BoxDecoration(
+                color: foregroundColor,
+                shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: Colors.white, size: 20),
+              child: Icon(icon, color: Colors.white, size: context.spacing.xl),
             ),
-            const SizedBox(height: 8),
-            // النص
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: circleColor,
-                  fontSize: 12,
-                  fontFamily: 'Plus Jakarta Sans',
-                  fontWeight: FontWeight.w700,
-                  height: 1.33,
-                ),
+
+            SizedBox(height: context.spacing.sm), // Tighter spacing
+            // 📝 Text
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: context.typography.homeQuickActionLabel.copyWith(
+                color: foregroundColor,
               ),
             ),
           ],

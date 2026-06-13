@@ -25,12 +25,28 @@ class AppRoutes {
   //home
   static const String home = '/home';
   //meds
-   static const String medicines = '/medicines';
-<<<<<<< HEAD
-   //chat
-   static const String chat = '/chat';
-=======
-  //profile
+  static const String medicines = '/medicines';
+
+  static const String chat = '/chat';
+  static const String settings = '/settings';
+  //profil
   static const String profile = '/profile';
->>>>>>> temp
+  static const String scanPrescription = '/scan-prescription';
+  static const String scannedMedicines = '/scanned-medicines';
+
+  static const String medicinesAdd = '/medicines/add';
+  static const String medicinesAddStep1 = '/medicines/add/1';
+  static const String medicinesAddStep2 = '/medicines/add/2';
+  static const String medicinesAddStep3 = '/medicines/add/3';
+  static const String medicinesAddStep4 = '/medicines/add/4';
+  static const String medicinesAddStep5 = '/medicines/add/5';
+  static const String medicineDetails = '/medicines/details/:id';
+
+  //profil
+
+  static const String medicineAlarm = '/medicines/alarm';
+  // 📊 Reports
+  static const String reportsHistory = '/reports';
+  static const String reportSetup = '/reports/setup';
+  static const String reportDetails = '/reports/details';
 }

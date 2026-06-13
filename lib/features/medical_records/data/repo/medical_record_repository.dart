@@ -91,4 +91,53 @@ class MedicalRecordRepository {
       throw ErrorHandler.handle(e);
     }
   }
+
+  Future<MedicalRecordModel> updateRecord({
+    required String id,
+    required String diseaseName,
+    String? notes,
+    required String recordDate,
+    List<String> removeAttachmentIds = const [],
+  }) async {
+    try {
+      final response = await _service.updateRecord(
+        id: id,
+        diseaseName: diseaseName,
+        notes: notes,
+        recordDate: recordDate,
+        removeAttachmentIds: removeAttachmentIds,
+      );
+
+      final data = response.data['data'];
+      if (data == null || data is! Map<String, dynamic>) {
+        throw AppException.server(msg: 'No record data returned from server');
+      }
+
+      final updatedRecord = MedicalRecordModel.fromJson(data);
+
+      if (_cachedRecords != null) {
+        _cachedRecords = _cachedRecords!
+            .map((record) => record.id == id ? updatedRecord : record)
+            .toList();
+      }
+
+      return updatedRecord;
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
+
+  Future<void> deleteRecord({required String id}) async {
+    try {
+      await _service.deleteRecord(id: id);
+
+      if (_cachedRecords != null) {
+        _cachedRecords = _cachedRecords!
+            .where((record) => record.id != id)
+            .toList();
+      }
+    } catch (e) {
+      throw ErrorHandler.handle(e);
+    }
+  }
 }

@@ -1,7 +1,6 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/page_transitions.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
-import 'package:cureta/features/Meds/view/medicines_main_view.dart';
 import 'package:cureta/features/authentcation/veiw/forget_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/reset_password_view.dart';
 import 'package:cureta/features/authentcation/veiw/signup_view.dart';
@@ -10,8 +9,12 @@ import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
 import 'package:cureta/features/chat_bot/veiw/Chat_screen.dart';
 import 'package:cureta/features/home/view/home_view.dart';
 import 'package:cureta/features/home/view/main_navigation_views.dart';
+import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
 import 'package:cureta/features/medical_records/veiw/add_medical_record_seconed_step.dart';
+import 'package:cureta/features/ocr/view/scan_prescription_screen.dart';
+import 'package:cureta/features/ocr/view/scanned_medicines_screen.dart';
+import 'package:cureta/features/ocr/data/models/ocr_medicine_match.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
@@ -19,16 +22,28 @@ import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart'
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_third_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_flow_wrapper.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_first_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_second_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_third_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_forth_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_fifth_step_veiw.dart';
+import 'package:cureta/features/medicines/veiw/add_medicine_flow_wrapper.dart';
+import 'package:cureta/features/medicines/veiw/medicine_details_veiw.dart';
+
 import 'package:cureta/features/medical_records/veiw/record_details_screen.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
-<<<<<<< HEAD
+import 'package:cureta/features/settings/view/settings_view.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
+import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
+import 'package:cureta/features/medicines/veiw_model/medicine_details_cubit.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
-=======
-import 'package:cureta/features/profile/view/select_profile_screen.dart';
->>>>>>> temp
 import 'package:cureta/features/startup/view/onboarding_view.dart';
 import 'package:cureta/features/startup/view/splash_view.dart';
+import 'package:cureta/features/reports/veiw/Report_history.dart';
+import 'package:cureta/features/reports/veiw/Report_setup.dart';
+import 'package:cureta/features/reports/veiw/Report_datails.dart';
+import 'package:cureta/features/reports/data/models/health_report_model.dart';
 import 'package:go_router/go_router.dart';
 
 class RoutesGeneration {
@@ -36,29 +51,38 @@ class RoutesGeneration {
     initialLocation: AppRoutes.splash,
     /*  redirect: (context, state) async {
   final authRepo = getIt.get<AuthRepository>();
-  final profileRepo = getIt.get<ProfileRepository>();
   final bool loggedIn = await authRepo.isLoggedIn();
+  final String currentLocation = state.matchedLocation;
 
- 
-  final bool hasProfiles = await profileRepo.hasProfiles(); 
-
-  final bool isAuthRoute = state.matchedLocation == AppRoutes.login || 
-                           state.matchedLocation == AppRoutes.signup ||
-                           state.matchedLocation == AppRoutes.splash ||
-                           state.matchedLocation == AppRoutes.onboarding;
-
-  if (loggedIn && !hasProfiles) {
-     if (state.matchedLocation != AppRoutes.addProfile) {
-       return AppRoutes.addProfile;
-     }
+  // 1. لو مش عامل Login
+  if (!loggedIn) {
+    // لو هو في صفحة الـ Auth (Login/Signup/Splash/Onboarding) سيبيه مكانه
+    final bool isAuthRoute = currentLocation == AppRoutes.login ||
+                             currentLocation == AppRoutes.signup ||
+                             currentLocation == AppRoutes.splash ||
+                             currentLocation == AppRoutes.onboarding;
+    return isAuthRoute ? null : AppRoutes.login;
   }
 
-  if (loggedIn && hasProfiles && isAuthRoute && state.matchedLocation != AppRoutes.splash) {
+  // 2. لو عامل Login، نتحقق من البروفايل
+  final profileRepo = getIt.get<ProfileRepository>();
+  final bool hasProfiles = await profileRepo.hasProfiles();
+
+  // لو معندوش بروفايل وهو لسه مش في صفحة "إضافة بروفايل" -> واديه يضيف بروفايل
+  if (!hasProfiles && currentLocation != AppRoutes.addProfile) {
+    return AppRoutes.addProfile;
+  }
+
+  // لو عنده بروفايل وبيحاول يدخل صفحات الـ Auth (زي اللوجن) -> واديه المين
+  final bool isAuthRoute = currentLocation == AppRoutes.login ||
+                           currentLocation == AppRoutes.signup;
+  if (hasProfiles && isAuthRoute) {
     return AppRoutes.mainNavigation;
   }
 
-  return null; 
+  return null; // كمل في طريقك عادي
 },*/
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         path: AppRoutes.splash,
@@ -70,6 +94,25 @@ class RoutesGeneration {
         path: AppRoutes.onboarding,
         name: AppRoutes.onboarding,
         builder: (context, state) => const OnboardingView(),
+      ),
+      // OCR Scan Prescription
+      GoRoute(
+        path: AppRoutes.scanPrescription,
+        name: AppRoutes.scanPrescription,
+        builder: (context, state) => const ScanPrescriptionScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.scannedMedicines,
+        name: AppRoutes.scannedMedicines,
+        builder: (context, state) {
+          final extra = state.extra;
+          final meds =
+              (extra as List<dynamic>?)
+                  ?.whereType<OcrMedicineMatch>()
+                  .toList() ??
+              [];
+          return ScannedMedicinesScreen(medicines: meds);
+        },
       ),
       // Home Page
       GoRoute(
@@ -84,23 +127,34 @@ class RoutesGeneration {
         pageBuilder: (context, state) =>
             PageTransitions.scale(child: const LoginView(), state: state),
       ),
-      GoRoute(
-        path: AppRoutes.forgetPassword,
-        name: AppRoutes.forgetPassword,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: ForgetPasswordView(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.verifyEmail,
-        name: AppRoutes.verifyEmail,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: VerifyEmailView(), state: state),
-      ),
-      GoRoute(
-        path: AppRoutes.resetPassword,
-        name: AppRoutes.resetPassword,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: ResetPasswordView(), state: state),
+      // Forgot Password Flow - Shared Cubit via ShellRoute
+      ShellRoute(
+        builder: (context, state, child) => BlocProvider(
+          create: (context) => getIt<ForgotPasswordViewModel>(),
+          child: child,
+        ),
+        routes: [
+          GoRoute(
+            path: AppRoutes.forgetPassword,
+            name: AppRoutes.forgetPassword,
+            pageBuilder: (context, state) =>
+                PageTransitions.fade(child: ForgetPasswordView(), state: state),
+          ),
+          GoRoute(
+            path: AppRoutes.verifyEmail,
+            name: AppRoutes.verifyEmail,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: VerifyEmailView(email: state.extra as String? ?? ''),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.resetPassword,
+            name: AppRoutes.resetPassword,
+            pageBuilder: (context, state) =>
+                PageTransitions.fade(child: ResetPasswordView(), state: state),
+          ),
+        ],
       ),
       // Medical Records Flow - Shared Cubits via ShellRoute
       ShellRoute(
@@ -148,61 +202,46 @@ class RoutesGeneration {
           ),
         ],
       ),
+      // Home Page
       GoRoute(
         path: AppRoutes.home,
         name: AppRoutes.home,
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const HomeView(), state: state),
+        pageBuilder: (context, state) => PageTransitions.fade(
+          child: HomeView(onMenuPressed: () {}),
+          state: state,
+        ),
       ),
       GoRoute(
         path: AppRoutes.addProfile,
         name: AppRoutes.addProfile,
-<<<<<<< HEAD
         redirect: (context, state) async {
-          final hasProfiles = await getIt
-              .get<ProfileRepository>()
-              .hasProfiles();
-          if (hasProfiles) {
-            return AppRoutes.mainNavigation;
+          final extra = state.extra;
+          final bool isFamily = extra is bool ? extra : false;
+          if (extra is! ProfileModel) {
+            final hasProfiles = await getIt
+                .get<ProfileRepository>()
+                .hasProfiles();
+            if (hasProfiles && !isFamily) {
+              return AppRoutes.mainNavigation;
+            }
           }
           return null;
         },
         pageBuilder: (context, state) {
-          final bool isFamily = state.extra as bool? ?? false;
+          final extra = state.extra;
+          final bool isFamily = extra is bool ? extra : false;
+          final ProfileModel? editingProfile = extra is ProfileModel
+              ? extra
+              : null;
+
           return PageTransitions.fade(
-            child: AddProfileMain(isFamilyMember: isFamily),
+            child: AddProfileMain(
+              isFamilyMember: editingProfile?.isPrimary == false || isFamily,
+              editingProfile: editingProfile,
+            ),
             state: state,
           );
         },
-=======
-        pageBuilder: (context, state) =>
-            PageTransitions.fade(child: const AddProfileMain(), state: state),
-      ),
-     
-      GoRoute(
-        path: AppRoutes.medicalRecords_step_three,
-        name: AppRoutes.medicalRecords_step_three,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordThirdStep(),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.addRecordStepFour,
-        name: AppRoutes.addRecordStepFour,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordForthStep(),
-          state: state,
-        ),
-      ),
-      GoRoute(
-        path: AppRoutes.addRecordStepFive,
-        name: AppRoutes.addRecordStepFive,
-        pageBuilder: (context, state) => PageTransitions.fade(
-          child: const AddRecordStepFifth(),
-          state: state,
-        ),
->>>>>>> temp
       ),
       GoRoute(
         path: AppRoutes.userRecords,
@@ -215,10 +254,70 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.medicines,
         name: AppRoutes.medicines,
-        pageBuilder: (context, state) => PageTransitions.scale(
-          child: const MedicinesMainView(),
-          state: state,
-        ),
+        redirect: (_, __) => '${AppRoutes.mainNavigation}?tab=1',
+      ),
+      GoRoute(
+        path: AppRoutes.medicineDetails,
+        name: AppRoutes.medicineDetails,
+        pageBuilder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return PageTransitions.scale(
+            child: BlocProvider<MedicineDetailsCubit>(
+              create: (context) =>
+                  getIt<MedicineDetailsCubit>(param1: id)..loadDetails(),
+              child: MedicineDetailsVeiw(onEditTap: () {}),
+            ),
+            state: state,
+          );
+        },
+      ),
+      // Medicines Add Flow — ShellRoute provides a single AddMedicineCubit
+      // instance shared across all 5 steps so form state persists on back nav.
+      ShellRoute(
+        builder: (context, state, child) =>
+            AddMedicineFlowWrapper(child: child),
+        routes: [
+          GoRoute(
+            path: AppRoutes.medicinesAddStep1,
+            name: AppRoutes.medicinesAddStep1,
+            pageBuilder: (context, state) => PageTransitions.fade(
+              child: const AddMedicineFirstStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep2,
+            name: AppRoutes.medicinesAddStep2,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineSecondStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep3,
+            name: AppRoutes.medicinesAddStep3,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineThirdStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep4,
+            name: AppRoutes.medicinesAddStep4,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineFourthStepVeiw(),
+              state: state,
+            ),
+          ),
+          GoRoute(
+            path: AppRoutes.medicinesAddStep5,
+            name: AppRoutes.medicinesAddStep5,
+            pageBuilder: (context, state) => PageTransitions.slideRight(
+              child: const AddMedicineFifthStepVeiw(),
+              state: state,
+            ),
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.mainNavigation,
@@ -226,6 +325,10 @@ class RoutesGeneration {
         pageBuilder: (context, state) {
           final extra = state.extra;
           final ProfileState profileModel;
+          final tabFromQuery = int.tryParse(
+            state.uri.queryParameters['tab'] ?? '',
+          );
+          int initialTabIndex = tabFromQuery ?? 0;
 
           if (extra is ProfileState) {
             profileModel = extra;
@@ -238,12 +341,37 @@ class RoutesGeneration {
               bloodType: extra.bloodType,
               isAddingFamilyMember: !extra.isPrimary,
             );
+          } else if (extra is Map) {
+            final profileExtra = extra['profile'];
+            final tabExtra = extra['tabIndex'];
+
+            if (tabExtra is int) {
+              initialTabIndex = tabExtra;
+            }
+
+            if (profileExtra is ProfileState) {
+              profileModel = profileExtra;
+            } else if (profileExtra is ProfileModel) {
+              profileModel = ProfileState(
+                name: profileExtra.fullName,
+                gender: profileExtra.gender,
+                relationship: profileExtra.relationship,
+                age: profileExtra.age,
+                bloodType: profileExtra.bloodType,
+                isAddingFamilyMember: !profileExtra.isPrimary,
+              );
+            } else {
+              profileModel = ProfileState(isAddingFamilyMember: false);
+            }
           } else {
             profileModel = ProfileState(isAddingFamilyMember: false);
           }
 
           return PageTransitions.scale(
-            child: MainNavigationScreen(profile: profileModel),
+            child: MainNavigationScreen(
+              profile: profileModel,
+              initialTabIndex: initialTabIndex,
+            ),
             state: state,
           );
         },
@@ -253,36 +381,67 @@ class RoutesGeneration {
         name: AppRoutes.recordDetails,
         pageBuilder: (context, state) {
           final data = state.extra as Map<String, dynamic>? ?? {};
-          final rawFiles = data['files'];
-          final files = rawFiles is List
-              ? rawFiles.whereType<RecordFile>().toList()
-              : <RecordFile>[];
+          final record = data['record'] as MedicalRecordModel?;
+          final recordsCubit = data['recordsCubit'] as MedicalRecordsCubit?;
+          final page = RecordDetailsView(
+            record: record,
+            conditionName: data['conditionName'] ?? '',
+            isOngoing: data['isOngoing'] ?? false,
+            diagnosedDate: data['diagnosedDate'] ?? '',
+            notes: data['notes'] ?? '',
+          );
+
           return PageTransitions.scale(
-            child: RecordDetailsView(
-              conditionName: data['conditionName'] ?? '',
-              isOngoing: data['isOngoing'] ?? false,
-              diagnosedDate: data['diagnosedDate'] ?? '',
-              notes: data['notes'] ?? '',
-              files: files,
-            ),
+            child: recordsCubit != null
+                ? BlocProvider<MedicalRecordsCubit>.value(
+                    value: recordsCubit,
+                    child: page,
+                  )
+                : page,
             state: state,
           );
         },
       ),
-<<<<<<< HEAD
       GoRoute(
         path: AppRoutes.chat,
         name: AppRoutes.chat,
-        pageBuilder: (context, state) => PageTransitions.fade (
-          child: const ChatScreen(),
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const ChatScreen(), state: state),
+      ),
+      // 📊 Reports
+      GoRoute(
+        path: AppRoutes.reportsHistory,
+        name: AppRoutes.reportsHistory,
+        pageBuilder: (context, state) => PageTransitions.scale(
+          child: const ReportHistoryView(),
           state: state,
         ),
       ),
-=======
-     
-
->>>>>>> temp
+      GoRoute(
+        path: AppRoutes.reportSetup,
+        name: AppRoutes.reportSetup,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: const ReportSetupView(),
+          state: state,
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.reportDetails,
+        name: AppRoutes.reportDetails,
+        pageBuilder: (context, state) {
+          final report = state.extra as HealthReportModel;
+          return PageTransitions.slideRight(
+            child: ReportDetailsView(report: report),
+            state: state,
+          );
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.settings,
+        name: AppRoutes.settings,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const SettingsScreen(), state: state),
+      ),
     ],
   );
-
 }

@@ -1,11 +1,14 @@
+import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
-import 'package:cureta/features/profile/data/models/profile_model.dart';
-import 'package:cureta/features/profile/data/models/relationship_model.dart';
-import 'package:cureta/features/profile/widgets/add_member_card.dart';
-import 'package:cureta/features/profile/widgets/icon_text_container.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/select_profile_screen.dart';
+import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
+import 'package:cureta/features/profile/view_model/profile_list_state.dart';
+import 'package:cureta/features/profile/widgets/selected_profile_card.dart';
+import 'package:cureta/features/profile/widgets/switch_profile_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class AllProfiesView extends StatefulWidget {
@@ -16,114 +19,26 @@ class AllProfiesView extends StatefulWidget {
 }
 
 class _AllProfiesViewState extends State<AllProfiesView> {
-  /// ==================== Profile Data ====================
-  late List<ProfileModel> _profiles;
-  late String _selectedProfileId;
+  Future<void> _showProfileSelectionDialog(ProfilesSuccess state) async {
+    if (state.profiles.isEmpty) {
+      return;
+    }
 
-  @override
-  void initState() {
-    super.initState();
-    _initializeProfiles();
-  }
-
-  /// Initialize profiles data
-  void _initializeProfiles() {
-    _profiles = [
-      ProfileModel(
-        id: '1',
-        primaryOwnerId: 1,
-        parentProfileId: null,
-        isPrimary: true,
-        fullName: 'John Doe',
-        relationship: 'Primary Account (You)',
-        age: 30,
-        gender: 'Male',
-        bloodType: 'O+',
-        imageUrl: '',
-        createdAt: '2023-01-01T00:00:00Z',
-        chronicDiseases: [],
-        allergies: [],      
-      ),
-      ProfileModel(
-        id: '2',
-        primaryOwnerId: 2,
-        parentProfileId: '1',
-        isPrimary: false,
-        fullName: 'Jane Doe',
-        relationship: 'Spouse',
-        age: 28,
-        gender: 'Female',
-        bloodType: 'A+',
-        imageUrl: '',
-        createdAt: '2023-01-01T00:00:00Z',
-        chronicDiseases: [],
-        allergies: [],
-      ),
-      ProfileModel(
-        id: '3',
-        primaryOwnerId: 3,
-        parentProfileId: '1',
-        isPrimary: false,
-        fullName: 'Billy Doe',
-        relationship: 'Son',
-        age: 5,
-        gender: 'Male',
-        bloodType: 'B-',
-        imageUrl: '',
-        createdAt: '2023-01-01T00:00:00Z',
-        chronicDiseases: [],
-        allergies: [],
-      ),
-      ProfileModel(
-        id: '4',
-        primaryOwnerId: 4,
-        parentProfileId: '1',
-        isPrimary: false,
-        fullName: 'Emma Doe',
-        relationship: 'Daughter',
-        age: 3,
-        gender: 'Female',
-        bloodType: 'AB+',
-        imageUrl: '',
-        createdAt: '2023-01-01T00:00:00Z',
-        chronicDiseases: [],
-        allergies: [],
-      ),
-    ];
-    _selectedProfileId = _profiles.first.id;
-  }
-
-  /// Get currently selected profile
-  ProfileModel get _currentProfile =>
-      _profiles.firstWhere((p) => p.id == _selectedProfileId);
-
-  /// Handle profile selection from dialog
-  void _onProfileSelected(ProfileModel profile) {
-    setState(() {
-      _selectedProfileId = profile.id;
-    });
-    // Close dialog after selection
-    Navigator.of(context).pop();
-  }
-
-  /// Show profile selection dialog
-  Future<void> _showProfileSelectionDialog() async {
     final selected = await SelectProfileScreen.showAsDialog(
       context,
-      profiles: _profiles,
-      selectedProfileId: _selectedProfileId,
+      profiles: state.profiles,
+      selectedProfileId: state.selectedProfileId ?? state.profiles.first.id,
       onAddProfilePressed: _onAddProfilePressed,
     );
 
-    if (selected != null) {
-      _onProfileSelected(selected);
+    if (selected != null && mounted) {
+      context.read<ProfilesListCubit>().selectProfile(selected.id);
     }
   }
 
-  /// Handle add profile button tap
   void _onAddProfilePressed() {
-    Navigator.of(context).pop(); // Close dialog first
-    GoRouter.of(context).go(AppRoutes.addProfile);
+    Navigator.of(context).pop();
+    GoRouter.of(context).go(AppRoutes.addProfile, extra: true);
   }
 
   @override
@@ -131,151 +46,119 @@ class _AllProfiesViewState extends State<AllProfiesView> {
     final spacing = context.spacing;
     final colors = context.colors;
     final typography = context.typography;
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: colors.background,
-        elevation: 0,
-        title: Text(
-          'Family Profiles',
-          style: typography.title.copyWith(color: colors.textPrimary),
-        ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(spacing.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// ==================== Header ====================
-              Text(
-                'Current Profile',
-                style: typography.label.copyWith(
-                  color: colors.textSecondary,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              SizedBox(height: spacing.md),
-
-              /// ==================== Selected Profile Card ====================
-              _buildSelectedProfileCard(context),
-              SizedBox(height: spacing.xl),
-
-              /// ==================== Switch Profile Button ====================
-              _buildSwitchProfileButton(context),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// Build selected profile card
-  Widget _buildSelectedProfileCard(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final typography = context.typography;
     final radius = context.radius;
 
-    return GestureDetector(
-      onTap: _showProfileSelectionDialog,
-      child: Container(
-        padding: EdgeInsets.all(spacing.lg),
-        decoration: BoxDecoration(
-          color: colors.accentCyan,
-          borderRadius: BorderRadius.circular(radius.md),
-          border: Border.all(color: colors.primary, width: 2),
+    return BlocProvider(
+      create: (context) =>
+          ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: colors.background,
+          elevation: 0,
+          title: Text(
+            'Family Profiles',
+            style: typography.title.copyWith(color: colors.textPrimary),
+          ),
         ),
-        child: Row(
-          children: [
-            /// Avatar
-            Container(
-              width: spacing.xxl + spacing.lg,
-              height: spacing.xxl + spacing.lg,
-              decoration: BoxDecoration(
-                color: colors.primary,
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  _getInitials(_currentProfile.fullName),
-                  style: typography.title.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: spacing.lg),
+        body: SafeArea(
+          child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+            builder: (context, state) {
+              if (state is ProfilesLoading || state is ProfilesInitial) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            /// Profile info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _currentProfile.fullName ,
-                    style: typography.title.copyWith(color: colors.textPrimary),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  SizedBox(height: spacing.xs),
-                  Text(
-                    _currentProfile.relationship,
-                    style: typography.body.copyWith(
-                      color: colors.textSecondary,
-                      fontSize: 12,
+              if (state is ProfilesError) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(spacing.lg),
+                    child: Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: typography.body.copyWith(
+                        color: colors.textSecondary,
+                      ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                );
+              }
 
-            /// Change indicator
-            Icon(
-              Icons.arrow_forward_ios,
-              color: colors.primary,
-              size: spacing.lg,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+              if (state is ProfilesSuccess) {
+                if (state.profiles.isEmpty) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(spacing.lg),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'No profiles found',
+                            style: typography.title.copyWith(
+                              color: colors.textPrimary,
+                            ),
+                          ),
+                          SizedBox(height: spacing.md),
+                          ElevatedButton(
+                            onPressed: _onAddProfilePressed,
+                            child: const Text('Add Profile'),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }
 
-  /// Build switch profile button
-  Widget _buildSwitchProfileButton(BuildContext context) {
-    final colors = context.colors;
-    final spacing = context.spacing;
-    final radius = context.radius;
+                final selectedId =
+                    state.selectedProfileId ?? state.profiles.first.id;
+                final currentProfile = state.profiles.firstWhere(
+                  (p) => p.id == selectedId,
+                  orElse: () => state.profiles.first,
+                );
 
-    return SizedBox(
-      width: double.infinity,
-      child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: spacing.xxl + spacing.lg),
-        child: ElevatedButton.icon(
-          onPressed: _showProfileSelectionDialog,
-          icon: const Icon(Icons.swap_horiz),
-          label: Text('Switch Profile'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: colors.primary,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(radius.md),
-            ),
-            elevation: 0,
-            padding: EdgeInsets.symmetric(vertical: spacing.md),
+                return Padding(
+                  padding: EdgeInsets.all(spacing.lg),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Current Profile',
+                        style: typography.label.copyWith(
+                          color: colors.textSecondary,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      SizedBox(height: spacing.md),
+                      SelectedProfileCard(
+                        profile: currentProfile,
+                        onTap: () => _showProfileSelectionDialog(state),
+                        accentColor: colors.accentCyan,
+                        borderColor: colors.primary,
+                        textColor: colors.textPrimary,
+                        secondaryTextColor: colors.textSecondary,
+                        primaryColor: colors.primary,
+                        borderRadius: radius.md,
+                        avatarSize: spacing.xxl + spacing.lg,
+                        titleStyle: typography.title,
+                        bodyStyle: typography.body,
+                      ),
+                      SizedBox(height: spacing.xl),
+                      SwitchProfileButton(
+                        onPressed: () => _showProfileSelectionDialog(state),
+                        backgroundColor: colors.primary,
+                        foregroundColor: Colors.white,
+                        borderRadius: radius.md,
+                        minHeight: spacing.xxl + spacing.lg,
+                        paddingVertical: spacing.md,
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return const SizedBox();
+            },
           ),
         ),
       ),
     );
-  }
-
-  /// Get initials from name for avatar
-  String _getInitials(String name) {
-    final parts = name.split(' ');
-    if (parts.isEmpty) return '?';
-    final initials = parts.take(2).map((e) => e.isNotEmpty ? e[0] : '').join();
-    return initials.toUpperCase();
   }
 }

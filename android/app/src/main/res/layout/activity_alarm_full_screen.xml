@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:background="#133A3E"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp"
+    android:paddingBottom="24dp"
+    android:paddingTop="16dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="32dp">
+
+        <!-- Default icon (shown when no image) -->
+        <TextView
+            android:id="@+id/tv_alarm_icon"
+            android:text="💊"
+            android:textSize="140sp"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/iv_medicine_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <TextView
+        android:text="حان وقت دوائك"
+        android:textSize="18sp"
+        android:textColor="#B0BEC5"
+        android:fontFamily="sans-serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"/>
+
+    <!-- Medicine name -->
+    <TextView
+        android:id="@+id/tv_medicine_name"
+        android:text=""
+        android:textSize="32sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Dose amount -->
+    <TextView
+        android:id="@+id/tv_dose_amount"
+        android:text=""
+        android:textSize="22sp"
+        android:textColor="#00A1A9"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:fontFamily="sans-serif"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Taken button -->
+    <Button
+        android:id="@+id/btn_taken"
+        android:text="تم أخذه"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/bg_button_primary"
+        android:stateListAnimator="@null"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Missed button -->
+    <Button
+        android:id="@+id/btn_missed"
+        android:text="تخطي الدواء"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#CF6679"
+        android:background="@drawable/bg_button_outlined_error"
+        android:stateListAnimator="@null"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"/>
+
+</LinearLayout>

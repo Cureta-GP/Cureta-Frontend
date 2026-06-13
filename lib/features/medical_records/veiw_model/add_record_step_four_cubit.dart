@@ -82,4 +82,8 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
 
     emit(state.withCategoryFiles(category, updatedFiles));
   }
+
+  void reset() {
+    emit(const AddRecordStepFourState());
+  }
 }

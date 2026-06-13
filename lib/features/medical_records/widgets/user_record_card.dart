@@ -1,18 +1,17 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
+import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
 import 'package:cureta/features/medical_records/widgets/user_record_status_pill.dart';
 import 'package:flutter/material.dart';
-import 'package:cureta/features/medical_records/widgets/record_details_documents_section.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 class UserRecordCard extends StatelessWidget {
   const UserRecordCard({super.key, required this.record, this.onTap});
-
   final MedicalRecordModel record;
   final VoidCallback? onTap;
-
   String _formatDate(String rawDate) {
     try {
       final date = DateTime.parse(rawDate);
@@ -33,37 +32,16 @@ class UserRecordCard extends StatelessWidget {
     final attachmentCount = record.attachments.length;
     final isOngoing = attachmentCount > 0;
     final meta = '$dateStr · $attachmentCount files';
-    // Convert AttachmentModel to RecordFile for details screen
-    final files = record.attachments.map((attachment) {
-      final isImage =
-          attachment.attachmentType.toLowerCase().contains('image') ||
-          attachment.fileName.toLowerCase().endsWith('.jpg') ||
-          attachment.fileName.toLowerCase().endsWith('.jpeg') ||
-          attachment.fileName.toLowerCase().endsWith('.png') ||
-          attachment.fileName.toLowerCase().endsWith('.gif');
-      final isPdf = attachment.fileName.toLowerCase().endsWith('.pdf');
-      return RecordFile(
-        name: attachment.fileName,
-        meta: attachment.attachmentType,
-        icon: isPdf ? Icons.picture_as_pdf : Icons.image,
-        iconBgColor: isPdf
-            ? colors.error.withValues(alpha: 0.1)
-            : colors.accentBlue,
-        iconColor: isPdf ? colors.error : const Color(0xFF3B82F6),
-        fileType: isPdf ? 'pdf' : (isImage ? 'image' : 'file'),
-        fileUrl: attachment.fileUrl,
-      );
-    }).toList();
-
     return GestureDetector(
       onTap: () => GoRouter.of(context).pushNamed(
         AppRoutes.recordDetails,
         extra: {
+          'record': record,
+          'recordsCubit': context.read<MedicalRecordsCubit>(),
           'conditionName': record.diseaseName,
           'isOngoing': isOngoing,
           'diagnosedDate': dateStr,
           'notes': record.notes ?? '',
-          'files': files,
         },
       ),
       child: Container(

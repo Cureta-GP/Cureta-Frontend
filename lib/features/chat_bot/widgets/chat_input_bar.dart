@@ -9,6 +9,7 @@ class ChatInputBar extends StatefulWidget {
     this.onSend,
     this.onAttach,
     this.onMic,
+    this.compactMode = false,
     this.isLoading = false,
   });
 
@@ -16,6 +17,7 @@ class ChatInputBar extends StatefulWidget {
   final ValueChanged<String>? onSend;
   final VoidCallback? onAttach;
   final VoidCallback? onMic;
+  final bool compactMode;
   final bool isLoading;
 
   @override
@@ -51,14 +53,19 @@ class _ChatInputBarState extends State<ChatInputBar> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.viewInsetsOf(context).bottom;
+    final isLandscape =
+        MediaQuery.orientationOf(context) == Orientation.landscape;
+    final keyboardOpen = bottomInset > 0;
+    final compact = widget.compactMode || (keyboardOpen && isLandscape);
+
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 5, bottomInset > 0 ? 10 : 14),
-      //color: const Color.fromARGB(0, 237, 233, 233),
+      padding: EdgeInsets.fromLTRB(8, 0, 8, keyboardOpen ? 4 : 14),
       child: ChatTextField(
         controller: _controller,
         onSend: _handleSend,
         onAttach: widget.onAttach,
         onMic: widget.onMic,
+        compactMode: compact,
         isLoading: widget.isLoading,
       ),
     );

@@ -7,9 +7,14 @@ import 'package:cureta/features/authentcation/widgets/header.dart';
 import 'package:cureta/features/authentcation/widgets/otp_box.dart';
 import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../veiw_model/forgot_password_view_model.dart';
+import '../veiw_model/forgot_password_state.dart';
 
 class VerifyEmailView extends StatefulWidget {
-  const VerifyEmailView({super.key});
+  final String email;
+  
+  const VerifyEmailView({super.key, required this.email});
 
   @override
   State<VerifyEmailView> createState() => _VerifyEmailViewState();
@@ -36,17 +41,16 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     super.dispose();
   }
 
-  // ignore: unused_element
   void _verifyCode() {
     if (otp.length < 6) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(AppLocalizations.otpError)));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.otpError)),
+      );
       return;
     }
 
-    // TODO: Call verify API here
-    debugPrint("OTP Code: $otp");
+    // Call verify OTP via repository
+    context.read<ForgotPasswordViewModel>().verifyOTP(otp);
   }
 
   @override
@@ -60,46 +64,77 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
         child: Padding(
           padding: EdgeInsets.all(spacing.xl),
           child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ArrowBack(),
-                Header(
-                  title: AppLocalizations.verifyEmailTitle,
-                  subtitle: AppLocalizations.verifyEmailSubtitle,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: Text(
-                    AppLocalizations.verifyEmailSent,
-                    textAlign: TextAlign.center,
-                    style: typography.body.copyWith(color: colors.primary),
+            child: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
+              listener: (context, state) {
+                if (state is ForgotPasswordEmailSentSuccess) { // Changed to listen for successful OTP entry
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('OTP verified successfully')),
+                  );
+                  Nav.push(context, AppRoutes.resetPassword);
+                } else if (state is ForgotPasswordError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(state.message)),
+                  );
+                }
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ArrowBack(),
+                  Header(
+                    title: AppLocalizations.verifyEmailTitle,
+                    subtitle: AppLocalizations.verifyEmailSubtitle,
                   ),
-                ),
-                SizedBox(height: spacing.xxl),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(6, (index) {
-                    return OtpBox(
-                      controller: _controllers[index],
-                      focusNode: _focusNodes[index],
-                      nextFocus: index < 5 ? _focusNodes[index + 1] : null,
-                      previousFocus: index > 0 ? _focusNodes[index - 1] : null,
-                    );
-                  }),
-                ),
-
-                SizedBox(height: spacing.xxl + spacing.sm),
-
-                CustomButton(
-                  text: AppLocalizations.verifyButton,
-                  onPressed: () async {
-                    if (otp.length < 6) return;
-                    await Nav.push(context, AppRoutes.resetPassword);
-                  },
-                ),
-              ],
+                  SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.verifyEmailSent,
+                          textAlign: TextAlign.center,
+                          style: typography.body.copyWith(color: colors.primary),
+                        ),
+                        SizedBox(height: spacing.sm),
+                        Text(
+                          widget.email,
+                          textAlign: TextAlign.center,
+                          style: typography.body.copyWith(
+                            color: colors.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: spacing.xxl),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List.generate(6, (index) {
+                      return OtpBox(
+                        controller: _controllers[index],
+                        focusNode: _focusNodes[index],
+                        nextFocus: index < 5 ? _focusNodes[index + 1] : null,
+                        previousFocus: index > 0 ? _focusNodes[index - 1] : null,
+                      );
+                    }),
+                  ),
+                  SizedBox(height: spacing.xxl + spacing.sm),
+                  BlocBuilder<ForgotPasswordViewModel, ForgotPasswordState>(
+                    builder: (context, state) {
+                      final isLoading = state is ForgotPasswordLoading;
+                      return CustomButton(
+                        text: AppLocalizations.verifyButton,
+                        onPressed: isLoading
+                            ? null
+                            : () {
+                                if (otp.length < 6) return;
+                                _verifyCode();
+                              },
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

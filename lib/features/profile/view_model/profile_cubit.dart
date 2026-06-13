@@ -1,3 +1,5 @@
+import 'package:cureta/features/profile/data/models/allergy_option.dart';
+import 'package:cureta/features/profile/data/models/chronic_disease_option.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +9,13 @@ import 'package:cureta/features/profile/data/models/profile_model.dart';
 class ProfileCubit extends Cubit<ProfileState> {
   final ProfileRepository repository;
 
-  ProfileCubit({required bool isFamilyMember, required this.repository})
-      : super(ProfileState(isAddingFamilyMember: isFamilyMember));
+  ProfileCubit({
+    required this.repository,
+    ProfileState? initialState,
+    bool isFamilyMember = false,
+  }) : super(
+         initialState ?? ProfileState(isAddingFamilyMember: isFamilyMember),
+       );
 
   // 🔹 تحديث الحقول
   void updateName(String val) => emit(state.copyWith(name: val));
@@ -17,6 +24,11 @@ class ProfileCubit extends Cubit<ProfileState> {
   void updateAge(int val) => emit(state.copyWith(age: val));
   void updateBloodType(String val) => emit(state.copyWith(bloodType: val));
   void updatePage(int page) => emit(state.copyWith(currentPage: page));
+
+  void updateOtherChronicText(String val) =>
+      emit(state.copyWith(otherChronicText: val));
+  void updateOtherAllergyText(String val) =>
+      emit(state.copyWith(otherAllergyText: val));
 
   void toggleChronic(String item) {
     final newSet = Set<String>.from(state.chronicConditions);
@@ -51,8 +63,9 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   void previousStep(PageController controller) {
     int prev = state.currentPage - 1;
-    if (!state.isAddingFamilyMember && state.currentPage == 3)
+    if (!state.isAddingFamilyMember && state.currentPage == 3) {
       prev = 1; // تخطي العلاقة عند الرجوع
+    }
     if (prev >= 0) {
       controller.animateToPage(
         prev,
@@ -65,6 +78,12 @@ class ProfileCubit extends Cubit<ProfileState> {
 
   // 🔹 إنشاء البروفايل
   Future<ProfileModel> createProfile({String? imagePath}) async {
+    final chronicList = _mapChronicConditions(
+      state.chronicConditions,
+      state.otherChronicText,
+    );
+    final allergyList = _mapAllergies(state.allergies, state.otherAllergyText);
+
     if (state.isAddingFamilyMember) {
       return await repository.createFamilyProfile(
         fullName: state.name,
@@ -72,10 +91,8 @@ class ProfileCubit extends Cubit<ProfileState> {
         gender: state.gender,
         relationship: state.relationship,
         bloodType: state.bloodType,
-        chronicDiseases: state.chronicConditions
-            .map((e) => {'name': e})
-            .toList(),
-        allergies: state.allergies.map((e) => {'name': e}).toList(),
+        chronicDiseases: chronicList,
+        allergies: allergyList,
         imagePath: imagePath,
       );
     } else {
@@ -84,12 +101,81 @@ class ProfileCubit extends Cubit<ProfileState> {
         age: state.age,
         gender: state.gender,
         bloodType: state.bloodType,
-        chronicDiseases: state.chronicConditions
-            .map((e) => {'name': e})
-            .toList(),
-        allergies: state.allergies.map((e) => {'name': e}).toList(),
+        chronicDiseases: chronicList,
+        allergies: allergyList,
         imagePath: imagePath,
       );
     }
+  }
+
+  Future<ProfileModel> updateProfile(
+    String profileId, {
+    String? imagePath,
+    bool removeImage = false,
+  }) async {
+    final chronicList = _mapChronicConditions(
+      state.chronicConditions,
+      state.otherChronicText,
+    );
+    final allergyList = _mapAllergies(state.allergies, state.otherAllergyText);
+
+    return await repository.updateProfile(
+      profileId: profileId,
+      fullName: state.name,
+      age: state.age,
+      gender: state.gender,
+      bloodType: state.bloodType,
+      chronicDiseases: chronicList,
+      allergies: allergyList,
+      relationship: state.isAddingFamilyMember ? state.relationship : null,
+      imagePath: imagePath,
+      removeImage: removeImage,
+    );
+  }
+
+  List<Map<String, dynamic>> _mapChronicConditions(
+    Set<String> conditions,
+    String otherText,
+  ) {
+    if (conditions.isEmpty) return [];
+
+    return conditions
+        .where((value) => value != 'other' || otherText.isNotEmpty)
+        .map((value) {
+          final option = ChronicDiseaseOptionX.fromBackendName(value);
+          if (option == null) {
+            return {'id': ChronicDiseaseOption.other.id, 'description': value};
+          }
+
+          final description = option == ChronicDiseaseOption.other
+              ? otherText
+              : option.backendName;
+
+          return {'id': option.id, 'description': description};
+        })
+        .toList();
+  }
+
+  List<Map<String, dynamic>> _mapAllergies(
+    Set<String> allergies,
+    String otherText,
+  ) {
+    if (allergies.isEmpty) return [];
+
+    return allergies
+        .where((value) => value != 'other' || otherText.isNotEmpty)
+        .map((value) {
+          final option = AllergyOptionX.fromBackendName(value);
+          if (option == null) {
+            return {'id': AllergyOption.other.id, 'description': value};
+          }
+
+          final description = option == AllergyOption.other
+              ? otherText
+              : option.backendName;
+
+          return {'id': option.id, 'description': description};
+        })
+        .toList();
   }
 }
