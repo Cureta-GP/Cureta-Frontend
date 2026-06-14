@@ -53,6 +53,8 @@ class _ChatVoiceInputModalState extends State<ChatVoiceInputModal> {
             });
           },
           localeId: context.locale.languageCode == 'ar' ? 'ar_EG' : 'en_US',
+          pauseFor: const Duration(minutes: 30),
+          listenFor: const Duration(minutes: 30),
           listenOptions: stt.SpeechListenOptions(listenMode: stt.ListenMode.dictation),
         );
       } else {
