@@ -9,11 +9,16 @@ class ReportHistoryCubit extends Cubit<ReportHistoryState> {
 
   ReportHistoryCubit(this._repo) : super(const ReportHistoryInitial());
 
-  Future<void> loadHistory() async {
-    emit(const ReportHistoryLoading());
+  Future<void> loadHistory({bool forceRefresh = false}) async {
+    if (state is! ReportHistoryLoaded && !forceRefresh) {
+      emit(const ReportHistoryLoading());
+    }
     try {
       final profileId = await _getProfileId();
-      final reports = await _repo.getReportsHistory(profileId: profileId);
+      final reports = await _repo.getReportsHistory(
+        profileId: profileId,
+        forceRefresh: forceRefresh,
+      );
       if (reports.isEmpty) {
         emit(const ReportHistoryEmpty());
       } else {
@@ -26,7 +31,7 @@ class ReportHistoryCubit extends Cubit<ReportHistoryState> {
     }
   }
 
-  Future<void> refresh() => loadHistory();
+  Future<void> refresh() => loadHistory(forceRefresh: true);
 
   Future<String> _getProfileId() async {
     return await getIt<ProfileRepository>().getResolvedSelectedProfileId() ??

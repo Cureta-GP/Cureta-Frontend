@@ -423,7 +423,7 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.reportSetup,
         name: AppRoutes.reportSetup,
-        pageBuilder: (context, state) => PageTransitions.slideRight(
+        pageBuilder: (context, state) => PageTransitions.slideUp(
           child: const ReportSetupView(),
           state: state,
         ),
@@ -433,7 +433,7 @@ class RoutesGeneration {
         name: AppRoutes.reportDetails,
         pageBuilder: (context, state) {
           final report = state.extra as HealthReportModel;
-          return PageTransitions.slideRight(
+          return PageTransitions.scale(
             child: ReportDetailsView(report: report),
             state: state,
           );

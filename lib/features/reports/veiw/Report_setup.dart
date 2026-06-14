@@ -33,8 +33,9 @@ class _ReportSetupBody extends StatelessWidget {
     final spacing = context.spacing;
     final typography = context.typography;
     final radius = context.radius;
+    final cubit = context.read<ReportSetupCubit>();
 
-    return BlocConsumer<ReportSetupCubit, ReportSetupState>(
+    return BlocListener<ReportSetupCubit, ReportSetupState>(
       listenWhen: (_, curr) => curr is ReportSetupSuccess,
       listener: (context, state) {
         if (state is ReportSetupSuccess) {
@@ -42,144 +43,178 @@ class _ReportSetupBody extends StatelessWidget {
           context.push(AppRoutes.reportDetails, extra: state.report);
         }
       },
-      builder: (context, state) {
-        final cubit = context.read<ReportSetupCubit>();
-        final isGenerating = state is ReportSetupGenerating;
-        final profiles = _profiles(state);
-        final canGenerate = !isGenerating && profiles.isNotEmpty;
-
-        return Scaffold(
+      child: Scaffold(
+        backgroundColor: colors.background,
+        appBar: AppBar(
           backgroundColor: colors.background,
-          appBar: AppBar(
-            backgroundColor: colors.background,
-            elevation: 0,
-            scrolledUnderElevation: 0,
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: colors.textPrimary),
-              onPressed: () => context.pop(),
-            ),
-            centerTitle: true,
-            title: Text(
-              'reports.generate_report'.tr(),
-              style: typography.medicalRecordScreenTitle.copyWith(
-                color: colors.textPrimary,
-              ),
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: colors.textPrimary),
+            onPressed: () => context.pop(),
+          ),
+          centerTitle: true,
+          title: Text(
+            'reports.generate_report'.tr(),
+            style: typography.medicalRecordScreenTitle.copyWith(
+              color: colors.textPrimary,
             ),
           ),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.all(spacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: spacing.md),
+        ),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(spacing.xl),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: spacing.md),
 
-                  // ── Profile selector ──────────────────────────────────────
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(start: spacing.xs),
-                    child: Text(
-                      'reports.select_profile'.tr(),
-                      style: typography.medicalRecordDetailLabel.copyWith(
-                        color: colors.textSecondary,
-                      ),
+                // ── Profile selector ──────────────────────────────────────
+                Padding(
+                  padding: EdgeInsetsDirectional.only(start: spacing.xs),
+                  child: Text(
+                    'reports.select_profile'.tr(),
+                    style: typography.medicalRecordDetailLabel.copyWith(
+                      color: colors.textSecondary,
                     ),
                   ),
-                  SizedBox(height: spacing.md),
-                  if (profiles.isEmpty)
-                    const ReportProfileSelectorShimmer()
-                  else
-                    ReportProfileSelectorWidget(
+                ),
+                SizedBox(height: spacing.md),
+                BlocBuilder<ReportSetupCubit, ReportSetupState>(
+                  buildWhen: (prev, curr) =>
+                      _profiles(prev) != _profiles(curr) ||
+                      _selectedProfile(prev) != _selectedProfile(curr),
+                  builder: (context, state) {
+                    final profiles = _profiles(state);
+                    if (profiles.isEmpty) {
+                      return const ReportProfileSelectorShimmer();
+                    }
+                    return ReportProfileSelectorWidget(
                       profiles: profiles,
                       selectedProfile: _selectedProfile(state),
                       onSelected: cubit.selectProfile,
-                    ),
-                  SizedBox(height: spacing.xl),
+                    );
+                  },
+                ),
+                SizedBox(height: spacing.xl),
 
-                  // ── Time period ───────────────────────────────────────────
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(start: spacing.xs),
-                    child: Text(
-                      'reports.select_period'.tr(),
-                      style: typography.medicalRecordDetailLabel.copyWith(
-                        color: colors.textSecondary,
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: spacing.md),
-                  ReportTimePeriodSelectorWidget(
-                    selectedPeriod: _period(state),
-                    onSelected: cubit.selectTimePeriod,
-                  ),
-                  SizedBox(height: spacing.xl),
-
-                  // ── Language ──────────────────────────────────────────────
-                  Padding(
-                    padding: EdgeInsetsDirectional.only(start: spacing.xs),
-                    child: Text(
-                      'reports.select_language'.tr(),
-                      style: typography.medicalRecordDetailLabel.copyWith(
-                        color: colors.textSecondary,
-                      ),
+                // ── Time period ───────────────────────────────────────────
+                Padding(
+                  padding: EdgeInsetsDirectional.only(start: spacing.xs),
+                  child: Text(
+                    'reports.select_period'.tr(),
+                    style: typography.medicalRecordDetailLabel.copyWith(
+                      color: colors.textSecondary,
                     ),
                   ),
-                  SizedBox(height: spacing.md),
-                  ReportLanguageToggleWidget(
-                    selectedLanguage: _language(state),
-                    onSelected: cubit.selectLanguage,
-                  ),
-                  SizedBox(height: spacing.xxl),
+                ),
+                SizedBox(height: spacing.md),
+                BlocSelector<ReportSetupCubit, ReportSetupState, String>(
+                  selector: (state) => _period(state),
+                  builder: (context, period) {
+                    return ReportTimePeriodSelectorWidget(
+                      selectedPeriod: period,
+                      onSelected: cubit.selectTimePeriod,
+                    );
+                  },
+                ),
+                SizedBox(height: spacing.xl),
 
-                  // ── Generate button ───────────────────────────────────────
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: canGenerate ? cubit.generateReport : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: colors.primary,
-                        foregroundColor: colors.background,
-                        disabledBackgroundColor: colors.primary,
-                        disabledForegroundColor: colors.background,
-                        padding: EdgeInsets.symmetric(vertical: spacing.md),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(radius.full),
+                // ── Language ──────────────────────────────────────────────
+                Padding(
+                  padding: EdgeInsetsDirectional.only(start: spacing.xs),
+                  child: Text(
+                    'reports.select_language'.tr(),
+                    style: typography.medicalRecordDetailLabel.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ),
+                SizedBox(height: spacing.md),
+                BlocSelector<ReportSetupCubit, ReportSetupState, String>(
+                  selector: (state) => _language(state),
+                  builder: (context, language) {
+                    return ReportLanguageToggleWidget(
+                      selectedLanguage: language,
+                      onSelected: cubit.selectLanguage,
+                    );
+                  },
+                ),
+                SizedBox(height: spacing.xxl),
+
+                // ── Generate button ───────────────────────────────────────
+                BlocBuilder<ReportSetupCubit, ReportSetupState>(
+                  builder: (context, state) {
+                    final isGenerating = state is ReportSetupGenerating;
+                    final profiles = _profiles(state);
+                    final canGenerate = !isGenerating && profiles.isNotEmpty;
+                    return SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: canGenerate ? cubit.generateReport : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: colors.primary,
+                          foregroundColor: colors.background,
+                          disabledBackgroundColor: colors.primary,
+                          disabledForegroundColor: colors.background,
+                          padding: EdgeInsets.symmetric(vertical: spacing.md),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(radius.full),
+                          ),
                         ),
+                        child: isGenerating
+                            ? SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  color: colors.background,
+                                ),
+                              )
+                            : Text(
+                                'reports.generate'.tr(),
+                                style: typography.medicalRecordButton.copyWith(
+                                  color: colors.background,
+                                ),
+                              ),
                       ),
-                      child: isGenerating
-                          ? SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: colors.background,
-                              ),
-                            )
-                          : Text(
-                              'reports.generate'.tr(),
-                              style: typography.medicalRecordButton.copyWith(
-                                color: colors.background,
-                              ),
+                    );
+                  },
+                ),
+
+                // ── Error message ─────────────────────────────────────────
+                BlocBuilder<ReportSetupCubit, ReportSetupState>(
+                  buildWhen: (prev, curr) =>
+                      (prev is ReportSetupError) !=
+                          (curr is ReportSetupError) ||
+                      (prev is ReportSetupError &&
+                          curr is ReportSetupError &&
+                          prev.messageKey != curr.messageKey),
+                  builder: (context, state) {
+                    if (state is ReportSetupError) {
+                      return Padding(
+                        padding: EdgeInsetsDirectional.only(top: spacing.md),
+                        child: Center(
+                          child: Text(
+                            state.messageKey.tr(),
+                            style: typography.label.copyWith(
+                              color: colors.error,
                             ),
-                    ),
-                  ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
 
-                  // ── Error message ─────────────────────────────────────────
-                  if (state is ReportSetupError)
-                    Padding(
-                      padding: EdgeInsetsDirectional.only(top: spacing.md),
-                      child: Text(
-                        state.messageKey.tr(),
-                        style: typography.label.copyWith(color: colors.error),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-
-                  SizedBox(height: spacing.xl),
-                ],
-              ),
+                SizedBox(height: spacing.xl),
+              ],
             ),
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
