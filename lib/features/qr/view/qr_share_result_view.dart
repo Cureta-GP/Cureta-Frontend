@@ -1,6 +1,9 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/shared/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 class QrShareResultView extends StatelessWidget {
@@ -41,6 +44,31 @@ class QrShareResultView extends StatelessWidget {
                 ),
               ),
               SizedBox(height: spacing.lg),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.copy, color: colors.primary),
+                    tooltip: 'Copy link',
+                    onPressed: () async {
+                      await Clipboard.setData(ClipboardData(text: shareUrl));
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Link copied')),
+                        );
+                      }
+                    },
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Copy link',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: colors.textPrimary),
+                  ),
+                ],
+              ),
+              SizedBox(height: spacing.lg),
               Text(
                 'Scan this code to view the shared records',
                 textAlign: TextAlign.center,
@@ -48,37 +76,16 @@ class QrShareResultView extends StatelessWidget {
                   context,
                 ).textTheme.bodyMedium?.copyWith(color: colors.textSecondary),
               ),
+
               SizedBox(height: spacing.md),
-              Card(
-                color: colors.surface,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: colors.divider),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(spacing.sm),
-                  child: SelectableText(
-                    shareUrl,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                ),
-              ),
-              SizedBox(height: spacing.md),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    await Clipboard.setData(ClipboardData(text: shareUrl));
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Link copied')),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.copy_rounded),
-                  label: const Text('Copy link'),
-                ),
+
+              CustomButton(
+                text: 'Done',
+                onPressed: () {
+                  if (context.mounted) {
+                    context.goNamed(AppRoutes.mainNavigation);
+                  }
+                },
               ),
             ],
           ),

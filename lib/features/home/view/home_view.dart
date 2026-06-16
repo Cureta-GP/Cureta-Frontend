@@ -102,8 +102,6 @@ class HomeView extends StatelessWidget {
                           SizedBox(height: spacing.xl),
                           const QuickActionsGrid(),
                           SizedBox(height: spacing.xl),
-                          const RecentActivitySection(),
-                          SizedBox(height: spacing.xxl),
                         ],
                       ),
                     ),

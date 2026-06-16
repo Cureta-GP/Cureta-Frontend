@@ -7,7 +7,7 @@ import 'filter_card.dart';
 
 class CategoryDropdownCard extends StatelessWidget {
   final String? selectedCategory;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String?> onChanged;
 
   const CategoryDropdownCard({
     super.key,
@@ -50,27 +50,23 @@ class CategoryDropdownCard extends StatelessWidget {
             return const Text('No categories available');
           }
 
-          final current = selectedCategory ?? categories.first;
-
-          // Notify parent on first build if nothing selected yet
-          if (selectedCategory == null) {
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              onChanged(current);
-            });
-          }
-
-          return DropdownButtonFormField<String>(
-            initialValue: current,
+          return DropdownButtonFormField<String?>(
+            initialValue: selectedCategory,
             decoration: const InputDecoration(
               labelText: 'Data category',
               border: OutlineInputBorder(),
             ),
-            items: categories
-                .map((item) => DropdownMenuItem(value: item, child: Text(item)))
-                .toList(),
-            onChanged: (value) {
-              if (value != null) onChanged(value);
-            },
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('All categories'),
+              ),
+              ...categories.map(
+                (item) =>
+                    DropdownMenuItem<String?>(value: item, child: Text(item)),
+              ),
+            ],
+            onChanged: onChanged,
           );
         },
       ),

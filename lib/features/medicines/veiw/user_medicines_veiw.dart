@@ -56,7 +56,6 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -64,12 +63,6 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
     return Scaffold(
       backgroundColor: colors.chatBackground,
       appBar: const MedicineScreenAppBarWidget(),
-      floatingActionButton: FloatingActionButton.extended(
-        heroTag: 'medicines_add_fab',
-        onPressed: _openAddMedicine,
-        icon: const Icon(Icons.add),
-        label: Text('medicines.add_medicine'.tr(), style: context.typography.button),
-      ),
       body: BlocListener<ProfilesListCubit, ProfilesListState>(
         listenWhen: (previous, current) {
           if (previous is ProfilesSuccess && current is ProfilesSuccess) {
