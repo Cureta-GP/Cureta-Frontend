@@ -75,9 +75,13 @@ class SelectProfileBottomSheet extends StatelessWidget {
                   child: CustomButton(
                     text: AppLocalizations.profilesAddNewProfile,
                     onPressed: () {
-                      GoRouter.of(
-                        context,
-                      ).go(AppRoutes.addProfile, extra: true);
+                      final cubit = context.read<ProfilesListCubit>();
+                      GoRouter.of(context)
+                          .pushNamed(AppRoutes.addProfile, extra: true)
+                          .then((_) {
+                        cubit.getProfiles();
+                      });
+                      Navigator.pop(context);
                     },
                   ),
                 ),

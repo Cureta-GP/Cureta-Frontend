@@ -38,7 +38,10 @@ class _AllProfiesViewState extends State<AllProfiesView> {
 
   void _onAddProfilePressed() {
     Navigator.of(context).pop();
-    GoRouter.of(context).go(AppRoutes.addProfile, extra: true);
+    final cubit = context.read<ProfilesListCubit>();
+    GoRouter.of(context).pushNamed(AppRoutes.addProfile, extra: true).then((_) {
+      cubit.getProfiles();
+    });
   }
 
   @override

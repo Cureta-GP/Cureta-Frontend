@@ -40,12 +40,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     await context.pushNamed(AppRoutes.medicinesAddStep1);
   }
 
-  ({IconData icon, VoidCallback onPressed, String tooltip}) _fabConfig() {
+  ({IconData icon, void Function(BuildContext) onPressed, String tooltip}) _fabConfig() {
     switch (_selectedIndex) {
       case 1:
         return (
           icon: Icons.medication_rounded,
-          onPressed: () {
+          onPressed: (innerContext) {
             _openAddMedicine();
           },
           tooltip: 'Add medicine',
@@ -53,24 +53,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       case 2:
         return (
           icon: Icons.note_add_rounded,
-          onPressed: () {
-            context.pushNamed(AppRoutes.medicalRecordsStepOne);
+          onPressed: (innerContext) {
+            innerContext.pushNamed(AppRoutes.medicalRecordsStepOne);
           },
           tooltip: 'Add record',
         );
       case 3:
         return (
           icon: Icons.person_add_alt_1_rounded,
-          onPressed: () {
-            context.pushNamed(AppRoutes.addProfile, extra: true);
+          onPressed: (innerContext) {
+            final cubit = innerContext.read<ProfilesListCubit>();
+            innerContext.pushNamed(AppRoutes.addProfile, extra: true).then((_) {
+              cubit.getProfiles();
+            });
           },
           tooltip: 'Add profile',
         );
       default:
         return (
           icon: Icons.chat,
-          onPressed: () {
-            context.pushNamed(AppRoutes.chat);
+          onPressed: (innerContext) {
+            innerContext.pushNamed(AppRoutes.chat);
           },
           tooltip: 'Chat',
         );
@@ -186,10 +189,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               const ProfileDetailsScreen(),
             ],
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: fabConfig.onPressed,
-            tooltip: fabConfig.tooltip,
-            child: Icon(fabConfig.icon),
+          floatingActionButton: Builder(
+            builder: (innerContext) => FloatingActionButton(
+              onPressed: () => fabConfig.onPressed(innerContext),
+              tooltip: fabConfig.tooltip,
+              child: Icon(fabConfig.icon),
+            ),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
