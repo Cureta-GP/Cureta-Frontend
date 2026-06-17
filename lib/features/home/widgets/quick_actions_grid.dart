@@ -43,9 +43,9 @@ class QuickActionsGrid extends StatelessWidget {
           foregroundColor: const Color(0xFF4338CA),
         ),
         _QuickActionCard(
-          icon: Icons.notifications_none_outlined,
+          icon: Icons.medication_outlined,
           label: AppLocalizations.homeAddAlert,
-          onTap: () {},
+          onTap: () => Nav.pushNamed(context, AppRoutes.medicinesAddStep1),
           backgroundColor: colors.accentOrange,
           foregroundColor: const Color(0xFFF97316),
         ),

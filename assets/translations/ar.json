@@ -79,7 +79,7 @@
   "home": {
     "welcome_back": "مرحباً بعودتك",
     "add_record": "إضافة سجل",
-    "add_alert": "إضافة تنبيه",
+    "add_alert": "إضافة دواء",
     "home_scan_prescription": "مسح الروشتة",
     "my_qr_code": "رمز QR الخاص بي",
     "recent_activity": "النشاط الأخير",
@@ -277,11 +277,36 @@
   "profiles": {
     "common": {
       "add_profile": "إضافة ملف شخصي",
+      "add_new_profile": "إضافة ملف شخصي جديد",
+      "edit_profile": "تعديل الملف الشخصي",
+      "delete_profile": "حذف",
+      "cannot_delete": "لا يمكن الحذف",
       "next_step": "الخطوة التالية",
       "continue": "استمرار",
       "skip_for_now": "تخطى الآن",
       "step_indicator": "الخطوة {} من 7",
       "review_profile": "مراجعة الملف الشخصي"
+    },
+    "select_profile": {
+      "title": "اختر ملفًا شخصيًا",
+      "subtitle": "قم بالتبديل بين أفراد العائلة لمتابعة تقدمهم."
+    },
+    "details": {
+      "title": "تفاصيل الملف الشخصي",
+      "full_name": "الاسم الكامل",
+      "relationship": "صلة القرابة",
+      "age": "العمر",
+      "years": "سنة",
+      "gender": "الجنس",
+      "blood_type": "فصيلة الدم",
+      "chronic_conditions": "الحالات المزمنة",
+      "allergies": "الحساسية",
+      "delete_confirm_title": "حذف الملف الشخصي",
+      "delete_confirm_message": "هل أنت متأكد أنك تريد حذف هذا الملف الشخصي؟",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "delete_success": "تم حذف الملف الشخصي بنجاح.",
+      "delete_failed": "فشل الحذف: {error}"
     },
     "steps": {
       "name": {

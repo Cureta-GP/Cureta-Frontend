@@ -22,7 +22,7 @@ class ProfileDetailCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colors.background,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: colors.divider.withValues(alpha: 0.5)),
       ),

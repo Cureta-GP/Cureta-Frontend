@@ -1,4 +1,5 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
@@ -28,14 +29,14 @@ class SelectProfileBottomSheet extends StatelessWidget {
           if (state is ProfilesLoading) {
             return const Center(child: CircularProgressIndicator());
           }
-    
+
           if (state is ProfilesError) {
             return Center(child: Text(state.message));
           }
-    
+
           if (state is ProfilesSuccess) {
             final profiles = state.profiles;
-    
+
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -47,20 +48,18 @@ class SelectProfileBottomSheet extends StatelessWidget {
                     borderRadius: BorderRadius.circular(2),
                   ),
                 ),
-    
+
                 SizedBox(height: spacing.lg),
-    
-                Text("Select Profile", style: typography.title),
-    
+
                 Text(
-                  "Switch between family members to track their progress.",
-                  style: typography.body.copyWith(
-                    color: colors.textSecondary,
-                  ),
+                  AppLocalizations.profilesSelectProfileTitle,
+                  style: typography.title,
                 ),
-    
+
+                Text(AppLocalizations.profilesSelectProfileSubtitle),
+
                 SizedBox(height: spacing.xl),
-    
+
                 ...profiles.map(
                   (profile) => _buildProfileTile(
                     context,
@@ -68,13 +67,13 @@ class SelectProfileBottomSheet extends StatelessWidget {
                     isSelected: profile.id == state.selectedProfileId,
                   ),
                 ),
-    
+
                 SizedBox(height: spacing.xl),
-    
+
                 SizedBox(
                   width: double.infinity,
                   child: CustomButton(
-                    text: "Add New Profile",
+                    text: AppLocalizations.profilesAddNewProfile,
                     onPressed: () {
                       GoRouter.of(
                         context,
@@ -85,7 +84,7 @@ class SelectProfileBottomSheet extends StatelessWidget {
               ],
             );
           }
-    
+
           return const SizedBox();
         },
       ),

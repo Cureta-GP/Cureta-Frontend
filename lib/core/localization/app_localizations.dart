@@ -334,6 +334,42 @@ class AppLocalizations {
       'validation.field_required'.tr(namedArgs: {'field': field});
   // Family profiles
   static String get profilesAddProfile => 'profiles.common.add_profile'.tr();
+  static String get profilesAddNewProfile =>
+      'profiles.common.add_new_profile'.tr();
+  static String get profilesEditProfile => 'profiles.common.edit_profile'.tr();
+  static String get profilesDeleteProfile =>
+      'profiles.common.delete_profile'.tr();
+  static String get profilesCannotDelete =>
+      'profiles.common.cannot_delete'.tr();
+  static String get profilesSelectProfileTitle =>
+      'profiles.select_profile.title'.tr();
+  static String get profilesSelectProfileSubtitle =>
+      'profiles.select_profile.subtitle'.tr();
+  static String get profilesDetailsTitle => 'profiles.details.title'.tr();
+  static String get profilesDetailsFullName =>
+      'profiles.details.full_name'.tr();
+  static String get profilesDetailsRelationship =>
+      'profiles.details.relationship'.tr();
+  static String get profilesDetailsAge => 'profiles.details.age'.tr();
+  static String get profilesDetailsYears => 'profiles.details.years'.tr();
+  static String get profilesDetailsGender => 'profiles.details.gender'.tr();
+  static String get profilesDetailsBloodType =>
+      'profiles.details.blood_type'.tr();
+  static String get profilesDetailsChronicConditions =>
+      'profiles.details.chronic_conditions'.tr();
+  static String get profilesDetailsAllergies =>
+      'profiles.details.allergies'.tr();
+  static String get profilesDetailsDeleteConfirmTitle =>
+      'profiles.details.delete_confirm_title'.tr();
+  static String get profilesDetailsDeleteConfirmMessage =>
+      'profiles.details.delete_confirm_message'.tr();
+  static String get profilesDetailsCancel => 'profiles.details.cancel'.tr();
+  static String get profilesDetailsDelete => 'profiles.details.delete'.tr();
+  static String get profilesDetailsDeleteSuccess =>
+      'profiles.details.delete_success'.tr();
+  static String profilesDetailsDeleteFailed(String error) =>
+      'profiles.details.delete_failed'.tr(namedArgs: {'error': error});
+
   static String get profilesNextStep => 'profiles.common.next_step'.tr();
   static String get profilesContinue => 'profiles.common.continue'.tr();
   static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
