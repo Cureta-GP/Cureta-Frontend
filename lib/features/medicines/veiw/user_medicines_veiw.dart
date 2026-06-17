@@ -61,7 +61,7 @@ class _UserMedicinesBodyState extends State<_UserMedicinesBody> {
     final colors = context.colors;
 
     return Scaffold(
-      backgroundColor: colors.chatBackground,
+      backgroundColor: colors.background,
       appBar: const MedicineScreenAppBarWidget(),
       body: BlocListener<ProfilesListCubit, ProfilesListState>(
         listenWhen: (previous, current) {

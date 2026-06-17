@@ -35,9 +35,9 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
     final condition = _conditionController.text.trim();
     // Condition is required
     if (condition.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter a condition')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.addRecordErrorConditionRequired)),
+      );
       return;
     }
     // Persist to shared cubit

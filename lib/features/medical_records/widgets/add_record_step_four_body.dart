@@ -113,8 +113,8 @@ class AddRecordStepFourBody extends StatelessWidget {
                 icon: Icons.description_outlined,
                 iconBackgroundColor: const Color(0xFFE8F5E9),
                 iconColor: const Color(0xFF4CAF50),
-                title: 'Report',
-                description: 'Upload medical reports',
+                title: AppLocalizations.addRecordCategoryReportTitle,
+                description: AppLocalizations.addRecordCategoryReportDescription,
                 onTap: onReportTap,
               ),
               AddRecordUploadedFilesSection(
@@ -127,8 +127,8 @@ class AddRecordStepFourBody extends StatelessWidget {
                 icon: Icons.folder_outlined,
                 iconBackgroundColor: const Color(0xFFF3E5F5),
                 iconColor: const Color(0xFF9C27B0),
-                title: 'Other',
-                description: 'Upload other documents',
+                title: AppLocalizations.addRecordCategoryOtherTitle,
+                description: AppLocalizations.addRecordCategoryOtherDescription,
                 onTap: onOtherTap,
               ),
               AddRecordUploadedFilesSection(

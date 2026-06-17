@@ -38,16 +38,6 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
                 onPressed: () =>
                     context.read<AddMedicineCubit>().validateStep2(),
               ),
-              SizedBox(height: spacing.md),
-              TextButton(
-                onPressed: () => context.read<AddMedicineCubit>().skipStep2(),
-                child: Text(
-                  'medicines.skip_for_now'.tr(),
-                  style: typography.medicalRecordSkip.copyWith(
-                    color: colors.textSecondary,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -94,7 +84,50 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
                     ),
                     const MedicineValidationErrorWidget(
                       fieldKey: 'doseForm',
-                      useTrExtension: true,
+                    ),
+                    SizedBox(height: spacing.xl),
+                    Text(
+                      'medicines.dose_amount_hint'.tr(),
+                      style: typography.medicalRecordDetailLabel.copyWith(
+                        color: colors.textSecondary,
+                      ),
+                    ),
+                    SizedBox(height: spacing.md),
+                    BlocSelector<AddMedicineCubit, AddMedicineState, String>(
+                      selector: (state) => state.formData.doseAmount,
+                      builder: (context, doseAmount) {
+                        return TextField(
+                          controller: TextEditingController(text: doseAmount)
+                            ..selection = TextSelection.fromPosition(
+                              TextPosition(offset: doseAmount.length),
+                            ),
+                          onChanged: (v) => context.read<AddMedicineCubit>().updateDoseAmount(v),
+                          style: typography.body.copyWith(
+                            color: colors.textPrimary,
+                          ),
+                          cursorColor: colors.textPrimary,
+                          decoration: InputDecoration(
+                            hintText: 'e.g. 2 pills, 1 spoon...',
+                            hintStyle: typography.body.copyWith(
+                              color: colors.textHint,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(context.radius.md),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(context.radius.md),
+                              borderSide: BorderSide(color: colors.primary),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: spacing.lg,
+                              vertical: spacing.lg,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const MedicineValidationErrorWidget(
+                      fieldKey: 'doseAmount',
                     ),
                     SizedBox(height: spacing.xl),
                     Text(
@@ -115,7 +148,6 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
                     ),
                     const MedicineValidationErrorWidget(
                       fieldKey: 'frequency',
-                      useTrExtension: true,
                     ),
                     SizedBox(height: spacing.xl),
                   ],

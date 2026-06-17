@@ -221,6 +221,26 @@ class AppLocalizations {
       'medical_records.add_record.save_record'.tr();
   static String get addRecordContinue =>
       'medical_records.add_record.continue'.tr();
+  static String get addRecordErrorConditionRequired =>
+      'medical_records.add_record.error_condition_required'.tr();
+  static String get addRecordErrorDateRequired =>
+      'medical_records.add_record.error_date_required'.tr();
+  static String get addRecordErrorProfileRequired =>
+      'medical_records.add_record.error_profile_required'.tr();
+  static String get addRecordErrorFileMissing =>
+      'medical_records.add_record.error_file_missing'.tr();
+  static String get addRecordErrorFileOpen =>
+      'medical_records.add_record.error_file_open'.tr();
+  static String get addRecordErrorAttachmentRequired =>
+      'medical_records.add_record.error_attachment_required'.tr();
+  static String get addRecordCategoryReportTitle =>
+      'medical_records.add_record.category_report_title'.tr();
+  static String get addRecordCategoryReportDescription =>
+      'medical_records.add_record.category_report_description'.tr();
+  static String get addRecordCategoryOtherTitle =>
+      'medical_records.add_record.category_other_title'.tr();
+  static String get addRecordCategoryOtherDescription =>
+      'medical_records.add_record.category_other_description'.tr();
 
   // Medical Records - List Screen
   static String get recordsListTitle => 'medical_records.list.title'.tr();

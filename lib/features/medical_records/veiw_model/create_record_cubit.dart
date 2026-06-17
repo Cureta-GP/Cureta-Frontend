@@ -4,6 +4,7 @@ import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
 import 'package:cureta/features/medical_records/data/repo/medical_record_repository.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'create_record_state.dart';
 
 class CreateRecordCubit extends Cubit<CreateRecordState> {
@@ -68,14 +69,6 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
         filePaths.add(file.path!);
       }
 
-      if (filePaths.isEmpty) {
-        emit(
-          CreateRecordFailure(
-            AppException.validation(msg: 'Please attach at least one file'),
-          ),
-        );
-        return;
-      }
 
       final dateStr =
           '${recordDate.year}-${recordDate.month.toString().padLeft(2, '0')}-${recordDate.day.toString().padLeft(2, '0')}';
@@ -87,7 +80,7 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
       if (resolvedProfileId == null || resolvedProfileId.isEmpty) {
         emit(
           CreateRecordFailure(
-            AppException.validation(msg: 'Profile not selected'),
+            AppException.validation(msg: AppLocalizations.addRecordErrorProfileRequired),
           ),
         );
         return;
@@ -105,8 +98,16 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
 
       emit(CreateRecordSuccess(record));
     } on AppException catch (e) {
-      emit(CreateRecordFailure(e));
-    } catch (_) {
+      if (e.message.toLowerCase().contains('attachment')) {
+        emit(
+          CreateRecordFailure(
+            AppException.validation(msg: AppLocalizations.addRecordErrorAttachmentRequired),
+          ),
+        );
+      } else {
+        emit(CreateRecordFailure(e));
+      }
+    } catch (e) {
       emit(CreateRecordFailure(AppException.server()));
     }
   }

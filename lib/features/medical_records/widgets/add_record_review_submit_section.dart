@@ -47,6 +47,9 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
               GoRouter.of(context).go('${AppRoutes.mainNavigation}?tab=2');
             },
           );
+        } else if (state is CreateRecordFailure) {
+          LoadingOverlay.hide();
+          ErrorHandler.show(context, state.error);
         } else {
           LoadingOverlay.hide();
         }
@@ -67,14 +70,14 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
       if (formState.diseaseName == null || formState.diseaseName!.isEmpty) {
         ErrorHandler.show(
           context,
-          AppException.validation(msg: 'Condition not specified'),
+          AppException.validation(msg: AppLocalizations.addRecordErrorConditionRequired),
         );
         return;
       }
       if (formState.recordDate == null) {
         ErrorHandler.show(
           context,
-          AppException.validation(msg: 'Date not selected'),
+          AppException.validation(msg: AppLocalizations.addRecordErrorDateRequired),
         );
         return;
       }
