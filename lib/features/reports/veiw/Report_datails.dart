@@ -98,32 +98,6 @@ class ReportDetailsView extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(spacing.xl),
-          child: SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colors.primary,
-                foregroundColor: colors.background,
-                padding: EdgeInsets.symmetric(vertical: spacing.md),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(context.radius.full),
-                ),
-              ),
-              icon: Icon(Icons.ios_share, color: colors.background),
-              label: Text(
-                'Share PDF',
-                style: typography.medicalRecordButton.copyWith(
-                  color: colors.background,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

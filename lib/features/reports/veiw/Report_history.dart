@@ -49,12 +49,6 @@ class _ReportHistoryBody extends StatelessWidget {
             color: colors.textPrimary,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: colors.textPrimary),
-            onPressed: () => context.read<ReportHistoryCubit>().refresh(),
-          ),
-        ],
       ),
       body: BlocBuilder<ReportHistoryCubit, ReportHistoryState>(
         builder: (context, state) {
