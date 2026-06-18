@@ -2,6 +2,7 @@ import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_mo
 import 'package:cureta/features/home/data/repo/schedule_repo.dart';
 import 'package:cureta/features/home/data/service/schedule_service.dart';
 import 'package:cureta/features/home/view_model/home_schedule_cubit.dart';
+import 'package:cureta/features/home/view_model/medicine_schedule_cubit.dart';
 import 'package:cureta/features/ocr/data/repo/ocr_repository.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
@@ -130,6 +131,9 @@ Future<void> setup() async {
   // Cubits
   getIt.registerFactory<HomeScheduleCubit>(
     () => HomeScheduleCubit(getIt<MedicineRepository>()),
+  );
+  getIt.registerFactory<MedicineScheduleCubit>(
+    () => MedicineScheduleCubit(getIt<MedicineRepository>()),
   );
   // 📊 Report Cubits
   getIt.registerFactory<ReportHistoryCubit>(
