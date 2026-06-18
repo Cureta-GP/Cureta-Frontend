@@ -68,9 +68,18 @@ class MyApp extends StatelessWidget {
               maxScaleFactor: _maxTextScaleFactor,
               child: MaterialApp.router(
                 debugShowCheckedModeBanner: false,
+                builder: (context, child) {
+                  return GestureDetector(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    behavior: HitTestBehavior.translucent,
+                    child: child!,
+                  );
+                },
                 theme: lightTheme,
                 darkTheme: darkTheme,
-                themeMode: settings.themeMode, // ← was: ThemeMode.system
+                themeMode: settings.themeMode,
                 routerConfig: RoutesGeneration.router,
                 themeAnimationDuration: const Duration(milliseconds: 300),
                 themeAnimationCurve: Curves.easeInOut,

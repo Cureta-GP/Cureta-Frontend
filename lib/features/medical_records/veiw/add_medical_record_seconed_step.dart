@@ -46,6 +46,8 @@ class AddMedicalRecordSeconedStep extends StatelessWidget {
       return;
     }
 
+    FocusManager.instance.primaryFocus?.unfocus();
+
     onNext?.call(date, isOngoing);
     GoRouter.of(context).pushNamed(AppRoutes.medicalRecords_step_three);
   }

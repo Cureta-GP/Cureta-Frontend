@@ -2,6 +2,12 @@
   "app": {
     "name": "كيوريتا"
   },
+  "common": {
+    "exit_app_title": "الخروج من التطبيق",
+    "exit_app_content": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+    "exit_app_confirm": "خروج",
+    "exit_app_cancel": "إلغاء"
+  },
   "auth": {
     "login": {
       "title": "مرحباً بعودتك",

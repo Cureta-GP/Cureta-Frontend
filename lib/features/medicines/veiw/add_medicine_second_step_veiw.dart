@@ -13,7 +13,10 @@ class AddMedicineSecondStepVeiw extends StatelessWidget {
     return BlocListener<AddMedicineCubit, AddMedicineState>(
       listenWhen: (_, curr) =>
           curr is AddMedicineValidated && curr.stepNumber == 2,
-      listener: (context, _) => context.push('/medicines/add/3'),
+      listener: (context, _) {
+        FocusManager.instance.primaryFocus?.unfocus();
+        context.push('/medicines/add/3');
+      },
       child: const AddMedicineStep2BodyWidget(),
     );
   }

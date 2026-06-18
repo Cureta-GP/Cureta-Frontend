@@ -2,6 +2,12 @@
   "app": {
     "name": "Cureta"
   },
+  "common": {
+    "exit_app_title": "Exit App",
+    "exit_app_content": "Are you sure you want to exit the app?",
+    "exit_app_confirm": "Exit",
+    "exit_app_cancel": "Cancel"
+  },
   "auth": {
     "login": {
       "title": "Welcome Back",

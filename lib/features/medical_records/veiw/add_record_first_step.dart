@@ -5,7 +5,7 @@ import 'package:cureta/features/medical_records/veiw_model/add_record_form_cubit
 import 'package:cureta/features/medical_records/widgets/add_record_condition_section.dart';
 import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:cureta/shared/widgets/step_progress_indicator.dart';
-import 'package:cureta/shared/widgets/custom_top_bar.dart';
+import 'package:cureta/shared/widgets/custom_screen_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -40,6 +40,9 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
       );
       return;
     }
+    // Explicitly unfocus before navigating so it doesn't autofocus when returning
+    FocusManager.instance.primaryFocus?.unfocus();
+
     // Persist to shared cubit
     context.read<AddRecordFormCubit>().setCondition(condition);
 
@@ -70,10 +73,13 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
       body: SafeArea(
         child: Column(
           children: [
-            CustomTopBar(
-              onBack: widget.onBack,
-              onAction: widget.onCancel,
-              actionLabel: AppLocalizations.addRecordCancel,
+            CustomScreenHeader(
+              title: '',
+              onBack: widget.onBack ?? () {
+                if (context.canPop()) {
+                  context.pop();
+                }
+              },
             ),
             Expanded(
               child: SingleChildScrollView(
