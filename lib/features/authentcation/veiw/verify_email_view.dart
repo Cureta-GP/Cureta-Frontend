@@ -13,7 +13,7 @@ import '../veiw_model/forgot_password_state.dart';
 
 class VerifyEmailView extends StatefulWidget {
   final String email;
-  
+
   const VerifyEmailView({super.key, required this.email});
 
   @override
@@ -43,9 +43,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
   void _verifyCode() {
     if (otp.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.otpError)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(AppLocalizations.otpError)));
       return;
     }
 
@@ -66,15 +66,16 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           child: SingleChildScrollView(
             child: BlocListener<ForgotPasswordViewModel, ForgotPasswordState>(
               listener: (context, state) {
-                if (state is ForgotPasswordEmailSentSuccess) { // Changed to listen for successful OTP entry
+                if (state is ForgotPasswordEmailSentSuccess) {
+                  // Changed to listen for successful OTP entry
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('OTP verified successfully')),
                   );
                   Nav.push(context, AppRoutes.resetPassword);
                 } else if (state is ForgotPasswordError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
                 }
               },
               child: Column(
@@ -85,25 +86,13 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     title: AppLocalizations.verifyEmailTitle,
                     subtitle: AppLocalizations.verifyEmailSubtitle,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Column(
-                      children: [
-                        Text(
-                          AppLocalizations.verifyEmailSent,
-                          textAlign: TextAlign.center,
-                          style: typography.body.copyWith(color: colors.primary),
-                        ),
-                        SizedBox(height: spacing.sm),
-                        Text(
-                          widget.email,
-                          textAlign: TextAlign.center,
-                          style: typography.body.copyWith(
-                            color: colors.primary,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+
+                  Text(
+                    widget.email,
+                    textAlign: TextAlign.center,
+                    style: typography.body.copyWith(
+                      color: colors.primary,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: spacing.xxl),
@@ -114,7 +103,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                         controller: _controllers[index],
                         focusNode: _focusNodes[index],
                         nextFocus: index < 5 ? _focusNodes[index + 1] : null,
-                        previousFocus: index > 0 ? _focusNodes[index - 1] : null,
+                        previousFocus: index > 0
+                            ? _focusNodes[index - 1]
+                            : null,
                       );
                     }),
                   ),

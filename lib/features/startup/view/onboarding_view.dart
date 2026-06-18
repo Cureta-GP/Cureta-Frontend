@@ -41,6 +41,7 @@ class _OnboardingViewState extends State<OnboardingView> {
                 },
               ),
             ),
+            SizedBox(height: spacing.xxl),
 
             /// Bottom Section (Indicators + Button)
             Padding(

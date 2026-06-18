@@ -24,7 +24,7 @@
       "email_hint": "أدخل بريدك الإلكتروني",
       "password_label": "كلمة المرور",
       "password_hint": "أنشئ كلمة مرور",
-      "phone_label": "رقم الهاتف (اختياري)",
+      "phone_label": "رقم الهاتف ",
       "phone_hint": "أدخل رقم هاتفك",
       "signup_button": "إنشاء حساب",
       "have_account": "لديك حساب بالفعل؟ ",
@@ -54,7 +54,6 @@
     "verify_email": {
       "title": "التحقق من بريدك الإلكتروني",
       "subtitle": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
-      "sent": "elbannabosina@gmail.com",
       "verify_button": "تحقق ومتابعة",
       "otp_error": "الرجاء إدخال الرمز كاملاً"
     },

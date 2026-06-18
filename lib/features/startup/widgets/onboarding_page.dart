@@ -16,36 +16,47 @@ class OnboardingPage extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: spacing.xxl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: MediaQuery.sizeOf(context).height * 0.35,
-            width: double.infinity,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(radius.xl),
-              child: Image.asset(
-                screen.imagePath,
-                fit: BoxFit.contain,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final imageHeight = constraints.maxHeight * 0.35;
+
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: spacing.xxl),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: imageHeight,
+                    width: double.infinity,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(radius.xl),
+                      child: Image.asset(
+                        screen.imagePath,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: spacing.xxl),
+                  Text(
+                    screen.title,
+                    textAlign: TextAlign.center,
+                    style: styles.title,
+                  ),
+                  SizedBox(height: spacing.md),
+                  Text(
+                    screen.description,
+                    textAlign: TextAlign.center,
+                    style: styles.body,
+                  ),
+                ],
               ),
             ),
           ),
-          SizedBox(height: spacing.xxl),
-          Text(
-            screen.title,
-            textAlign: TextAlign.center,
-            style: styles.title,
-          ),
-          SizedBox(height: spacing.md),
-          Text(
-            screen.description,
-            textAlign: TextAlign.center,
-            style: styles.body,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
