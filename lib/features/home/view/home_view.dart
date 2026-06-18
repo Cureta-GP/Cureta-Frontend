@@ -1,3 +1,4 @@
+import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/home/view_model/home_schedule_cubit.dart';
@@ -11,6 +12,7 @@ import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key, required this.onMenuPressed});
@@ -97,7 +99,22 @@ class HomeView extends StatelessWidget {
                             padding: EdgeInsets.symmetric(
                               horizontal: spacing.lg,
                             ),
-                            child: const UpcomingMedsSection(),
+                            child: UpcomingMedsSection(
+                              onSeeAll: () async {
+                                final profileId = _resolveProfileId(
+                                  context.read<ProfilesListCubit>().state,
+                                );
+                                await context.pushNamed(
+                                  AppRoutes.medicineSchedule,
+                                );
+                                if (!context.mounted || profileId == null) {
+                                  return;
+                                }
+                                await context.read<HomeScheduleCubit>().refresh(
+                                  profileId,
+                                );
+                              },
+                            ),
                           ),
                           SizedBox(height: spacing.xl),
                           const QuickActionsGrid(),

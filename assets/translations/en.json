@@ -347,7 +347,10 @@
     "see_all": "See all",
     "missed": "Missed",
     "taken": "Taken",
-    "no_meds_today": "No medicines scheduled today"
+    "pending": "Pending",
+    "no_meds_today": "No medicines scheduled today",
+    "schedule_title": "Medicine Schedule",
+    "schedule_no_meds": "No medicines scheduled for this day"
   },
   "chat": {
     "input_hint": "Ask me anything...",

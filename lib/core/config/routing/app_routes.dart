@@ -44,6 +44,7 @@ class AppRoutes {
   static const String medicinesAddStep4 = '/medicines/add/4';
   static const String medicinesAddStep5 = '/medicines/add/5';
   static const String medicineDetails = '/medicines/details/:id';
+  static const String medicineSchedule = '/medicines/schedule';
 
   //profil
 
