@@ -97,15 +97,22 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   ),
                   SizedBox(height: spacing.xxl),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List.generate(6, (index) {
-                      return OtpBox(
-                        controller: _controllers[index],
-                        focusNode: _focusNodes[index],
-                        nextFocus: index < 5 ? _focusNodes[index + 1] : null,
-                        previousFocus: index > 0
-                            ? _focusNodes[index - 1]
-                            : null,
+                      return Expanded(
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.only(
+                            start: index == 0 ? 0 : spacing.xs / 2,
+                            end: index == 5 ? 0 : spacing.xs / 2,
+                          ),
+                          child: OtpBox(
+                            controller: _controllers[index],
+                            focusNode: _focusNodes[index],
+                            nextFocus: index < 5 ? _focusNodes[index + 1] : null,
+                            previousFocus: index > 0
+                                ? _focusNodes[index - 1]
+                                : null,
+                          ),
+                        ),
                       );
                     }),
                   ),
