@@ -23,7 +23,7 @@ class UserRecordsHeader extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: spacing.lg,
-        vertical: spacing.lg,
+        vertical: spacing.sm,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,7 +33,8 @@ class UserRecordsHeader extends StatelessWidget {
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: typography.medicalRecordQuestion.copyWith(
+              textAlign: TextAlign.center,
+              style: typography.medicalRecordScreenTitle.copyWith(
                 color: colors.textPrimary,
               ),
             ),

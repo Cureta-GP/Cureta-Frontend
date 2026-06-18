@@ -16,26 +16,35 @@ class UserRecordsFilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final spacing = context.spacing;
     final radius = context.radius;
-    final typography = context.typography;
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(radius.full),
-      child: Container(
-        constraints: BoxConstraints(minHeight: spacing.xl + spacing.xs),
-        padding: EdgeInsets.symmetric(horizontal: spacing.lg),
-        decoration: BoxDecoration(
-          color: selected ? colors.primary : colors.surface,
-          borderRadius: BorderRadius.circular(radius.full),
-          border: selected ? null : Border.all(color: colors.divider),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          label,
-          style: typography.medicalRecordStep.copyWith(
-            color: selected ? Colors.white : colors.textSecondary,
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(radius.full),
+        child: AnimatedContainer(
+          duration: context.durations.fast,
+          padding: EdgeInsetsDirectional.symmetric(
+            horizontal: context.spacing.sm,
+            vertical: context.spacing.md,
+          ),
+          decoration: BoxDecoration(
+            color: selected ? colors.primary : colors.surface,
+            borderRadius: BorderRadius.circular(radius.full),
+            border: Border.all(
+              color: selected ? colors.primary : colors.divider,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: context.typography.medicalRecordProgress.copyWith(
+                color: selected ? colors.background : colors.textSecondary,
+              ),
+            ),
           ),
         ),
       ),

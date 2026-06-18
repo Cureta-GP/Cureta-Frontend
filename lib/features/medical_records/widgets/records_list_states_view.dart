@@ -7,7 +7,9 @@ import 'package:cureta/features/medical_records/widgets/user_record_card.dart';
 import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:easy_localization/easy_localization.dart';
+import 'package:go_router/go_router.dart';
+import 'package:cureta/core/config/routing/app_routes.dart';
 class RecordsLoadingScroll extends StatelessWidget {
   const RecordsLoadingScroll({super.key, required this.topSection});
 
@@ -95,12 +97,61 @@ class RecordsEmptyScroll extends StatelessWidget {
           hasScrollBody: false,
           child: Center(
             child: Padding(
-              padding: EdgeInsets.all(spacing.xl),
-              child: Text(
-                'No records found',
-                style: context.typography.medicalRecordHelper.copyWith(
-                  color: colors.textSecondary,
-                ),
+              padding: EdgeInsets.all(spacing.xxl),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 120,
+                    height: 120,
+                    decoration: BoxDecoration(
+                      color: colors.secondary,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.folder_open_outlined,
+                      size: 60,
+                      color: colors.primary,
+                    ),
+                  ),
+                  SizedBox(height: spacing.xl),
+                  Text(
+                    'medical_records.list.empty_records_title'.tr(),
+                    style: context.typography.title.copyWith(
+                      color: colors.textPrimary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: spacing.md),
+                  Text(
+                    'medical_records.list.empty_records_subtitle'.tr(),
+                    style: context.typography.label.copyWith(
+                      color: colors.textSecondary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: spacing.xxl),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        context.pushNamed(AppRoutes.medicalRecordsStepOne);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: colors.primary,
+                        foregroundColor: colors.background,
+                        padding: EdgeInsets.symmetric(vertical: spacing.md),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(context.radius.xxl),
+                        ),
+                      ),
+                      child: Text(
+                        'medical_records.list.add_your_first_record'.tr(),
+                        style: context.typography.medicalRecordButton,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
