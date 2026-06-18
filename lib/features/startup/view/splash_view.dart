@@ -6,6 +6,7 @@ import 'package:cureta/features/authentcation/data/repo/auth_repository.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -22,7 +23,7 @@ class _SplashViewState extends State<SplashView> {
   }
 // داخل SplashView
 Future<void> _navigateToNext() async {
-  await Future.delayed(const Duration(seconds: 2)); // وقت للأنيميشن
+  // تم إزالة الانتظار الوهمي (Future.delayed) لكي يفتح التطبيق بأسرع وقت ممكن
 
   // التحقق يتم "خلف الكواليس" واللوجو معروض
   final authRepo = getIt.get<AuthRepository>();
@@ -32,20 +33,21 @@ Future<void> _navigateToNext() async {
   if (!mounted) return;
 
   if (loggedIn) {
-    // التحقق من وجود profile_id محفوظ في SharedPreferences
-    final cachedProfileId = await profileRepo.getCachedProfileId();
+    final hasProfiles = await profileRepo.hasProfiles();
     
-    if (cachedProfileId != null && cachedProfileId.isNotEmpty) {
-      // إذا كان هناك profile_id محفوظ، اذهب مباشرة إلى الـ home screen
-      context.go(AppRoutes.mainNavigation);
-    } else {
-      // إذا لم يكن هناك profile_id محفوظ، اذهب إلى صفحة إنشاء البروفايل
-      context.go(AppRoutes.addProfile);
+    if (context.mounted) {
+      if (hasProfiles) {
+        context.go(AppRoutes.mainNavigation);
+      } else {
+        context.go(AppRoutes.addProfile);
+      }
     }
   } else {
     // إذا لم يكن المستخدم مسجل دخول، اذهب إلى صفحة الـ onboarding
     context.go(AppRoutes.onboarding);
   }
+  
+  FlutterNativeSplash.remove();
 }
 
   @override
@@ -55,13 +57,7 @@ Future<void> _navigateToNext() async {
 
     return Scaffold(
       backgroundColor: colors.background,
-      body: Center(
-        child: Image.asset(
-          AppImages.logo,
-          width: spacing.xxl * 6,
-          height: spacing.xxl * 6,
-        ),
-      ),
+      body: const SizedBox.shrink(),
     );
   }
 }

@@ -9,6 +9,8 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({super.key});
@@ -79,9 +81,18 @@ class _LoginFormState extends State<LoginForm> {
         if (state is AuthSuccess) {
           // Play success animation and navigate
           _animationManager.playSuccess();
-          Future.delayed(const Duration(milliseconds: 500), () {
+          Future.delayed(const Duration(milliseconds: 500), () async {
             if (context.mounted) {
-              GoRouter.of(context).go(AppRoutes.mainNavigation);
+              final profileRepo = getIt.get<ProfileRepository>();
+              final hasProfiles = await profileRepo.hasProfiles();
+              
+              if (context.mounted) {
+                if (hasProfiles) {
+                  GoRouter.of(context).go(AppRoutes.mainNavigation);
+                } else {
+                  GoRouter.of(context).go(AppRoutes.addProfile);
+                }
+              }
             }
           });
         } else if (state is AuthError) {

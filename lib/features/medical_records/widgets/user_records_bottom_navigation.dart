@@ -93,20 +93,16 @@ class UserRecordsBottomNavigation extends StatelessWidget {
                   color: fg,
                 ),
                 SizedBox(height: spacing.xs / 2),
-                SizedBox(
-                  width: spacing.xxl + spacing.lg,
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      labels[index],
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: typography.medicalRecordProgress.copyWith(
-                        color: fg,
-                        fontWeight: isActive
-                            ? FontWeight.w600
-                            : FontWeight.w400,
-                      ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: spacing.xs),
+                  child: Text(
+                    labels[index],
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: typography.medicalRecordHelper.copyWith(
+                      color: fg,
+                      fontWeight: isActive ? FontWeight.w600 : FontWeight.w400,
+                      fontSize: 11, // Explicitly small to fit most texts
                     ),
                   ),
                 ),
