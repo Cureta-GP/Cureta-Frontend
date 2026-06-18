@@ -49,20 +49,6 @@ class UserRecordsSearchBar extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: spacing.lg),
-        Container(
-          width: fieldHeight,
-          height: fieldHeight,
-          decoration: BoxDecoration(
-            color: colors.surface,
-            borderRadius: BorderRadius.circular(radius.lg),
-          ),
-          child: IconButton(
-            onPressed: onFilterTap,
-            padding: EdgeInsets.zero,
-            icon: Icon(Icons.tune, size: 20, color: colors.primary),
-          ),
-        ),
       ],
     );
   }

@@ -34,22 +34,17 @@ class UserRecordsSearchAndFilters extends StatelessWidget {
             onFilterTap: onFilterTap,
           ),
           SizedBox(height: spacing.lg),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: filters
-                  .map(
-                    (filter) => Padding(
-                      padding: EdgeInsets.only(right: spacing.md),
-                      child: UserRecordsFilterChip(
-                        label: filter.label,
-                        selected: selectedFilterId == filter.id,
-                        onTap: () => onFilterSelected(filter.id),
-                      ),
-                    ),
-                  )
-                  .toList(),
-            ),
+          Row(
+            children: [
+              for (var i = 0; i < filters.length; i++) ...[
+                UserRecordsFilterChip(
+                  label: filters[i].label,
+                  selected: selectedFilterId == filters[i].id,
+                  onTap: () => onFilterSelected(filters[i].id),
+                ),
+                if (i < filters.length - 1) SizedBox(width: spacing.sm),
+              ]
+            ],
           ),
         ],
     );

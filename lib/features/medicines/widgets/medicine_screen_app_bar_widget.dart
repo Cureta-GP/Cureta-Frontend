@@ -17,10 +17,7 @@ class MedicineScreenAppBarWidget extends StatelessWidget
     return AppBar(
       backgroundColor: colors.background,
       elevation: 0,
-      leading: IconButton(
-        icon: Icon(Icons.menu, color: colors.textPrimary),
-        onPressed: onMenuTap,
-      ),
+      automaticallyImplyLeading: false,
       title: Text(
         AppLocalizations.medicinesMyMedicines,
         style: context.typography.medicalRecordScreenTitle.copyWith(
