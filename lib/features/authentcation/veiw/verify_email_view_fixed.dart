@@ -41,9 +41,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
   void _verifyCode() {
     if (otp.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.otpError)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(AppLocalizations.otpError)));
       return;
     }
 
@@ -73,9 +73,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                   );
                   Nav.push(context, AppRoutes.resetPassword);
                 } else if (state is ForgotPasswordError) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(state.message)),
-                  );
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(state.message)));
                 }
               },
               child: Column(
@@ -86,14 +86,7 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                     title: AppLocalizations.verifyEmailTitle,
                     subtitle: AppLocalizations.verifyEmailSubtitle,
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Text(
-                      AppLocalizations.verifyEmailSent,
-                      textAlign: TextAlign.center,
-                      style: typography.body.copyWith(color: colors.primary),
-                    ),
-                  ),
+
                   SizedBox(height: spacing.xxl),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -102,7 +95,9 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
                         controller: _controllers[index],
                         focusNode: _focusNodes[index],
                         nextFocus: index < 5 ? _focusNodes[index + 1] : null,
-                        previousFocus: index > 0 ? _focusNodes[index - 1] : null,
+                        previousFocus: index > 0
+                            ? _focusNodes[index - 1]
+                            : null,
                       );
                     }),
                   ),

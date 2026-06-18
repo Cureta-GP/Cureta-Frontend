@@ -20,19 +20,24 @@ class OtpBox extends StatelessWidget {
     final spacing = context.spacing;
     final radius = context.radius;
     final colors = context.colors;
+    final typography = context.typography;
 
     return SizedBox(
-      width: spacing.xxl + spacing.md,
-      height: spacing.xxl + spacing.lg,
+      height: spacing.xxl + spacing.xl,
       child: TextField(
         controller: controller,
         focusNode: focusNode,
         keyboardType: TextInputType.number,
         textAlign: TextAlign.center,
         maxLength: 1,
-        style: Theme.of(context).textTheme.titleLarge,
+        style: typography.title.copyWith(
+          fontWeight: FontWeight.w600,
+          height: 1,
+        ),
         decoration: InputDecoration(
-          counterText: "",
+          counterText: '',
+          isDense: true,
+          contentPadding: EdgeInsets.symmetric(vertical: spacing.md),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(radius.md),
             borderSide: BorderSide(color: Colors.grey.shade300, width: 1.5),

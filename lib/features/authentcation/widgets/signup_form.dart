@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../shared/widgets/custom_text_field.dart';
 import '../../../shared/widgets/custom_button.dart';
-import 'google_button.dart';
 import 'link.dart';
 
 class SignupForm extends StatefulWidget {
@@ -119,8 +118,7 @@ class _SignupFormState extends State<SignupForm> {
                 ),
               ),
               SizedBox(height: spacing.lg),
-              const GoogleButton(),
-              SizedBox(height: spacing.xxl),
+
               Link(
                 text: AppLocalizations.haveAccount,
                 actionText: AppLocalizations.loginLink,

@@ -110,7 +110,6 @@ class AppLocalizations {
   // Email Verification
   static String get verifyEmailTitle => 'auth.verify_email.title'.tr();
   static String get verifyEmailSubtitle => 'auth.verify_email.subtitle'.tr();
-  static String get verifyEmailSent => 'auth.verify_email.sent'.tr();
   static String get verifyButton => 'auth.verify_email.verify_button'.tr();
   static String get otpError => 'auth.verify_email.otp_error'.tr();
 

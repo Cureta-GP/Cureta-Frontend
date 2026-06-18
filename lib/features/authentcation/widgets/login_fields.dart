@@ -6,7 +6,7 @@ import 'package:cureta/core/utils/validators.dart';
 import 'package:flutter/material.dart';
 import '../../../shared/widgets/custom_text_field.dart';
 import '../../../shared/widgets/custom_button.dart';
-import 'google_button.dart';
+
 import 'link.dart';
 
 class LoginFields extends StatelessWidget {
@@ -75,8 +75,7 @@ class LoginFields extends StatelessWidget {
           isLoading: isLoading,
         ),
         SizedBox(height: spacing.lg),
-        const GoogleButton(),
-        SizedBox(height: spacing.xxl),
+
         Link(
           text: AppLocalizations.noAccount,
           actionText: AppLocalizations.signupLink,
