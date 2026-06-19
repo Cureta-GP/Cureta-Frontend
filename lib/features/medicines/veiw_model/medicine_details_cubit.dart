@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/Services/notification_service.dart';
+import '../data/models/medicine_enums.dart';
 import '../data/repo/medicine_repository.dart';
 import 'medicine_details_state.dart';
 
@@ -83,6 +84,9 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
         updatedAt: DateTime.now(),
       );
       final savedMedicine = await _repository.updateMedicine(updatedMedicine);
+      if (savedMedicine.syncStatus == SyncStatus.failed) {
+        throw Exception('Failed to update medicine on the server');
+      }
       await NotificationService.instance.cancelMedicineAlarms(
         currentState.medicine.id,
         profileId: currentState.medicine.profileId,

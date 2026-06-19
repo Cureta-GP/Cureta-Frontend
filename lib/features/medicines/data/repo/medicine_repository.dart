@@ -136,8 +136,9 @@ class MedicineRepository {
       try {
         if (m.remoteId != null && m.remoteId!.isNotEmpty) {
           // It's an update
-          await _remote.updateMedicine(m.remoteId!, _buildPayload(m, pid));
-          await _local.updateSyncStatus(m.id, SyncStatus.synced);
+          final dto = await _remote.updateMedicine(m.remoteId!, _buildPayload(m, pid));
+          final newRemoteId = (dto.id != null && dto.id!.isNotEmpty) ? dto.id : m.remoteId;
+          await _local.updateSyncStatus(m.id, SyncStatus.synced, remoteId: newRemoteId);
         } else {
           // It's a create
           final dto = await _remote.createMedicine(_buildPayload(m, pid));
@@ -185,45 +186,92 @@ class MedicineRepository {
   Future<MedicineModel> updateMedicine(MedicineModel m) async {
     final updating = m.copyWith(syncStatus: SyncStatus.pending);
     await _local.update(updating);
+    
     if (updating.remoteId != null && updating.remoteId!.isNotEmpty) {
       try {
-        final pid = await _pid();
+        try {
+          final pid = await _pid();
+        
+        // Normalize startDate to beginning of day to avoid timezone/time validation issues on backend
+        DateTime normalizedStart = updating.startDate;
+        if (normalizedStart.hour != 0 || normalizedStart.minute != 0 || normalizedStart.second != 0) {
+          normalizedStart = DateTime(normalizedStart.year, normalizedStart.month, normalizedStart.day);
+        }
+
+        String computedDose = updating.doseAmount.isNotEmpty && updating.doseUnit.isNotEmpty
+            ? '${updating.doseAmount} ${updating.doseUnit}'
+            : updating.doseAmount.isNotEmpty
+            ? updating.doseAmount
+            : updating.doseUnit;
+
+        if (computedDose.trim().isEmpty) {
+          computedDose = '1'; // Fallback dose to pass backend validation
+        }
+
+        final payload = MedicinePayload(
+          profileId: pid,
+          name: updating.name,
+          dose: computedDose,
+          frequency: updating.frequency,
+          reminders: updating.alarmTimes,
+          startDate: normalizedStart.toIso8601String(),
+          notes: updating.notes,
+          doseForm: updating.doseForm,
+        );
+
         final dto = await _remote.updateMedicine(
           updating.remoteId!,
-          _buildPayload(updating, pid),
+          payload,
         );
+
+        // Additionally sync reminders if there are any, using the new endpoint
+        if (payload.reminders.isNotEmpty) {
+          await _remote.updateReminders(updating.remoteId!, payload);
+        }
+
+        final serverRemoteId =
+            (dto.id != null && dto.id!.isNotEmpty) ? dto.id : updating.remoteId;
         final remoteModel = dto.toDomain(
           updating.id,
           syncStatus: SyncStatus.synced,
-          remoteId: updating.remoteId,
+          remoteId: serverRemoteId,
           profileId: updating.profileId,
         );
         final synced = updating.copyWith(
           syncStatus: SyncStatus.synced,
+          remoteId: serverRemoteId,
           // Keep local-only fields while trusting backend canonical medicine fields.
           name: remoteModel.name,
-          doseAmount: remoteModel.doseAmount,
-          doseUnit: remoteModel.doseUnit,
+          doseAmount: remoteModel.doseAmount.isNotEmpty
+              ? remoteModel.doseAmount
+              : updating.doseAmount,
+          doseUnit: remoteModel.doseUnit.isNotEmpty
+              ? remoteModel.doseUnit
+              : updating.doseUnit,
           frequency: remoteModel.frequency,
-          alarmTimes: remoteModel.alarmTimes,
-          startDate: remoteModel.startDate,
           notes: remoteModel.notes,
-          updatedAt: remoteModel.updatedAt.isAfter(updating.updatedAt)
-              ? remoteModel.updatedAt
-              : DateTime.now(),
+          alarmTimes: remoteModel.alarmTimes.isNotEmpty
+              ? remoteModel.alarmTimes
+              : updating.alarmTimes,
+          startDate: remoteModel.startDate,
         );
         await _local.update(synced);
         return synced;
       } catch (e) {
-        developer.log(
-          'Failed to update medicine on remote: $e',
-          name: 'MedicineRepository',
-        );
+        developer.log('Failed to update medicine on remote: $e', name: 'MedicineRepository');
         final failed = updating.copyWith(syncStatus: SyncStatus.failed);
         await _local.update(failed);
-        return failed;
+        
+        // Re-throw so the Cubit knows the exact reason!
+        throw Exception(e.toString());
       }
+    } catch (e) {
+      developer.log('Critical error in updateMedicine: $e', name: 'MedicineRepository');
+      rethrow;
     }
+    }
+    // For pending creations, fallback to basic update.
+    await _local.update(updating);
     return updating;
   }
 
@@ -298,12 +346,14 @@ class MedicineRepository {
         );
       } catch (e) {
         developer.log('Failed to log dose: $e', name: 'MedicineRepository');
+        throw Exception('Failed to save log to server: $e');
       }
     } else {
       developer.log(
         'Skip remote dose log: no remoteId found (localId=$localId)',
         name: 'MedicineRepository',
       );
+      throw Exception('Cannot log dose: Medicine not synced with server');
     }
   }
 
@@ -328,19 +378,34 @@ class MedicineRepository {
     }
   }
 
-  MedicinePayload _buildPayload(MedicineModel m, String pid) => MedicinePayload(
-    profileId: pid,
-    name: m.name,
-    dose: m.doseAmount.isNotEmpty && m.doseUnit.isNotEmpty
+  MedicinePayload _buildPayload(MedicineModel m, String pid) {
+    // Normalize startDate to beginning of day to avoid timezone/time validation issues on backend
+    DateTime normalizedStart = m.startDate;
+    if (normalizedStart.hour != 0 || normalizedStart.minute != 0 || normalizedStart.second != 0) {
+      normalizedStart = DateTime(normalizedStart.year, normalizedStart.month, normalizedStart.day);
+    }
+
+    String computedDose = m.doseAmount.isNotEmpty && m.doseUnit.isNotEmpty
         ? '${m.doseAmount} ${m.doseUnit}'
         : m.doseAmount.isNotEmpty
         ? m.doseAmount
-        : m.doseUnit,
-    frequency: m.frequency,
-    reminders: m.alarmTimes,
-    startDate: m.startDate.toIso8601String(),
-    notes: m.notes,
-  );
+        : m.doseUnit;
+
+    if (computedDose.trim().isEmpty) {
+      computedDose = '1'; // Fallback dose to pass backend validation
+    }
+
+    return MedicinePayload(
+      profileId: pid,
+      name: m.name,
+      dose: computedDose,
+      frequency: m.frequency,
+      reminders: m.alarmTimes,
+      startDate: normalizedStart.toIso8601String(),
+      notes: m.notes,
+      doseForm: m.doseForm,
+    );
+  }
 
   String _extractDoseAmount(String dose) {
     if (dose.isEmpty) return '';
