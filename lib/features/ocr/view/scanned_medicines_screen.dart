@@ -85,9 +85,6 @@ class ScannedMedicinesScreen extends StatelessWidget {
                                         : m.original,
                                     style: context.typography.label,
                                   ),
-                                  subtitle: Text(
-                                    AppLocalizations.scannedMedicinesTablet,
-                                  ),
                                   trailing: const Icon(
                                     Icons.edit_outlined,
                                     size: 20,

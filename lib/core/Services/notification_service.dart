@@ -104,6 +104,10 @@ class NotificationService {
           scheduledAt: scheduledAt,
         );
       }
+
+      // Also try to sync any previously queued dose logs
+      final repo = get_it_services.getIt<MedicineRepository>();
+      repo.syncPendingDoseLogs().ignore();
     } on PlatformException catch (e) {
       developer.log(
         'consumePendingAlarmActions failed: ${e.code} — ${e.message}',

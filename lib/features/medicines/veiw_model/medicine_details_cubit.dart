@@ -84,9 +84,6 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
         updatedAt: DateTime.now(),
       );
       final savedMedicine = await _repository.updateMedicine(updatedMedicine);
-      if (savedMedicine.syncStatus == SyncStatus.failed) {
-        throw Exception('Failed to update medicine on the server');
-      }
       await NotificationService.instance.cancelMedicineAlarms(
         currentState.medicine.id,
         profileId: currentState.medicine.profileId,

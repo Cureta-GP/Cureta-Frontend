@@ -34,7 +34,8 @@ enum Frequency {
 enum SyncStatus {
   pending,
   synced,
-  failed;
+  failed,
+  deleted;
 
   String toJson() => name;
 

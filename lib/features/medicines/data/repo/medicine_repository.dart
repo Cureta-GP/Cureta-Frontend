@@ -134,6 +134,14 @@ class MedicineRepository {
     await _refreshFromRemote(pid);
     for (final m in await _local.getPending(pid)) {
       try {
+        if (m.syncStatus == SyncStatus.deleted) {
+          if (m.remoteId != null && m.remoteId!.isNotEmpty) {
+            await _remote.deleteMedicine(m.remoteId!);
+          }
+          await _local.hardDelete(m.id);
+          continue;
+        }
+
         if (m.remoteId != null && m.remoteId!.isNotEmpty) {
           // It's an update
           final dto = await _remote.updateMedicine(m.remoteId!, _buildPayload(m, pid));
@@ -163,24 +171,24 @@ class MedicineRepository {
           'Failed to sync medicine ${m.id}: $e',
           name: 'MedicineRepository',
         );
-        await _local.updateSyncStatus(m.id, SyncStatus.failed);
+        if (m.syncStatus != SyncStatus.deleted) {
+          await _local.updateSyncStatus(m.id, SyncStatus.failed);
+        }
       }
     }
+    // Also sync any pending dose logs since some medicines might have just received a remoteId
+    syncPendingDoseLogs().ignore();
   }
 
   Future<void> deleteMedicine(String localId) async {
     final m = await _local.getById(localId);
+    if (m == null) return;
+    
+    // This will set the status to deleted locally
     await _local.delete(localId);
-    if (m?.remoteId != null) {
-      try {
-        await _remote.deleteMedicine(m!.remoteId!);
-      } catch (e) {
-        developer.log(
-          'Failed to delete medicine: $e',
-          name: 'MedicineRepository',
-        );
-      }
-    }
+    
+    // Trigger sync in background immediately to attempt network call
+    syncPendingMedicines().ignore();
   }
 
   Future<MedicineModel> updateMedicine(MedicineModel m) async {
@@ -295,9 +303,7 @@ class MedicineRepository {
         developer.log('Failed to update medicine on remote: $e', name: 'MedicineRepository');
         final failed = updating.copyWith(syncStatus: SyncStatus.failed);
         await _local.update(failed);
-        
-        // Re-throw so the Cubit knows the exact reason!
-        throw Exception(e.toString());
+        return failed;
       }
     } catch (e) {
       developer.log('Critical error in updateMedicine: $e', name: 'MedicineRepository');
@@ -363,31 +369,60 @@ class MedicineRepository {
       }
     }
 
-    if (effectiveRemoteId != null && effectiveRemoteId.isNotEmpty) {
+    final actionId = _uuid.v4();
+    final actionData = {
+      'id': actionId,
+      'local_medicine_id': localId,
+      'remote_medicine_id': effectiveRemoteId,
+      'action': normalizedStatus,
+      'scheduled_at': scheduledAt?.toIso8601String(),
+      'created_at': now.toIso8601String(),
+    };
+
+    // Save to local queue
+    await _local.insertDoseLogAction(actionData);
+
+    // Trigger sync immediately
+    syncPendingDoseLogs().ignore();
+  }
+
+  Future<void> syncPendingDoseLogs() async {
+    final pending = await _local.getPendingDoseLogActions();
+    if (pending.isEmpty) return;
+
+    for (final item in pending) {
       try {
-        developer.log(
-          'Sending dose log: localId=$localId, remoteId=$effectiveRemoteId, status=$normalizedStatus',
-          name: 'MedicineRepository',
-        );
-        await _remote.trackDose(
-          effectiveRemoteId,
-          normalizedStatus,
-          scheduledAt: scheduledAt,
-        );
-        developer.log(
-          'Dose log sent successfully for remoteId=$effectiveRemoteId',
-          name: 'MedicineRepository',
-        );
+        final id = item['id'] as String;
+        String? remoteId = item['remote_medicine_id'] as String?;
+        final localId = item['local_medicine_id'] as String;
+
+        if (remoteId == null || remoteId.isEmpty) {
+          // Try to get updated remoteId if it was synced in the meantime
+          final m = await _local.getById(localId);
+          if (m != null && m.remoteId != null && m.remoteId!.isNotEmpty) {
+            remoteId = m.remoteId;
+          }
+        }
+
+        if (remoteId != null && remoteId.isNotEmpty) {
+          final action = item['action'] as String;
+          final scheduledAtStr = item['scheduled_at'] as String?;
+          final scheduledAt = scheduledAtStr != null ? DateTime.parse(scheduledAtStr) : null;
+          final createdAtStr = item['created_at'] as String?;
+          final takenAt = createdAtStr != null ? DateTime.parse(createdAtStr) : null;
+
+          await _remote.trackDose(remoteId, action, scheduledAt: scheduledAt, takenAt: takenAt);
+          
+          // Successfully tracked, remove from queue
+          await _local.deleteDoseLogAction(id);
+          developer.log('Synced dose log $id successfully.', name: 'MedicineRepository');
+        } else {
+          // Medicine still not synced, leave it in the queue for later
+          developer.log('Skip syncing dose log $id: no remoteId for medicine $localId', name: 'MedicineRepository');
+        }
       } catch (e) {
-        developer.log('Failed to log dose: $e', name: 'MedicineRepository');
-        throw Exception('Failed to save log to server: $e');
+        developer.log('Failed to sync dose log: $e', name: 'MedicineRepository');
       }
-    } else {
-      developer.log(
-        'Skip remote dose log: no remoteId found (localId=$localId)',
-        name: 'MedicineRepository',
-      );
-      throw Exception('Cannot log dose: Medicine not synced with server');
     }
   }
 
@@ -438,6 +473,7 @@ class MedicineRepository {
       startDate: normalizedStart.toIso8601String(),
       notes: m.notes,
       doseForm: m.doseForm,
+      imagePath: m.imagePath,
     );
   }
 

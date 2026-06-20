@@ -7,9 +7,10 @@ import '../models/medicine_enums.dart';
 
 class MedicineLocalService {
   static const _dbName = 'cureta_medicines.db';
-  static const _dbVersion = 3;
+  static const _dbVersion = 4;
   static const _table = 'medicines';
   static const _doseLogsTable = 'medicine_dose_logs';
+  static const _doseLogsQueueTable = 'dose_logs_queue';
 
   static const colId = 'id';
   static const colName = 'name';
@@ -72,6 +73,16 @@ class MedicineLocalService {
         created_at TEXT NOT NULL
       )
     ''');
+    await db.execute('''
+      CREATE TABLE $_doseLogsQueueTable (
+        id TEXT PRIMARY KEY,
+        local_medicine_id TEXT NOT NULL,
+        remote_medicine_id TEXT,
+        action TEXT NOT NULL,
+        scheduled_at TEXT,
+        created_at TEXT NOT NULL
+      )
+    ''');
   }
 
   Future<void> _upgrade(Database db, int oldVersion, int newVersion) async {
@@ -96,6 +107,18 @@ class MedicineLocalService {
         )
       ''');
     }
+    if (oldVersion < 4) {
+      await db.execute('''
+        CREATE TABLE IF NOT EXISTS $_doseLogsQueueTable (
+          id TEXT PRIMARY KEY,
+          local_medicine_id TEXT NOT NULL,
+          remote_medicine_id TEXT,
+          action TEXT NOT NULL,
+          scheduled_at TEXT,
+          created_at TEXT NOT NULL
+        )
+      ''');
+    }
   }
 
   Future<void> insert(MedicineModel m) async {
@@ -109,7 +132,11 @@ class MedicineLocalService {
   }
 
   Future<List<MedicineModel>> getAll(String profileId) async {
-    final maps = await _db!.query(_table, where: '$colProfileId = ?', whereArgs: [profileId]);
+    final maps = await _db!.query(
+      _table, 
+      where: '$colProfileId = ? AND $colSyncStatus != ?', 
+      whereArgs: [profileId, SyncStatus.deleted.toJson()]
+    );
     return maps.map(_fromMap).toList();
   }
 
@@ -121,8 +148,8 @@ class MedicineLocalService {
   Future<List<MedicineModel>> getPending(String profileId) async {
     final maps = await _db!.query(
       _table,
-      where: '$colSyncStatus = ? AND $colProfileId = ?',
-      whereArgs: [SyncStatus.pending.toJson(), profileId],
+      where: '($colSyncStatus = ? OR $colSyncStatus = ? OR $colSyncStatus = ?) AND $colProfileId = ?',
+      whereArgs: [SyncStatus.pending.toJson(), SyncStatus.deleted.toJson(), SyncStatus.failed.toJson(), profileId],
     );
     return maps.map(_fromMap).toList();
   }
@@ -178,8 +205,27 @@ class MedicineLocalService {
 
   Future<void> delete(String id) async {
     final m = await getById(id);
+    if (m != null) {
+      await updateSyncStatus(id, SyncStatus.deleted);
+    }
+  }
+
+  Future<void> hardDelete(String id) async {
+    final m = await getById(id);
     await _db!.delete(_table, where: '$colId = ?', whereArgs: [id]);
     if (m != null) await _emitAll(m.profileId);
+  }
+
+  Future<void> insertDoseLogAction(Map<String, dynamic> data) async {
+    await _db!.insert(_doseLogsQueueTable, data, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<List<Map<String, dynamic>>> getPendingDoseLogActions() async {
+    return await _db!.query(_doseLogsQueueTable);
+  }
+
+  Future<void> deleteDoseLogAction(String id) async {
+    await _db!.delete(_doseLogsQueueTable, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<void> close() async {

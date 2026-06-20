@@ -123,11 +123,19 @@ class MedicineService {
     String medicineId,
     String status, {
     DateTime? scheduledAt,
+    DateTime? takenAt,
   }) async {
     final scheduled = (scheduledAt ?? DateTime.now()).toUtc().toIso8601String();
+    final data = <String, dynamic>{
+      'status': status, 
+      'scheduled_at': scheduled,
+    };
+    if (takenAt != null) {
+      data['taken_at'] = takenAt.toUtc().toIso8601String();
+    }
     await DioHelper.postData(
       url: ApiEndpoints.medicineLogs(medicineId),
-      data: {'status': status, 'scheduled_at': scheduled},
+      data: data,
     );
   }
 
