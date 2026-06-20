@@ -15,6 +15,7 @@ class MedicineDto {
   final String? notes;
   final String? createdAt;
   final String? updatedAt;
+  final List<Map<String, dynamic>> rawReminders;
 
   const MedicineDto({
     this.id,
@@ -29,6 +30,7 @@ class MedicineDto {
     this.notes,
     this.createdAt,
     this.updatedAt,
+    this.rawReminders = const [],
   });
 
   factory MedicineDto.fromJson(Map<String, dynamic> json) {
@@ -38,6 +40,7 @@ class MedicineDto {
     //   • [{"time": "08:00"}, ...]  (current server contract)
     //   • ["08:00", ...]            (legacy / fallback)
     final raw = json['reminders'] as List<dynamic>? ?? [];
+    final rawReminders = raw.whereType<Map<String, dynamic>>().toList();
     final remindersList = raw
         .map((e) {
           if (e is Map<String, dynamic>) {
@@ -61,6 +64,7 @@ class MedicineDto {
       notes: json['notes']?.toString(),
       createdAt: json['created_at']?.toString(),
       updatedAt: json['updated_at']?.toString(),
+      rawReminders: rawReminders,
     );
   }
 

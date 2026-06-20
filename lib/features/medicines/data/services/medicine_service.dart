@@ -47,29 +47,50 @@ class MedicineService {
     return MedicineDto.fromJson(_extractItemMap(response.data));
   }
 
-  Future<void> updateReminders(String medicineId, MedicinePayload payload) async {
-    // The endpoint is POST /api/reminders/{medicine_id}
-    // and expects a body for EACH time slot.
-    for (final time in payload.reminders) {
-      final formattedStart = payload.startDate.contains('T') ? payload.startDate.split('T')[0] : payload.startDate;
-      final body = {
-        "time": time,
-        "dose": payload.dose,
-        "frequency": payload.frequency.toJson(),
-        "with_food": false,
-        "start_date": formattedStart,
-      };
-      if (payload.endDate != null) {
-        final formattedEnd = payload.endDate!.contains('T') ? payload.endDate!.split('T')[0] : payload.endDate!;
-        body["end_date"] = formattedEnd;
-      }
-      if (payload.notes != null) body["notes"] = payload.notes!;
-
-      await DioHelper.postData(
-        url: ApiEndpoints.reminders(medicineId),
-        data: body,
-      );
+  Future<void> createReminder(String medicineId, MedicinePayload payload, String time) async {
+    final formattedStart = payload.startDate.contains('T') ? payload.startDate.split('T')[0] : payload.startDate;
+    final body = {
+      "time": time,
+      "dose": payload.dose,
+      "frequency": payload.frequency.toJson(),
+      "with_food": false,
+      "start_date": formattedStart,
+    };
+    if (payload.endDate != null) {
+      final formattedEnd = payload.endDate!.contains('T') ? payload.endDate!.split('T')[0] : payload.endDate!;
+      body["end_date"] = formattedEnd;
     }
+    if (payload.notes != null) body["notes"] = payload.notes!;
+
+    await DioHelper.postData(
+      url: ApiEndpoints.reminders(medicineId),
+      data: body,
+    );
+  }
+
+  Future<void> updateReminder(String reminderId, MedicinePayload payload, String time) async {
+    final formattedStart = payload.startDate.contains('T') ? payload.startDate.split('T')[0] : payload.startDate;
+    final body = {
+      "time": time,
+      "dose": payload.dose,
+      "frequency": payload.frequency.toJson(),
+      "with_food": false,
+      "start_date": formattedStart,
+    };
+    if (payload.endDate != null) {
+      final formattedEnd = payload.endDate!.contains('T') ? payload.endDate!.split('T')[0] : payload.endDate!;
+      body["end_date"] = formattedEnd;
+    }
+    if (payload.notes != null) body["notes"] = payload.notes!;
+
+    await DioHelper.putData(
+      url: ApiEndpoints.reminderData(reminderId),
+      data: body,
+    );
+  }
+
+  Future<void> deleteReminder(String reminderId) async {
+    await DioHelper.deleteData(url: ApiEndpoints.reminderData(reminderId));
   }
 
   Future<MedicineDto> archiveMedicine(String id) async {

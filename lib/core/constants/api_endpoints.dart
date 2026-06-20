@@ -24,6 +24,7 @@ class ApiEndpoints {
   static String profileLogs(String profileId) =>
       "medicines/profile/$profileId/logs";
   static String reminders(String medicineId) => "reminders/$medicineId";
+  static String reminderData(String reminderId) => "reminders/$reminderId";
 
   //Schedule
   static const String schedule = 'schedule';

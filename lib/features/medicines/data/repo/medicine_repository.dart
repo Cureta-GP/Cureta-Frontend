@@ -219,14 +219,43 @@ class MedicineRepository {
           doseForm: updating.doseForm,
         );
 
+        // 1. Fetch all medicines for profile to find current state and reminder IDs
+        // (Because GET /api/medicines/:id is not implemented on the backend)
+        final allMedicines = await _remote.getMedicines(profileId: pid);
+        final currentServerMedicine = allMedicines.where((m) => m.id == updating.remoteId).firstOrNull;
+        
+        // 2. Update the main medicine details
         final dto = await _remote.updateMedicine(
           updating.remoteId!,
           payload,
         );
 
-        // Additionally sync reminders if there are any, using the new endpoint
-        if (payload.reminders.isNotEmpty) {
-          await _remote.updateReminders(updating.remoteId!, payload);
+        // 3. Diffing logic for reminders (Positional Matching to use PUT for edits)
+        final oldReminders = currentServerMedicine?.rawReminders ?? [];
+        final newTimes = payload.reminders;
+        
+        final maxLength = oldReminders.length > newTimes.length ? oldReminders.length : newTimes.length;
+        
+        for (int i = 0; i < maxLength; i++) {
+          final oldReminder = i < oldReminders.length ? oldReminders[i] : null;
+          final newTime = i < newTimes.length ? newTimes[i] : null;
+          
+          if (oldReminder != null && newTime != null) {
+            // Both exist at this index -> Update using PUT
+            final existingId = oldReminder['id'] as String?;
+            if (existingId != null) {
+              await _remote.updateReminder(existingId, payload, newTime);
+            }
+          } else if (oldReminder != null && newTime == null) {
+            // Old exists, new doesn't -> Delete
+            final oldId = oldReminder['id'] as String?;
+            if (oldId != null) {
+              await _remote.deleteReminder(oldId);
+            }
+          } else if (oldReminder == null && newTime != null) {
+            // New exists, old doesn't -> Create using POST
+            await _remote.createReminder(updating.remoteId!, payload, newTime);
+          }
         }
 
         final serverRemoteId =
@@ -250,9 +279,7 @@ class MedicineRepository {
               : updating.doseUnit,
           frequency: remoteModel.frequency,
           notes: remoteModel.notes,
-          alarmTimes: remoteModel.alarmTimes.isNotEmpty
-              ? remoteModel.alarmTimes
-              : updating.alarmTimes,
+          alarmTimes: updating.alarmTimes, // Always trust local updated times since backend PUT ignores them
           startDate: remoteModel.startDate,
         );
         await _local.update(synced);
