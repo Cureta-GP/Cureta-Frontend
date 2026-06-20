@@ -40,7 +40,12 @@ class MedicineDto {
     //   • [{"time": "08:00"}, ...]  (current server contract)
     //   • ["08:00", ...]            (legacy / fallback)
     final raw = json['reminders'] as List<dynamic>? ?? [];
-    final rawReminders = raw.whereType<Map<String, dynamic>>().toList();
+    final List<Map<String, dynamic>> rawReminders = [];
+    for (var r in raw) {
+      if (r is Map) {
+        rawReminders.add(Map<String, dynamic>.from(r));
+      }
+    }
     final remindersList = raw
         .map((e) {
           if (e is Map<String, dynamic>) {

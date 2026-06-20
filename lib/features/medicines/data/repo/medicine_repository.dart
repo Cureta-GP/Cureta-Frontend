@@ -234,6 +234,9 @@ class MedicineRepository {
         final oldReminders = currentServerMedicine?.rawReminders ?? [];
         final newTimes = payload.reminders;
         
+        developer.log('DIFFING: oldReminders from server = $oldReminders', name: 'MedicineRepository');
+        developer.log('DIFFING: newTimes from UI = $newTimes', name: 'MedicineRepository');
+        
         final maxLength = oldReminders.length > newTimes.length ? oldReminders.length : newTimes.length;
         
         for (int i = 0; i < maxLength; i++) {
@@ -242,18 +245,21 @@ class MedicineRepository {
           
           if (oldReminder != null && newTime != null) {
             // Both exist at this index -> Update using PUT
-            final existingId = oldReminder['id'] as String?;
-            if (existingId != null) {
+            final existingId = oldReminder['id']?.toString() ?? oldReminder['reminder_id']?.toString();
+            developer.log('DIFFING: Updating index $i. existingId = $existingId, newTime = $newTime', name: 'MedicineRepository');
+            if (existingId != null && existingId.isNotEmpty) {
               await _remote.updateReminder(existingId, payload, newTime);
             }
           } else if (oldReminder != null && newTime == null) {
             // Old exists, new doesn't -> Delete
-            final oldId = oldReminder['id'] as String?;
-            if (oldId != null) {
+            final oldId = oldReminder['id']?.toString() ?? oldReminder['reminder_id']?.toString();
+            developer.log('DIFFING: Deleting index $i. oldId = $oldId', name: 'MedicineRepository');
+            if (oldId != null && oldId.isNotEmpty) {
               await _remote.deleteReminder(oldId);
             }
           } else if (oldReminder == null && newTime != null) {
             // New exists, old doesn't -> Create using POST
+            developer.log('DIFFING: Creating new reminder at index $i. newTime = $newTime', name: 'MedicineRepository');
             await _remote.createReminder(updating.remoteId!, payload, newTime);
           }
         }
