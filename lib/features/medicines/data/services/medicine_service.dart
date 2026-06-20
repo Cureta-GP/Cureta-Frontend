@@ -93,6 +93,19 @@ class MedicineService {
     await DioHelper.deleteData(url: ApiEndpoints.reminderData(reminderId));
   }
 
+  Future<List<Map<String, dynamic>>> getReminders(String medicineId) async {
+    try {
+      final response = await DioHelper.getData(
+        url: ApiEndpoints.reminders(medicineId),
+        query: {},
+      );
+      final raw = _extractItemsList(response.data);
+      return raw.whereType<Map<String, dynamic>>().toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
   Future<MedicineDto> archiveMedicine(String id) async {
     final response = await DioHelper.patchData(
       url: ApiEndpoints.medicineArchive(id),

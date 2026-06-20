@@ -219,10 +219,11 @@ class MedicineRepository {
           doseForm: updating.doseForm,
         );
 
-        // 1. Fetch all medicines for profile to find current state and reminder IDs
-        // (Because GET /api/medicines/:id is not implemented on the backend)
-        final allMedicines = await _remote.getMedicines(profileId: pid);
-        final currentServerMedicine = allMedicines.where((m) => m.id == updating.remoteId).firstOrNull;
+        // 1. Fetch current reminders directly from the dedicated endpoints using medicine ID
+        // This is safe and guarantees we have the true IDs, bypassing the stale main GET /api/medicines
+        final oldReminders = updating.remoteId != null && updating.remoteId!.isNotEmpty 
+            ? await _remote.getReminders(updating.remoteId!) 
+            : [];
         
         // 2. Update the main medicine details
         final dto = await _remote.updateMedicine(
@@ -231,7 +232,6 @@ class MedicineRepository {
         );
 
         // 3. Diffing logic for reminders (Positional Matching to use PUT for edits)
-        final oldReminders = currentServerMedicine?.rawReminders ?? [];
         final newTimes = payload.reminders;
         
         developer.log('DIFFING: oldReminders from server = $oldReminders', name: 'MedicineRepository');
@@ -287,6 +287,7 @@ class MedicineRepository {
           notes: remoteModel.notes,
           alarmTimes: updating.alarmTimes, // Always trust local updated times since backend PUT ignores them
           startDate: remoteModel.startDate,
+          updatedAt: DateTime.now().add(const Duration(seconds: 5)), // HACK: Protect against stale GET /api/medicines that overwrite local DB
         );
         await _local.update(synced);
         return synced;

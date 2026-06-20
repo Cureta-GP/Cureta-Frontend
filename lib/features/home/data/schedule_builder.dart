@@ -80,12 +80,15 @@ class ScheduleBuilder {
   }) {
     final matchingLogs = logs.where((log) {
       final localScheduled = log.scheduledAt.toLocal();
-      final localTaken = log.takenAt?.toLocal();
-      final byScheduled = _isLikelySameDoseSlot(localScheduled, scheduled);
-      final byTaken = localTaken != null
-          ? _isLikelySameDoseSlot(localTaken, scheduled)
-          : false;
-      return byScheduled || byTaken;
+      // Use exact hour/minute matching against the scheduled slot.
+      // Fuzzy matching causes bugs when:
+      // 1. A medicine has multiple alarms within 90 minutes.
+      // 2. A user edits an alarm time and expects the new time to be upcoming.
+      return localScheduled.year == scheduled.year &&
+             localScheduled.month == scheduled.month &&
+             localScheduled.day == scheduled.day &&
+             localScheduled.hour == scheduled.hour &&
+             localScheduled.minute == scheduled.minute;
     });
 
     if (matchingLogs.any((l) => l.status.name == 'taken')) {
@@ -117,14 +120,6 @@ class ScheduleBuilder {
     return scheduled.isBefore(referenceNow)
         ? DoseStatus.missed
         : DoseStatus.pending;
-  }
-
-  static bool _isLikelySameDoseSlot(DateTime a, DateTime b) {
-    final sameLocalDay =
-        a.year == b.year && a.month == b.month && a.day == b.day;
-    if (!sameLocalDay) return false;
-    final diff = a.difference(b).inMinutes.abs();
-    return diff <= 90;
   }
 
   static DateTime? _dateAt(String hhmm, DateTime date) {
