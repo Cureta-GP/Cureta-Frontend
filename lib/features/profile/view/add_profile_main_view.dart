@@ -149,13 +149,7 @@ class _AddProfileMainState extends State<AddProfileMain> {
                       : await cubit.createProfile();
                   if (!mounted) return;
                   Navigator.pop(context); // غلق Loading
-                  if (GoRouter.of(context).canPop()) {
-                    GoRouter.of(context).pop(profile);
-                  } else {
-                    GoRouter.of(
-                      context,
-                    ).go(AppRoutes.mainNavigation, extra: profile);
-                  }
+                  GoRouter.of(context).go('${AppRoutes.mainNavigation}?tab=0', extra: profile);
                 } catch (e) {
                   if (!mounted) return;
                   Navigator.pop(context);

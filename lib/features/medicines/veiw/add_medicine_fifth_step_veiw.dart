@@ -53,13 +53,13 @@ class AddMedicineFifthStepVeiw extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: AddRecordNextButton(
-                  label: AppLocalizations.medicinesGoToMyMedicines,
+                  label: AppLocalizations.recordsListNavHome,
                   onPressed: () {
                     context.read<AddMedicineCubit>().resetForm();
-                    // Navigate to main screen with medicines tab selected.
+                    // Navigate to main screen with home tab selected.
                     // Using go() clears the entire stack so back goes to home.
                     context.go(
-                      '${AppRoutes.mainNavigation}?tab=1',
+                      '${AppRoutes.mainNavigation}?tab=0',
                     );
                   },
                 ),

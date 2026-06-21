@@ -44,7 +44,7 @@ class AddRecordReviewSubmitSection extends StatelessWidget {
               context.read<AddRecordFormCubit>().reset();
               context.read<AddRecordStepFourCubit>().reset();
               context.read<CreateRecordCubit>().reset();
-              GoRouter.of(context).go('${AppRoutes.mainNavigation}?tab=2');
+              GoRouter.of(context).go('${AppRoutes.mainNavigation}?tab=0');
             },
           );
         } else if (state is CreateRecordFailure) {
