@@ -59,10 +59,6 @@ class CustomDrawer extends StatelessWidget {
           ),
 
           _DrawerItem(
-            icon: Icons.people_outline,
-            label: 'drawer.family_profiles'.tr(),
-          ),
-          _DrawerItem(
             icon: Icons.settings_outlined,
             label: 'drawer.settings'.tr(),
             onTap: () => _openSettings(context),

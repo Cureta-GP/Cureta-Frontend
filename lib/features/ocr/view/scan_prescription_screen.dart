@@ -26,7 +26,6 @@ class ScanPrescriptionScreen extends StatelessWidget {
 
       if (image != null && context.mounted) {
         final file = File(image.path);
-        // Scan the prescription and upload to backend
         context.read<OcrCubit>().scanPrescription(file);
       }
     } catch (e) {
@@ -45,7 +44,6 @@ class ScanPrescriptionScreen extends StatelessWidget {
       child: BlocListener<OcrCubit, OcrState>(
         listener: (context, state) {
           if (state is OcrScanSuccess) {
-            // navigate to scanned medicines screen on success
             context.pushNamed(
               AppRoutes.scannedMedicines,
               extra: state.response.extractedMedicines,

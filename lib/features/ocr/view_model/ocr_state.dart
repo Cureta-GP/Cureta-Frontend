@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../data/models/ocr_medicine_match.dart'; // استيراد الموديل هنا أيضاً
 import '../data/models/ocr_scan_response.dart';
 import '../data/models/ocr_confirm_response.dart';
 
@@ -11,6 +12,16 @@ abstract class OcrState extends Equatable {
 class OcrInitial extends OcrState {}
 
 class OcrLoading extends OcrState {}
+
+// 3. الحالة الجديدة التي تطلق عند تحديث أو حذف الأدوية
+class OcrMedicinesUpdated extends OcrState {
+  final List<OcrMedicineMatch> medicines;
+
+  OcrMedicinesUpdated({required this.medicines});
+
+  @override
+  List<Object?> get props => [medicines];
+}
 
 class OcrScanSuccess extends OcrState {
   final OcrScanResponse response;

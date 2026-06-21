@@ -21,43 +21,50 @@ class _SplashViewState extends State<SplashView> {
     super.initState();
     _navigateToNext();
   }
-// داخل SplashView
-Future<void> _navigateToNext() async {
-  // تم إزالة الانتظار الوهمي (Future.delayed) لكي يفتح التطبيق بأسرع وقت ممكن
 
-  // التحقق يتم "خلف الكواليس" واللوجو معروض
-  final authRepo = getIt.get<AuthRepository>();
-  final profileRepo = getIt.get<ProfileRepository>();
-  final bool loggedIn = await authRepo.isLoggedIn();
+  // داخل SplashView
+  Future<void> _navigateToNext() async {
+    // تم إزالة الانتظار الوهمي (Future.delayed) لكي يفتح التطبيق بأسرع وقت ممكن
 
-  if (!mounted) return;
+    // التحقق يتم "خلف الكواليس" واللوجو معروض
+    final authRepo = getIt.get<AuthRepository>();
+    final profileRepo = getIt.get<ProfileRepository>();
+    final bool loggedIn = await authRepo.isLoggedIn();
 
-  if (loggedIn) {
-    final hasProfiles = await profileRepo.hasProfiles();
-    
-    if (context.mounted) {
-      if (hasProfiles) {
-        context.go(AppRoutes.mainNavigation);
-      } else {
-        context.go(AppRoutes.addProfile);
+    if (!mounted) return;
+
+    if (loggedIn) {
+      final hasProfiles = await profileRepo.hasProfiles();
+
+      if (context.mounted) {
+        if (hasProfiles) {
+          context.go(AppRoutes.mainNavigation);
+        } else {
+          context.go(AppRoutes.addProfile);
+        }
       }
+    } else {
+      // إذا لم يكن المستخدم مسجل دخول، اذهب إلى صفحة الـ onboarding
+      context.go(AppRoutes.onboarding);
     }
-  } else {
-    // إذا لم يكن المستخدم مسجل دخول، اذهب إلى صفحة الـ onboarding
-    context.go(AppRoutes.onboarding);
+
+    FlutterNativeSplash.remove();
   }
-  
-  FlutterNativeSplash.remove();
-}
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final spacing = context.spacing;
 
     return Scaffold(
       backgroundColor: colors.background,
-      body: const SizedBox.shrink(),
+      body: Center(
+        child: Image.asset(
+          AppImages.logo,
+          width: 200,
+          height: 200,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 }

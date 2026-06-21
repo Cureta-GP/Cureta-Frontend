@@ -41,77 +41,94 @@ class ProgressStepLayout extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Column(
-          children: [
-            CustomScreenHeader(
-              title: appBarTitle,
-              onBack: onBack,
-              onAction: onSkip,
-              actionLabel: onSkip != null ? AppLocalizations.skip : null,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: spacing.lg),
-              child: StepProgressIndicator(
-                stepLabel: stepLabel,
-                progressLabel: progressLabel,
-                progress: progress,
-              ),
-            ),
-            SizedBox(height: spacing.lg),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: spacing.lg),
-              child: Column(
-                children: [
-                  Text(
-                    title,
-                    textAlign: TextAlign.center,
-                    style: typography.medicalRecordScreenTitle.copyWith(
-                      color: colors.textPrimary,
-                      fontSize: 24,
-                    ),
-                  ),
-                  if (subtitle != null) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      subtitle!,
-                      textAlign: TextAlign.center,
-                      style: typography.body.copyWith(
-                        color: colors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: child,
-            ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(
-                spacing.lg,
-                spacing.sm,
-                spacing.lg,
-                spacing.lg,
-              ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  AddRecordNextButton(
-                    label: buttonLabel ?? AppLocalizations.profilesNextStep,
-                    onPressed: onNext,
+                  CustomScreenHeader(
+                    title: appBarTitle,
+                    onBack: onBack,
+                    onAction: onSkip,
+                    actionLabel: onSkip != null ? AppLocalizations.skip : null,
                   ),
-                  if (onSkip != null)
-                    TextButton(
-                      onPressed: onSkip,
-                      child: Text(
-                        AppLocalizations.profilesSkipForNow,
-                        style: typography.body.copyWith(
-                          color: colors.textSecondary,
-                        ),
-                      ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+                    child: StepProgressIndicator(
+                      stepLabel: stepLabel,
+                      progressLabel: progressLabel,
+                      progress: progress,
                     ),
+                  ),
+                  SizedBox(height: spacing.lg),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: typography.medicalRecordScreenTitle.copyWith(
+                            color: colors.textPrimary,
+                            fontSize: 24,
+                          ),
+                        ),
+                        if (subtitle != null) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            subtitle!,
+                            textAlign: TextAlign.center,
+                            style: typography.body.copyWith(
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+
+            SliverFillRemaining(
+              hasScrollBody: true,
+              child: Column(
+                children: [
+                  Expanded(child: child),
+
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      spacing.lg,
+                      spacing.sm,
+                      spacing.lg,
+                      spacing.lg,
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AddRecordNextButton(
+                          label:
+                              buttonLabel ?? AppLocalizations.profilesNextStep,
+                          onPressed: onNext,
+                        ),
+                        if (onSkip != null)
+                          TextButton(
+                            onPressed: onSkip,
+                            child: Text(
+                              AppLocalizations.profilesSkipForNow,
+                              style: typography.body.copyWith(
+                                color: colors.textSecondary,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

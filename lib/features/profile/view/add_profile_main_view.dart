@@ -158,9 +158,13 @@ class _AddProfileMainState extends State<AddProfileMain> {
                   }
                 } catch (e) {
                   if (!mounted) return;
-                  Navigator.pop(context); 
+                  Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.profilesFailedToSave(e.toString()))),
+                    SnackBar(
+                      content: Text(
+                        AppLocalizations.profilesFailedToSave(e.toString()),
+                      ),
+                    ),
                   );
                 }
               } else {
