@@ -16,7 +16,10 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
       listeners: [
         BlocListener<AddMedicineCubit, AddMedicineState>(
           listenWhen: (_, curr) => curr is AddMedicineSuccess,
-          listener: (context, _) => context.push('/medicines/add/5'),
+          listener: (context, _) {
+            FocusManager.instance.primaryFocus?.unfocus();
+            context.push('/medicines/add/5');
+          },
         ),
         BlocListener<AddMedicineCubit, AddMedicineState>(
           listenWhen: (_, curr) => curr is AddMedicineFailure,

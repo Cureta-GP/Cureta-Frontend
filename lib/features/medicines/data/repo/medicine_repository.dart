@@ -134,10 +134,19 @@ class MedicineRepository {
     await _refreshFromRemote(pid);
     for (final m in await _local.getPending(pid)) {
       try {
+        if (m.syncStatus == SyncStatus.deleted) {
+          if (m.remoteId != null && m.remoteId!.isNotEmpty) {
+            await _remote.deleteMedicine(m.remoteId!);
+          }
+          await _local.hardDelete(m.id);
+          continue;
+        }
+
         if (m.remoteId != null && m.remoteId!.isNotEmpty) {
           // It's an update
-          await _remote.updateMedicine(m.remoteId!, _buildPayload(m, pid));
-          await _local.updateSyncStatus(m.id, SyncStatus.synced);
+          final dto = await _remote.updateMedicine(m.remoteId!, _buildPayload(m, pid));
+          final newRemoteId = (dto.id != null && dto.id!.isNotEmpty) ? dto.id : m.remoteId;
+          await _local.updateSyncStatus(m.id, SyncStatus.synced, remoteId: newRemoteId);
         } else {
           // It's a create
           final dto = await _remote.createMedicine(_buildPayload(m, pid));
@@ -162,68 +171,143 @@ class MedicineRepository {
           'Failed to sync medicine ${m.id}: $e',
           name: 'MedicineRepository',
         );
-        await _local.updateSyncStatus(m.id, SyncStatus.failed);
+        if (m.syncStatus != SyncStatus.deleted) {
+          await _local.updateSyncStatus(m.id, SyncStatus.failed);
+        }
       }
     }
+    // Also sync any pending dose logs since some medicines might have just received a remoteId
+    syncPendingDoseLogs().ignore();
   }
 
   Future<void> deleteMedicine(String localId) async {
     final m = await _local.getById(localId);
+    if (m == null) return;
+    
+    // This will set the status to deleted locally
     await _local.delete(localId);
-    if (m?.remoteId != null) {
-      try {
-        await _remote.deleteMedicine(m!.remoteId!);
-      } catch (e) {
-        developer.log(
-          'Failed to delete medicine: $e',
-          name: 'MedicineRepository',
-        );
-      }
-    }
+    
+    // Trigger sync in background immediately to attempt network call
+    syncPendingMedicines().ignore();
   }
 
   Future<MedicineModel> updateMedicine(MedicineModel m) async {
     final updating = m.copyWith(syncStatus: SyncStatus.pending);
     await _local.update(updating);
+    
     if (updating.remoteId != null && updating.remoteId!.isNotEmpty) {
       try {
-        final pid = await _pid();
+        try {
+          final pid = await _pid();
+        
+        // Normalize startDate to beginning of day to avoid timezone/time validation issues on backend
+        DateTime normalizedStart = updating.startDate;
+        if (normalizedStart.hour != 0 || normalizedStart.minute != 0 || normalizedStart.second != 0) {
+          normalizedStart = DateTime(normalizedStart.year, normalizedStart.month, normalizedStart.day);
+        }
+
+        String computedDose = updating.doseAmount.isNotEmpty && updating.doseUnit.isNotEmpty
+            ? '${updating.doseAmount} ${updating.doseUnit}'
+            : updating.doseAmount.isNotEmpty
+            ? updating.doseAmount
+            : updating.doseUnit;
+
+        if (computedDose.trim().isEmpty) {
+          computedDose = '1'; // Fallback dose to pass backend validation
+        }
+
+        final payload = MedicinePayload(
+          profileId: pid,
+          name: updating.name,
+          dose: computedDose,
+          frequency: updating.frequency,
+          reminders: updating.alarmTimes,
+          startDate: normalizedStart.toIso8601String(),
+          notes: updating.notes,
+          doseForm: updating.doseForm,
+        );
+
+        // 1. Fetch current reminders directly from the dedicated endpoints using medicine ID
+        // This is safe and guarantees we have the true IDs, bypassing the stale main GET /api/medicines
+        final oldReminders = updating.remoteId != null && updating.remoteId!.isNotEmpty 
+            ? await _remote.getReminders(updating.remoteId!) 
+            : [];
+        
+        // 2. Update the main medicine details
         final dto = await _remote.updateMedicine(
           updating.remoteId!,
-          _buildPayload(updating, pid),
+          payload,
         );
+
+        // 3. Diffing logic for reminders (Positional Matching to use PUT for edits)
+        final newTimes = payload.reminders;
+        
+        developer.log('DIFFING: oldReminders from server = $oldReminders', name: 'MedicineRepository');
+        developer.log('DIFFING: newTimes from UI = $newTimes', name: 'MedicineRepository');
+        
+        final maxLength = oldReminders.length > newTimes.length ? oldReminders.length : newTimes.length;
+        
+        for (int i = 0; i < maxLength; i++) {
+          final oldReminder = i < oldReminders.length ? oldReminders[i] : null;
+          final newTime = i < newTimes.length ? newTimes[i] : null;
+          
+          if (oldReminder != null && newTime != null) {
+            // Both exist at this index -> Update using PUT
+            final existingId = oldReminder['id']?.toString() ?? oldReminder['reminder_id']?.toString();
+            developer.log('DIFFING: Updating index $i. existingId = $existingId, newTime = $newTime', name: 'MedicineRepository');
+            if (existingId != null && existingId.isNotEmpty) {
+              await _remote.updateReminder(existingId, payload, newTime);
+            }
+          } else if (oldReminder != null && newTime == null) {
+            // Old exists, new doesn't -> Delete
+            final oldId = oldReminder['id']?.toString() ?? oldReminder['reminder_id']?.toString();
+            developer.log('DIFFING: Deleting index $i. oldId = $oldId', name: 'MedicineRepository');
+            if (oldId != null && oldId.isNotEmpty) {
+              await _remote.deleteReminder(oldId);
+            }
+          } else if (oldReminder == null && newTime != null) {
+            // New exists, old doesn't -> Create using POST
+            developer.log('DIFFING: Creating new reminder at index $i. newTime = $newTime', name: 'MedicineRepository');
+            await _remote.createReminder(updating.remoteId!, payload, newTime);
+          }
+        }
+
+        final serverRemoteId =
+            (dto.id != null && dto.id!.isNotEmpty) ? dto.id : updating.remoteId;
         final remoteModel = dto.toDomain(
           updating.id,
           syncStatus: SyncStatus.synced,
-          remoteId: updating.remoteId,
+          remoteId: serverRemoteId,
           profileId: updating.profileId,
         );
         final synced = updating.copyWith(
           syncStatus: SyncStatus.synced,
+          remoteId: serverRemoteId,
           // Keep local-only fields while trusting backend canonical medicine fields.
           name: remoteModel.name,
-          doseAmount: remoteModel.doseAmount,
-          doseUnit: remoteModel.doseUnit,
-          frequency: remoteModel.frequency,
-          alarmTimes: remoteModel.alarmTimes,
-          startDate: remoteModel.startDate,
+          doseAmount: updating.doseAmount,
+          doseUnit: updating.doseUnit,
+          frequency: updating.frequency, // Always trust local updated frequency since backend PUT might ignore it
           notes: remoteModel.notes,
-          updatedAt: remoteModel.updatedAt.isAfter(updating.updatedAt)
-              ? remoteModel.updatedAt
-              : DateTime.now(),
+          alarmTimes: updating.alarmTimes, // Always trust local updated times since backend PUT ignores them
+          startDate: remoteModel.startDate,
+          updatedAt: DateTime.now().add(const Duration(seconds: 5)), // HACK: Protect against stale GET /api/medicines that overwrite local DB
         );
         await _local.update(synced);
         return synced;
       } catch (e) {
-        developer.log(
-          'Failed to update medicine on remote: $e',
-          name: 'MedicineRepository',
-        );
+        developer.log('Failed to update medicine on remote: $e', name: 'MedicineRepository');
         final failed = updating.copyWith(syncStatus: SyncStatus.failed);
         await _local.update(failed);
         return failed;
       }
+    } catch (e) {
+      developer.log('Critical error in updateMedicine: $e', name: 'MedicineRepository');
+      rethrow;
     }
+    }
+    // For pending creations, fallback to basic update.
+    await _local.update(updating);
     return updating;
   }
 
@@ -281,29 +365,60 @@ class MedicineRepository {
       }
     }
 
-    if (effectiveRemoteId != null && effectiveRemoteId.isNotEmpty) {
+    final actionId = _uuid.v4();
+    final actionData = {
+      'id': actionId,
+      'local_medicine_id': localId,
+      'remote_medicine_id': effectiveRemoteId,
+      'action': normalizedStatus,
+      'scheduled_at': scheduledAt?.toIso8601String(),
+      'created_at': now.toIso8601String(),
+    };
+
+    // Save to local queue
+    await _local.insertDoseLogAction(actionData);
+
+    // Trigger sync immediately
+    syncPendingDoseLogs().ignore();
+  }
+
+  Future<void> syncPendingDoseLogs() async {
+    final pending = await _local.getPendingDoseLogActions();
+    if (pending.isEmpty) return;
+
+    for (final item in pending) {
       try {
-        developer.log(
-          'Sending dose log: localId=$localId, remoteId=$effectiveRemoteId, status=$normalizedStatus',
-          name: 'MedicineRepository',
-        );
-        await _remote.trackDose(
-          effectiveRemoteId,
-          normalizedStatus,
-          scheduledAt: scheduledAt,
-        );
-        developer.log(
-          'Dose log sent successfully for remoteId=$effectiveRemoteId',
-          name: 'MedicineRepository',
-        );
+        final id = item['id'] as String;
+        String? remoteId = item['remote_medicine_id'] as String?;
+        final localId = item['local_medicine_id'] as String;
+
+        if (remoteId == null || remoteId.isEmpty) {
+          // Try to get updated remoteId if it was synced in the meantime
+          final m = await _local.getById(localId);
+          if (m != null && m.remoteId != null && m.remoteId!.isNotEmpty) {
+            remoteId = m.remoteId;
+          }
+        }
+
+        if (remoteId != null && remoteId.isNotEmpty) {
+          final action = item['action'] as String;
+          final scheduledAtStr = item['scheduled_at'] as String?;
+          final scheduledAt = scheduledAtStr != null ? DateTime.parse(scheduledAtStr) : null;
+          final createdAtStr = item['created_at'] as String?;
+          final takenAt = createdAtStr != null ? DateTime.parse(createdAtStr) : null;
+
+          await _remote.trackDose(remoteId, action, scheduledAt: scheduledAt, takenAt: takenAt);
+          
+          // Successfully tracked, remove from queue
+          await _local.deleteDoseLogAction(id);
+          developer.log('Synced dose log $id successfully.', name: 'MedicineRepository');
+        } else {
+          // Medicine still not synced, leave it in the queue for later
+          developer.log('Skip syncing dose log $id: no remoteId for medicine $localId', name: 'MedicineRepository');
+        }
       } catch (e) {
-        developer.log('Failed to log dose: $e', name: 'MedicineRepository');
+        developer.log('Failed to sync dose log: $e', name: 'MedicineRepository');
       }
-    } else {
-      developer.log(
-        'Skip remote dose log: no remoteId found (localId=$localId)',
-        name: 'MedicineRepository',
-      );
     }
   }
 
@@ -328,19 +443,35 @@ class MedicineRepository {
     }
   }
 
-  MedicinePayload _buildPayload(MedicineModel m, String pid) => MedicinePayload(
-    profileId: pid,
-    name: m.name,
-    dose: m.doseAmount.isNotEmpty && m.doseUnit.isNotEmpty
+  MedicinePayload _buildPayload(MedicineModel m, String pid) {
+    // Normalize startDate to beginning of day to avoid timezone/time validation issues on backend
+    DateTime normalizedStart = m.startDate;
+    if (normalizedStart.hour != 0 || normalizedStart.minute != 0 || normalizedStart.second != 0) {
+      normalizedStart = DateTime(normalizedStart.year, normalizedStart.month, normalizedStart.day);
+    }
+
+    String computedDose = m.doseAmount.isNotEmpty && m.doseUnit.isNotEmpty
         ? '${m.doseAmount} ${m.doseUnit}'
         : m.doseAmount.isNotEmpty
         ? m.doseAmount
-        : m.doseUnit,
-    frequency: m.frequency,
-    reminders: m.alarmTimes,
-    startDate: m.startDate.toIso8601String(),
-    notes: m.notes,
-  );
+        : m.doseUnit;
+
+    if (computedDose.trim().isEmpty) {
+      computedDose = '1'; // Fallback dose to pass backend validation
+    }
+
+    return MedicinePayload(
+      profileId: pid,
+      name: m.name,
+      dose: computedDose,
+      frequency: m.frequency,
+      reminders: m.alarmTimes,
+      startDate: normalizedStart.toIso8601String(),
+      notes: m.notes,
+      doseForm: m.doseForm,
+      imagePath: m.imagePath,
+    );
+  }
 
   String _extractDoseAmount(String dose) {
     if (dose.isEmpty) return '';

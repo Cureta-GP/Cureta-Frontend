@@ -3,6 +3,7 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_form_cubit.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_body.dart';
 import 'package:cureta/features/medical_records/widgets/add_record_step_two_bottom_bar.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -39,11 +40,13 @@ class AddMedicalRecordSeconedStep extends StatelessWidget {
   void _handleNext(BuildContext context, DateTime? date, bool isOngoing) {
     // Date is required
     if (date == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please select a date')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(AppLocalizations.addRecordErrorDateRequired)),
+      );
       return;
     }
+
+    FocusManager.instance.primaryFocus?.unfocus();
 
     onNext?.call(date, isOngoing);
     GoRouter.of(context).pushNamed(AppRoutes.medicalRecords_step_three);

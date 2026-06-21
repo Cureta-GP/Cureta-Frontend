@@ -23,7 +23,14 @@ class ApiEndpoints {
   static String medicineLogs(String id) => "medicines/$id/logs";
   static String profileLogs(String profileId) =>
       "medicines/profile/$profileId/logs";
+  static String reminders(String medicineId) => "reminders/$medicineId";
+  static String reminderData(String reminderId) => "reminders/$reminderId";
 
   //Schedule
   static const String schedule = 'schedule';
+
+  //QR
+  static const String recordsCategories = 'qr-share/categories';
+  static const String filteredRecords = 'qr-share/token';
+  static String qrShare(String token) => "qr-share/$token";
 }

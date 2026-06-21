@@ -1,3 +1,4 @@
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/shared/widgets/add_record_next_button.dart';
 import 'package:cureta/shared/widgets/custom_screen_header.dart';
@@ -12,7 +13,7 @@ class ProgressStepLayout extends StatelessWidget {
   final String stepLabel;
   final String progressLabel;
   final Widget child;
-  final String buttonLabel;
+  final String? buttonLabel;
   final VoidCallback onNext;
   final VoidCallback? onSkip;
   final VoidCallback? onBack;
@@ -27,7 +28,7 @@ class ProgressStepLayout extends StatelessWidget {
     required this.child,
     required this.onNext,
     this.subtitle,
-    this.buttonLabel = "Next Step",
+    this.buttonLabel,
     this.onSkip,
     this.onBack,
   });
@@ -40,68 +41,94 @@ class ProgressStepLayout extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Column(
-          children: [
-            CustomScreenHeader(
-              title: appBarTitle,
-              onBack: onBack,
-              onAction: onSkip,
-              actionLabel: onSkip != null ? "Skip" : null,
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: spacing.lg),
-              child: StepProgressIndicator(
-                stepLabel: stepLabel,
-                progressLabel: progressLabel,
-                progress: progress,
-              ),
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(spacing.lg),
-                child: Column(
-                  children: [
-                    SizedBox(height: spacing.lg),
-                    Text(
-                      title,
-                      textAlign: TextAlign.center,
-                      style: typography.medicalRecordScreenTitle.copyWith(
-                        color: colors.textPrimary,
-                        fontSize: 24,
-                      ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CustomScreenHeader(
+                    title: appBarTitle,
+                    onBack: onBack,
+                    onAction: onSkip,
+                    actionLabel: onSkip != null ? AppLocalizations.skip : null,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+                    child: StepProgressIndicator(
+                      stepLabel: stepLabel,
+                      progressLabel: progressLabel,
+                      progress: progress,
                     ),
-                    if (subtitle != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        subtitle!,
-                        textAlign: TextAlign.center,
-                        style: typography.body.copyWith(
-                          color: colors.textSecondary,
+                  ),
+                  SizedBox(height: spacing.lg),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: spacing.lg),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          title,
+                          textAlign: TextAlign.center,
+                          style: typography.medicalRecordScreenTitle.copyWith(
+                            color: colors.textPrimary,
+                            fontSize: 24,
+                          ),
                         ),
-                      ),
-                    ],
-                    const SizedBox(height: 30),
-                    child,
-                  ],
-                ),
+                        if (subtitle != null) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            subtitle!,
+                            textAlign: TextAlign.center,
+                            style: typography.body.copyWith(
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.all(spacing.lg),
+
+            SliverFillRemaining(
+              hasScrollBody: true,
               child: Column(
                 children: [
-                  AddRecordNextButton(label: buttonLabel, onPressed: onNext),
-                  if (onSkip != null)
-                    TextButton(
-                      onPressed: onSkip,
-                      child: Text(
-                        "Skip for now",
-                        style: typography.body.copyWith(
-                          color: colors.textSecondary,
-                        ),
-                      ),
+                  Expanded(child: child),
+
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      spacing.lg,
+                      spacing.sm,
+                      spacing.lg,
+                      spacing.lg,
                     ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        AddRecordNextButton(
+                          label:
+                              buttonLabel ?? AppLocalizations.profilesNextStep,
+                          onPressed: onNext,
+                        ),
+                        if (onSkip != null)
+                          TextButton(
+                            onPressed: onSkip,
+                            child: Text(
+                              AppLocalizations.profilesSkipForNow,
+                              style: typography.body.copyWith(
+                                color: colors.textSecondary,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),

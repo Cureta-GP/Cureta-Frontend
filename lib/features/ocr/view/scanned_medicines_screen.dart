@@ -1,4 +1,3 @@
-import 'package:cureta/features/ocr/data/repo/ocr_repository.dart';
 import 'package:cureta/features/ocr/view_model/ocr_cubit.dart';
 import 'package:cureta/features/ocr/view_model/ocr_state.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +21,10 @@ class ScannedMedicinesScreen extends StatelessWidget {
     final spacing = context.spacing;
 
     return BlocProvider(
-      create: (context) => OcrCubit(repository: getIt.get<OcrRepository>()),
-
+      create: (context) =>
+          getIt.get<OcrCubit>()..initializeMedicines(medicines),
       child: Scaffold(
         appBar: AppBar(title: Text(AppLocalizations.scannedMedicinesTitle)),
-
         body: BlocListener<OcrCubit, OcrState>(
           listener: (context, state) {
             if (state is OcrConfirmSuccess) {
@@ -46,7 +44,8 @@ class ScannedMedicinesScreen extends StatelessWidget {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              List meds = medicines;
+              final currentCubit = context.read<OcrCubit>();
+              final meds = currentCubit.currentMedicines;
 
               return Column(
                 children: [
@@ -85,12 +84,17 @@ class ScannedMedicinesScreen extends StatelessWidget {
                                         : m.original,
                                     style: context.typography.label,
                                   ),
-                                  subtitle: Text(
-                                    AppLocalizations.scannedMedicinesTablet,
-                                  ),
-                                  trailing: const Icon(
-                                    Icons.edit_outlined,
-                                    size: 20,
+                                  trailing: IconButton(
+                                    icon: const Icon(
+                                      Icons.delete_outlined,
+                                      size: 20,
+                                    ),
+                                    color: context.colors.error,
+                                    onPressed: () {
+                                      context.read<OcrCubit>().deleteMedicine(
+                                        index,
+                                      );
+                                    },
                                   ),
                                 ),
                               );

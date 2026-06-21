@@ -1,4 +1,5 @@
 import 'package:cureta/features/profile/data/models/profile_model.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class SelectedProfileCard extends StatelessWidget {
@@ -79,7 +80,7 @@ class SelectedProfileCard extends StatelessWidget {
                   ),
                   SizedBox(height: avatarSize / 6),
                   Text(
-                    profile.relationship,
+                    AppLocalizations.getLocalizedRelationship(profile.relationship),
                     style: bodyStyle.copyWith(
                       color: secondaryTextColor,
                       fontSize: 12,

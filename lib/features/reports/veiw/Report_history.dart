@@ -32,29 +32,29 @@ class _ReportHistoryBody extends StatelessWidget {
     final spacing = context.spacing;
     final typography = context.typography;
 
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        context.go('${AppRoutes.mainNavigation}?tab=0');
+      },
+      child: Scaffold(
         backgroundColor: colors.background,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: colors.textPrimary),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        centerTitle: true,
+        appBar: AppBar(
+          backgroundColor: colors.background,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back, color: colors.textPrimary),
+            onPressed: () => context.go('${AppRoutes.mainNavigation}?tab=0'),
+          ),
+          centerTitle: true,
         title: Text(
           'reports.my_reports'.tr(),
           style: typography.medicalRecordScreenTitle.copyWith(
             color: colors.textPrimary,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh, color: colors.textPrimary),
-            onPressed: () => context.read<ReportHistoryCubit>().refresh(),
-          ),
-        ],
       ),
       body: BlocBuilder<ReportHistoryCubit, ReportHistoryState>(
         builder: (context, state) {
@@ -106,6 +106,7 @@ class _ReportHistoryBody extends StatelessWidget {
           'reports.new_report'.tr(),
           style: typography.medicalRecordButton,
         ),
+      ),
       ),
     );
   }

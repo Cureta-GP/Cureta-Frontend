@@ -129,7 +129,7 @@ class _SelectProfileScreenState extends State<SelectProfileScreen> {
                       children: [
                         ProfileCard(
                           name: profile.fullName,
-                          relationship: profile.relationship,
+                          relationship: AppLocalizations.getLocalizedRelationship(profile.relationship),
                           avatarUrl: profile.imageUrl,
                           isSelected: _selectedId == profile.id,
                           onTap: () => _handleProfileSelected(profile),

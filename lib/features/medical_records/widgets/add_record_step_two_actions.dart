@@ -30,7 +30,7 @@ class AddRecordStepTwoActions extends StatelessWidget {
           label: nextLabel ?? AppLocalizations.addRecordNextStep,
           isLoading: isLoading,
         ),
-        SizedBox(height: spacing.md),
+        /* SizedBox(height: spacing.md),
         Align(
           alignment: AlignmentDirectional.centerStart,
           child: TextButton(
@@ -47,7 +47,7 @@ class AddRecordStepTwoActions extends StatelessWidget {
               ),
             ),
           ),
-        ),
+        ),*/
       ],
     );
   }

@@ -5,6 +5,8 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/widgets/record_details_editable_field.dart';
 import 'package:cureta/features/medicines/widgets/add_alarm_time_button_widget.dart';
 import 'package:cureta/features/medicines/widgets/time_picker_row_widget.dart';
+import 'package:cureta/features/medicines/widgets/frequency_selector_widget.dart';
+import 'package:cureta/features/medicines/data/models/medicine_enums.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -18,6 +20,7 @@ class MedicineDetailsEditFormWidget extends StatelessWidget {
     required this.doseUnitController,
     required this.notesController,
     required this.alarmTimesNotifier,
+    required this.frequencyNotifier,
     required this.imagePathNotifier,
     required this.onSave,
     required this.onCancel,
@@ -29,6 +32,7 @@ class MedicineDetailsEditFormWidget extends StatelessWidget {
   final TextEditingController doseUnitController;
   final TextEditingController notesController;
   final ValueNotifier<List<String>> alarmTimesNotifier;
+  final ValueNotifier<Frequency> frequencyNotifier;
   final ValueNotifier<String?> imagePathNotifier;
   final VoidCallback onSave;
   final VoidCallback onCancel;
@@ -107,6 +111,23 @@ class MedicineDetailsEditFormWidget extends StatelessWidget {
               label: 'medicines.details_notes_label'.tr(),
               minLines: 3,
               maxLines: 5,
+            ),
+            SizedBox(height: spacing.xl),
+            Text(
+              'medicines.frequency_label'.tr(),
+              style: typography.medicalRecordDetailLabel.copyWith(
+                color: colors.textSecondary,
+              ),
+            ),
+            SizedBox(height: spacing.md),
+            ValueListenableBuilder<Frequency>(
+              valueListenable: frequencyNotifier,
+              builder: (context, freq, _) {
+                return FrequencySelectorWidget(
+                  selectedFrequency: freq,
+                  onSelected: (f) => frequencyNotifier.value = f,
+                );
+              },
             ),
             SizedBox(height: spacing.xl),
             Text(

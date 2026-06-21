@@ -11,8 +11,11 @@ import 'package:cureta/features/settings/data/model/app_settings.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await EasyLocalization.ensureInitialized();
   await initializeTimezone();
   await setup();
@@ -68,9 +71,18 @@ class MyApp extends StatelessWidget {
               maxScaleFactor: _maxTextScaleFactor,
               child: MaterialApp.router(
                 debugShowCheckedModeBanner: false,
+                builder: (context, child) {
+                  return GestureDetector(
+                    onTap: () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                    },
+                    behavior: HitTestBehavior.translucent,
+                    child: child!,
+                  );
+                },
                 theme: lightTheme,
                 darkTheme: darkTheme,
-                themeMode: settings.themeMode, // ← was: ThemeMode.system
+                themeMode: settings.themeMode,
                 routerConfig: RoutesGeneration.router,
                 themeAnimationDuration: const Duration(milliseconds: 300),
                 themeAnimationCurve: Curves.easeInOut,

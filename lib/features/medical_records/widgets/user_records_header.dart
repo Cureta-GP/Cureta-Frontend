@@ -23,7 +23,7 @@ class UserRecordsHeader extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         horizontal: spacing.lg,
-        vertical: spacing.lg,
+        vertical: spacing.sm,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -33,29 +33,9 @@ class UserRecordsHeader extends StatelessWidget {
               title,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: typography.medicalRecordQuestion.copyWith(
+              textAlign: TextAlign.center,
+              style: typography.medicalRecordScreenTitle.copyWith(
                 color: colors.textPrimary,
-              ),
-            ),
-          ),
-          SizedBox(width: spacing.lg),
-          InkWell(
-            onTap: onProfileTap,
-            borderRadius: BorderRadius.circular(radius.full),
-            child: Container(
-              width: spacing.xxl + spacing.sm,
-              height: spacing.xxl + spacing.sm,
-              decoration: BoxDecoration(
-                color: colors.primary,
-                shape: BoxShape.circle,
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                avatarInitial.toUpperCase(),
-                style: typography.medicalRecordButton.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                ),
               ),
             ),
           ),

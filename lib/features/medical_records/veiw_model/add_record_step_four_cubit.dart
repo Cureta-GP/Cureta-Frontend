@@ -3,6 +3,7 @@ import 'package:cureta/features/medical_records/data/models/add_record_uploaded_
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:open_filex/open_filex.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 
 class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
   AddRecordStepFourCubit() : super(const AddRecordStepFourState());
@@ -54,7 +55,7 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
 
   Future<void> viewFile(AddRecordUploadedFile file) async {
     if (file.path == null || file.path!.isEmpty) {
-      emit(state.copyWith(fileOpenError: 'File path is missing or invalid.'));
+      emit(state.copyWith(fileOpenError: AppLocalizations.addRecordErrorFileMissing));
       // Clear error immediately so next time it triggers listener even if same string
       emit(state.copyWith(clearError: true));
       return;
@@ -64,7 +65,7 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
     if (result.type != ResultType.done) {
       emit(
         state.copyWith(
-          fileOpenError: 'Unable to open this file: ${result.message}',
+          fileOpenError: '${AppLocalizations.addRecordErrorFileOpen} ${result.message}',
         ),
       );
       emit(state.copyWith(clearError: true));

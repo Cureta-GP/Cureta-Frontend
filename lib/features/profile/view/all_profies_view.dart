@@ -1,6 +1,7 @@
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/select_profile_screen.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
@@ -38,7 +39,10 @@ class _AllProfiesViewState extends State<AllProfiesView> {
 
   void _onAddProfilePressed() {
     Navigator.of(context).pop();
-    GoRouter.of(context).go(AppRoutes.addProfile, extra: true);
+    final cubit = context.read<ProfilesListCubit>();
+    GoRouter.of(context).pushNamed(AppRoutes.addProfile, extra: true).then((_) {
+      cubit.getProfiles();
+    });
   }
 
   @override
@@ -56,7 +60,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
           backgroundColor: colors.background,
           elevation: 0,
           title: Text(
-            'Family Profiles',
+            AppLocalizations.drawerFamilyProfiles,
             style: typography.title.copyWith(color: colors.textPrimary),
           ),
         ),
@@ -91,7 +95,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'No profiles found',
+                            AppLocalizations.profilesNoProfiles,
                             style: typography.title.copyWith(
                               color: colors.textPrimary,
                             ),
@@ -99,7 +103,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
                           SizedBox(height: spacing.md),
                           ElevatedButton(
                             onPressed: _onAddProfilePressed,
-                            child: const Text('Add Profile'),
+                            child: Text(AppLocalizations.profilesAddProfile),
                           ),
                         ],
                       ),
@@ -120,7 +124,7 @@ class _AllProfiesViewState extends State<AllProfiesView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Current Profile',
+                        AppLocalizations.profilesCurrentProfile,
                         style: typography.label.copyWith(
                           color: colors.textSecondary,
                           letterSpacing: 0.5,

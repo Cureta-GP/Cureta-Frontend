@@ -30,14 +30,31 @@ class _NameInputStepState extends State<NameInputStep> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(context.spacing.lg),
-      child: CustomTextField(
-        hint: AppLocalizations.profilesNameHint,
-        onChanged: (val) => context.read<ProfileCubit>().updateName(val),
-        label: '',
-        controller: _controller,
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          physics: const ClampingScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Padding(
+              padding: EdgeInsets.all(context.spacing.lg),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomTextField(
+                    hint: AppLocalizations.profilesNameHint,
+                    onChanged: (val) =>
+                        context.read<ProfileCubit>().updateName(val),
+                    label: '',
+                    controller: _controller,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

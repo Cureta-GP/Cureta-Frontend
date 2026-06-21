@@ -28,7 +28,7 @@ class UserRecordsTopSection extends StatelessWidget {
       color: colors.background,
       padding: EdgeInsets.fromLTRB(
         spacing.lg,
-        spacing.lg,
+        spacing.sm,
         spacing.lg,
         spacing.md,
       ),

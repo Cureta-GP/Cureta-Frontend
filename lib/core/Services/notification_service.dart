@@ -5,6 +5,7 @@ import 'package:cureta/features/medicines/data/models/medicine_model.dart';
 import 'package:cureta/core/Services/GetItServices.dart' as get_it_services;
 import 'alarm_id_helper.dart';
 import 'tz_helper.dart';
+import 'package:cureta/features/medicines/data/models/medicine_enums.dart';
 import 'package:cureta/features/medicines/data/repo/medicine_repository.dart';
 
 class NotificationService {
@@ -104,6 +105,10 @@ class NotificationService {
           scheduledAt: scheduledAt,
         );
       }
+
+      // Also try to sync any previously queued dose logs
+      final repo = get_it_services.getIt<MedicineRepository>();
+      repo.syncPendingDoseLogs().ignore();
     } on PlatformException catch (e) {
       developer.log(
         'consumePendingAlarmActions failed: ${e.code} — ${e.message}',
@@ -119,8 +124,15 @@ class NotificationService {
   }
 
   Future<void> scheduleMedicineAlarms(MedicineModel medicine) async {
+    if (medicine.frequency == Frequency.asNeeded) return;
+
     for (var i = 0; i < medicine.alarmTimes.length; i++) {
-      final scheduled = _parseTzTime(medicine.alarmTimes[i]);
+      int? targetWeekday;
+      if (medicine.frequency == Frequency.weekly) {
+        targetWeekday = medicine.startDate.toLocal().weekday;
+      }
+      
+      final scheduled = _parseTzTime(medicine.alarmTimes[i], targetWeekday: targetWeekday);
       if (scheduled == null) continue;
 
       final id = alarmId(medicine.id, medicine.profileId, i);
@@ -178,13 +190,13 @@ class NotificationService {
   }
 
   /// Parses "HH:mm" and returns the next TZ-aware occurrence.
-  DateTime? _parseTzTime(String timeStr) {
+  DateTime? _parseTzTime(String timeStr, {int? targetWeekday}) {
     final parts = timeStr.split(':');
     if (parts.length != 2) return null;
     final hour = int.tryParse(parts[0]);
     final minute = int.tryParse(parts[1]);
     if (hour == null || minute == null) return null;
-    return nextTzOccurrence(hour, minute);
+    return nextTzOccurrence(hour, minute, targetWeekday: targetWeekday);
   }
 
   Future<void> _invoke(String method, [Map<String, dynamic>? args]) async {

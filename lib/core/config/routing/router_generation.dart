@@ -8,6 +8,8 @@ import 'package:cureta/features/authentcation/veiw/login_view.dart';
 import 'package:cureta/features/authentcation/veiw/verify_email_view.dart';
 import 'package:cureta/features/chat_bot/veiw/Chat_screen.dart';
 import 'package:cureta/features/home/view/home_view.dart';
+import 'package:cureta/features/home/view/medicine_schedule_view.dart';
+import 'package:cureta/features/home/view_model/medicine_schedule_cubit.dart';
 import 'package:cureta/features/home/view/main_navigation_views.dart';
 import 'package:cureta/features/authentcation/veiw_model/forgot_password_view_model.dart';
 import "package:cureta/features/medical_records/veiw/User's_Records.dart";
@@ -17,6 +19,8 @@ import 'package:cureta/features/ocr/view/scanned_medicines_screen.dart';
 import 'package:cureta/features/ocr/data/models/ocr_medicine_match.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/features/profile/view/add_profile_main_view.dart';
+import 'package:cureta/features/qr/view/filter_data_view.dart';
+import 'package:cureta/features/qr/view/qr_view.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_first_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_forth_step.dart';
 import 'package:cureta/features/medical_records/veiw/add_record_step_fifth.dart';
@@ -257,6 +261,17 @@ class RoutesGeneration {
         redirect: (_, __) => '${AppRoutes.mainNavigation}?tab=1',
       ),
       GoRoute(
+        path: AppRoutes.medicineSchedule,
+        name: AppRoutes.medicineSchedule,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: BlocProvider(
+            create: (_) => getIt<MedicineScheduleCubit>(),
+            child: const MedicineScheduleView(),
+          ),
+          state: state,
+        ),
+      ),
+      GoRoute(
         path: AppRoutes.medicineDetails,
         name: AppRoutes.medicineDetails,
         pageBuilder: (context, state) {
@@ -420,7 +435,7 @@ class RoutesGeneration {
       GoRoute(
         path: AppRoutes.reportSetup,
         name: AppRoutes.reportSetup,
-        pageBuilder: (context, state) => PageTransitions.slideRight(
+        pageBuilder: (context, state) => PageTransitions.slideUp(
           child: const ReportSetupView(),
           state: state,
         ),
@@ -430,12 +445,34 @@ class RoutesGeneration {
         name: AppRoutes.reportDetails,
         pageBuilder: (context, state) {
           final report = state.extra as HealthReportModel;
-          return PageTransitions.slideRight(
+          return PageTransitions.scale(
             child: ReportDetailsView(report: report),
             state: state,
           );
         },
       ),
+      GoRoute(
+        path: AppRoutes.qr,
+        name: AppRoutes.qr,
+        pageBuilder: (context, state) =>
+            PageTransitions.fade(child: const QrView(), state: state),
+      ),
+      GoRoute(
+        path: AppRoutes.qrFilterData,
+        name: AppRoutes.qrFilterData,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: FilterDataView(profileId: state.extra as String? ?? ''),
+          state: state,
+        ),
+      ),
+      /*GoRoute(
+        path: AppRoutes.qrShareHealthData,
+        name: AppRoutes.qrShareHealthData,
+        pageBuilder: (context, state) => PageTransitions.slideRight(
+          child: const ShareHealthDataView(),
+          state: state,
+        ),
+      ),*/
       GoRoute(
         path: AppRoutes.settings,
         name: AppRoutes.settings,

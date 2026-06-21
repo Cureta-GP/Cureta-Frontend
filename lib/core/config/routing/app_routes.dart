@@ -28,6 +28,9 @@ class AppRoutes {
   static const String medicines = '/medicines';
 
   static const String chat = '/chat';
+  static const String qr = '/qr';
+  static const String qrFilterData = '/qr/filter-data';
+  static const String qrShareHealthData = '/qr/share-health-data';
   static const String settings = '/settings';
   //profil
   static const String profile = '/profile';
@@ -41,6 +44,7 @@ class AppRoutes {
   static const String medicinesAddStep4 = '/medicines/add/4';
   static const String medicinesAddStep5 = '/medicines/add/5';
   static const String medicineDetails = '/medicines/details/:id';
+  static const String medicineSchedule = '/medicines/schedule';
 
   //profil
 

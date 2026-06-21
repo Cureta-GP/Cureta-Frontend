@@ -1,4 +1,5 @@
 import 'package:cureta/core/config/routing/app_routes.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
@@ -16,78 +17,110 @@ class SelectProfileBottomSheet extends StatelessWidget {
     final colors = context.colors;
     final spacing = context.spacing;
     final typography = context.typography;
+    final maxHeight = MediaQuery.of(context).size.height * 0.75;
 
-    return Container(
-      padding: EdgeInsets.all(spacing.lg),
-      decoration: BoxDecoration(
-        color: colors.background,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
-      ),
-      child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
-        builder: (context, state) {
-          if (state is ProfilesLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-    
-          if (state is ProfilesError) {
-            return Center(child: Text(state.message));
-          }
-    
-          if (state is ProfilesSuccess) {
-            final profiles = state.profiles;
-    
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: colors.divider,
-                    borderRadius: BorderRadius.circular(2),
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      child: Container(
+        padding: EdgeInsets.fromLTRB(
+          spacing.lg,
+          spacing.md,
+          spacing.lg,
+          spacing.lg + MediaQuery.of(context).viewInsets.bottom,
+        ),
+        decoration: BoxDecoration(
+          color: colors.background,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+        ),
+        child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+          builder: (context, state) {
+            if (state is ProfilesLoading) {
+              return const SizedBox(
+                height: 120,
+                child: Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            if (state is ProfilesError) {
+              return SizedBox(
+                height: 120,
+                child: Center(child: Text(state.message)),
+              );
+            }
+
+            if (state is ProfilesSuccess) {
+              final profiles = state.profiles;
+
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Drag handle
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: colors.divider,
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
                   ),
-                ),
-    
-                SizedBox(height: spacing.lg),
-    
-                Text("Select Profile", style: typography.title),
-    
-                Text(
-                  "Switch between family members to track their progress.",
-                  style: typography.body.copyWith(
-                    color: colors.textSecondary,
+
+                  SizedBox(height: spacing.lg),
+
+                  Text(
+                    AppLocalizations.profilesSelectProfileTitle,
+                    style: typography.title,
                   ),
-                ),
-    
-                SizedBox(height: spacing.xl),
-    
-                ...profiles.map(
-                  (profile) => _buildProfileTile(
-                    context,
-                    profile: profile,
-                    isSelected: profile.id == state.selectedProfileId,
+
+                  const SizedBox(height: 4),
+
+                  Text(
+                    AppLocalizations.profilesSelectProfileSubtitle,
+                    style: typography.body.copyWith(color: colors.textSecondary),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-    
-                SizedBox(height: spacing.xl),
-    
-                SizedBox(
-                  width: double.infinity,
-                  child: CustomButton(
-                    text: "Add New Profile",
-                    onPressed: () {
-                      GoRouter.of(
+
+                  SizedBox(height: spacing.lg),
+
+                  // Scrollable profile list
+                  Flexible(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      padding: EdgeInsets.zero,
+                      itemCount: profiles.length,
+                      itemBuilder: (context, index) => _buildProfileTile(
                         context,
-                      ).go(AppRoutes.addProfile, extra: true);
-                    },
+                        profile: profiles[index],
+                        isSelected: profiles[index].id == state.selectedProfileId,
+                      ),
+                    ),
                   ),
-                ),
-              ],
-            );
-          }
-    
-          return const SizedBox();
-        },
+
+                  SizedBox(height: spacing.lg),
+
+                  SizedBox(
+                    width: double.infinity,
+                    child: CustomButton(
+                      text: AppLocalizations.profilesAddNewProfile,
+                      onPressed: () {
+                        final cubit = context.read<ProfilesListCubit>();
+                        GoRouter.of(context)
+                            .pushNamed(AppRoutes.addProfile, extra: true)
+                            .then((_) {
+                          cubit.getProfiles();
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
@@ -104,7 +137,7 @@ class SelectProfileBottomSheet extends StatelessWidget {
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: isSelected
-            ? colors.primary.withOpacity(0.05)
+            ? colors.primary.withValues(alpha: 0.05)
             : Colors.transparent,
         border: Border.all(color: isSelected ? colors.primary : colors.divider),
         borderRadius: BorderRadius.circular(16),
@@ -114,6 +147,7 @@ class SelectProfileBottomSheet extends StatelessWidget {
           context.read<ProfilesListCubit>().selectProfile(profile.id);
           Navigator.pop(context);
         },
+        contentPadding: EdgeInsets.zero,
         leading: CircleAvatar(
           backgroundImage: profile.imageUrl != null
               ? NetworkImage(profile.imageUrl!)
@@ -124,7 +158,7 @@ class SelectProfileBottomSheet extends StatelessWidget {
           profile.fullName,
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
-        subtitle: Text(profile.relationship),
+        subtitle: Text(AppLocalizations.getLocalizedRelationship(profile.relationship)),
         trailing: isSelected
             ? Icon(Icons.check_circle, color: colors.primary)
             : const Icon(Icons.arrow_forward_ios, size: 16),

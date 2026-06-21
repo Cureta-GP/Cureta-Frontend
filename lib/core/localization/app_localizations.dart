@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class AppLocalizations {
   // App
   static String get appName => 'app.name'.tr();
+  static String get commonNone => 'common.none'.tr();
 
   // Auth - Login
   static String get loginTitle => 'auth.login.title'.tr();
@@ -110,7 +111,6 @@ class AppLocalizations {
   // Email Verification
   static String get verifyEmailTitle => 'auth.verify_email.title'.tr();
   static String get verifyEmailSubtitle => 'auth.verify_email.subtitle'.tr();
-  static String get verifyEmailSent => 'auth.verify_email.sent'.tr();
   static String get verifyButton => 'auth.verify_email.verify_button'.tr();
   static String get otpError => 'auth.verify_email.otp_error'.tr();
 
@@ -221,6 +221,26 @@ class AppLocalizations {
       'medical_records.add_record.save_record'.tr();
   static String get addRecordContinue =>
       'medical_records.add_record.continue'.tr();
+  static String get addRecordErrorConditionRequired =>
+      'medical_records.add_record.error_condition_required'.tr();
+  static String get addRecordErrorDateRequired =>
+      'medical_records.add_record.error_date_required'.tr();
+  static String get addRecordErrorProfileRequired =>
+      'medical_records.add_record.error_profile_required'.tr();
+  static String get addRecordErrorFileMissing =>
+      'medical_records.add_record.error_file_missing'.tr();
+  static String get addRecordErrorFileOpen =>
+      'medical_records.add_record.error_file_open'.tr();
+  static String get addRecordErrorAttachmentRequired =>
+      'medical_records.add_record.error_attachment_required'.tr();
+  static String get addRecordCategoryReportTitle =>
+      'medical_records.add_record.category_report_title'.tr();
+  static String get addRecordCategoryReportDescription =>
+      'medical_records.add_record.category_report_description'.tr();
+  static String get addRecordCategoryOtherTitle =>
+      'medical_records.add_record.category_other_title'.tr();
+  static String get addRecordCategoryOtherDescription =>
+      'medical_records.add_record.category_other_description'.tr();
 
   // Medical Records - List Screen
   static String get recordsListTitle => 'medical_records.list.title'.tr();
@@ -314,7 +334,51 @@ class AppLocalizations {
       'validation.field_required'.tr(namedArgs: {'field': field});
   // Family profiles
   static String get profilesAddProfile => 'profiles.common.add_profile'.tr();
+  static String get profilesAddNewProfile =>
+      'profiles.common.add_new_profile'.tr();
+  static String get profilesEditProfile => 'profiles.common.edit_profile'.tr();
+  static String get profilesDeleteProfile =>
+      'profiles.common.delete_profile'.tr();
+  static String get profilesCannotDelete =>
+      'profiles.common.cannot_delete'.tr();
+  static String get profilesCurrentProfile => 'profiles.common.current_profile'.tr();
+  static String get profilesNoProfiles => 'profiles.common.no_profiles'.tr();
+  static String profilesFailedToSave(String error) =>
+      'profiles.common.failed_to_save'.tr(namedArgs: {'error': error});
+  static String get profilesSwitchProfile => 'profiles.common.switch_profile'.tr();
+  static String get profilesAddMember => 'profiles.common.add_member'.tr();
+  static String get drawerFamilyProfiles => 'drawer.family_profiles'.tr();
+  static String get profilesSelectProfileTitle =>
+      'profiles.select_profile.title'.tr();
+  static String get profilesSelectProfileSubtitle =>
+      'profiles.select_profile.subtitle'.tr();
+  static String get profilesDetailsTitle => 'profiles.details.title'.tr();
+  static String get profilesDetailsFullName =>
+      'profiles.details.full_name'.tr();
+  static String get profilesDetailsRelationship =>
+      'profiles.details.relationship'.tr();
+  static String get profilesDetailsAge => 'profiles.details.age'.tr();
+  static String get profilesDetailsYears => 'profiles.details.years'.tr();
+  static String get profilesDetailsGender => 'profiles.details.gender'.tr();
+  static String get profilesDetailsBloodType =>
+      'profiles.details.blood_type'.tr();
+  static String get profilesDetailsChronicConditions =>
+      'profiles.details.chronic_conditions'.tr();
+  static String get profilesDetailsAllergies =>
+      'profiles.details.allergies'.tr();
+  static String get profilesDetailsDeleteConfirmTitle =>
+      'profiles.details.delete_confirm_title'.tr();
+  static String get profilesDetailsDeleteConfirmMessage =>
+      'profiles.details.delete_confirm_message'.tr();
+  static String get profilesDetailsCancel => 'profiles.details.cancel'.tr();
+  static String get profilesDetailsDelete => 'profiles.details.delete'.tr();
+  static String get profilesDetailsDeleteSuccess =>
+      'profiles.details.delete_success'.tr();
+  static String profilesDetailsDeleteFailed(String error) =>
+      'profiles.details.delete_failed'.tr(namedArgs: {'error': error});
+
   static String get profilesNextStep => 'profiles.common.next_step'.tr();
+  static String get profilesReviewProfile => 'profiles.common.review_profile'.tr();
   static String get profilesContinue => 'profiles.common.continue'.tr();
   static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
   static String profilesStepIndicator(int current, int total) =>
@@ -345,6 +409,10 @@ class AppLocalizations {
       'profiles.steps.relation.father'.tr();
   static String get profilesRelationSpouse =>
       'profiles.steps.relation.spouse'.tr();
+  static String get profilesRelationBrother =>
+      'profiles.steps.relation.brother'.tr();
+  static String get profilesRelationSister =>
+      'profiles.steps.relation.sister'.tr();
   static String get profilesRelationOther =>
       'profiles.steps.relation.other'.tr();
 
@@ -412,6 +480,50 @@ class AppLocalizations {
   static Locale currentLocale(BuildContext context) =>
       EasyLocalization.of(context)!.locale;
 
+  static String getLocalizedGender(String gender) {
+    final lower = gender.trim().toLowerCase();
+    if (lower == 'male' || lower == 'ذكر') return profilesGenderMale;
+    if (lower == 'female' || lower == 'أنثى' || lower == 'انثى') return profilesGenderFemale;
+    return gender;
+  }
+
+  static String getLocalizedRelationship(String relationship) {
+    final lower = relationship.trim().toLowerCase();
+    switch (lower) {
+      case 'self':
+        return selectProfilePrimaryAccount;
+      case 'son':
+      case 'ابن':
+        return profilesRelationSon;
+      case 'daughter':
+      case 'ابنة':
+      case 'بنت':
+        return profilesRelationDaughter;
+      case 'mother':
+      case 'أم':
+        return profilesRelationMother;
+      case 'father':
+      case 'أب':
+        return profilesRelationFather;
+      case 'spouse':
+      case 'زوج':
+      case 'زوجة':
+        return profilesRelationSpouse;
+      case 'brother':
+      case 'أخ':
+        return profilesRelationBrother;
+      case 'sister':
+      case 'أخت':
+        return profilesRelationSister;
+      case 'other':
+      case 'أخرى':
+      case 'آخر':
+        return profilesRelationOther;
+      default:
+        return relationship;
+    }
+  }
+
   // Home
   static String get homeWelcomeBack => 'home.welcome_back'.tr();
   static String get homeAddRecord => 'home.add_record'.tr();
@@ -419,6 +531,10 @@ class AppLocalizations {
   static String get homeScanPrescription => 'home.home_scan_prescription'.tr();
 
   static String get homeMyQrCode => 'home.my_qr_code'.tr();
+  static String get qrTitle => 'qr.title'.tr();
+  static String get qrHeading => 'qr.heading'.tr();
+  static String get qrDescription => 'qr.description'.tr();
+  static String get qrButton => 'qr.button'.tr();
   static String get homeUpcomingMeds => 'home.upcoming_meds'.tr();
   static String get homeSeeAll => 'home.see_all'.tr();
   static String get homeRecentActivity => 'home.recent_activity'.tr();
@@ -440,7 +556,6 @@ class AppLocalizations {
   static String get chatGreetingMessage => 'chat.greeting_message'.tr();
   static String get chatUserQuestion => 'chat.user_question'.tr();
   static String get chatReplyMessage => 'chat.reply_message'.tr();
-
 
   // OCR - Scan Prescription
   static String get scanPrescriptionTitle => 'ocr.scan_prescription.title'.tr();
@@ -472,13 +587,16 @@ class AppLocalizations {
 
   // Medicines
   static String get medicinesSuccessTitle => 'medicines.success_title'.tr();
-  static String get medicinesSuccessSubtitle => 'medicines.success_subtitle'.tr();
-  static String get medicinesGoToMyMedicines => 'medicines.go_to_my_medicines'.tr();
+  static String get medicinesSuccessSubtitle =>
+      'medicines.success_subtitle'.tr();
+  static String get medicinesGoToMyMedicines =>
+      'medicines.go_to_my_medicines'.tr();
   static String get medicinesStep1Of5 => 'medicines.step_1_of_5'.tr();
   static String get medicinesStep1Progress => 'medicines.step_1_progress'.tr();
   static String get medicinesStep1Question => 'medicines.step_1_question'.tr();
   static String get medicinesStep1Subtitle => 'medicines.step_1_subtitle'.tr();
-  static String get medicinesMedicineNameHint => 'medicines.medicine_name_hint'.tr();
+  static String get medicinesMedicineNameHint =>
+      'medicines.medicine_name_hint'.tr();
   static String get medicinesStep1InfoHint => 'medicines.step_1_info_hint'.tr();
   static String get medicinesAddMedicine => 'medicines.add_medicine'.tr();
   static String get medicinesStep4Of5 => 'medicines.step_4_of_5'.tr();
@@ -495,14 +613,18 @@ class AppLocalizations {
   static String get medicinesStep3Of5 => 'medicines.step_3_of_5'.tr();
   static String get medicinesStep3Progress => 'medicines.step_3_progress'.tr();
   static String get medicinesStep3Question => 'medicines.step_3_question'.tr();
-  static String get medicinesAlarmTimesLabel => 'medicines.alarm_times_label'.tr();
+  static String get medicinesAlarmTimesLabel =>
+      'medicines.alarm_times_label'.tr();
   static String get medicinesAddAlarmTime => 'medicines.add_alarm_time'.tr();
   static String get medicinesNotesLabel => 'medicines.notes_label'.tr();
   static String get medicinesNotesHint => 'medicines.notes_hint'.tr();
   static String get medicinesMyMedicines => 'medicines.my_medicines'.tr();
-  static String get medicinesEmptyMedicinesTitle => 'medicines.empty_medicines_title'.tr();
-  static String get medicinesEmptyMedicinesSubtitle => 'medicines.empty_medicines_subtitle'.tr();
-  static String get medicinesAddYourFirstMedicine => 'medicines.add_your_first_medicine'.tr();
+  static String get medicinesEmptyMedicinesTitle =>
+      'medicines.empty_medicines_title'.tr();
+  static String get medicinesEmptyMedicinesSubtitle =>
+      'medicines.empty_medicines_subtitle'.tr();
+  static String get medicinesAddYourFirstMedicine =>
+      'medicines.add_your_first_medicine'.tr();
   static String get medicinesSearchHint => 'medicines.search_hint'.tr();
   static String get medicinesFilterAll => 'medicines.filter_all'.tr();
   static String get medicinesFilterActive => 'medicines.filter_active'.tr();
@@ -511,15 +633,20 @@ class AppLocalizations {
   static String get medicinesEditDetails => 'medicines.edit_details'.tr();
   static String get medicinesEditMedicine => 'medicines.edit_medicine'.tr();
   static String get medicinesDeleteMedicine => 'medicines.delete_medicine'.tr();
-  static String get medicinesDeleteConfirmTitle => 'medicines.delete_confirm_title'.tr();
-  static String medicinesDeleteConfirmMessage(String medicine) => 'medicines.delete_confirm_message'.tr(namedArgs: {'medicine': medicine});
+  static String get medicinesDeleteConfirmTitle =>
+      'medicines.delete_confirm_title'.tr();
+  static String medicinesDeleteConfirmMessage(String medicine) =>
+      'medicines.delete_confirm_message'.tr(namedArgs: {'medicine': medicine});
   static String get medicinesSaveChanges => 'medicines.save_changes'.tr();
   static String get medicinesCancel => 'medicines.cancel'.tr();
   static String get medicinesUpdateSuccess => 'medicines.update_success'.tr();
   static String get medicinesDeleteSuccess => 'medicines.delete_success'.tr();
-  static String get medicinesPickImageTitle => 'medicines.pick_image_title'.tr();
-  static String get medicinesPickFromCamera => 'medicines.pick_from_camera'.tr();
-  static String get medicinesPickFromGallery => 'medicines.pick_from_gallery'.tr();
+  static String get medicinesPickImageTitle =>
+      'medicines.pick_image_title'.tr();
+  static String get medicinesPickFromCamera =>
+      'medicines.pick_from_camera'.tr();
+  static String get medicinesPickFromGallery =>
+      'medicines.pick_from_gallery'.tr();
   static String get medicinesAlarmTaken => 'medicines.alarm_taken'.tr();
   static String get medicinesAlarmMissed => 'medicines.alarm_missed'.tr();
   static String get medicinesAlarmSubtitle => 'medicines.alarm_subtitle'.tr();

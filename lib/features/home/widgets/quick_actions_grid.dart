@@ -30,7 +30,7 @@ class QuickActionsGrid extends StatelessWidget {
         _QuickActionCard(
           icon: Icons.qr_code_2_outlined,
           label: AppLocalizations.homeMyQrCode,
-          onTap: () {},
+          onTap: () => Nav.pushNamed(context, AppRoutes.qr),
           backgroundColor: colors.accentPurple,
           foregroundColor: const Color(0xFF6366F1),
         ),
@@ -43,9 +43,9 @@ class QuickActionsGrid extends StatelessWidget {
           foregroundColor: const Color(0xFF4338CA),
         ),
         _QuickActionCard(
-          icon: Icons.notifications_none_outlined,
+          icon: Icons.medication_outlined,
           label: AppLocalizations.homeAddAlert,
-          onTap: () {},
+          onTap: () => Nav.pushNamed(context, AppRoutes.medicinesAddStep1),
           backgroundColor: colors.accentOrange,
           foregroundColor: const Color(0xFFF97316),
         ),

@@ -9,6 +9,7 @@ import 'package:cureta/features/medicines/widgets/medicine_info_card_widget.dart
 import 'package:cureta/features/medicines/widgets/medicine_logs_list_widget.dart';
 import 'package:cureta/features/medicines/widgets/medicine_list_error_widget.dart';
 import 'package:cureta/features/medicines/data/models/medicine_model.dart';
+import 'package:cureta/features/medicines/data/models/medicine_enums.dart';
 import 'package:cureta/features/medicines/widgets/medicine_details_overlay.dart';
 import 'package:cureta/features/medicines/widgets/medicine_delete_confirm_dialog.dart';
 import 'package:cureta/core/error_handling/error_handler.dart';
@@ -31,6 +32,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
   final _doseUnitController = TextEditingController();
   final _notesController = TextEditingController();
   final ValueNotifier<List<String>> _alarmTimesNotifier = ValueNotifier<List<String>>([]);
+  final ValueNotifier<Frequency> _frequencyNotifier = ValueNotifier<Frequency>(Frequency.daily);
   final ValueNotifier<String?> _imagePathNotifier = ValueNotifier<String?>(null);
 
   @override
@@ -40,6 +42,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
     _doseUnitController.dispose();
     _notesController.dispose();
     _alarmTimesNotifier.dispose();
+    _frequencyNotifier.dispose();
     _imagePathNotifier.dispose();
     super.dispose();
   }
@@ -50,6 +53,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
     _doseUnitController.text = medicine.doseUnit;
     _notesController.text = medicine.notes ?? '';
     _alarmTimesNotifier.value = List<String>.from(medicine.alarmTimes);
+    _frequencyNotifier.value = medicine.frequency;
     _imagePathNotifier.value = medicine.imagePath;
   }
 
@@ -62,6 +66,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
         doseUnit: _doseUnitController.text.trim(),
         notes: _notesController.text.trim(),
         alarmTimes: _alarmTimesNotifier.value,
+        frequency: _frequencyNotifier.value,
         imagePath: _imagePathNotifier.value,
       );
     } catch (e) {
@@ -169,6 +174,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
                         doseUnitController: _doseUnitController,
                         notesController: _notesController,
                         alarmTimesNotifier: _alarmTimesNotifier,
+                        frequencyNotifier: _frequencyNotifier,
                         imagePathNotifier: _imagePathNotifier,
                         onSave: () => _handleSave(context, cubit),
                         onCancel: cubit.cancelEdit,

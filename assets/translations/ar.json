@@ -2,6 +2,13 @@
   "app": {
     "name": "كيوريتا"
   },
+  "common": {
+    "exit_app_title": "الخروج من التطبيق",
+    "exit_app_content": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
+    "exit_app_confirm": "خروج",
+    "exit_app_cancel": "إلغاء",
+    "none": "لا يوجد"
+  },
   "auth": {
     "login": {
       "title": "مرحباً بعودتك",
@@ -24,7 +31,7 @@
       "email_hint": "أدخل بريدك الإلكتروني",
       "password_label": "كلمة المرور",
       "password_hint": "أنشئ كلمة مرور",
-      "phone_label": "رقم الهاتف (اختياري)",
+      "phone_label": "رقم الهاتف ",
       "phone_hint": "أدخل رقم هاتفك",
       "signup_button": "إنشاء حساب",
       "have_account": "لديك حساب بالفعل؟ ",
@@ -54,7 +61,6 @@
     "verify_email": {
       "title": "التحقق من بريدك الإلكتروني",
       "subtitle": "لقد أرسلنا رمز التحقق المكون من 6 أرقام إلى",
-      "sent": "elbannabosina@gmail.com",
       "verify_button": "تحقق ومتابعة",
       "otp_error": "الرجاء إدخال الرمز كاملاً"
     },
@@ -70,10 +76,16 @@
       "add_profile": "إضافة ملف شخصي جديد"
     }
   },
+  "qr": {
+    "title": "رمز QR الخاص بي",
+    "heading": "شارك بياناتك الصحية عبر رمز QR",
+    "description": "أنشئ رمز QR آمنًا لمشاركة معلوماتك الصحية مع الأطباء أو مقدمي الرعاية أو جهات الاتصال في حالات الطوارئ.",
+    "button": "إنشاء رمز QR"
+  },
   "home": {
     "welcome_back": "مرحباً بعودتك",
     "add_record": "إضافة سجل",
-    "add_alert": "إضافة تنبيه",
+    "add_alert": "إضافة دواء",
     "home_scan_prescription": "مسح الروشتة",
     "my_qr_code": "رمز QR الخاص بي",
     "recent_activity": "النشاط الأخير",
@@ -96,7 +108,10 @@
     "see_all": "عرض الكل",
     "missed": "فاتت",
     "taken": "تم",
-    "no_meds_today": "لا توجد أدوية مجدولة اليوم"
+    "pending": "قيد الانتظار",
+    "no_meds_today": "لا توجد أدوية مجدولة اليوم",
+    "schedule_title": "جدول الأدوية",
+    "schedule_no_meds": "لا توجد أدوية مجدولة لهذا اليوم"
   },
   "chat": {
     "input_hint": "اسألني أي شيء...",
@@ -179,6 +194,9 @@
       "record_hypertension_meta": "مسجل منذ 2018",
       "record_seasonal_allergies": "حساسية موسمية",
       "record_seasonal_allergies_meta": "ربيع 2022",
+      "empty_records_title": "لا توجد سجلات بعد",
+      "empty_records_subtitle": "أضف سجلات طبية لتتبع تاريخك الصحي.",
+      "add_your_first_record": "أضف سجلك الأول",
       "nav_home": "الرئيسية",
       "nav_meds": "الأدوية",
       "nav_scan_rx": "مسح الروشتة",
@@ -224,9 +242,19 @@
       "review_started_on": "تاريخ البداية",
       "review_documents": "المستندات",
       "review_reports": "{count} تقارير",
-      "review_documents_attached": "تم الإرفاق بنجاح",
+      "review_documents_attached": "مستندات مرفقة",
       "save_record": "حفظ السجل",
-      "continue": "استمرار",
+      "continue": "متابعة",
+      "error_condition_required": "الرجاء تحديد الحالة المرضية",
+      "error_date_required": "الرجاء اختيار التاريخ",
+      "error_profile_required": "الرجاء تحديد الملف الشخصي",
+      "error_file_missing": "مسار الملف مفقود أو غير صالح.",
+      "error_file_open": "تعذر فتح هذا الملف:",
+      "error_attachment_required": "مطلوب مرفق واحد على الأقل",
+      "category_report_title": "تقارير",
+      "category_report_description": "رفع التقارير الطبية",
+      "category_other_title": "أخرى",
+      "category_other_description": "رفع مستندات أخرى",
       "yes": "نعم",
       "no": "لا",
       "next": "التالي",
@@ -261,11 +289,41 @@
   "profiles": {
     "common": {
       "add_profile": "إضافة ملف شخصي",
+      "add_new_profile": "إضافة ملف شخصي جديد",
+      "edit_profile": "تعديل الملف الشخصي",
+      "delete_profile": "حذف",
+      "cannot_delete": "لا يمكن الحذف",
       "next_step": "الخطوة التالية",
       "continue": "استمرار",
       "skip_for_now": "تخطى الآن",
       "step_indicator": "الخطوة {} من 7",
-      "review_profile": "مراجعة الملف الشخصي"
+      "review_profile": "مراجعة الملف الشخصي",
+      "current_profile": "الملف الشخصي الحالي",
+      "no_profiles": "لا توجد ملفات شخصية",
+      "failed_to_save": "فشل حفظ الملف الشخصي: {error}",
+      "switch_profile": "تبديل الملف الشخصي",
+      "add_member": "إضافة فرد عائلة"
+    },
+    "select_profile": {
+      "title": "اختر ملفًا شخصيًا",
+      "subtitle": "قم بالتبديل بين أفراد العائلة لمتابعة تقدمهم."
+    },
+    "details": {
+      "title": "تفاصيل الملف الشخصي",
+      "full_name": "الاسم الكامل",
+      "relationship": "صلة القرابة",
+      "age": "العمر",
+      "years": "سنة",
+      "gender": "الجنس",
+      "blood_type": "فصيلة الدم",
+      "chronic_conditions": "الحالات المزمنة",
+      "allergies": "الحساسية",
+      "delete_confirm_title": "حذف الملف الشخصي",
+      "delete_confirm_message": "هل أنت متأكد أنك تريد حذف هذا الملف الشخصي؟",
+      "cancel": "إلغاء",
+      "delete": "حذف",
+      "delete_success": "تم حذف الملف الشخصي بنجاح.",
+      "delete_failed": "فشل الحذف: {error}"
     },
     "steps": {
       "name": {
@@ -288,6 +346,8 @@
         "mother": "أم",
         "father": "أب",
         "spouse": "زوج/زوجة",
+        "brother": "أخ",
+        "sister": "أخت",
         "other": "أخرى"
       },
       "age": {
@@ -395,8 +455,9 @@
     "go_to_my_medicines": "الذهاب إلى أدويتي",
     "next": "التالي",
     "next_step": "الخطوة التالية",
-    "skip": "تخط��",
+    "skip": "تخطى",
     "skip_for_now": "تخطي الآن",
+    "this_field_is_required": "هذا الحقل مطلوب",
     "error_medicine_name_required": "اسم الدواء مطلوب",
     "error_dose_form_required": "الرجاء تحديد شكل الجرعة",
     "error_frequency_required": "الرجاء تحديد التكرار",

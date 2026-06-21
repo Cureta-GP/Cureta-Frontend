@@ -9,6 +9,8 @@ import '../models/profile_model.dart';
 class ProfileRepository {
   static const String _profileIdKey = 'profileId';
   final ProfileService _service;
+  
+  List<ProfileModel>? _cachedProfiles;
 
   ProfileRepository(this._service);
 
@@ -53,27 +55,32 @@ class ProfileRepository {
     return relationship;
   }
 
-  Future<List<ProfileModel>> getProfiles() async {
-  final response = await _service.getProfiles();
-  final List data = response.data['data'];
-  final profiles = data.map((profile) => ProfileModel.fromJson(profile)).toList();
-
-  if (profiles.isNotEmpty) {
-    // ✅ لو في cached ID وموجود في الـ list، خليه زي ما هو
-    final cachedId = await getCachedProfileId();
-    final hasCached = cachedId != null && profiles.any((p) => p.id == cachedId);
-
-    if (!hasCached) {
-      final selected = profiles.firstWhere(
-        (p) => p.isPrimary,
-        orElse: () => profiles.first,
-      );
-      await cacheSelectedProfileId(selected.id);
+  Future<List<ProfileModel>> getProfiles({bool forceRefresh = false}) async {
+    if (!forceRefresh && _cachedProfiles != null) {
+      return _cachedProfiles!;
     }
-  }
 
-  return profiles;
-}
+    final response = await _service.getProfiles();
+    final List data = response.data['data'];
+    final profiles = data.map((profile) => ProfileModel.fromJson(profile)).toList();
+
+    if (profiles.isNotEmpty) {
+      // ✅ لو في cached ID وموجود في الـ list، خليه زي ما هو
+      final cachedId = await getCachedProfileId();
+      final hasCached = cachedId != null && profiles.any((p) => p.id == cachedId);
+
+      if (!hasCached) {
+        final selected = profiles.firstWhere(
+          (p) => p.isPrimary,
+          orElse: () => profiles.first,
+        );
+        await cacheSelectedProfileId(selected.id);
+      }
+    }
+
+    _cachedProfiles = profiles;
+    return profiles;
+  }
 
   Future<ProfileModel> createPrimaryProfile({
     required String fullName,
@@ -98,6 +105,7 @@ class ProfileRepository {
       );
       final profile = ProfileModel.fromJson(response.data['data']);
       await cacheSelectedProfileId(profile.id);
+      _cachedProfiles = null;
       return profile;
     } on DioException catch (e) {
       final responseData = e.response?.data;
@@ -171,6 +179,7 @@ class ProfileRepository {
       );
       final profile = ProfileModel.fromJson(response.data['data']);
       await cacheSelectedProfileId(profile.id);
+      _cachedProfiles = null;
       return profile;
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
@@ -212,6 +221,7 @@ class ProfileRepository {
 
       final profile = ProfileModel.fromJson(response.data['data']);
       await cacheSelectedProfileId(profile.id);
+      _cachedProfiles = null;
       return profile;
     } on DioException catch (e) {
       throw ErrorHandler.handle(e);
@@ -222,6 +232,7 @@ class ProfileRepository {
 
  Future<void> deleteProfile({required String profileId}) async {
   await _service.deleteProfile(profileId: profileId);
+  _cachedProfiles = null;
 
   final cachedId = await getCachedProfileId();
   if (cachedId == profileId) {

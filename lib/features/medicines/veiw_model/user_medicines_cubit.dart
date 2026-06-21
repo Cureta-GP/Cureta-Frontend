@@ -69,6 +69,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
 
     try {
       await _repository.refreshMedicines();
+      await syncPendingMedicines();
     } catch (e) {
       // Only show error if there is no data to display.
       if (!hasData) {

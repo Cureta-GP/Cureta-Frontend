@@ -24,9 +24,9 @@ class MedicineListControlsWidget extends StatelessWidget {
 
     return Padding(
       padding: EdgeInsetsDirectional.fromSTEB(
-        spacing.xl,
+        spacing.lg,
         spacing.md,
-        spacing.xl,
+        spacing.lg,
         spacing.sm,
       ),
       child: Column(

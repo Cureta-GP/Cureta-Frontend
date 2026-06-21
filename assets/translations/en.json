@@ -2,6 +2,13 @@
   "app": {
     "name": "Cureta"
   },
+  "common": {
+    "exit_app_title": "Exit App",
+    "exit_app_content": "Are you sure you want to exit the app?",
+    "exit_app_confirm": "Exit",
+    "exit_app_cancel": "Cancel",
+    "none": "None"
+  },
   "auth": {
     "login": {
       "title": "Welcome Back",
@@ -24,7 +31,7 @@
       "email_hint": "Enter your email",
       "password_label": "Password",
       "password_hint": "Create a password",
-      "phone_label": "Phone Number (Optional)",
+      "phone_label": "Phone Number ",
       "phone_hint": "Enter your phone number",
       "signup_button": "Create Account",
       "have_account": "Already have an account? ",
@@ -54,7 +61,6 @@
     "verify_email": {
       "title": "Verify Your Email",
       "subtitle": "We've sent a 6-digit verification code to",
-      "sent": "elbannabosina@gmail.com",
       "verify_button": "Verify & Continue",
       "otp_error": "Please enter the full code"
     },
@@ -121,6 +127,9 @@
       "record_hypertension_meta": "Recorded since 2018",
       "record_seasonal_allergies": "Seasonal Allergies",
       "record_seasonal_allergies_meta": "Spring 2022",
+      "empty_records_title": "No Records Yet",
+      "empty_records_subtitle": "Add medical records to track your health history.",
+      "add_your_first_record": "Add Your First Record",
       "nav_home": "Home",
       "nav_meds": "Medecines",
       "nav_scan_rx": "Scan Rx",
@@ -166,9 +175,19 @@
       "review_started_on": "Started on",
       "review_documents": "Documents",
       "review_reports": "{count} Reports",
-      "review_documents_attached": "Attached successfully",
+      "review_documents_attached": "Documents attached",
       "save_record": "Save record",
       "continue": "Continue",
+      "error_condition_required": "Condition not specified",
+      "error_date_required": "Date not selected",
+      "error_profile_required": "Profile not selected",
+      "error_file_missing": "File path is missing or invalid.",
+      "error_file_open": "Unable to open this file:",
+      "error_attachment_required": "At least one attachment is required",
+      "category_report_title": "Report",
+      "category_report_description": "Upload medical reports",
+      "category_other_title": "Other",
+      "category_other_description": "Upload other documents",
       "yes": "Yes",
       "no": "No",
       "next": "Next",
@@ -203,11 +222,41 @@
   "profiles": {
     "common": {
       "add_profile": "Add Profile",
+      "add_new_profile": "Add New Profile",
+      "edit_profile": "Edit Profile",
+      "delete_profile": "Delete",
+      "cannot_delete": "Cannot Delete",
       "next_step": "Next Step",
       "continue": "Continue",
       "skip_for_now": "Skip for now",
       "step_indicator": "Step {} of 7",
-      "review_profile": "Review Profile"
+      "review_profile": "Review Profile",
+      "current_profile": "Current Profile",
+      "no_profiles": "No profiles found",
+      "failed_to_save": "Failed to save profile: {error}",
+      "switch_profile": "Switch Profile",
+      "add_member": "Add Member"
+    },
+    "select_profile": {
+      "title": "Select Profile",
+      "subtitle": "Switch between family members to track their progress."
+    },
+    "details": {
+      "title": "Profile Details",
+      "full_name": "Full Name",
+      "relationship": "Relationship",
+      "age": "Age",
+      "years": "Years",
+      "gender": "Gender",
+      "blood_type": "Blood Type",
+      "chronic_conditions": "Chronic Conditions",
+      "allergies": "Allergies",
+      "delete_confirm_title": "Delete Profile",
+      "delete_confirm_message": "Are you sure you want to delete this profile?",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "delete_success": "Profile deleted successfully.",
+      "delete_failed": "Delete failed: {error}"
     },
     "steps": {
       "name": {
@@ -230,6 +279,8 @@
         "mother": "Mother",
         "father": "Father",
         "spouse": "Spouse",
+        "brother": "Brother",
+        "sister": "Sister",
         "other": "Other"
       },
       "age": {
@@ -281,10 +332,16 @@
     "phone_invalid": "Please enter a valid phone number",
     "field_required": "{field} is required"
   },
+  "qr": {
+    "title": "My QR Code",
+    "heading": "Share Health Data via QR Code",
+    "description": "Generate a secure QR code to share your health information with doctors, caregivers, or emergency contacts.",
+    "button": "Create QR Code"
+  },
   "home": {
     "welcome_back": "Welcome Back",
     "add_record": "Add Record",
-    "add_alert": "Add Alert",
+    "add_alert": "Add Medicine",
     "home_scan_prescription": "Scan Prescription",
     "my_qr_code": "My QR Code",
     "recent_activity": "Recent Activity",
@@ -307,7 +364,10 @@
     "see_all": "See all",
     "missed": "Missed",
     "taken": "Taken",
-    "no_meds_today": "No medicines scheduled today"
+    "pending": "Pending",
+    "no_meds_today": "No medicines scheduled today",
+    "schedule_title": "Medicine Schedule",
+    "schedule_no_meds": "No medicines scheduled for this day"
   },
   "chat": {
     "input_hint": "Ask me anything...",
@@ -398,6 +458,7 @@
     "skip": "Skip",
     "skip_for_now": "Skip for now",
     "error_loading_medicines": "Failed to load medicines. Please try again.",
+    "this_field_is_required": "This field is required",
     "error_medicine_name_required": "Medicine name is required",
     "error_dose_form_required": "Please select a dose form",
     "error_frequency_required": "Please select a frequency",
@@ -465,6 +526,20 @@
     "logout": "Logout",
     "footer": "Terms of Service | Privacy Policy"
   },
+  "copilot_explain": "Explain Screen",
+  "copilot_voice": "Voice Chat",
+  "copilot_dismiss": "Dismiss",
+  "copilot_you": "You",
+  "copilot_assistant": "Assistant",
+  "copilot_thinking": "Thinking...",
+  "copilot_tap_to_speak": "Tap microphone to speak",
+  "copilot_listening": "Listening...",
+  "chat_mic_permission_required": "Please allow microphone permission",
+  "chat_mic_error": "Error: {error}",
+  "chat_mic_init_failed": "Failed to initialize microphone",
+  "chat_speak_now": "Speak now...",
+  "chat_cancel": "Cancel",
+  "chat_send": "Send",
   "reports": {
     "my_reports": "My Reports",
     "new_report": "New Report",

@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'app_exceptions.dart';
 
 class ErrorHandler {
@@ -87,20 +88,26 @@ class ErrorHandler {
   }) {
     switch (error.type) {
       case ErrorType.snackbar:
+        final displayMessage = error.message.toLowerCase().contains('attachment') 
+            ? AppLocalizations.addRecordErrorAttachmentRequired 
+            : error.message;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error.message),
+            content: Text(displayMessage),
             behavior: SnackBarBehavior.floating,
           ),
         );
         break;
 
       case ErrorType.dialog:
+        final displayMessage = error.message.toLowerCase().contains('attachment') 
+            ? AppLocalizations.addRecordErrorAttachmentRequired 
+            : error.message;
         showDialog(
           context: context,
           builder: (_) => AlertDialog(
             title: const Text('تنبيه'),
-            content: Text(error.message),
+            content: Text(displayMessage),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -121,9 +128,12 @@ class ErrorHandler {
 
       case ErrorType.fullScreen:
       case ErrorType.inline:
+        final displayMessage = error.message.toLowerCase().contains('attachment') 
+            ? AppLocalizations.addRecordErrorAttachmentRequired 
+            : error.message;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error.message),
+            content: Text(displayMessage),
             behavior: SnackBarBehavior.floating,
           ),
         );

@@ -11,9 +11,17 @@ Future<void> initializeTimezone() async {
 /// Returns the next wall-clock occurrence of [hour]:[minute]
 /// using the device's local time. If the time has already
 /// passed today, returns tomorrow at the same time.
-DateTime nextTzOccurrence(int hour, int minute) {
+DateTime nextTzOccurrence(int hour, int minute, {int? targetWeekday}) {
   final now = DateTime.now();
   var scheduled = DateTime(now.year, now.month, now.day, hour, minute);
+
+  if (targetWeekday != null) {
+    while (scheduled.weekday != targetWeekday || !scheduled.isAfter(now)) {
+      scheduled = scheduled.add(const Duration(days: 1));
+    }
+    return scheduled;
+  }
+
   if (!scheduled.isAfter(now)) {
     scheduled = scheduled.add(const Duration(days: 1));
   }

@@ -35,16 +35,6 @@ class AddMedicineStep3BodyWidget extends StatelessWidget {
                 onPressed: () =>
                     context.read<AddMedicineCubit>().validateStep3(),
               ),
-              SizedBox(height: spacing.md),
-              TextButton(
-                onPressed: () => context.read<AddMedicineCubit>().skipStep3(),
-                child: Text(
-                  'medicines.skip_for_now'.tr(),
-                  style: typography.medicalRecordSkip.copyWith(
-                    color: colors.textSecondary,
-                  ),
-                ),
-              ),
             ],
           ),
         ),

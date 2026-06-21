@@ -109,10 +109,13 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     final current = _currentData();
     final errors = <String, String>{};
     if (current.doseForm == null) {
-      errors['doseForm'] = 'medicines.error_dose_form_required';
+      errors['doseForm'] = 'medicines.this_field_is_required';
     }
     if (current.frequency == null) {
-      errors['frequency'] = 'medicines.error_frequency_required';
+      errors['frequency'] = 'medicines.this_field_is_required';
+    }
+    if (current.doseAmount.trim().isEmpty) {
+      errors['doseAmount'] = 'medicines.this_field_is_required';
     }
     if (errors.isNotEmpty) {
       emit(current.copyWith(validationErrors: errors));
@@ -122,16 +125,6 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
   }
 
   void validateStep3() {
-    final current = _currentData();
-    emit(AddMedicineValidated(stepNumber: 3, data: current));
-  }
-
-  void skipStep2() {
-    final current = _currentData();
-    emit(AddMedicineValidated(stepNumber: 2, data: current));
-  }
-
-  void skipStep3() {
     final current = _currentData();
     emit(AddMedicineValidated(stepNumber: 3, data: current));
   }

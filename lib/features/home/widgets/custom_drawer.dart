@@ -36,10 +36,7 @@ class CustomDrawer extends StatelessWidget {
             child: Image.asset(AppImages.logo, fit: BoxFit.cover),
           ),
           const SizedBox(height: 40),
-          _DrawerItem(
-            icon: Icons.dashboard_outlined,
-            label: 'drawer.dashboard'.tr(),
-          ),
+
           _DrawerItem(
             icon: Icons.medication_outlined,
             label: 'drawer.medicines'.tr(),
@@ -58,15 +55,9 @@ class CustomDrawer extends StatelessWidget {
           _DrawerItem(
             icon: Icons.qr_code_outlined,
             label: 'drawer.qr_code'.tr(),
+            onTap: () => _openQr(context),
           ),
-          _DrawerItem(
-            icon: Icons.calendar_today_outlined,
-            label: 'drawer.calendar'.tr(),
-          ),
-          _DrawerItem(
-            icon: Icons.people_outline,
-            label: 'drawer.family_profiles'.tr(),
-          ),
+
           _DrawerItem(
             icon: Icons.settings_outlined,
             label: 'drawer.settings'.tr(),
@@ -160,6 +151,11 @@ class CustomDrawer extends StatelessWidget {
   void _openReports(BuildContext context) {
     controller.hideDrawer();
     GoRouter.of(context).push(AppRoutes.reportsHistory);
+  }
+
+  void _openQr(BuildContext context) {
+    controller.hideDrawer();
+    GoRouter.of(context).push(AppRoutes.qr);
   }
 
   void _openSettings(BuildContext context) {

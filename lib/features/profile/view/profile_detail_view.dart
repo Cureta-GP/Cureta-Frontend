@@ -1,3 +1,4 @@
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/widgets/profile_detail_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -7,6 +8,7 @@ import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cureta/features/medical_records/widgets/user_records_header.dart';
 
 class ProfileDetailsScreen extends StatelessWidget {
   const ProfileDetailsScreen({super.key});
@@ -18,14 +20,13 @@ class ProfileDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        title: const Text("Profile Details"),
-        backgroundColor: colors.background,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: BlocBuilder<ProfilesListCubit, ProfilesListState>(
-        builder: (context, state) {
+      body: SafeArea(
+        child: Column(
+          children: [
+            UserRecordsHeader(title: AppLocalizations.profilesDetailsTitle),
+            Expanded(
+              child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+                builder: (context, state) {
           if (state is ProfilesSuccess) {
             final profile = state.profiles.firstWhere(
               (p) => p.id == state.selectedProfileId,
@@ -42,16 +43,14 @@ class ProfileDetailsScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 60,
-                          backgroundColor: colors.primary.withValues(
-                            alpha: 0.1,
-                          ),
+                          backgroundColor: colors.primary,
                           backgroundImage: profile.imageUrl != null
                               ? NetworkImage(profile.imageUrl!)
                               : null,
                           child: profile.imageUrl == null
                               ? Text(
                                   profile.fullName[0],
-                                  style: const TextStyle(fontSize: 40),
+                                  style: const TextStyle(fontSize: 40, color: Colors.white),
                                 )
                               : null,
                         ),
@@ -76,28 +75,28 @@ class ProfileDetailsScreen extends StatelessWidget {
 
                   ProfileDetailCard(
                     icon: Icons.person_outline,
-                    label: "Full Name",
+                    label: AppLocalizations.profilesDetailsFullName,
                     value: profile.fullName,
                   ),
                   if (profile.relationship.isNotEmpty)
                     ProfileDetailCard(
                       icon: Icons.family_restroom,
-                      label: "Relationship",
-                      value: profile.relationship,
+                      label: AppLocalizations.profilesDetailsRelationship,
+                      value: AppLocalizations.getLocalizedRelationship(profile.relationship),
                     ),
                   ProfileDetailCard(
                     icon: Icons.cake_outlined,
-                    label: "Age",
-                    value: "${profile.age} Years",
+                    label: AppLocalizations.profilesDetailsAge,
+                    value: "${profile.age} ${AppLocalizations.profilesDetailsYears}",
                   ),
                   ProfileDetailCard(
                     icon: profile.gender == "Male" ? Icons.male : Icons.female,
-                    label: "Gender",
-                    value: profile.gender,
+                    label: AppLocalizations.profilesDetailsGender,
+                    value: AppLocalizations.getLocalizedGender(profile.gender),
                   ),
                   ProfileDetailCard(
                     icon: Icons.bloodtype,
-                    label: "Blood Type",
+                    label: AppLocalizations.profilesDetailsBloodType,
                     value: profile.bloodType,
                   ),
                   /*ProfileDetailCard(
@@ -107,12 +106,12 @@ class ProfileDetailsScreen extends StatelessWidget {
                   ),*/
                   ProfileDetailCard(
                     icon: Icons.health_and_safety,
-                    label: "Chronic Conditions",
+                    label: AppLocalizations.profilesDetailsChronicConditions,
                     items: _extractDisplayItems(profile.chronicDiseases),
                   ),
                   ProfileDetailCard(
                     icon: Icons.set_meal,
-                    label: "Allergies",
+                    label: AppLocalizations.profilesDetailsAllergies,
                     items: _extractDisplayItems(profile.allergies),
                   ),
                   SizedBox(height: spacing.xxl),
@@ -137,9 +136,9 @@ class ProfileDetailsScreen extends StatelessWidget {
                               context.read<ProfilesListCubit>().getProfiles();
                             }
                           },
-                          child: const Text(
-                            "Edit Profile",
-                            style: TextStyle(color: Colors.white),
+                          child: Text(
+                            AppLocalizations.profilesEditProfile,
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
@@ -163,20 +162,20 @@ class ProfileDetailsScreen extends StatelessWidget {
                                   final confirmed = await showDialog<bool>(
                                     context: context,
                                     builder: (context) => AlertDialog(
-                                      title: const Text('Delete Profile'),
-                                      content: const Text(
-                                        'Are you sure you want to delete this profile?',
+                                      title: Text(AppLocalizations.profilesDetailsDeleteConfirmTitle),
+                                      content: Text(
+                                        AppLocalizations.profilesDetailsDeleteConfirmMessage,
                                       ),
                                       actions: [
                                         TextButton(
                                           onPressed: () =>
                                               Navigator.of(context).pop(false),
-                                          child: const Text('Cancel'),
+                                          child: Text(AppLocalizations.profilesDetailsCancel),
                                         ),
                                         TextButton(
                                           onPressed: () =>
                                               Navigator.of(context).pop(true),
-                                          child: const Text('Delete'),
+                                          child: Text(AppLocalizations.profilesDetailsDelete),
                                         ),
                                       ],
                                     ),
@@ -204,9 +203,9 @@ class ProfileDetailsScreen extends StatelessWidget {
                                     if (!context.mounted) return;
                                     Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                         content: Text(
-                                          'Profile deleted successfully.',
+                                          AppLocalizations.profilesDetailsDeleteSuccess,
                                         ),
                                       ),
                                     );
@@ -215,13 +214,17 @@ class ProfileDetailsScreen extends StatelessWidget {
                                     Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
-                                        content: Text('Delete failed: $e'),
+                                        content: Text(
+                                          AppLocalizations.profilesDetailsDeleteFailed(e.toString()),
+                                        ),
                                       ),
                                     );
                                   }
                                 },
                           child: Text(
-                            profile.isPrimary ? 'Cannot Delete' : 'Delete',
+                            profile.isPrimary
+                                ? AppLocalizations.profilesCannotDelete
+                                : AppLocalizations.profilesDeleteProfile,
                             style: TextStyle(
                               color: profile.isPrimary
                                   ? colors.divider
@@ -235,15 +238,19 @@ class ProfileDetailsScreen extends StatelessWidget {
                 ],
               ),
             );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   List<String> _extractDisplayItems(List<dynamic> items) {
-    if (items.isEmpty) return const ['None'];
+    if (items.isEmpty) return [AppLocalizations.commonNone];
     return items
         .map((item) {
           if (item is Map<String, dynamic>) {

@@ -42,9 +42,68 @@ class MedicineService {
   Future<MedicineDto> updateMedicine(String id, MedicinePayload payload) async {
     final response = await DioHelper.putData(
       url: ApiEndpoints.medicineData(id),
-      data: payload.toJson(),
+      data: payload.toJson(includeReminders: false),
     );
     return MedicineDto.fromJson(_extractItemMap(response.data));
+  }
+
+  Future<void> createReminder(String medicineId, MedicinePayload payload, String time) async {
+    final formattedStart = payload.startDate.contains('T') ? payload.startDate.split('T')[0] : payload.startDate;
+    final body = {
+      "time": time,
+      "dose": payload.dose,
+      "frequency": payload.frequency.toJson(),
+      "with_food": false,
+      "start_date": formattedStart,
+    };
+    if (payload.endDate != null) {
+      final formattedEnd = payload.endDate!.contains('T') ? payload.endDate!.split('T')[0] : payload.endDate!;
+      body["end_date"] = formattedEnd;
+    }
+    if (payload.notes != null) body["notes"] = payload.notes!;
+
+    await DioHelper.postData(
+      url: ApiEndpoints.reminders(medicineId),
+      data: body,
+    );
+  }
+
+  Future<void> updateReminder(String reminderId, MedicinePayload payload, String time) async {
+    final formattedStart = payload.startDate.contains('T') ? payload.startDate.split('T')[0] : payload.startDate;
+    final body = {
+      "time": time,
+      "dose": payload.dose,
+      "frequency": payload.frequency.toJson(),
+      "with_food": false,
+      "start_date": formattedStart,
+    };
+    if (payload.endDate != null) {
+      final formattedEnd = payload.endDate!.contains('T') ? payload.endDate!.split('T')[0] : payload.endDate!;
+      body["end_date"] = formattedEnd;
+    }
+    if (payload.notes != null) body["notes"] = payload.notes!;
+
+    await DioHelper.putData(
+      url: ApiEndpoints.reminderData(reminderId),
+      data: body,
+    );
+  }
+
+  Future<void> deleteReminder(String reminderId) async {
+    await DioHelper.deleteData(url: ApiEndpoints.reminderData(reminderId));
+  }
+
+  Future<List<Map<String, dynamic>>> getReminders(String medicineId) async {
+    try {
+      final response = await DioHelper.getData(
+        url: ApiEndpoints.reminders(medicineId),
+        query: {},
+      );
+      final raw = _extractItemsList(response.data);
+      return raw.whereType<Map<String, dynamic>>().toList();
+    } catch (e) {
+      return [];
+    }
   }
 
   Future<MedicineDto> archiveMedicine(String id) async {
@@ -64,11 +123,19 @@ class MedicineService {
     String medicineId,
     String status, {
     DateTime? scheduledAt,
+    DateTime? takenAt,
   }) async {
     final scheduled = (scheduledAt ?? DateTime.now()).toUtc().toIso8601String();
+    final data = <String, dynamic>{
+      'status': status, 
+      'scheduled_at': scheduled,
+    };
+    if (takenAt != null) {
+      data['taken_at'] = takenAt.toUtc().toIso8601String();
+    }
     await DioHelper.postData(
       url: ApiEndpoints.medicineLogs(medicineId),
-      data: {'status': status, 'scheduled_at': scheduled},
+      data: data,
     );
   }
 

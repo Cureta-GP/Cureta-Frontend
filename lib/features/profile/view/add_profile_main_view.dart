@@ -121,7 +121,7 @@ class _AddProfileMainState extends State<AddProfileMain> {
 
           return ProgressStepLayout(
             appBarTitle: isEditing
-                ? 'Edit Profile'
+                ? AppLocalizations.profilesEditProfile
                 : AppLocalizations.profilesAddProfile,
             title: steps[state.currentPage]["title"]!,
             subtitle: steps[state.currentPage]["subtitle"],
@@ -131,6 +131,9 @@ class _AddProfileMainState extends State<AddProfileMain> {
             ),
             progressLabel: "${((state.currentPage + 1) / 7 * 100).toInt()}%",
             progress: (state.currentPage + 1) / 7,
+            buttonLabel: state.currentPage == 6
+                ? AppLocalizations.profilesReviewProfile
+                : AppLocalizations.profilesNextStep,
             onNext: () async {
               if (state.currentPage == 6) {
                 showDialog(
@@ -146,18 +149,16 @@ class _AddProfileMainState extends State<AddProfileMain> {
                       : await cubit.createProfile();
                   if (!mounted) return;
                   Navigator.pop(context); // غلق Loading
-                  if (isEditing) {
-                    GoRouter.of(context).pop(profile);
-                  } else {
-                    GoRouter.of(
-                      context,
-                    ).go(AppRoutes.mainNavigation, extra: profile);
-                  }
+                  GoRouter.of(context).go('${AppRoutes.mainNavigation}?tab=0', extra: profile);
                 } catch (e) {
                   if (!mounted) return;
-                  Navigator.pop(context); 
+                  Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Failed to save profile: $e')),
+                    SnackBar(
+                      content: Text(
+                        AppLocalizations.profilesFailedToSave(e.toString()),
+                      ),
+                    ),
                   );
                 }
               } else {

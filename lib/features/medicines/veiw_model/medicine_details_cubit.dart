@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/Services/notification_service.dart';
+import '../data/models/medicine_enums.dart';
 import '../data/repo/medicine_repository.dart';
 import 'medicine_details_state.dart';
 
@@ -67,6 +68,7 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
     required String doseUnit,
     required String notes,
     required List<String> alarmTimes,
+    required Frequency frequency,
     String? imagePath,
   }) async {
     if (state is! MedicineDetailsLoaded) return;
@@ -79,6 +81,7 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
         doseUnit: doseUnit,
         notes: notes,
         alarmTimes: alarmTimes,
+        frequency: frequency,
         imagePath: imagePath,
         updatedAt: DateTime.now(),
       );
