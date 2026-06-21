@@ -8,6 +8,7 @@ import 'package:cureta/features/profile/data/models/profile_model.dart';
 import 'package:cureta/features/profile/view_model/profile_list_cubit.dart';
 import 'package:cureta/features/profile/view_model/profile_list_state.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cureta/features/medical_records/widgets/user_records_header.dart';
 
 class ProfileDetailsScreen extends StatelessWidget {
   const ProfileDetailsScreen({super.key});
@@ -19,14 +20,13 @@ class ProfileDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: colors.background,
-      appBar: AppBar(
-        title: Text(AppLocalizations.profilesDetailsTitle),
-        backgroundColor: colors.background,
-        elevation: 0,
-        centerTitle: true,
-      ),
-      body: BlocBuilder<ProfilesListCubit, ProfilesListState>(
-        builder: (context, state) {
+      body: SafeArea(
+        child: Column(
+          children: [
+            UserRecordsHeader(title: AppLocalizations.profilesDetailsTitle),
+            Expanded(
+              child: BlocBuilder<ProfilesListCubit, ProfilesListState>(
+                builder: (context, state) {
           if (state is ProfilesSuccess) {
             final profile = state.profiles.firstWhere(
               (p) => p.id == state.selectedProfileId,
@@ -43,16 +43,14 @@ class ProfileDetailsScreen extends StatelessWidget {
                       children: [
                         CircleAvatar(
                           radius: 60,
-                          backgroundColor: colors.primary.withValues(
-                            alpha: 0.1,
-                          ),
+                          backgroundColor: colors.primary,
                           backgroundImage: profile.imageUrl != null
                               ? NetworkImage(profile.imageUrl!)
                               : null,
                           child: profile.imageUrl == null
                               ? Text(
                                   profile.fullName[0],
-                                  style: const TextStyle(fontSize: 40),
+                                  style: const TextStyle(fontSize: 40, color: Colors.white),
                                 )
                               : null,
                         ),
@@ -240,9 +238,13 @@ class ProfileDetailsScreen extends StatelessWidget {
                 ],
               ),
             );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+                  }
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

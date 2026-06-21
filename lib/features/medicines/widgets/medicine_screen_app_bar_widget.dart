@@ -17,6 +17,7 @@ class MedicineScreenAppBarWidget extends StatelessWidget
     return AppBar(
       backgroundColor: colors.background,
       elevation: 0,
+      scrolledUnderElevation: 0,
       automaticallyImplyLeading: false,
       title: Text(
         AppLocalizations.medicinesMyMedicines,
