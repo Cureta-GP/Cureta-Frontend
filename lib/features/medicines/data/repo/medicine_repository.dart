@@ -285,13 +285,9 @@ class MedicineRepository {
           remoteId: serverRemoteId,
           // Keep local-only fields while trusting backend canonical medicine fields.
           name: remoteModel.name,
-          doseAmount: remoteModel.doseAmount.isNotEmpty
-              ? remoteModel.doseAmount
-              : updating.doseAmount,
-          doseUnit: remoteModel.doseUnit.isNotEmpty
-              ? remoteModel.doseUnit
-              : updating.doseUnit,
-          frequency: remoteModel.frequency,
+          doseAmount: updating.doseAmount,
+          doseUnit: updating.doseUnit,
+          frequency: updating.frequency, // Always trust local updated frequency since backend PUT might ignore it
           notes: remoteModel.notes,
           alarmTimes: updating.alarmTimes, // Always trust local updated times since backend PUT ignores them
           startDate: remoteModel.startDate,

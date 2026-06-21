@@ -68,6 +68,7 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
     required String doseUnit,
     required String notes,
     required List<String> alarmTimes,
+    required Frequency frequency,
     String? imagePath,
   }) async {
     if (state is! MedicineDetailsLoaded) return;
@@ -80,6 +81,7 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
         doseUnit: doseUnit,
         notes: notes,
         alarmTimes: alarmTimes,
+        frequency: frequency,
         imagePath: imagePath,
         updatedAt: DateTime.now(),
       );
