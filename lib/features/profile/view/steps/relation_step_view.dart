@@ -30,14 +30,14 @@ class RelationSelectionStep extends StatelessWidget {
           itemBuilder: (context, index) {
             final option = relationshipOptions[index];
             
-            final isSelected = state.relationship == option.name;
+            final isSelected = state.relationship.toLowerCase() == option.apiValue.toLowerCase();
 
             return IconTextContainer(
               label: option.name,
               iconPath: option.iconPath,
               isSelected: isSelected, 
               onTap: () {
-                context.read<ProfileCubit>().updateRelation(option.name);
+                context.read<ProfileCubit>().updateRelation(option.apiValue);
               },
             );
           },

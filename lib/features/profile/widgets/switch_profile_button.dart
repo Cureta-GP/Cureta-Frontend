@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 
 class SwitchProfileButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -27,7 +28,7 @@ class SwitchProfileButton extends StatelessWidget {
         child: ElevatedButton.icon(
           onPressed: onPressed,
           icon: const Icon(Icons.swap_horiz),
-          label: const Text('Switch Profile'),
+          label: Text(AppLocalizations.profilesSwitchProfile),
           style: ElevatedButton.styleFrom(
             backgroundColor: backgroundColor,
             foregroundColor: foregroundColor,

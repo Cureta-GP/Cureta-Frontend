@@ -1,4 +1,5 @@
 import 'package:cureta/core/theme/theme_extensions.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:flutter/material.dart';
 
 class AddMemberCard extends StatelessWidget {
@@ -31,7 +32,7 @@ class AddMemberCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              "Add Member",
+              AppLocalizations.profilesAddMember,
               style: TextStyle(
                 color: colors.primary,
                 fontWeight: FontWeight.bold,

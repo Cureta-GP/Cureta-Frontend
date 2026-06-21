@@ -6,7 +6,8 @@
     "exit_app_title": "الخروج من التطبيق",
     "exit_app_content": "هل أنت متأكد أنك تريد الخروج من التطبيق؟",
     "exit_app_confirm": "خروج",
-    "exit_app_cancel": "إلغاء"
+    "exit_app_cancel": "إلغاء",
+    "none": "لا يوجد"
   },
   "auth": {
     "login": {
@@ -296,7 +297,12 @@
       "continue": "استمرار",
       "skip_for_now": "تخطى الآن",
       "step_indicator": "الخطوة {} من 7",
-      "review_profile": "مراجعة الملف الشخصي"
+      "review_profile": "مراجعة الملف الشخصي",
+      "current_profile": "الملف الشخصي الحالي",
+      "no_profiles": "لا توجد ملفات شخصية",
+      "failed_to_save": "فشل حفظ الملف الشخصي: {error}",
+      "switch_profile": "تبديل الملف الشخصي",
+      "add_member": "إضافة فرد عائلة"
     },
     "select_profile": {
       "title": "اختر ملفًا شخصيًا",
@@ -340,6 +346,8 @@
         "mother": "أم",
         "father": "أب",
         "spouse": "زوج/زوجة",
+        "brother": "أخ",
+        "sister": "أخت",
         "other": "أخرى"
       },
       "age": {

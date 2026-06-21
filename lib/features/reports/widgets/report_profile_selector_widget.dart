@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/profile/data/models/profile_model.dart';
+import 'package:cureta/core/localization/app_localizations.dart';
 
 class ReportProfileSelectorWidget extends StatelessWidget {
   const ReportProfileSelectorWidget({
@@ -103,7 +104,7 @@ class _ProfileChip extends StatelessWidget {
             ),
             SizedBox(height: spacing.xs / 4),
             Text(
-              profile.relationship,
+              AppLocalizations.getLocalizedRelationship(profile.relationship),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: typography.label.copyWith(

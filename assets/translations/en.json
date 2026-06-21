@@ -6,7 +6,8 @@
     "exit_app_title": "Exit App",
     "exit_app_content": "Are you sure you want to exit the app?",
     "exit_app_confirm": "Exit",
-    "exit_app_cancel": "Cancel"
+    "exit_app_cancel": "Cancel",
+    "none": "None"
   },
   "auth": {
     "login": {
@@ -229,7 +230,12 @@
       "continue": "Continue",
       "skip_for_now": "Skip for now",
       "step_indicator": "Step {} of 7",
-      "review_profile": "Review Profile"
+      "review_profile": "Review Profile",
+      "current_profile": "Current Profile",
+      "no_profiles": "No profiles found",
+      "failed_to_save": "Failed to save profile: {error}",
+      "switch_profile": "Switch Profile",
+      "add_member": "Add Member"
     },
     "select_profile": {
       "title": "Select Profile",
@@ -273,6 +279,8 @@
         "mother": "Mother",
         "father": "Father",
         "spouse": "Spouse",
+        "brother": "Brother",
+        "sister": "Sister",
         "other": "Other"
       },
       "age": {

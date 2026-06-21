@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 class AppLocalizations {
   // App
   static String get appName => 'app.name'.tr();
+  static String get commonNone => 'common.none'.tr();
 
   // Auth - Login
   static String get loginTitle => 'auth.login.title'.tr();
@@ -340,6 +341,13 @@ class AppLocalizations {
       'profiles.common.delete_profile'.tr();
   static String get profilesCannotDelete =>
       'profiles.common.cannot_delete'.tr();
+  static String get profilesCurrentProfile => 'profiles.common.current_profile'.tr();
+  static String get profilesNoProfiles => 'profiles.common.no_profiles'.tr();
+  static String profilesFailedToSave(String error) =>
+      'profiles.common.failed_to_save'.tr(namedArgs: {'error': error});
+  static String get profilesSwitchProfile => 'profiles.common.switch_profile'.tr();
+  static String get profilesAddMember => 'profiles.common.add_member'.tr();
+  static String get drawerFamilyProfiles => 'drawer.family_profiles'.tr();
   static String get profilesSelectProfileTitle =>
       'profiles.select_profile.title'.tr();
   static String get profilesSelectProfileSubtitle =>
@@ -370,6 +378,7 @@ class AppLocalizations {
       'profiles.details.delete_failed'.tr(namedArgs: {'error': error});
 
   static String get profilesNextStep => 'profiles.common.next_step'.tr();
+  static String get profilesReviewProfile => 'profiles.common.review_profile'.tr();
   static String get profilesContinue => 'profiles.common.continue'.tr();
   static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
   static String profilesStepIndicator(int current, int total) =>
@@ -400,6 +409,10 @@ class AppLocalizations {
       'profiles.steps.relation.father'.tr();
   static String get profilesRelationSpouse =>
       'profiles.steps.relation.spouse'.tr();
+  static String get profilesRelationBrother =>
+      'profiles.steps.relation.brother'.tr();
+  static String get profilesRelationSister =>
+      'profiles.steps.relation.sister'.tr();
   static String get profilesRelationOther =>
       'profiles.steps.relation.other'.tr();
 
@@ -466,6 +479,50 @@ class AppLocalizations {
 
   static Locale currentLocale(BuildContext context) =>
       EasyLocalization.of(context)!.locale;
+
+  static String getLocalizedGender(String gender) {
+    final lower = gender.trim().toLowerCase();
+    if (lower == 'male' || lower == 'ذكر') return profilesGenderMale;
+    if (lower == 'female' || lower == 'أنثى' || lower == 'انثى') return profilesGenderFemale;
+    return gender;
+  }
+
+  static String getLocalizedRelationship(String relationship) {
+    final lower = relationship.trim().toLowerCase();
+    switch (lower) {
+      case 'self':
+        return selectProfilePrimaryAccount;
+      case 'son':
+      case 'ابن':
+        return profilesRelationSon;
+      case 'daughter':
+      case 'ابنة':
+      case 'بنت':
+        return profilesRelationDaughter;
+      case 'mother':
+      case 'أم':
+        return profilesRelationMother;
+      case 'father':
+      case 'أب':
+        return profilesRelationFather;
+      case 'spouse':
+      case 'زوج':
+      case 'زوجة':
+        return profilesRelationSpouse;
+      case 'brother':
+      case 'أخ':
+        return profilesRelationBrother;
+      case 'sister':
+      case 'أخت':
+        return profilesRelationSister;
+      case 'other':
+      case 'أخرى':
+      case 'آخر':
+        return profilesRelationOther;
+      default:
+        return relationship;
+    }
+  }
 
   // Home
   static String get homeWelcomeBack => 'home.welcome_back'.tr();
