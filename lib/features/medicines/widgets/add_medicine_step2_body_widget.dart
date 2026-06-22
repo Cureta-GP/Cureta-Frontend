@@ -107,7 +107,7 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
                           ),
                           cursorColor: colors.textPrimary,
                           decoration: InputDecoration(
-                            hintText: 'e.g. 2 pills, 1 spoon... ✨ (Updated OTA)',
+                            hintText: 'e.g. 2 pills, 1 spoon...',
                             hintStyle: typography.body.copyWith(
                               color: colors.textHint,
                             ),
