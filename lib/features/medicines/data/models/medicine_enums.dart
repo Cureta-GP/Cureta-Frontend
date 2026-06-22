@@ -24,8 +24,10 @@ enum Frequency {
   String toJson() => name;
 
   static Frequency fromJson(String json) {
+    // Normalise backend variants: "as_needed" / "as-needed" → "asneeded"
+    final normalised = json.toLowerCase().replaceAll(RegExp(r'[_\-]'), '');
     return Frequency.values.firstWhere(
-      (e) => e.name.toLowerCase() == json.toLowerCase(),
+      (e) => e.name.toLowerCase() == normalised,
       orElse: () => Frequency.daily,
     );
   }

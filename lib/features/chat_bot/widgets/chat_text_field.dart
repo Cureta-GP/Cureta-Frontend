@@ -55,14 +55,6 @@ class ChatTextField extends StatelessWidget {
       ),
       child: Row(
         children: [
-          _buildActionButton(
-            context,
-            icon: Icons.attach_file,
-            onPressed: onAttach,
-            size: actionButtonSize,
-            iconSize: actionIconSize,
-            marginEnd: compactMode ? 2 : 4,
-          ),
           Expanded(
             child: TextField(
               controller: controller,
