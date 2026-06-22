@@ -25,7 +25,7 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
     final typography = context.typography;
 
     return Scaffold(
-      backgroundColor: colors.chatBackground,
+      backgroundColor: colors.background,
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: EdgeInsetsDirectional.fromSTEB(
