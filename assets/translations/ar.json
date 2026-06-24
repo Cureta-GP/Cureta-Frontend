@@ -141,7 +141,7 @@
       "rescan": "إعادة المسح",
       "low_confidence": "دقة منخفضة - يرجى التحقق من التفاصيل",
       "tablet": "قرص",
-      "no_results": "لم يتم العثور على ÷دوية"
+      "no_results": "لم يتم العثور على أدوية"
     }
   },
   "onboarding": {
@@ -397,8 +397,10 @@
     "password_max_length": "يجب أن تكون كلمة المرور أقل من 50 حرفاً",
     "name_required": "الاسم الكامل مطلوب",
     "name_min_length": "يجب أن يكون الاسم الكامل حرفين على الأقل",
+    "phone_required": "رقم الهاتف مطلوب",
     "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
-    "field_required": "{field} مطلوب"
+    "field_required": "{field} مطلوب",
+    "passwords_not_match": "كلمتا المرور غير متطابقتين"
   },
   "medicines": {
     "my_medicines": "أدويتي",

@@ -26,20 +26,35 @@ class AddRecordFirstStep extends StatefulWidget {
 
 class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
   final TextEditingController _conditionController = TextEditingController();
+  bool _showConditionError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _conditionController.addListener(_onConditionChanged);
+  }
+
+  void _onConditionChanged() {
+    if (_showConditionError && _conditionController.text.isNotEmpty) {
+      setState(() => _showConditionError = false);
+    }
+  }
+
   @override
   void dispose() {
+    _conditionController.removeListener(_onConditionChanged);
     _conditionController.dispose();
     super.dispose();
   }
+
   void _handleNext() {
     final condition = _conditionController.text.trim();
-    // Condition is required
+    // Condition is required — show inline error instead of snackbar
     if (condition.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.addRecordErrorConditionRequired)),
-      );
+      setState(() => _showConditionError = true);
       return;
     }
+    setState(() => _showConditionError = false);
     // Explicitly unfocus before navigating so it doesn't autofocus when returning
     FocusManager.instance.primaryFocus?.unfocus();
 
@@ -75,11 +90,13 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
           children: [
             CustomScreenHeader(
               title: '',
-              onBack: widget.onBack ?? () {
-                if (context.canPop()) {
-                  context.pop();
-                }
-              },
+              onBack:
+                  widget.onBack ??
+                  () {
+                    if (context.canPop()) {
+                      context.pop();
+                    }
+                  },
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -93,7 +110,12 @@ class _AddRecordFirstStepState extends State<AddRecordFirstStep> {
                       progress: 0.2,
                     ),
                     SizedBox(height: spacing.xxl),
-                    AddRecordConditionSection(controller: _conditionController),
+                    AddRecordConditionSection(
+                      controller: _conditionController,
+                      errorText: _showConditionError
+                          ? AppLocalizations.addRecordErrorConditionRequired
+                          : null,
+                    ),
                     SizedBox(height: spacing.xl),
                   ],
                 ),

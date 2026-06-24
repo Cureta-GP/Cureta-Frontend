@@ -329,8 +329,10 @@
     "password_max_length": "Password must be less than 50 characters",
     "name_required": "Full name is required",
     "name_min_length": "Full name must be at least 2 characters",
+    "phone_required": "Phone number is required",
     "phone_invalid": "Please enter a valid phone number",
-    "field_required": "{field} is required"
+    "field_required": "{field} is required",
+    "passwords_not_match": "Passwords do not match"
   },
   "qr": {
     "title": "My QR Code",

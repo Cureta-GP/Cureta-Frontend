@@ -56,10 +56,10 @@ class Validators {
     return null;
   }
 
-  // Validate phone number (optional)
+  // Validate phone number (required)
   static String? phone(String? value) {
-    if (value == null || value.isEmpty) {
-      return null; // Optional field
+    if (value == null || value.trim().isEmpty) {
+      return AppLocalizations.phoneRequired;
     }
 
     final phoneRegex = RegExp(r'^\+?[\d\s-()]+$');
@@ -68,6 +68,17 @@ class Validators {
       return AppLocalizations.phoneInvalid;
     }
 
+    return null;
+  }
+
+  // Validate confirm password matches the new password
+  static String? confirmPassword(String? value, String? newPassword) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.passwordRequired;
+    }
+    if (value != newPassword) {
+      return AppLocalizations.passwordsNotMatch;
+    }
     return null;
   }
 }

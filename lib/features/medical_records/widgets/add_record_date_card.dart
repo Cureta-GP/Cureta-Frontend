@@ -7,10 +7,14 @@ class AddRecordDateCard extends StatelessWidget {
     super.key,
     required this.selectedDate,
     required this.onTap,
+    this.hasError = false,
+    this.errorText,
   });
 
   final DateTime? selectedDate;
   final VoidCallback onTap;
+  final bool hasError;
+  final String? errorText;
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
@@ -71,7 +75,10 @@ class AddRecordDateCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colors.background,
                 borderRadius: BorderRadius.circular(radius.md),
-                border: Border.all(color: colors.divider, width: 1.6),
+                border: Border.all(
+                  color: hasError ? colors.error : colors.divider,
+                  width: 1.6,
+                ),
               ),
               child: Row(
                 children: [
@@ -98,6 +105,20 @@ class AddRecordDateCard extends StatelessWidget {
               ),
             ),
           ),
+          if (hasError && errorText != null) ...[
+            SizedBox(height: spacing.xs),
+            Row(
+              children: [
+                SizedBox(width: spacing.xs),
+                Text(
+                  errorText!,
+                  style: typography.medicalRecordHelper.copyWith(
+                    color: colors.error,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ],
       ),
     );
