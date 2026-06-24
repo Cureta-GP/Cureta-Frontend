@@ -39,6 +39,7 @@ class MainNavigationScreen extends StatefulWidget {
 class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
   final _advancedDrawerController = AdvancedDrawerController();
+  late final ProfilesListCubit _profilesCubit;
 
   Future<void> _openAddMedicine() async {
     await context.pushNamed(AppRoutes.medicinesAddStep1);
@@ -100,7 +101,15 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   void initState() {
     super.initState();
     _selectedIndex = widget.initialTabIndex.clamp(0, 3);
+    _profilesCubit = ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles();
     _checkAlarmPermissions();
+  }
+
+  @override
+  void dispose() {
+    _profilesCubit.close();
+    _advancedDrawerController.dispose();
+    super.dispose();
   }
 
   Future<void> _checkAlarmPermissions() async {
@@ -139,6 +148,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     if (oldWidget.initialTabIndex != widget.initialTabIndex) {
       _selectedIndex = widget.initialTabIndex.clamp(0, 3);
     }
+    // Only refresh if the profile extra actually changed (e.g. returning from adding a profile via GoRouter.go)
+    if (oldWidget.profile != widget.profile) {
+      _profilesCubit.getProfiles();
+    }
   }
 
   void _onItemTapped(int index) {
@@ -158,9 +171,8 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>
-              ProfilesListCubit(getIt.get<ProfileRepository>())..getProfiles(),
+        BlocProvider.value(
+          value: _profilesCubit,
         ),
         BlocProvider(create: (context) => getIt<AuthCubit>()),
       ],

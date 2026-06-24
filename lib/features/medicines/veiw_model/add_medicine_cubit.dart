@@ -58,7 +58,18 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     final current = _currentData();
     final errors = Map<String, String>.from(current.validationErrors);
     errors.remove('frequency');
-    emit(current.copyWith(frequency: frequency, validationErrors: errors));
+    // As-needed medicines have no fixed schedule — clear any alarm times that
+    // may have been set so they are never stored or shown in the calendar.
+    final alarmTimes = frequency == Frequency.asNeeded
+        ? <TimeOfDay>[]
+        : current.alarmTimes;
+    emit(
+      current.copyWith(
+        frequency: frequency,
+        alarmTimes: alarmTimes,
+        validationErrors: errors,
+      ),
+    );
   }
 
   void addAlarmTime(TimeOfDay time) {
@@ -145,9 +156,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
       // Schedule a native alarm for every reminder time — best-effort,
       // a failure here must never block the save flow.
       if (medicine.alarmTimes.isNotEmpty) {
-        NotificationService.instance
-            .scheduleMedicineAlarms(medicine)
-            .ignore();
+        NotificationService.instance.scheduleMedicineAlarms(medicine).ignore();
       }
 
       emit(AddMedicineSuccess(medicine: medicine));
@@ -162,17 +171,21 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
   }
 
   Future<MedicinePayload> _buildPayload(AddMedicineStepUpdated data) async {
-    final times = data.alarmTimes.map((t) {
-      final hour = t.hour.toString().padLeft(2, '0');
-      final minute = t.minute.toString().padLeft(2, '0');
-      return '$hour:$minute';
-    }).toList();
+    final resolvedFrequency = data.frequency ?? Frequency.daily;
+    // As-needed medicines have no schedule — send an empty reminders list.
+    final times = resolvedFrequency == Frequency.asNeeded
+        ? <String>[]
+        : data.alarmTimes.map((t) {
+            final hour = t.hour.toString().padLeft(2, '0');
+            final minute = t.minute.toString().padLeft(2, '0');
+            return '$hour:$minute';
+          }).toList();
 
     return MedicinePayload(
       profileId: await _getProfileId(),
       name: data.medicineName,
       dose: data.dose,
-      frequency: data.frequency ?? Frequency.daily,
+      frequency: resolvedFrequency,
       reminders: times,
       startDate: data.startDate.toIso8601String(),
       notes: data.notes.isEmpty ? null : data.notes,
