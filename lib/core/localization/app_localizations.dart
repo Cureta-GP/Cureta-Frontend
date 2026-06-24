@@ -656,5 +656,22 @@ class AppLocalizations {
   static String get medicinesAlarmTaken => 'medicines.alarm_taken'.tr();
   static String get medicinesAlarmMissed => 'medicines.alarm_missed'.tr();
   static String get medicinesAlarmSubtitle => 'medicines.alarm_subtitle'.tr();
+
+  // Medicines - Drug Interactions
+  static String get drugInteractionTitle =>
+      'medicines.drug_interaction_title'.tr();
+  static String get drugInteractionSubtitle =>
+      'medicines.drug_interaction_subtitle'.tr();
+  static String get drugInteractionSeverityMajor =>
+      'medicines.drug_interaction_severity_major'.tr();
+  static String get drugInteractionSeverityModerate =>
+      'medicines.drug_interaction_severity_moderate'.tr();
+  static String get drugInteractionSeverityMinor =>
+      'medicines.drug_interaction_severity_minor'.tr();
+  static String get drugInteractionInteractsWith =>
+      'medicines.drug_interaction_interacts_with'.tr();
+  static String get drugInteractionDismiss =>
+      'medicines.drug_interaction_dismiss'.tr();
+
   static String dynamicTr(String key) => key.tr();
 }

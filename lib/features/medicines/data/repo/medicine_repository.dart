@@ -3,11 +3,19 @@ import 'package:uuid/uuid.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import '../models/dose_log_model.dart';
+import '../models/drug_interaction_model.dart';
 import '../models/medicine_model.dart';
 import '../models/medicine_payload.dart';
 import '../models/medicine_enums.dart';
 import '../services/medicine_local_service.dart';
 import '../services/medicine_service.dart';
+
+/// Return type for [addMedicine]: the saved model
+/// plus optional drug interaction warnings.
+typedef AddMedicineResult = ({
+  MedicineModel medicine,
+  DrugInteractionModel? interactions,
+});
 
 class MedicineRepository {
   final MedicineLocalService _local;
@@ -28,7 +36,7 @@ class MedicineRepository {
     return await repo.getResolvedSelectedProfileId() ?? '';
   }
 
-  Future<MedicineModel> addMedicine(MedicinePayload payload) async {
+  Future<AddMedicineResult> addMedicine(MedicinePayload payload) async {
     final pid = await _pid();
     final now = DateTime.now();
     final model = MedicineModel(
@@ -49,8 +57,9 @@ class MedicineRepository {
       imagePath: payload.imagePath,
     );
     await _local.insert(model);
+    DrugInteractionModel? interactions;
     try {
-      final dto = await _remote.createMedicine(
+      final result = await _remote.createMedicine(
         MedicinePayload(
           profileId: pid,
           name: payload.name,
@@ -63,29 +72,40 @@ class MedicineRepository {
           doseForm: payload.doseForm,
         ),
       );
+      interactions = result.interactions;
+      final dto = result.dto;
       if (dto.id != null && dto.id!.isNotEmpty) {
         await _local.updateSyncStatus(
           model.id,
           SyncStatus.synced,
           remoteId: dto.id,
         );
-        return model.copyWith(syncStatus: SyncStatus.synced, remoteId: dto.id);
+        return (
+          medicine: model.copyWith(
+            syncStatus: SyncStatus.synced,
+            remoteId: dto.id,
+          ),
+          interactions: interactions,
+        );
       }
       await _refreshFromRemote(pid);
       final linked = await _local.getById(model.id);
       if (linked != null &&
           linked.remoteId != null &&
           linked.remoteId!.isNotEmpty) {
-        return linked;
+        return (medicine: linked, interactions: interactions);
       }
       await _local.updateSyncStatus(model.id, SyncStatus.failed);
-      return model.copyWith(syncStatus: SyncStatus.failed);
+      return (
+        medicine: model.copyWith(syncStatus: SyncStatus.failed),
+        interactions: interactions,
+      );
     } catch (e) {
       developer.log(
         'Failed to sync medicine ${model.id}: $e',
         name: 'MedicineRepository',
       );
-      return model;
+      return (medicine: model, interactions: interactions);
     }
   }
 
@@ -149,7 +169,8 @@ class MedicineRepository {
           await _local.updateSyncStatus(m.id, SyncStatus.synced, remoteId: newRemoteId);
         } else {
           // It's a create
-          final dto = await _remote.createMedicine(_buildPayload(m, pid));
+          final result = await _remote.createMedicine(_buildPayload(m, pid));
+          final dto = result.dto;
           if (dto.id != null && dto.id!.isNotEmpty) {
             await _local.updateSyncStatus(
               m.id,

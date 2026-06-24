@@ -496,7 +496,14 @@
     "pick_from_gallery": "Choose from Gallery",
     "alarm_taken": "Taken",
     "alarm_missed": "Missed",
-    "alarm_subtitle": "It's time to take your medication"
+    "alarm_subtitle": "It's time to take your medication",
+    "drug_interaction_title": "Drug Interaction Warning",
+    "drug_interaction_subtitle": "The medicine you added may interact with your current medications. Please consult your doctor.",
+    "drug_interaction_severity_major": "Major",
+    "drug_interaction_severity_moderate": "Moderate",
+    "drug_interaction_severity_minor": "Minor",
+    "drug_interaction_interacts_with": "Interacts with",
+    "drug_interaction_dismiss": "I Understand"
   },
   "settings": {
     "title": "App Settings",

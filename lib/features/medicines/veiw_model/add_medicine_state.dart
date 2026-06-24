@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../data/models/drug_interaction_model.dart';
 import '../data/models/medicine_model.dart';
 import '../data/models/medicine_enums.dart';
 
@@ -115,11 +116,15 @@ final class AddMedicineLoading extends AddMedicineState {
 
 final class AddMedicineSuccess extends AddMedicineState {
   final MedicineModel medicine;
+  final DrugInteractionModel? interactions;
 
-  const AddMedicineSuccess({required this.medicine});
+  const AddMedicineSuccess({
+    required this.medicine,
+    this.interactions,
+  });
 
   @override
-  List<Object?> get props => [medicine];
+  List<Object?> get props => [medicine, interactions];
 }
 
 final class AddMedicineFailure extends AddMedicineState {

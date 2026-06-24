@@ -151,15 +151,20 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
 
     try {
       final payload = await _buildPayload(current);
-      final medicine = await _repository.addMedicine(payload);
+      final result = await _repository.addMedicine(payload);
 
       // Schedule a native alarm for every reminder time — best-effort,
       // a failure here must never block the save flow.
-      if (medicine.alarmTimes.isNotEmpty) {
-        NotificationService.instance.scheduleMedicineAlarms(medicine).ignore();
+      if (result.medicine.alarmTimes.isNotEmpty) {
+        NotificationService.instance
+            .scheduleMedicineAlarms(result.medicine)
+            .ignore();
       }
 
-      emit(AddMedicineSuccess(medicine: medicine));
+      emit(AddMedicineSuccess(
+        medicine: result.medicine,
+        interactions: result.interactions,
+      ));
     } catch (e) {
       emit(
         AddMedicineFailure(
