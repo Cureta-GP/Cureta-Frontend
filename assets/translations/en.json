@@ -396,7 +396,8 @@
       "confirm": "Confirm Medicines",
       "rescan": "Rescan",
       "low_confidence": "Low confidence - Please check details",
-      "tablet": "Tablet"
+      "tablet": "Tablet",
+      "no_results": "No medicatios found"
     }
   },
   "medicines": {
