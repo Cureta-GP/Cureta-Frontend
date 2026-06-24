@@ -93,13 +93,27 @@ class MedicineNameFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final radius = context.radius;
+    final spacing = context.spacing;
+    final typography = context.typography;
     return BlocSelector<AddMedicineCubit, AddMedicineState, String?>(
       selector: (state) => state.formData.imagePath,
       builder: (context, imagePath) {
         return TextField(
           onChanged: (v) => context.read<AddMedicineCubit>().updateMedicineName(v),
+          style: typography.medicalRecordInput.copyWith(
+            color: colors.textPrimary,
+          ),
           decoration: InputDecoration(
             hintText: AppLocalizations.medicinesMedicineNameHint,
+            hintStyle: typography.medicalRecordInput.copyWith(
+              color: colors.textHint,
+            ),
+            filled: true,
+            fillColor: colors.background,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: spacing.xl,
+              vertical: spacing.md,
+            ),
             suffixIcon: IconButton(
               icon: imagePath != null
                   ? ClipRRect(
@@ -114,12 +128,21 @@ class MedicineNameFieldWidget extends StatelessWidget {
                   : Icon(Icons.photo_camera, color: colors.primary),
               onPressed: () => ImagePickerSheetWidget.show(context),
             ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(radius.md),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.full),
+              borderSide: BorderSide(color: colors.divider, width: 1),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(radius.md),
-              borderSide: BorderSide(color: colors.primary),
+              borderRadius: BorderRadius.circular(radius.full),
+              borderSide: BorderSide(color: colors.primary, width: 1.6),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.full),
+              borderSide: BorderSide(color: colors.error, width: 1.6),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.full),
+              borderSide: BorderSide(color: colors.error, width: 1.6),
             ),
           ),
         );
