@@ -234,6 +234,15 @@ class MedicineLocalService {
     _db = null;
   }
 
+  Future<void> clearAllData() async {
+    if (_db != null) {
+      await _db!.delete(_table);
+      await _db!.delete(_doseLogsTable);
+      await _db!.delete(_doseLogsQueueTable);
+      await _emitAll('');
+    }
+  }
+
   Future<void> _emitAll(String profileId) async {
     if (_db == null || _controller.isClosed) return;
     final items = profileId.isNotEmpty ? await getAll(profileId) : <MedicineModel>[];

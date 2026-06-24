@@ -14,6 +14,10 @@ class ProfileRepository {
 
   ProfileRepository(this._service);
 
+  void clearCache() {
+    _cachedProfiles = null;
+  }
+
   String _normalizeGenderForApi(String gender) {
     final value = gender.trim().toLowerCase();
 
