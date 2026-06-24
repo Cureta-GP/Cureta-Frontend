@@ -23,26 +23,19 @@ class AppLogout {
       // 2. Network: Remove Authorization Header
       DioHelper.clearAuthToken();
 
-      // 3. Local Database: Wipe SQLite Databases
+      // 3. Local Database: Wipe SQLite Databases safely
       try {
-        final dbPath = await getDatabasesPath();
-
-        // Close the current MedicineLocalService connection to release locks
-        await getIt<MedicineLocalService>().close();
-
-        // Delete the specific medicine database file
-        final medicinesDbPath = join(dbPath, 'cureta_medicines.db');
-        await deleteDatabase(medicinesDbPath);
-
-        // Re-initialize MedicineLocalService so it creates a fresh empty database for the next user
-        await getIt<MedicineLocalService>().init();
+        await getIt<MedicineLocalService>().clearAllData();
       } catch (e) {
         debugPrint('Error wiping local databases: $e');
       }
 
       // 4. State Management: Clear In-Memory Caches in Repositories
-      // E.g., clear the in-memory cached profiles in ProfileRepository.
-      getIt<ProfileRepository>().clearCache();
+      // The safest way to clear all Singletons (Repositories & Services) is to completely reset GetIt
+      // and re-register them to ensure absolutely no ghosts remain in any repository.
+      await getIt.reset();
+      await setup();
+      await getIt<MedicineLocalService>().init();
 
       // Note on Cubits: Since the app uses GetIt 'registerFactory' for Cubits,
       // and they are provided via BlocProvider at the route/page level,
