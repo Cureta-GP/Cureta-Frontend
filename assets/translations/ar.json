@@ -502,7 +502,11 @@
     "drug_interaction_severity_moderate": "متوسط",
     "drug_interaction_severity_minor": "بسيط",
     "drug_interaction_interacts_with": "يتعارض مع",
-    "drug_interaction_dismiss": "فهمت"
+    "drug_interaction_dismiss": "فهمت",
+    "duplicate_medicine_title": "الدواء موجود بالفعل",
+    "duplicate_medicine_subtitle": "هذا الدواء موجود بالفعل في قائمتك. يرجى مراجعة أدويتك الحالية.",
+    "duplicate_medicine_dismiss": "حسنًا",
+    "duplicate_medicines_ocr_subtitle": "بعض الأدوية كانت موجودة بالفعل في قائمتك وتم تخطيها:"
   },
   "settings": {
     "title": "إعدادات التطبيق",

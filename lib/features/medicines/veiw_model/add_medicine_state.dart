@@ -130,9 +130,14 @@ final class AddMedicineSuccess extends AddMedicineState {
 final class AddMedicineFailure extends AddMedicineState {
   final String errorMessage;
   final AddMedicineStepUpdated data;
+  final bool isDuplicate;
 
-  const AddMedicineFailure({required this.errorMessage, required this.data});
+  const AddMedicineFailure({
+    required this.errorMessage,
+    required this.data,
+    this.isDuplicate = false,
+  });
 
   @override
-  List<Object?> get props => [errorMessage, data];
+  List<Object?> get props => [errorMessage, data, isDuplicate];
 }

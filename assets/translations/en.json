@@ -503,7 +503,11 @@
     "drug_interaction_severity_moderate": "Moderate",
     "drug_interaction_severity_minor": "Minor",
     "drug_interaction_interacts_with": "Interacts with",
-    "drug_interaction_dismiss": "I Understand"
+    "drug_interaction_dismiss": "I Understand",
+    "duplicate_medicine_title": "Medicine Already Exists",
+    "duplicate_medicine_subtitle": "This medicine is already in your list. Please check your current medicines.",
+    "duplicate_medicine_dismiss": "Got It",
+    "duplicate_medicines_ocr_subtitle": "Some medicines were already in your list and were skipped:"
   },
   "settings": {
     "title": "App Settings",

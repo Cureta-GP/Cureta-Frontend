@@ -102,25 +102,36 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
                               TextPosition(offset: doseAmount.length),
                             ),
                           onChanged: (v) => context.read<AddMedicineCubit>().updateDoseAmount(v),
-                          style: typography.body.copyWith(
+                          style: typography.medicalRecordInput.copyWith(
                             color: colors.textPrimary,
                           ),
                           cursorColor: colors.textPrimary,
                           decoration: InputDecoration(
                             hintText: 'e.g. 2 pills, 1 spoon...',
-                            hintStyle: typography.body.copyWith(
+                            hintStyle: typography.medicalRecordInput.copyWith(
                               color: colors.textHint,
                             ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(context.radius.md),
+                            filled: true,
+                            fillColor: colors.background,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: spacing.xl,
+                              vertical: spacing.md,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(context.radius.full),
+                              borderSide: BorderSide(color: colors.divider, width: 1),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(context.radius.md),
-                              borderSide: BorderSide(color: colors.primary),
+                              borderRadius: BorderRadius.circular(context.radius.full),
+                              borderSide: BorderSide(color: colors.primary, width: 1.6),
                             ),
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: spacing.lg,
-                              vertical: spacing.lg,
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(context.radius.full),
+                              borderSide: BorderSide(color: colors.error, width: 1.6),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(context.radius.full),
+                              borderSide: BorderSide(color: colors.error, width: 1.6),
                             ),
                           ),
                         );

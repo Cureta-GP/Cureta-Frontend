@@ -673,5 +673,15 @@ class AppLocalizations {
   static String get drugInteractionDismiss =>
       'medicines.drug_interaction_dismiss'.tr();
 
+  // Medicines - Duplicate Medicine
+  static String get duplicateMedicineTitle =>
+      'medicines.duplicate_medicine_title'.tr();
+  static String get duplicateMedicineSubtitle =>
+      'medicines.duplicate_medicine_subtitle'.tr();
+  static String get duplicateMedicineDismiss =>
+      'medicines.duplicate_medicine_dismiss'.tr();
+  static String get duplicateMedicinesOcrSubtitle =>
+      'medicines.duplicate_medicines_ocr_subtitle'.tr();
+
   static String dynamicTr(String key) => key.tr();
 }

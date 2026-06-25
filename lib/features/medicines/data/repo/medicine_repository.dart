@@ -1,7 +1,9 @@
 import 'dart:developer' as developer;
+import 'package:dio/dio.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
+import '../models/duplicate_medicine_exception.dart';
 import '../models/dose_log_model.dart';
 import '../models/drug_interaction_model.dart';
 import '../models/medicine_model.dart';
@@ -100,6 +102,21 @@ class MedicineRepository {
         medicine: model.copyWith(syncStatus: SyncStatus.failed),
         interactions: interactions,
       );
+    } on DioException catch (e) {
+      // 409 Conflict → medicine already exists for this profile.
+      if (e.response?.statusCode == 409) {
+        await _local.hardDelete(model.id);
+        final msg =
+            (e.response?.data is Map ? e.response?.data['message'] : null)
+                as String? ??
+            'Medicine already exists.';
+        throw DuplicateMedicineException(message: msg);
+      }
+      developer.log(
+        'Failed to sync medicine ${model.id}: $e',
+        name: 'MedicineRepository',
+      );
+      return (medicine: model, interactions: interactions);
     } catch (e) {
       developer.log(
         'Failed to sync medicine ${model.id}: $e',

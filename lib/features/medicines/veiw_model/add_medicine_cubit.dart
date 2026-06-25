@@ -5,6 +5,7 @@ import 'package:cureta/core/Services/notification_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import '../data/models/medicine_payload.dart';
 import '../data/models/medicine_enums.dart';
+import '../data/models/duplicate_medicine_exception.dart';
 import '../data/repo/medicine_repository.dart';
 import 'add_medicine_state.dart';
 
@@ -165,6 +166,14 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
         medicine: result.medicine,
         interactions: result.interactions,
       ));
+    } on DuplicateMedicineException catch (_) {
+      emit(
+        AddMedicineFailure(
+          errorMessage: 'medicines.duplicate_medicine_subtitle',
+          data: current,
+          isDuplicate: true,
+        ),
+      );
     } catch (e) {
       emit(
         AddMedicineFailure(
