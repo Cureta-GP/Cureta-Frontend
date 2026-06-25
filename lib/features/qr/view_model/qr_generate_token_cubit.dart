@@ -12,8 +12,10 @@ class QrGenerateTokenCubit extends Cubit<QrGenerateTokenState> {
     emit(QrGenerateTokenLoading());
     try {
       final shareUrl = await _repository.generateShareUrl(request);
+      if (isClosed) return;
       emit(QrGenerateTokenSuccess(shareUrl));
     } catch (e) {
+      if (isClosed) return;
       emit(QrGenerateTokenError(e.toString()));
     }
   }

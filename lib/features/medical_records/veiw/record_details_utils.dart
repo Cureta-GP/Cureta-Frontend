@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/medical_records/data/models/attachment_model.dart';
@@ -59,7 +60,15 @@ Future<void> openRecordFile(
               child: InteractiveViewer(
                 minScale: 0.8,
                 maxScale: 4,
-                child: Image.network(url, fit: BoxFit.contain),
+                child: CachedNetworkImage(
+                  imageUrl: url,
+                  fit: BoxFit.contain,
+                  placeholder: (context, _) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, _, __) => const Center(
+                    child: Icon(Icons.broken_image_outlined, size: 48),
+                  ),
+                ),
               ),
             ),
             Positioned(

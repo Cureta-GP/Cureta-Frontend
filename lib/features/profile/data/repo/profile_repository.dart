@@ -64,26 +64,41 @@ class ProfileRepository {
       return _cachedProfiles!;
     }
 
-    final response = await _service.getProfiles();
-    final List data = response.data['data'];
-    final profiles = data.map((profile) => ProfileModel.fromJson(profile)).toList();
-
-    if (profiles.isNotEmpty) {
-      // ✅ لو في cached ID وموجود في الـ list، خليه زي ما هو
-      final cachedId = await getCachedProfileId();
-      final hasCached = cachedId != null && profiles.any((p) => p.id == cachedId);
-
-      if (!hasCached) {
-        final selected = profiles.firstWhere(
-          (p) => p.isPrimary,
-          orElse: () => profiles.first,
+    try {
+      final response = await _service.getProfiles();
+      final dynamic data = response.data is Map ? response.data['data'] : null;
+      if (data is! List) {
+        // Malformed response / error envelope ({"data": null}, etc.) must not
+        // throw an uncaught TypeError at startup.
+        throw ErrorHandler.handle(
+          Exception('Invalid profiles response shape'),
         );
-        await cacheSelectedProfileId(selected.id);
       }
-    }
+      final profiles = data
+          .whereType<Map>()
+          .map((profile) =>
+              ProfileModel.fromJson(Map<String, dynamic>.from(profile)))
+          .toList();
 
-    _cachedProfiles = profiles;
-    return profiles;
+      if (profiles.isNotEmpty) {
+        // ✅ لو في cached ID وموجود في الـ list، خليه زي ما هو
+        final cachedId = await getCachedProfileId();
+        final hasCached = cachedId != null && profiles.any((p) => p.id == cachedId);
+
+        if (!hasCached) {
+          final selected = profiles.firstWhere(
+            (p) => p.isPrimary,
+            orElse: () => profiles.first,
+          );
+          await cacheSelectedProfileId(selected.id);
+        }
+      }
+
+      _cachedProfiles = profiles;
+      return profiles;
+    } on DioException catch (e) {
+      throw ErrorHandler.handle(e);
+    }
   }
 
   Future<ProfileModel> createPrimaryProfile({

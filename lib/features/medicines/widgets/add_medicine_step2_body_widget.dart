@@ -93,50 +93,7 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: spacing.md),
-                    BlocSelector<AddMedicineCubit, AddMedicineState, String>(
-                      selector: (state) => state.formData.doseAmount,
-                      builder: (context, doseAmount) {
-                        return TextField(
-                          controller: TextEditingController(text: doseAmount)
-                            ..selection = TextSelection.fromPosition(
-                              TextPosition(offset: doseAmount.length),
-                            ),
-                          onChanged: (v) => context.read<AddMedicineCubit>().updateDoseAmount(v),
-                          style: typography.medicalRecordInput.copyWith(
-                            color: colors.textPrimary,
-                          ),
-                          cursorColor: colors.textPrimary,
-                          decoration: InputDecoration(
-                            hintText: 'e.g. 2 pills, 1 spoon...',
-                            hintStyle: typography.medicalRecordInput.copyWith(
-                              color: colors.textHint,
-                            ),
-                            filled: true,
-                            fillColor: colors.background,
-                            contentPadding: EdgeInsets.symmetric(
-                              horizontal: spacing.xl,
-                              vertical: spacing.md,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(context.radius.full),
-                              borderSide: BorderSide(color: colors.divider, width: 1),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(context.radius.full),
-                              borderSide: BorderSide(color: colors.primary, width: 1.6),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(context.radius.full),
-                              borderSide: BorderSide(color: colors.error, width: 1.6),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(context.radius.full),
-                              borderSide: BorderSide(color: colors.error, width: 1.6),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                    const _DoseAmountField(),
                     const MedicineValidationErrorWidget(
                       fieldKey: 'doseAmount',
                     ),
@@ -166,6 +123,80 @@ class AddMedicineStep2BodyWidget extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Dose-amount input with its OWN persistent controller.
+///
+/// Previously this field lived inside a `BlocSelector` on `doseAmount` and
+/// created a `TextEditingController` inside `build`, so every keystroke
+/// rebuilt the field and reset the controller (cursor jumps + input lag).
+/// Now the controller is created once; typing only pushes the value to the
+/// cubit for validation and never rebuilds this widget.
+class _DoseAmountField extends StatefulWidget {
+  const _DoseAmountField();
+
+  @override
+  State<_DoseAmountField> createState() => _DoseAmountFieldState();
+}
+
+class _DoseAmountFieldState extends State<_DoseAmountField> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+      text: context.read<AddMedicineCubit>().state.formData.doseAmount,
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final spacing = context.spacing;
+    final typography = context.typography;
+
+    return TextField(
+      controller: _controller,
+      onChanged: (v) => context.read<AddMedicineCubit>().updateDoseAmount(v),
+      style: typography.medicalRecordInput.copyWith(color: colors.textPrimary),
+      cursorColor: colors.textPrimary,
+      decoration: InputDecoration(
+        hintText: 'e.g. 2 pills, 1 spoon...',
+        hintStyle: typography.medicalRecordInput.copyWith(
+          color: colors.textHint,
+        ),
+        filled: true,
+        fillColor: colors.background,
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: spacing.xl,
+          vertical: spacing.md,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(context.radius.full),
+          borderSide: BorderSide(color: colors.divider, width: 1),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(context.radius.full),
+          borderSide: BorderSide(color: colors.primary, width: 1.6),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(context.radius.full),
+          borderSide: BorderSide(color: colors.error, width: 1.6),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(context.radius.full),
+          borderSide: BorderSide(color: colors.error, width: 1.6),
         ),
       ),
     );

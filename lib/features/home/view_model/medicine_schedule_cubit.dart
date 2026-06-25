@@ -31,8 +31,10 @@ class MedicineScheduleCubit extends Cubit<MedicineScheduleState> {
         medicines: medicines,
         date: selectedDate,
       );
+      if (isClosed) return;
       emit(MedicineScheduleLoaded(selectedDate: selectedDate, entries: entries));
     } catch (e) {
+      if (isClosed) return;
       emit(MedicineScheduleError(e.toString()));
     } finally {
       _isLoading = false;
@@ -70,6 +72,7 @@ class MedicineScheduleCubit extends Cubit<MedicineScheduleState> {
         await load(profileId, date: current.selectedDate);
       }
     } catch (e) {
+      if (isClosed) return;
       emit(MedicineScheduleError(e.toString()));
     }
   }

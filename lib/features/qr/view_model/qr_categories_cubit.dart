@@ -13,8 +13,10 @@ class QrCategoriesCubit extends Cubit<QrCategoriesState> {
       final categories = await _repository.getRecordsCategories(
         profileId: profileId,
       );
+      if (isClosed) return;
       emit(QrCategoriesLoaded(categories));
     } catch (e) {
+      if (isClosed) return;
       emit(QrCategoriesError(e.toString()));
     }
   }

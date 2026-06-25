@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:cureta/core/Services/dio_helper.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
+import 'package:cureta/core/Services/notification_service.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/features/medicines/data/services/medicine_local_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
@@ -23,14 +24,25 @@ class AppLogout {
       // 2. Network: Remove Authorization Header
       DioHelper.clearAuthToken();
 
-      // 3. Local Database: Wipe SQLite Databases safely
+      // 3. Alarms: Cancel ALL scheduled OS-level medicine alarms and clear the
+      // native alarm registry. Without this, the previous user's reminders keep
+      // firing after logout and can even be re-armed after a reboot — wiping the
+      // SQLite DB alone does NOT remove the scheduled AlarmManager alarms.
+      try {
+        await NotificationService.instance.stopAlarm();
+        await NotificationService.instance.cancelAllAlarms();
+      } catch (e) {
+        debugPrint('Error cancelling scheduled alarms: $e');
+      }
+
+      // 4. Local Database: Wipe SQLite Databases safely
       try {
         await getIt<MedicineLocalService>().clearAllData();
       } catch (e) {
         debugPrint('Error wiping local databases: $e');
       }
 
-      // 4. State Management: Clear In-Memory Caches in Repositories
+      // 5. State Management: Clear In-Memory Caches in Repositories
       // The safest way to clear all Singletons (Repositories & Services) is to completely reset GetIt
       // and re-register them to ensure absolutely no ghosts remain in any repository.
       await getIt.reset();

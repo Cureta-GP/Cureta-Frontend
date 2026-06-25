@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:flutter/foundation.dart';
@@ -17,10 +16,8 @@ import '../data/repo/chat_repository.dart';
 import 'chat_state.dart';
 
 class ChatCubit extends Cubit<ChatState> {
-  ChatCubit()
-    : _repository = getIt.get<ChatRepository>(),
-      _profileRepository = getIt.get<ProfileRepository>(),
-      super(const ChatState());
+  ChatCubit(this._repository, this._profileRepository)
+    : super(const ChatState());
 
   final ChatRepository _repository;
   final ProfileRepository _profileRepository;
@@ -70,6 +67,7 @@ class ChatCubit extends Cubit<ChatState> {
       _log(
         'chatController now contains ${chatController.messages.length} messages',
       );
+      if (isClosed) return;
       emit(
         state.copyWith(
           isHistoryLoading: false,
@@ -81,10 +79,12 @@ class ChatCubit extends Cubit<ChatState> {
     } on AppException catch (error) {
       _log('loadMessages AppException: ${error.message}');
       await chatController.setMessages(const <Message>[]);
+      if (isClosed) return;
       emit(const ChatState(isHistoryLoading: false, isEmpty: true));
     } catch (error) {
       _log('loadMessages unexpected error: $error');
       await chatController.setMessages(const <Message>[]);
+      if (isClosed) return;
       emit(const ChatState(isHistoryLoading: false, isEmpty: true));
     }
   }
@@ -124,6 +124,7 @@ class ChatCubit extends Cubit<ChatState> {
 
     await chatController.insertMessage(userMessage);
     _log('inserted user message id=${userMessage.id}');
+    if (isClosed) return;
     emit(
       state.copyWith(
         isReplyLoading: true,
@@ -156,6 +157,7 @@ class ChatCubit extends Cubit<ChatState> {
       _log('sendTextMessage unexpected error: $error');
       await _insertAssistantFallbackMessage();
     } finally {
+      if (isClosed) return;
       emit(
         state.copyWith(
           isReplyLoading: false,
@@ -172,6 +174,7 @@ class ChatCubit extends Cubit<ChatState> {
   Future<void> startNewChat() async {
     _sessionId = null;
     await chatController.setMessages(const <Message>[]);
+    if (isClosed) return;
     emit(const ChatState(isEmpty: true));
   }
 

@@ -83,6 +83,29 @@ class AlarmScheduler : BroadcastReceiver() {
             removeAlarmFromPrefs(context, id)
         }
 
+        /**
+         * Cancels every scheduled alarm and clears the alarm registry.
+         * Used on logout so a previous user's reminders never fire again
+         * (and are not resurrected by rescheduleAllFromPrefs after a reboot).
+         */
+        fun cancelAllAlarms(context: Context) {
+            val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+            val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            // Collect ids first to avoid mutating prefs while iterating.
+            val ids = prefs.all.keys
+                .filter { it.startsWith("alarm_") }
+                .mapNotNull { it.removePrefix("alarm_").toIntOrNull() }
+            for (id in ids) {
+                val intent = Intent(context, AlarmScheduler::class.java)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    context, id, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+                alarmManager.cancel(pendingIntent)
+            }
+            prefs.edit().clear().apply()
+        }
+
         fun rescheduleAlarmForNextOccurence(context: Context, alarmId: Int, localId: String, remoteId: String, medicineName: String, dose: String, imagePath: String, originalTimeMillis: Long, frequency: String) {
             if (frequency == "asNeeded") {
                 removeAlarmFromPrefs(context, alarmId)

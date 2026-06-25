@@ -20,11 +20,14 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
       final medicine = await _repository.getMedicineById(medicineId);
       if (medicine != null) {
         final logs = await _repository.getMedicineLogs(medicineId);
+        if (isClosed) return;
         emit(MedicineDetailsLoaded(medicine: medicine, logs: logs));
       } else {
+        if (isClosed) return;
         emit(const MedicineDetailsError('medicines.error_medicine_not_found'));
       }
     } catch (e) {
+      if (isClosed) return;
       emit(const MedicineDetailsError('medicines.error_loading_details'));
     }
   }
@@ -37,8 +40,10 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
         // Reload details after toggling to get updated status
         await loadDetails();
       } catch (e) {
+        if (isClosed) return;
         emit(const MedicineDetailsError('medicines.error_toggling_status'));
         // Re-emit previous loaded state to recover UI
+        if (isClosed) return;
         emit(currentState);
       }
     }
@@ -95,6 +100,7 @@ class MedicineDetailsCubit extends Cubit<MedicineDetailsState> {
       }
       // Let animation play
       await Future.delayed(const Duration(milliseconds: 1200));
+      if (isClosed) return;
       emit(currentState.copyWith(
         medicine: savedMedicine,
         isEditing: false,

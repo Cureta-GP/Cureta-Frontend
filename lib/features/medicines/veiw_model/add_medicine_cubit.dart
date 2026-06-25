@@ -162,11 +162,13 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
             .ignore();
       }
 
+      if (isClosed) return;
       emit(AddMedicineSuccess(
         medicine: result.medicine,
         interactions: result.interactions,
       ));
     } on DuplicateMedicineException catch (_) {
+      if (isClosed) return;
       emit(
         AddMedicineFailure(
           errorMessage: 'medicines.duplicate_medicine_subtitle',
@@ -175,6 +177,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
         ),
       );
     } catch (e) {
+      if (isClosed) return;
       emit(
         AddMedicineFailure(
           errorMessage: 'medicines.error_medicine_submit_failed',

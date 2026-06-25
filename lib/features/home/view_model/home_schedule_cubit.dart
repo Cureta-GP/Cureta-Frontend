@@ -30,6 +30,7 @@ class HomeScheduleCubit extends Cubit<HomeScheduleState> {
       medicines,
     ) async {
       final entries = await _buildTodayEntries(medicines);
+      if (isClosed) return;
       emit(HomeScheduleLoaded(entries));
     });
     await _alarmActionsSub?.cancel();
@@ -52,8 +53,10 @@ class HomeScheduleCubit extends Cubit<HomeScheduleState> {
       await _medicineRepository.refreshMedicines();
       final medicines = await _medicineRepository.getUserMedicines();
       final entries = await _buildTodayEntries(medicines);
+      if (isClosed) return;
       emit(HomeScheduleLoaded(entries));
     } catch (e) {
+      if (isClosed) return;
       emit(HomeScheduleError(e.toString()));
     } finally {
       _isLoading = false;
@@ -71,6 +74,7 @@ class HomeScheduleCubit extends Cubit<HomeScheduleState> {
       await _medicineRepository.refreshMedicines();
       final medicines = await _medicineRepository.getUserMedicines();
       final entries = await _buildTodayEntries(medicines);
+      if (isClosed) return;
       emit(HomeScheduleLoaded(entries));
     } catch (_) {
       // Silent refresh must never interrupt UI with transient errors.

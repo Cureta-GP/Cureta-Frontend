@@ -30,6 +30,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
         }
       },
       onError: (_) {
+        if (isClosed) return;
         emit(
           const UserMedicinesError(
             messageKey: 'medicines.error_loading_medicines',
@@ -73,6 +74,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
     } catch (e) {
       // Only show error if there is no data to display.
       if (!hasData) {
+        if (isClosed) return;
         emit(
           const UserMedicinesError(
             messageKey: 'medicines.error_loading_medicines',
@@ -93,6 +95,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
             .where((m) => m.syncStatus == SyncStatus.failed)
             .length;
         if (failedCount > 0 && state is UserMedicinesLoaded) {
+          if (isClosed) return;
           emit(
             UserMedicinesSyncBanner(
               failedCount: failedCount,
@@ -144,6 +147,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
         ..insert(deletedIndex, deleted);
       _allMedicines = allRevert;
       _filteredMedicines = filteredRevert;
+      if (isClosed) return;
       emit(
         UserMedicinesLoaded(
           allMedicines: allRevert,
@@ -204,6 +208,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
           ..[filteredIndex] = medicine;
         _filteredMedicines = filteredRevert;
       }
+      if (isClosed) return;
       emit(
         currentState.copyWith(
           allMedicines: reverted,
@@ -247,6 +252,7 @@ class UserMedicinesCubit extends Cubit<UserMedicinesState> {
     }
 
     _filteredMedicines = result;
+    if (isClosed) return;
     emit(
       UserMedicinesLoaded(
         allMedicines: _allMedicines,

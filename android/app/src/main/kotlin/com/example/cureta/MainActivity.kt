@@ -97,6 +97,11 @@ class MainActivity : FlutterActivity() {
                         result.success(null)
                     }
 
+                    "cancelAllAlarms" -> {
+                        AlarmScheduler.cancelAllAlarms(this)
+                        result.success(null)
+                    }
+
                     "stopAlarm" -> {
                         stopService(Intent(this, AlarmService::class.java))
                         result.success(null)

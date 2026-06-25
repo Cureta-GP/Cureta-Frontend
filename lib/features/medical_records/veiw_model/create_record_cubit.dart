@@ -78,6 +78,7 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
           : await _profileRepository.getResolvedSelectedProfileId();
 
       if (resolvedProfileId == null || resolvedProfileId.isEmpty) {
+        if (isClosed) return;
         emit(
           CreateRecordFailure(
             AppException.validation(msg: AppLocalizations.addRecordErrorProfileRequired),
@@ -96,18 +97,22 @@ class CreateRecordCubit extends Cubit<CreateRecordState> {
         filePaths: filePaths,
       );
 
+      if (isClosed) return;
       emit(CreateRecordSuccess(record));
     } on AppException catch (e) {
       if (e.message.toLowerCase().contains('attachment')) {
+        if (isClosed) return;
         emit(
           CreateRecordFailure(
             AppException.validation(msg: AppLocalizations.addRecordErrorAttachmentRequired),
           ),
         );
       } else {
+        if (isClosed) return;
         emit(CreateRecordFailure(e));
       }
     } catch (e) {
+      if (isClosed) return;
       emit(CreateRecordFailure(AppException.server()));
     }
   }

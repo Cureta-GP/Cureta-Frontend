@@ -11,8 +11,10 @@ class QrRedeemCubit extends Cubit<QrRedeemState> {
     emit(QrRedeemLoading());
     try {
       final html = await _repository.redeemToken(token);
+      if (isClosed) return;
       emit(QrRedeemSuccess(html));
     } catch (e) {
+      if (isClosed) return;
       emit(QrRedeemError(e.toString()));
     }
   }

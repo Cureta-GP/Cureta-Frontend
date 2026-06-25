@@ -27,11 +27,21 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
   }
 
   Future<void> pickRecordFile(AddRecordUploadCategory category) async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: allowedExtensions,
-    );
+    FilePickerResult? result;
+    try {
+      result = await FilePicker.platform.pickFiles(
+        allowMultiple: true,
+        type: FileType.custom,
+        allowedExtensions: allowedExtensions,
+      );
+    } catch (e) {
+      // PlatformException (permission denied, picker already active, etc.)
+      // must not crash the screen.
+      if (isClosed) return;
+      emit(state.copyWith(fileOpenError: AppLocalizations.addRecordErrorFileOpen));
+      emit(state.copyWith(clearError: true));
+      return;
+    }
 
     if (result == null || result.files.isEmpty) {
       return;
@@ -62,6 +72,7 @@ class AddRecordStepFourCubit extends Cubit<AddRecordStepFourState> {
     }
 
     final result = await OpenFilex.open(file.path!);
+    if (isClosed) return;
     if (result.type != ResultType.done) {
       emit(
         state.copyWith(

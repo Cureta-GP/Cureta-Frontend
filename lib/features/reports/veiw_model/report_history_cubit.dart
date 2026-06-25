@@ -20,11 +20,14 @@ class ReportHistoryCubit extends Cubit<ReportHistoryState> {
         forceRefresh: forceRefresh,
       );
       if (reports.isEmpty) {
+        if (isClosed) return;
         emit(const ReportHistoryEmpty());
       } else {
+        if (isClosed) return;
         emit(ReportHistoryLoaded(reports: reports));
       }
     } catch (_) {
+      if (isClosed) return;
       emit(
         const ReportHistoryError(messageKey: 'reports.error_loading_history'),
       );

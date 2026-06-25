@@ -15,10 +15,13 @@ class ForgotPasswordViewModel extends Cubit<ForgotPasswordState> {
     emit(ForgotPasswordLoading());
     try {
       await authRepository.forgotPassword(email: email);
+      if (isClosed) return;
       emit(ForgotPasswordEmailSentSuccess());
     } on AppException catch (e) {
+      if (isClosed) return;
       emit(ForgotPasswordError(e.message));
     } catch (e) {
+      if (isClosed) return;
       emit(ForgotPasswordError(e.toString()));
     }
   }
@@ -48,10 +51,13 @@ class ForgotPasswordViewModel extends Cubit<ForgotPasswordState> {
         otp: finalOtp,
         newPassword: newPassword,
       );
+      if (isClosed) return;
       emit(ResetPasswordSuccess());
     } on AppException catch (e) {
+      if (isClosed) return;
       emit(ForgotPasswordError(e.message));
     } catch (e) {
+      if (isClosed) return;
       emit(ForgotPasswordError(e.toString()));
     }
   }
