@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
 import '../data/repo/medical_record_repository.dart';
 import 'medical_records_state.dart';

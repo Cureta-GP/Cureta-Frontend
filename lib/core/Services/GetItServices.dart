@@ -20,6 +20,7 @@ import 'package:cureta/features/medical_records/data/repo/medical_record_reposit
 import 'package:cureta/features/medical_records/veiw_model/add_record_form_cubit.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_cubit.dart';
 import 'package:cureta/features/medical_records/veiw_model/create_record_cubit.dart';
+import 'package:cureta/features/medical_records/veiw_model/medical_records_cubit.dart';
 import 'package:cureta/features/chat_bot/data/services/chat_service.dart';
 import 'package:cureta/features/chat_bot/data/repo/chat_repository.dart';
 import 'package:cureta/features/chat_bot/veiw_model/chat_cubit.dart';
@@ -59,7 +60,15 @@ Future<void> setup() async {
   // 🧠 Cubits
   getIt.registerFactory<AddRecordFormCubit>(() => AddRecordFormCubit());
   getIt.registerFactory<AddRecordStepFourCubit>(() => AddRecordStepFourCubit());
-  getIt.registerFactory<CreateRecordCubit>(() => CreateRecordCubit());
+  getIt.registerFactory<CreateRecordCubit>(
+    () => CreateRecordCubit(
+      getIt.get<MedicalRecordRepository>(),
+      getIt.get<ProfileRepository>(),
+    ),
+  );
+  getIt.registerFactory<MedicalRecordsCubit>(
+    () => MedicalRecordsCubit(getIt.get<MedicalRecordRepository>()),
+  );
 
   getIt.registerFactory<AuthCubit>(
     () => AuthCubit(getIt.get<AuthRepository>()),
@@ -74,8 +83,18 @@ Future<void> setup() async {
   getIt.registerSingleton<ChatRepository>(
     ChatRepository(getIt.get<ChatService>()),
   );
-  getIt.registerFactory<ChatCubit>(() => ChatCubit());
-  getIt.registerFactory<ChatSessionsCubit>(() => ChatSessionsCubit());
+  getIt.registerFactory<ChatCubit>(
+    () => ChatCubit(
+      getIt.get<ChatRepository>(),
+      getIt.get<ProfileRepository>(),
+    ),
+  );
+  getIt.registerFactory<ChatSessionsCubit>(
+    () => ChatSessionsCubit(
+      getIt.get<ChatRepository>(),
+      getIt.get<ProfileRepository>(),
+    ),
+  );
 
   // OCR
   getIt.registerSingleton<OcrService>(OcrService());

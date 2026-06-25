@@ -54,7 +54,7 @@ class _UserRecordsViewState extends State<UserRecordsView> {
     final hasProfilesCubit = context.read<ProfilesListCubit?>() != null;
 
     Widget child = BlocProvider(
-      create: (_) => MedicalRecordsCubit(),
+      create: (_) => getIt<MedicalRecordsCubit>(),
       child: BlocListener<ProfilesListCubit, ProfilesListState>(
         listenWhen: (prev, curr) {
           final prevId = prev is ProfilesSuccess

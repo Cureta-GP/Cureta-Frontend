@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/medical_records/veiw_model/add_record_step_four_state.dart';
 import 'package:cureta/features/medical_records/data/repo/medical_record_repository.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
@@ -8,10 +7,8 @@ import 'package:cureta/core/localization/app_localizations.dart';
 import 'create_record_state.dart';
 
 class CreateRecordCubit extends Cubit<CreateRecordState> {
-  CreateRecordCubit()
-    : _repository = getIt.get<MedicalRecordRepository>(),
-      _profileRepository = getIt.get<ProfileRepository>(),
-      super(const CreateRecordInitial());
+  CreateRecordCubit(this._repository, this._profileRepository)
+    : super(const CreateRecordInitial());
 
   final MedicalRecordRepository _repository;
   final ProfileRepository _profileRepository;
