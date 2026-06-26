@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 
 /// Reusable profile card widget for displaying a single profile option
@@ -66,16 +68,26 @@ class ProfileCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: colors.primary,
                   shape: BoxShape.circle,
+                  image: avatarUrl != null && avatarUrl!.isNotEmpty
+                      ? DecorationImage(
+                          image: avatarUrl!.startsWith('http')
+                              ? CachedNetworkImageProvider(avatarUrl!) as ImageProvider
+                              : FileImage(File(avatarUrl!)),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
-                child: Center(
-                  child: Text(
-                    _getInitials(name),
-                    style: typography.title.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+                child: avatarUrl == null || avatarUrl!.isEmpty
+                    ? Center(
+                        child: Text(
+                          _getInitials(name),
+                          style: typography.title.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    : null,
               ),
               SizedBox(width: spacing.lg),
               // Profile information

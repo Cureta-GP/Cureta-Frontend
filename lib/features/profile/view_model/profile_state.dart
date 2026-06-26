@@ -14,6 +14,8 @@ class ProfileState extends Equatable {
   final String otherAllergyText;
   final int currentPage;
   final bool isAddingFamilyMember; 
+  final String? imagePath;
+  final String? imageUrl;
 
   const ProfileState({
     this.name = '',
@@ -27,6 +29,8 @@ class ProfileState extends Equatable {
     this.otherAllergyText = '',
     this.currentPage = 0,
     required this.isAddingFamilyMember, 
+    this.imagePath,
+    this.imageUrl,
   });
 
   ProfileState copyWith({
@@ -34,6 +38,7 @@ class ProfileState extends Equatable {
     int? age, String? bloodType, Set<String>? chronicConditions,
     Set<String>? allergies, String? otherChronicText, String? otherAllergyText,
     int? currentPage, bool? isAddingFamilyMember,
+    String? imagePath, String? imageUrl,
   }) {
     return ProfileState(
       name: name ?? this.name,
@@ -47,6 +52,8 @@ class ProfileState extends Equatable {
       otherAllergyText: otherAllergyText ?? this.otherAllergyText,
       currentPage: currentPage ?? this.currentPage,
       isAddingFamilyMember: isAddingFamilyMember ?? this.isAddingFamilyMember,
+      imagePath: imagePath ?? this.imagePath,
+      imageUrl: imageUrl ?? this.imageUrl,
     );
   }
 
@@ -58,6 +65,8 @@ class ProfileState extends Equatable {
     "blood_type": bloodType,
     "chronic_conditions": chronicConditions.toList(),
     "allergies": allergies.toList(),
+    "image_path": imagePath,
+    "image_url": imageUrl,
   };
 
   @override
@@ -69,7 +78,11 @@ class ProfileState extends Equatable {
     bloodType,
     chronicConditions,
     allergies,
+    otherChronicText,
+    otherAllergyText,
     currentPage,
     isAddingFamilyMember,
+    imagePath,
+    imageUrl,
   ];
 }

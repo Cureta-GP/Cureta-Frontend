@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/widgets/profile_detail_card.dart';
 import 'package:flutter/material.dart';
@@ -42,27 +44,33 @@ class ProfileDetailsScreen extends StatelessWidget {
                       child: Column(
                         children: [
                           Center(
-                            child: Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: colors.primary,
-                                  backgroundImage: profile.imageUrl != null
-                                      ? CachedNetworkImageProvider(
-                                          profile.imageUrl!,
-                                        )
-                                      : null,
-                                  child: profile.imageUrl == null
-                                      ? Text(
-                                          profile.fullName[0],
-                                          style: const TextStyle(
-                                            fontSize: 40,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : null,
-                                ),
-                                if (!profile.isPrimary)
+                            child: GestureDetector(
+                              onTap: () async {
+                                final picker = ImagePicker();
+                                final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                                if (pickedFile != null && context.mounted) {
+                                  await repository.saveLocalProfileImage(profile.id, pickedFile.path);
+                                  context.read<ProfilesListCubit>().getProfiles();
+                                }
+                              },
+                              child: Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 60,
+                                    backgroundColor: colors.primary.withOpacity(0.1),
+                                    backgroundImage: profile.imageUrl != null
+                                        ? (profile.imageUrl!.startsWith('http')
+                                            ? CachedNetworkImageProvider(profile.imageUrl!)
+                                            : FileImage(File(profile.imageUrl!)) as ImageProvider)
+                                        : null,
+                                    child: profile.imageUrl == null
+                                        ? Icon(
+                                            Icons.person,
+                                            size: 60,
+                                            color: colors.primary,
+                                          )
+                                        : null,
+                                  ),
                                   Positioned(
                                     bottom: 0,
                                     right: 0,
@@ -70,13 +78,14 @@ class ProfileDetailsScreen extends StatelessWidget {
                                       backgroundColor: colors.primary,
                                       radius: 18,
                                       child: const Icon(
-                                        Icons.edit,
+                                        Icons.camera_alt,
                                         color: Colors.white,
                                         size: 18,
                                       ),
                                     ),
                                   ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                           SizedBox(height: spacing.xl),

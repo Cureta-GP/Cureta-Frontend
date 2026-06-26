@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:shimmer/shimmer.dart';
@@ -138,7 +139,9 @@ class _Avatar extends StatelessWidget {
       return CircleAvatar(
         radius: size / 2,
         backgroundColor: colors.accentCyan,
-        backgroundImage: CachedNetworkImageProvider(profile.imageUrl!),
+        backgroundImage: profile.imageUrl!.startsWith('http')
+            ? CachedNetworkImageProvider(profile.imageUrl!) as ImageProvider
+            : FileImage(File(profile.imageUrl!)),
       );
     }
     return CircleAvatar(

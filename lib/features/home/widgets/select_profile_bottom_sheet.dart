@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
@@ -151,7 +152,9 @@ class SelectProfileBottomSheet extends StatelessWidget {
         contentPadding: EdgeInsets.zero,
         leading: CircleAvatar(
           backgroundImage: profile.imageUrl != null
-              ? CachedNetworkImageProvider(profile.imageUrl!)
+              ? (profile.imageUrl!.startsWith('http')
+                  ? CachedNetworkImageProvider(profile.imageUrl!)
+                  : FileImage(File(profile.imageUrl!)) as ImageProvider)
               : null,
           child: profile.imageUrl == null ? Text(profile.fullName[0]) : null,
         ),

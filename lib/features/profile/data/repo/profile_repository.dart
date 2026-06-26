@@ -1,4 +1,7 @@
 // lib/data/repositories/profile_repository.dart
+import 'dart:io';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
 import 'package:cureta/core/error_handling/error_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:cureta/features/profile/data/services/profile_service.dart';
@@ -79,6 +82,14 @@ class ProfileRepository {
           .map((profile) =>
               ProfileModel.fromJson(Map<String, dynamic>.from(profile)))
           .toList();
+
+      final prefs = await SharedPreferences.getInstance();
+      for (var p in profiles) {
+        final localImage = prefs.getString('profile_image_${p.id}');
+        if (localImage != null && File(localImage).existsSync()) {
+          p.imageUrl = localImage;
+        }
+      }
 
       if (profiles.isNotEmpty) {
         // ✅ لو في cached ID وموجود في الـ list، خليه زي ما هو
@@ -325,6 +336,32 @@ class ProfileRepository {
       return profiles.isNotEmpty;
     } catch (e) {
       return false;
+    }
+  }
+
+  Future<void> saveLocalProfileImage(String profileId, String imagePath) async {
+    try {
+      final file = File(imagePath);
+      if (!file.existsSync()) return;
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final fileName = '${profileId}_${DateTime.now().millisecondsSinceEpoch}${p.extension(imagePath)}';
+      final savedImage = await file.copy('${appDir.path}/$fileName');
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('profile_image_$profileId', savedImage.path);
+      
+      // Update cache
+      if (_cachedProfiles != null) {
+        for (var profile in _cachedProfiles!) {
+          if (profile.id == profileId) {
+            profile.imageUrl = savedImage.path;
+            break;
+          }
+        }
+      }
+    } catch (e) {
+      // Ignore local save errors
     }
   }
 }

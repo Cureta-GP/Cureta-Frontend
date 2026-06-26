@@ -8,7 +8,7 @@ class ProfileModel {
   final int age;
   final String gender;
   final String bloodType;
-  final String? imageUrl;
+  String? imageUrl;
   final String? createdAt;
   final List<dynamic> chronicDiseases;
   final List<dynamic> allergies;

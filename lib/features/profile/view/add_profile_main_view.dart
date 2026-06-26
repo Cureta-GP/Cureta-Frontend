@@ -104,6 +104,7 @@ class _AddProfileMainState extends State<AddProfileMain> {
             otherAllergyText: allergyParse.otherText,
             currentPage: 0,
             isAddingFamilyMember: !widget.editingProfile!.isPrimary,
+            imageUrl: widget.editingProfile!.imageUrl,
           )
         : null;
     final effectiveFamilyMember =

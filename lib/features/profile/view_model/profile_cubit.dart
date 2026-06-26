@@ -30,6 +30,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   void updateOtherAllergyText(String val) =>
       emit(state.copyWith(otherAllergyText: val));
 
+  void updateImage(String path) => emit(state.copyWith(imagePath: path));
+
   void toggleChronic(String item) {
     final newSet = Set<String>.from(state.chronicConditions);
     newSet.contains(item) ? newSet.remove(item) : newSet.add(item);
@@ -83,9 +85,11 @@ class ProfileCubit extends Cubit<ProfileState> {
       state.otherChronicText,
     );
     final allergyList = _mapAllergies(state.allergies, state.otherAllergyText);
+    final finalImagePath = imagePath ?? state.imagePath;
 
+    ProfileModel profile;
     if (state.isAddingFamilyMember) {
-      return await repository.createFamilyProfile(
+      profile = await repository.createFamilyProfile(
         fullName: state.name,
         age: state.age,
         gender: state.gender,
@@ -93,19 +97,23 @@ class ProfileCubit extends Cubit<ProfileState> {
         bloodType: state.bloodType,
         chronicDiseases: chronicList,
         allergies: allergyList,
-        imagePath: imagePath,
       );
     } else {
-      return await repository.createPrimaryProfile(
+      profile = await repository.createPrimaryProfile(
         fullName: state.name,
         age: state.age,
         gender: state.gender,
         bloodType: state.bloodType,
         chronicDiseases: chronicList,
         allergies: allergyList,
-        imagePath: imagePath,
       );
     }
+
+    if (finalImagePath != null) {
+      await repository.saveLocalProfileImage(profile.id, finalImagePath);
+    }
+    
+    return profile;
   }
 
   Future<ProfileModel> updateProfile(
@@ -118,8 +126,9 @@ class ProfileCubit extends Cubit<ProfileState> {
       state.otherChronicText,
     );
     final allergyList = _mapAllergies(state.allergies, state.otherAllergyText);
+    final finalImagePath = imagePath ?? state.imagePath;
 
-    return await repository.updateProfile(
+    final profile = await repository.updateProfile(
       profileId: profileId,
       fullName: state.name,
       age: state.age,
@@ -128,9 +137,14 @@ class ProfileCubit extends Cubit<ProfileState> {
       chronicDiseases: chronicList,
       allergies: allergyList,
       relationship: state.isAddingFamilyMember ? state.relationship : null,
-      imagePath: imagePath,
       removeImage: removeImage,
     );
+
+    if (finalImagePath != null) {
+      await repository.saveLocalProfileImage(profile.id, finalImagePath);
+    }
+
+    return profile;
   }
 
   List<Map<String, dynamic>> _mapChronicConditions(
