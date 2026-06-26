@@ -146,12 +146,12 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     emit(AddMedicineScanRequested(data: current));
   }
 
-  Future<void> submitMedicine() async {
+  Future<void> submitMedicine(String language) async {
     final current = _currentData();
     emit(AddMedicineLoading(data: current));
 
     try {
-      final payload = await _buildPayload(current);
+      final payload = await _buildPayload(current, language);
       final result = await _repository.addMedicine(payload);
 
       // Schedule a native alarm for every reminder time — best-effort,
@@ -187,7 +187,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
     }
   }
 
-  Future<MedicinePayload> _buildPayload(AddMedicineStepUpdated data) async {
+  Future<MedicinePayload> _buildPayload(AddMedicineStepUpdated data, String language) async {
     final resolvedFrequency = data.frequency ?? Frequency.daily;
     // As-needed medicines have no schedule — send an empty reminders list.
     final times = resolvedFrequency == Frequency.asNeeded
@@ -208,6 +208,7 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
       notes: data.notes.isEmpty ? null : data.notes,
       doseForm: data.doseForm,
       imagePath: data.imagePath,
+      language: language,
     );
   }
 

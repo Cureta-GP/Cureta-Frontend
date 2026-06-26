@@ -72,6 +72,7 @@ class MedicineRepository {
           endDate: payload.endDate,
           notes: payload.notes,
           doseForm: payload.doseForm,
+          language: payload.language,
         ),
       );
       interactions = result.interactions;

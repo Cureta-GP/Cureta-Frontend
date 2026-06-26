@@ -12,6 +12,7 @@ class MedicinePayload extends Equatable {
   final String? notes;
   final DoseForm? doseForm;
   final String? imagePath;
+  final String? language;
 
   const MedicinePayload({
     this.profileId,
@@ -24,6 +25,7 @@ class MedicinePayload extends Equatable {
     this.notes,
     this.doseForm,
     this.imagePath,
+    this.language,
   });
 
   Map<String, dynamic> toJson({bool includeReminders = true}) {
@@ -41,6 +43,7 @@ class MedicinePayload extends Equatable {
       if (notes != null && notes!.isNotEmpty) 'notes': notes,
       if (imagePath != null && imagePath!.isNotEmpty) 'image_path': imagePath,
       if (doseForm != null) 'dose_form': doseForm!.toJson(),
+      if (language != null) 'language': language,
     };
   }
 
@@ -56,5 +59,6 @@ class MedicinePayload extends Equatable {
     notes,
     doseForm,
     imagePath,
+    language,
   ];
 }
