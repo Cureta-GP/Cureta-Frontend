@@ -88,7 +88,7 @@ class CustomDrawer extends StatelessWidget {
                     return MaterialButton(
                       onPressed: isLoading
                           ? null
-                          : () => context.read<AuthCubit>().logout(),
+                          : () => _confirmLogout(context),
                       color: Colors.red.shade600,
                       disabledColor: Colors.red.shade400,
                       height: 48,
@@ -137,6 +137,34 @@ class CustomDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text('drawer.logout_confirm_title'.tr()),
+        content: Text('drawer.logout_confirm_message'.tr()),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text('drawer.logout_confirm_cancel'.tr()),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red.shade600),
+            child: Text(
+              'drawer.logout_confirm_yes'.tr(),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true && context.mounted) {
+      context.read<AuthCubit>().logout();
+    }
   }
 
   void _openChat(BuildContext context) {

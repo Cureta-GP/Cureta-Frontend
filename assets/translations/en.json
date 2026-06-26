@@ -544,6 +544,10 @@
     "family_profiles": "Family Profiles",
     "settings": "Settings",
     "logout": "Logout",
+    "logout_confirm_title": "Logout",
+    "logout_confirm_message": "Are you sure you want to logout?",
+    "logout_confirm_cancel": "Cancel",
+    "logout_confirm_yes": "Logout",
     "footer": "Terms of Service | Privacy Policy"
   },
   "copilot_explain": "Explain Screen",
