@@ -81,4 +81,24 @@ class Validators {
     }
     return null;
   }
+
+  // Strong password validation for sign-up.
+  // Rules: ≥8 chars, uppercase, lowercase, digit, special character.
+  static String? signupPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return AppLocalizations.passwordRequired;
+    }
+    final hasLength = value.length >= 8;
+    final hasUpper = value.contains(RegExp(r'[A-Z]'));
+    final hasLower = value.contains(RegExp(r'[a-z]'));
+    final hasDigit = value.contains(RegExp(r'[0-9]'));
+    final hasSpecial = value.contains(
+      RegExp(r'[!@#$%^&*(),.?":{}|<>\[\]\\/_ \-+=~`]'),
+    );
+
+    if (!hasLength || !hasUpper || !hasLower || !hasDigit || !hasSpecial) {
+      return AppLocalizations.passwordWeak;
+    }
+    return null;
+  }
 }

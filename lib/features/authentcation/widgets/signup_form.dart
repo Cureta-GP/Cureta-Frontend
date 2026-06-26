@@ -12,6 +12,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../shared/widgets/custom_text_field.dart';
 import '../../../shared/widgets/custom_button.dart';
 import 'link.dart';
+import 'password_requirements_widget.dart';
 
 class SignupForm extends StatefulWidget {
   const SignupForm({super.key});
@@ -98,8 +99,15 @@ class _SignupFormState extends State<SignupForm> {
                 hint: AppLocalizations.signupPasswordHint,
                 controller: _passwordController,
                 isPassword: true,
-                validator: (value) => Validators.password(value),
+                validator: (value) => Validators.signupPassword(value),
                 prefixIcon: const Icon(Icons.lock),
+              ),
+              SizedBox(height: spacing.sm),
+              ValueListenableBuilder<TextEditingValue>(
+                valueListenable: _passwordController,
+                builder: (context, value, _) {
+                  return PasswordRequirementsWidget(password: value.text);
+                },
               ),
               SizedBox(height: spacing.xl),
               CustomTextField(

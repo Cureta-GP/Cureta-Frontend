@@ -90,6 +90,15 @@ class AppLocalizations {
   static String get passwordMinLength => 'validation.password_min_length'.tr();
   static String get passwordMaxLength => 'validation.password_max_length'.tr();
   static String get passwordsNotMatch => 'validation.passwords_not_match'.tr();
+  static String get passwordReqLength => 'validation.password_req_length'.tr();
+  static String get passwordReqUppercase =>
+      'validation.password_req_uppercase'.tr();
+  static String get passwordReqLowercase =>
+      'validation.password_req_lowercase'.tr();
+  static String get passwordReqNumber => 'validation.password_req_number'.tr();
+  static String get passwordReqSpecial =>
+      'validation.password_req_special'.tr();
+  static String get passwordWeak => 'validation.password_weak'.tr();
   static String get nameRequired => 'validation.name_required'.tr();
   static String get nameMinLength => 'validation.name_min_length'.tr();
   static String get phoneRequired => 'validation.phone_required'.tr();

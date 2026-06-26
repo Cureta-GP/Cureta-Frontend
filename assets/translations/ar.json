@@ -400,7 +400,13 @@
     "phone_required": "رقم الهاتف مطلوب",
     "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
     "field_required": "{field} مطلوب",
-    "passwords_not_match": "كلمتا المرور غير متطابقتين"
+    "passwords_not_match": "كلمتا المرور غير متطابقتين",
+    "password_req_length": "8 أحرف على الأقل",
+    "password_req_uppercase": "حرف كبير واحد على الأقل (A-Z)",
+    "password_req_lowercase": "حرف صغير واحد على الأقل (a-z)",
+    "password_req_number": "رقم واحد على الأقل (0-9)",
+    "password_req_special": "رمز خاص واحد على الأقل (!@#$%...)",
+    "password_weak": "كلمة المرور لا تستوفي جميع المتطلبات"
   },
   "medicines": {
     "my_medicines": "أدويتي",
