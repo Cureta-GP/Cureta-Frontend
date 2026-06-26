@@ -111,7 +111,7 @@ class AddMedicineStep4BodyWidget extends StatelessWidget {
                           ? null
                           : () => context
                               .read<AddMedicineCubit>()
-                              .submitMedicine(),
+                              .submitMedicine(context.locale.languageCode),
                     ),
                   ),
                 ],
