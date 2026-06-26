@@ -22,6 +22,7 @@ class ReportSetupCubit extends Cubit<ReportSetupState> {
               (p) => p.isPrimary,
               orElse: () => profiles.first,
             );
+      if (isClosed) return;
       emit(
         ReportSetupUpdated(
           timePeriod: 'last_month',
@@ -32,6 +33,7 @@ class ReportSetupCubit extends Cubit<ReportSetupState> {
       );
     } catch (_) {
       final d = _data();
+      if (isClosed) return;
       emit(
         ReportSetupError(
           messageKey: 'reports.error_loading_profiles',
@@ -104,8 +106,10 @@ class ReportSetupCubit extends Cubit<ReportSetupState> {
         timePeriod: d.period,
         language: d.lang,
       );
+      if (isClosed) return;
       emit(ReportSetupSuccess(report: report));
     } catch (_) {
+      if (isClosed) return;
       emit(
         ReportSetupError(
           messageKey: 'reports.error_generating',

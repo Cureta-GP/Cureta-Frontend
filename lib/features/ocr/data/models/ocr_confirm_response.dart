@@ -1,3 +1,4 @@
+import 'package:cureta/features/medicines/data/models/drug_interaction_model.dart';
 import 'ocr_created_medicine.dart';
 
 class OcrConfirmResponse {
@@ -6,6 +7,7 @@ class OcrConfirmResponse {
   final List<String> duplicates;
   final List<OcrCreatedMedicine> created;
   final String? message;
+  final DrugInteractionModel? drugInteractions;
 
   OcrConfirmResponse({
     required this.success,
@@ -13,9 +15,25 @@ class OcrConfirmResponse {
     required this.duplicates,
     required this.created,
     this.message,
+    this.drugInteractions,
   });
 
   factory OcrConfirmResponse.fromJson(Map<String, dynamic> json) {
+    DrugInteractionModel? parsedInteractions;
+
+    // Check root level
+    final topInteractions = json['drug_interactions'];
+    if (topInteractions is Map<String, dynamic>) {
+      parsedInteractions = DrugInteractionModel.fromJson(topInteractions);
+    }
+    // Check nested inside 'data'
+    else if (json['data'] is Map<String, dynamic>) {
+      final nestedInteractions = json['data']['drug_interactions'];
+      if (nestedInteractions is Map<String, dynamic>) {
+        parsedInteractions = DrugInteractionModel.fromJson(nestedInteractions);
+      }
+    }
+
     return OcrConfirmResponse(
       success: json['success'] ?? false,
       checked: List<String>.from(json['checked'] ?? []),
@@ -28,6 +46,7 @@ class OcrConfirmResponse {
               .toList() ??
           [],
       message: json['message'],
+      drugInteractions: parsedInteractions,
     );
   }
 }

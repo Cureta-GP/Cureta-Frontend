@@ -140,7 +140,8 @@
       "confirm": "تأكيد الأدوية",
       "rescan": "إعادة المسح",
       "low_confidence": "دقة منخفضة - يرجى التحقق من التفاصيل",
-      "tablet": "قرص"
+      "tablet": "قرص",
+      "no_results": "لم يتم العثور على أدوية"
     }
   },
   "onboarding": {
@@ -396,8 +397,10 @@
     "password_max_length": "يجب أن تكون كلمة المرور أقل من 50 حرفاً",
     "name_required": "الاسم الكامل مطلوب",
     "name_min_length": "يجب أن يكون الاسم الكامل حرفين على الأقل",
+    "phone_required": "رقم الهاتف مطلوب",
     "phone_invalid": "الرجاء إدخال رقم هاتف صحيح",
-    "field_required": "{field} مطلوب"
+    "field_required": "{field} مطلوب",
+    "passwords_not_match": "كلمتا المرور غير متطابقتين"
   },
   "medicines": {
     "my_medicines": "أدويتي",
@@ -492,7 +495,18 @@
     "pick_from_gallery": "اختيار من المعرض",
     "alarm_taken": "تم أخذ الدواء",
     "alarm_missed": "تخطي الدواء",
-    "alarm_subtitle": "حان وقت تناول الدواء الخاص بك"
+    "alarm_subtitle": "حان وقت تناول الدواء الخاص بك",
+    "drug_interaction_title": "تحذير تعارض دوائي",
+    "drug_interaction_subtitle": "الدواء الذي أضفته قد يتعارض مع أدويتك الحالية. يرجى استشارة طبيبك.",
+    "drug_interaction_severity_major": "شديد",
+    "drug_interaction_severity_moderate": "متوسط",
+    "drug_interaction_severity_minor": "بسيط",
+    "drug_interaction_interacts_with": "يتعارض مع",
+    "drug_interaction_dismiss": "فهمت",
+    "duplicate_medicine_title": "الدواء موجود بالفعل",
+    "duplicate_medicine_subtitle": "هذا الدواء موجود بالفعل في قائمتك. يرجى مراجعة أدويتك الحالية.",
+    "duplicate_medicine_dismiss": "حسنًا",
+    "duplicate_medicines_ocr_subtitle": "بعض الأدوية كانت موجودة بالفعل في قائمتك وتم تخطيها:"
   },
   "settings": {
     "title": "إعدادات التطبيق",

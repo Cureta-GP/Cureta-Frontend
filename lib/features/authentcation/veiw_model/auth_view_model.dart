@@ -33,10 +33,13 @@ class AuthCubit extends Cubit<AuthState> {
         email: email,
         password: password,
       );
+      if (isClosed) return;
       emit(AuthSuccess(user));
     } on AppException catch (e) {
+      if (isClosed) return;
       emit(AuthError(e.message, exception: e));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(AppException.server().message));
     }
   }
@@ -59,10 +62,13 @@ class AuthCubit extends Cubit<AuthState> {
         phone: phone,
         password: password,
       );
+      if (isClosed) return;
       emit(AuthSuccess(user));
     } on AppException catch (e) {
+      if (isClosed) return;
       emit(AuthError(e.message, exception: e));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(AppException.server().message));
     }
   }
@@ -72,6 +78,7 @@ class AuthCubit extends Cubit<AuthState> {
   // ──────────────────────────────────────
   Future<void> logout() async {
     await _authRepository.logout();
+    if (isClosed) return;
     emit(const AuthInitial());
   }
 }

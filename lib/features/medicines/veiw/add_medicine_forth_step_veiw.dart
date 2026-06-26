@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_cubit.dart';
 import 'package:cureta/features/medicines/veiw_model/add_medicine_state.dart';
 import 'package:cureta/features/medicines/widgets/add_medicine_step4_body_widget.dart';
+import 'package:cureta/features/medicines/widgets/drug_interaction_dialog.dart';
 
 class AddMedicineFourthStepVeiw extends StatelessWidget {
   const AddMedicineFourthStepVeiw({super.key});
@@ -16,8 +17,22 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
       listeners: [
         BlocListener<AddMedicineCubit, AddMedicineState>(
           listenWhen: (_, curr) => curr is AddMedicineSuccess,
-          listener: (context, _) {
+          listener: (context, state) async {
+            if (state is! AddMedicineSuccess) return;
             FocusManager.instance.primaryFocus?.unfocus();
+
+            // Show interaction warning if the backend flagged conflicts.
+            final interactions = state.interactions;
+            if (interactions != null &&
+                interactions.hasInteraction &&
+                interactions.interactions.isNotEmpty) {
+              await showDrugInteractionDialog(
+                context,
+                interactions: interactions,
+              );
+            }
+
+            if (!context.mounted) return;
             context.push('/medicines/add/5');
           },
         ),
@@ -40,4 +55,5 @@ class AddMedicineFourthStepVeiw extends StatelessWidget {
     );
   }
 }
+
 

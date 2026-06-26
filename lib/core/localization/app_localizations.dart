@@ -89,8 +89,10 @@ class AppLocalizations {
   static String get passwordRequired => 'validation.password_required'.tr();
   static String get passwordMinLength => 'validation.password_min_length'.tr();
   static String get passwordMaxLength => 'validation.password_max_length'.tr();
+  static String get passwordsNotMatch => 'validation.passwords_not_match'.tr();
   static String get nameRequired => 'validation.name_required'.tr();
   static String get nameMinLength => 'validation.name_min_length'.tr();
+  static String get phoneRequired => 'validation.phone_required'.tr();
   static String get phoneInvalid => 'validation.phone_invalid'.tr();
 
   // Reset Password
@@ -341,11 +343,13 @@ class AppLocalizations {
       'profiles.common.delete_profile'.tr();
   static String get profilesCannotDelete =>
       'profiles.common.cannot_delete'.tr();
-  static String get profilesCurrentProfile => 'profiles.common.current_profile'.tr();
+  static String get profilesCurrentProfile =>
+      'profiles.common.current_profile'.tr();
   static String get profilesNoProfiles => 'profiles.common.no_profiles'.tr();
   static String profilesFailedToSave(String error) =>
       'profiles.common.failed_to_save'.tr(namedArgs: {'error': error});
-  static String get profilesSwitchProfile => 'profiles.common.switch_profile'.tr();
+  static String get profilesSwitchProfile =>
+      'profiles.common.switch_profile'.tr();
   static String get profilesAddMember => 'profiles.common.add_member'.tr();
   static String get drawerFamilyProfiles => 'drawer.family_profiles'.tr();
   static String get profilesSelectProfileTitle =>
@@ -378,7 +382,8 @@ class AppLocalizations {
       'profiles.details.delete_failed'.tr(namedArgs: {'error': error});
 
   static String get profilesNextStep => 'profiles.common.next_step'.tr();
-  static String get profilesReviewProfile => 'profiles.common.review_profile'.tr();
+  static String get profilesReviewProfile =>
+      'profiles.common.review_profile'.tr();
   static String get profilesContinue => 'profiles.common.continue'.tr();
   static String get profilesSkipForNow => 'profiles.common.skip_for_now'.tr();
   static String profilesStepIndicator(int current, int total) =>
@@ -483,7 +488,8 @@ class AppLocalizations {
   static String getLocalizedGender(String gender) {
     final lower = gender.trim().toLowerCase();
     if (lower == 'male' || lower == 'ذكر') return profilesGenderMale;
-    if (lower == 'female' || lower == 'أنثى' || lower == 'انثى') return profilesGenderFemale;
+    if (lower == 'female' || lower == 'أنثى' || lower == 'انثى')
+      return profilesGenderFemale;
     return gender;
   }
 
@@ -650,5 +656,32 @@ class AppLocalizations {
   static String get medicinesAlarmTaken => 'medicines.alarm_taken'.tr();
   static String get medicinesAlarmMissed => 'medicines.alarm_missed'.tr();
   static String get medicinesAlarmSubtitle => 'medicines.alarm_subtitle'.tr();
+
+  // Medicines - Drug Interactions
+  static String get drugInteractionTitle =>
+      'medicines.drug_interaction_title'.tr();
+  static String get drugInteractionSubtitle =>
+      'medicines.drug_interaction_subtitle'.tr();
+  static String get drugInteractionSeverityMajor =>
+      'medicines.drug_interaction_severity_major'.tr();
+  static String get drugInteractionSeverityModerate =>
+      'medicines.drug_interaction_severity_moderate'.tr();
+  static String get drugInteractionSeverityMinor =>
+      'medicines.drug_interaction_severity_minor'.tr();
+  static String get drugInteractionInteractsWith =>
+      'medicines.drug_interaction_interacts_with'.tr();
+  static String get drugInteractionDismiss =>
+      'medicines.drug_interaction_dismiss'.tr();
+
+  // Medicines - Duplicate Medicine
+  static String get duplicateMedicineTitle =>
+      'medicines.duplicate_medicine_title'.tr();
+  static String get duplicateMedicineSubtitle =>
+      'medicines.duplicate_medicine_subtitle'.tr();
+  static String get duplicateMedicineDismiss =>
+      'medicines.duplicate_medicine_dismiss'.tr();
+  static String get duplicateMedicinesOcrSubtitle =>
+      'medicines.duplicate_medicines_ocr_subtitle'.tr();
+
   static String dynamicTr(String key) => key.tr();
 }

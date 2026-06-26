@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 // ignore: depend_on_referenced_packages
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,17 +28,20 @@ class DioHelper {
       ),
     );
 
-    // Add interceptor to log requests and responses (especially error bodies)
-    dio!.interceptors.add(
-      LogInterceptor(
-        request: true,
-        requestHeader: true,
-        requestBody: true,
-        responseHeader: true,
-        responseBody: true,
-        error: true,
-      ),
-    );
+    // Logging only in debug builds. In release we never log headers/bodies
+    // because requests carry Bearer tokens and medical (PHI) data.
+    if (kDebugMode) {
+      dio!.interceptors.add(
+        LogInterceptor(
+          request: true,
+          requestHeader: true,
+          requestBody: true,
+          responseHeader: true,
+          responseBody: true,
+          error: true,
+        ),
+      );
+    }
   }
 
   static void setAuthToken(String token) {

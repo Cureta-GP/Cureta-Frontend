@@ -10,6 +10,7 @@ import 'package:cureta/features/settings/data/app_settings_notifier.dart';
 import 'package:cureta/features/settings/data/model/app_settings.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
@@ -22,6 +23,12 @@ void main() async {
   await getIt<MedicineLocalService>().init();
   NotificationService.instance.initCallHandler();
   await DioHelper.init();
+
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(
     EasyLocalization(
       supportedLocales: const [Locale('en'), Locale('ar')],

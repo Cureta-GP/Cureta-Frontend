@@ -1,17 +1,27 @@
 import 'package:cureta/core/Services/dio_helper.dart';
 import 'package:cureta/core/constants/api_endpoints.dart';
+import '../models/drug_interaction_model.dart';
 import '../models/medicine_dto.dart';
 import '../models/medicine_payload.dart';
 import '../models/dose_log_model.dart';
 
+/// Return type for [createMedicine]: the created medicine DTO
+/// plus optional drug interaction warnings from the backend.
+typedef CreateMedicineResult = ({
+  MedicineDto dto,
+  DrugInteractionModel? interactions,
+});
+
 class MedicineService {
   MedicineService();
-  Future<MedicineDto> createMedicine(MedicinePayload payload) async {
+  Future<CreateMedicineResult> createMedicine(MedicinePayload payload) async {
     final response = await DioHelper.postData(
       url: ApiEndpoints.medicines,
       data: payload.toJson(),
     );
-    return MedicineDto.fromJson(_extractItemMap(response.data));
+    final dto = MedicineDto.fromJson(_extractItemMap(response.data));
+    final interactions = _extractDrugInteractions(response.data);
+    return (dto: dto, interactions: interactions);
   }
 
   Future<List<MedicineDto>> getMedicines({
@@ -200,5 +210,25 @@ class MedicineService {
     }
 
     return const <Map<String, dynamic>>[];
+  }
+
+  /// Extracts `drug_interactions` from the raw response.
+  /// Checks both top-level and nested inside `data`.
+  DrugInteractionModel? _extractDrugInteractions(dynamic raw) {
+    if (raw is! Map<String, dynamic>) return null;
+    // Top-level check
+    final topLevel = raw['drug_interactions'];
+    if (topLevel is Map<String, dynamic>) {
+      return DrugInteractionModel.fromJson(topLevel);
+    }
+    // Nested inside data check
+    final data = raw['data'];
+    if (data is Map<String, dynamic>) {
+      final nested = data['drug_interactions'];
+      if (nested is Map<String, dynamic>) {
+        return DrugInteractionModel.fromJson(nested);
+      }
+    }
+    return null;
   }
 }

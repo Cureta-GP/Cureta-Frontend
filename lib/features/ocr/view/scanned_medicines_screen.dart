@@ -8,6 +8,8 @@ import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:cureta/features/medicines/widgets/drug_interaction_dialog.dart';
+import 'package:cureta/features/medicines/widgets/duplicate_medicine_dialog.dart';
 
 import 'package:cureta/features/ocr/data/models/ocr_medicine_match.dart';
 
@@ -26,11 +28,37 @@ class ScannedMedicinesScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(title: Text(AppLocalizations.scannedMedicinesTitle)),
         body: BlocListener<OcrCubit, OcrState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is OcrConfirmSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.response.message ?? '')),
-              );
+              final duplicates = state.response.duplicates;
+              final interactions = state.response.drugInteractions;
+              final hasInteractions = interactions != null &&
+                  interactions.hasInteraction &&
+                  interactions.interactions.isNotEmpty;
+              final hasIssues = duplicates.isNotEmpty || hasInteractions;
+
+              if (duplicates.isNotEmpty) {
+                await showDuplicateMedicineDialog(
+                  context,
+                  duplicateNames: duplicates,
+                );
+              }
+
+              if (hasInteractions) {
+                if (!context.mounted) return;
+                await showDrugInteractionDialog(
+                  context,
+                  interactions: interactions,
+                );
+              }
+
+              if (!context.mounted) return;
+              
+              if (!hasIssues) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.response.message ?? '')),
+                );
+              }
               Nav.pushNamed(context, AppRoutes.medicines);
             } else if (state is OcrFailure) {
               ScaffoldMessenger.of(

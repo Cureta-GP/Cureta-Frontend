@@ -1,6 +1,7 @@
 import 'package:cureta/core/constants/app_images.dart';
 import 'package:cureta/core/config/routing/app_routes.dart';
 import 'package:cureta/core/utils/navigation_helper.dart';
+import 'package:cureta/core/utils/app_logout.dart';
 import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/authentcation/veiw_model/auth_view_model.dart';
 import 'package:cureta/features/authentcation/veiw_model/auth_state.dart';
@@ -67,7 +68,7 @@ class CustomDrawer extends StatelessWidget {
           BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
               if (state is AuthInitial) {
-                Nav.clearAndGo(context, AppRoutes.login);
+                AppLogout.clearAllUserData(context);
               } else if (state is AuthError) {
                 ScaffoldMessenger.of(
                   context,

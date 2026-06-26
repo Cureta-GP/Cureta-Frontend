@@ -21,8 +21,10 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
 
       await repository.cacheSelectedProfileId(initialId);
 
+      if (isClosed) return;
       emit(ProfilesSuccess(profiles, initialId));
     } catch (e) {
+      if (isClosed) return;
       emit(ProfilesError(e.toString()));
     }
   }
@@ -31,6 +33,7 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
     if (state is ProfilesSuccess) {
       final currentState = state as ProfilesSuccess;
       await repository.cacheSelectedProfileId(profileId);
+      if (isClosed) return;
       emit(ProfilesSuccess(currentState.profiles, profileId));
     }
   }
@@ -47,6 +50,7 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
           .toList();
 
       if (updatedProfiles.isEmpty) {
+        if (isClosed) return;
         emit(ProfilesSuccess([], null));
         return;
       }
@@ -62,9 +66,11 @@ class ProfilesListCubit extends Cubit<ProfilesListState> {
         await repository.cacheSelectedProfileId(newSelectedId);
       }
 
+      if (isClosed) return;
       emit(ProfilesSuccess(updatedProfiles, newSelectedId));
     }
   } catch (e) {
+    if (isClosed) return;
     emit(ProfilesError(e.toString()));
   }
 }

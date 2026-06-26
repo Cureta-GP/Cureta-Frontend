@@ -27,8 +27,10 @@ class OcrCubit extends Cubit<OcrState> {
     emit(OcrLoading());
     try {
       final resp = await repository.scan(imageFile.path);
+      if (isClosed) return;
       emit(OcrScanSuccess(response: resp));
     } catch (e) {
+      if (isClosed) return;
       emit(OcrFailure(message: e.toString().replaceAll('Exception: ', '')));
     }
   }
@@ -43,8 +45,10 @@ class OcrCubit extends Cubit<OcrState> {
         medicines: medicines,
         profileId: profileId,
       );
+      if (isClosed) return;
       emit(OcrConfirmSuccess(response: resp));
     } catch (e) {
+      if (isClosed) return;
       emit(OcrFailure(message: e.toString().replaceAll('Exception: ', '')));
     }
   }

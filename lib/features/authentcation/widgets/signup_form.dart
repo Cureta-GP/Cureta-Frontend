@@ -108,6 +108,7 @@ class _SignupFormState extends State<SignupForm> {
                 controller: _phoneController,
                 prefixIcon: const Icon(Icons.phone),
                 keyboardType: TextInputType.phone,
+                validator: (value) => Validators.phone(value),
               ),
               SizedBox(height: spacing.xxl),
               CustomButton(

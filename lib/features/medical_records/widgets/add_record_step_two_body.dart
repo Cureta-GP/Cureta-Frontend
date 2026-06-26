@@ -14,6 +14,8 @@ class AddRecordStepTwoBody extends StatelessWidget {
     required this.isOngoing,
     required this.onPickDate,
     required this.onOngoingChanged,
+    this.showDateError = false,
+    this.dateErrorText,
   });
 
   final VoidCallback? onBack;
@@ -21,6 +23,8 @@ class AddRecordStepTwoBody extends StatelessWidget {
   final bool isOngoing;
   final VoidCallback onPickDate;
   final ValueChanged<bool> onOngoingChanged;
+  final bool showDateError;
+  final String? dateErrorText;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +46,12 @@ class AddRecordStepTwoBody extends StatelessWidget {
                 progress: 0.4,
               ),
               SizedBox(height: spacing.xl),
-              AddRecordDateCard(selectedDate: selectedDate, onTap: onPickDate),
+              AddRecordDateCard(
+                selectedDate: selectedDate,
+                onTap: onPickDate,
+                hasError: showDateError,
+                errorText: dateErrorText,
+              ),
               SizedBox(height: spacing.lg),
               AddRecordOngoingCard(
                 isOngoing: isOngoing,

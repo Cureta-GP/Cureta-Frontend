@@ -3,9 +3,14 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:flutter/material.dart';
 
 class AddRecordConditionSection extends StatelessWidget {
-  const AddRecordConditionSection({super.key, required this.controller});
+  const AddRecordConditionSection({
+    super.key,
+    required this.controller,
+    this.errorText,
+  });
 
   final TextEditingController controller;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +39,10 @@ class AddRecordConditionSection extends StatelessWidget {
             hintStyle: typography.medicalRecordInput.copyWith(
               color: colors.textHint,
             ),
+            errorText: errorText,
+            errorStyle: typography.medicalRecordHelper.copyWith(
+              color: colors.error,
+            ),
             filled: true,
             fillColor: colors.background,
             contentPadding: EdgeInsets.symmetric(
@@ -47,6 +56,14 @@ class AddRecordConditionSection extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(radius.full),
               borderSide: BorderSide(color: colors.primary, width: 1.6),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.full),
+              borderSide: BorderSide(color: colors.error, width: 1.6),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.full),
+              borderSide: BorderSide(color: colors.error, width: 1.6),
             ),
           ),
         ),

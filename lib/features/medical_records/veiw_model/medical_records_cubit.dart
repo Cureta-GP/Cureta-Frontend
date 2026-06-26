@@ -1,14 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/medical_records/data/models/medical_record_model.dart';
 import '../data/repo/medical_record_repository.dart';
 import 'medical_records_state.dart';
 
 class MedicalRecordsCubit extends Cubit<MedicalRecordsState> {
-  MedicalRecordsCubit()
-    : _repository = getIt.get<MedicalRecordRepository>(),
-      super(const MedicalRecordsInitial());
+  MedicalRecordsCubit(this._repository)
+    : super(const MedicalRecordsInitial());
 
   final MedicalRecordRepository _repository;
 
@@ -29,10 +27,13 @@ class MedicalRecordsCubit extends Cubit<MedicalRecordsState> {
         search: search,
         forceRefresh: forceRefresh,
       );
+      if (isClosed) return;
       emit(MedicalRecordsSuccess(records));
     } on AppException catch (e) {
+      if (isClosed) return;
       emit(MedicalRecordsFailure(e));
     } catch (_) {
+      if (isClosed) return;
       emit(
         MedicalRecordsFailure(
           AppException.server(msg: 'Failed to load records'),
@@ -50,6 +51,7 @@ class MedicalRecordsCubit extends Cubit<MedicalRecordsState> {
     if (state is MedicalRecordsSuccess) {
       final current = (state as MedicalRecordsSuccess).records;
       final updated = current.where((record) => record.id != recordId).toList();
+      if (isClosed) return;
       emit(MedicalRecordsSuccess(updated));
     }
   }
@@ -77,6 +79,7 @@ class MedicalRecordsCubit extends Cubit<MedicalRecordsState> {
       final updated = current
           .map((record) => record.id == recordId ? updatedRecord : record)
           .toList();
+      if (isClosed) return updatedRecord;
       emit(MedicalRecordsSuccess(updated));
     }
 

@@ -158,6 +158,13 @@ class NotificationService {
     }
   }
 
+  /// Cancels every scheduled medicine alarm and clears the native alarm
+  /// registry. Call this on logout so the previous user's reminders never
+  /// fire again (and are not resurrected after a device reboot).
+  Future<void> cancelAllAlarms() async {
+    await _invoke('cancelAllAlarms');
+  }
+
   Future<void> triggerAlarm(String medicineName) async {
     await _invoke('triggerAlarm', {'medicine_name': medicineName});
   }

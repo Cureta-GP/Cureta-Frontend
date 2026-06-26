@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cureta/core/localization/app_localizations.dart';
 import 'package:cureta/features/profile/widgets/profile_detail_card.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class ProfileDetailsScreen extends StatelessWidget {
                           radius: 60,
                           backgroundColor: colors.primary,
                           backgroundImage: profile.imageUrl != null
-                              ? NetworkImage(profile.imageUrl!)
+                              ? CachedNetworkImageProvider(profile.imageUrl!)
                               : null,
                           child: profile.imageUrl == null
                               ? Text(

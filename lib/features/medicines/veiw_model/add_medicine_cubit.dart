@@ -5,6 +5,7 @@ import 'package:cureta/core/Services/notification_service.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import '../data/models/medicine_payload.dart';
 import '../data/models/medicine_enums.dart';
+import '../data/models/duplicate_medicine_exception.dart';
 import '../data/repo/medicine_repository.dart';
 import 'add_medicine_state.dart';
 
@@ -151,16 +152,32 @@ class AddMedicineCubit extends Cubit<AddMedicineState> {
 
     try {
       final payload = await _buildPayload(current);
-      final medicine = await _repository.addMedicine(payload);
+      final result = await _repository.addMedicine(payload);
 
       // Schedule a native alarm for every reminder time — best-effort,
       // a failure here must never block the save flow.
-      if (medicine.alarmTimes.isNotEmpty) {
-        NotificationService.instance.scheduleMedicineAlarms(medicine).ignore();
+      if (result.medicine.alarmTimes.isNotEmpty) {
+        NotificationService.instance
+            .scheduleMedicineAlarms(result.medicine)
+            .ignore();
       }
 
-      emit(AddMedicineSuccess(medicine: medicine));
+      if (isClosed) return;
+      emit(AddMedicineSuccess(
+        medicine: result.medicine,
+        interactions: result.interactions,
+      ));
+    } on DuplicateMedicineException catch (_) {
+      if (isClosed) return;
+      emit(
+        AddMedicineFailure(
+          errorMessage: 'medicines.duplicate_medicine_subtitle',
+          data: current,
+          isDuplicate: true,
+        ),
+      );
     } catch (e) {
+      if (isClosed) return;
       emit(
         AddMedicineFailure(
           errorMessage: 'medicines.error_medicine_submit_failed',

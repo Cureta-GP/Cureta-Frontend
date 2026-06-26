@@ -3,6 +3,7 @@ import 'package:cureta/core/theme/theme_extensions.dart';
 import 'package:cureta/features/profile/data/models/allergy_option.dart';
 import 'package:cureta/features/profile/data/models/chronic_disease_option.dart';
 import 'package:cureta/features/profile/view_model/profile_cubit.dart';
+import 'package:cureta/features/profile/view_model/profile_state.dart';
 import 'package:cureta/shared/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -69,12 +70,16 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
     final spacing = context.spacing;
     final typography = context.typography;
     final radius = context.radius;
-    final state = context.watch<ProfileCubit>().state;
-    final selectedItems = widget.type == MedicalConditionType.chronic
-        ? state.chronicConditions
-        : state.allergies;
 
-    return SingleChildScrollView(
+    // Select ONLY the relevant set. Typing in the "other" text field changes
+    // otherChronicText/otherAllergyText (not this set), so the chip list no
+    // longer rebuilds on every keystroke.
+    return BlocSelector<ProfileCubit, ProfileState, Set<String>>(
+      selector: (state) => widget.type == MedicalConditionType.chronic
+          ? state.chronicConditions
+          : state.allergies,
+      builder: (context, selectedItems) {
+        return SingleChildScrollView(
       padding: EdgeInsets.symmetric(
         horizontal: spacing.lg,
         vertical: spacing.md,
@@ -146,6 +151,8 @@ class _MedicalConditionsStepState extends State<MedicalConditionsStep> {
           SizedBox(height: spacing.xxl * 4),
         ],
       ),
+        );
+      },
     );
   }
 }

@@ -23,8 +23,17 @@ class _ChatVoiceInputModalState extends State<ChatVoiceInputModal> {
     _startListening();
   }
 
+  @override
+  void dispose() {
+    // Release the microphone/recognition session if the sheet is dismissed
+    // (scrim tap, back gesture, Cancel) while still listening.
+    _speech.cancel();
+    super.dispose();
+  }
+
   Future<void> _startListening() async {
     final status = await Permission.microphone.request();
+    if (!mounted) return;
     if (status != PermissionStatus.granted) {
       setState(() => _error = 'chat_mic_permission_required'.tr());
       return;
@@ -34,12 +43,17 @@ class _ChatVoiceInputModalState extends State<ChatVoiceInputModal> {
       final available = await _speech.initialize(
         onStatus: (val) {
           if (val == 'done') {
+            if (!mounted) return;
             setState(() => _isListening = false);
             // Optionally auto-send when done, but let user confirm to avoid mistakes
           }
         },
-        onError: (val) => setState(() => _error = 'chat_mic_error'.tr(namedArgs: {'error': val.errorMsg})),
+        onError: (val) {
+          if (!mounted) return;
+          setState(() => _error = 'chat_mic_error'.tr(namedArgs: {'error': val.errorMsg}));
+        },
       );
+      if (!mounted) return;
 
       if (available) {
         setState(() {
@@ -48,25 +62,28 @@ class _ChatVoiceInputModalState extends State<ChatVoiceInputModal> {
         });
         _speech.listen(
           onResult: (val) {
+            if (!mounted) return;
             setState(() {
               _text = val.recognizedWords;
             });
           },
           localeId: context.locale.languageCode == 'ar' ? 'ar_EG' : 'en_US',
-          pauseFor: const Duration(minutes: 30),
-          listenFor: const Duration(minutes: 30),
+          pauseFor: const Duration(seconds: 4),
+          listenFor: const Duration(seconds: 60),
           listenOptions: stt.SpeechListenOptions(listenMode: stt.ListenMode.dictation),
         );
       } else {
         setState(() => _error = 'chat_mic_init_failed'.tr());
       }
     } catch (e) {
+      if (!mounted) return;
       setState(() => _error = e.toString());
     }
   }
 
   void _stopListening() {
     _speech.stop();
+    if (!mounted) return;
     setState(() => _isListening = false);
   }
 

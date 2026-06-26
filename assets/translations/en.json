@@ -329,8 +329,10 @@
     "password_max_length": "Password must be less than 50 characters",
     "name_required": "Full name is required",
     "name_min_length": "Full name must be at least 2 characters",
+    "phone_required": "Phone number is required",
     "phone_invalid": "Please enter a valid phone number",
-    "field_required": "{field} is required"
+    "field_required": "{field} is required",
+    "passwords_not_match": "Passwords do not match"
   },
   "qr": {
     "title": "My QR Code",
@@ -396,7 +398,8 @@
       "confirm": "Confirm Medicines",
       "rescan": "Rescan",
       "low_confidence": "Low confidence - Please check details",
-      "tablet": "Tablet"
+      "tablet": "Tablet",
+      "no_results": "No medicatios found"
     }
   },
   "medicines": {
@@ -493,7 +496,18 @@
     "pick_from_gallery": "Choose from Gallery",
     "alarm_taken": "Taken",
     "alarm_missed": "Missed",
-    "alarm_subtitle": "It's time to take your medication"
+    "alarm_subtitle": "It's time to take your medication",
+    "drug_interaction_title": "Drug Interaction Warning",
+    "drug_interaction_subtitle": "The medicine you added may interact with your current medications. Please consult your doctor.",
+    "drug_interaction_severity_major": "Major",
+    "drug_interaction_severity_moderate": "Moderate",
+    "drug_interaction_severity_minor": "Minor",
+    "drug_interaction_interacts_with": "Interacts with",
+    "drug_interaction_dismiss": "I Understand",
+    "duplicate_medicine_title": "Medicine Already Exists",
+    "duplicate_medicine_subtitle": "This medicine is already in your list. Please check your current medicines.",
+    "duplicate_medicine_dismiss": "Got It",
+    "duplicate_medicines_ocr_subtitle": "Some medicines were already in your list and were skipped:"
   },
   "settings": {
     "title": "App Settings",

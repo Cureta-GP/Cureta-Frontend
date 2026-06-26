@@ -1,15 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cureta/core/error_handling/app_exceptions.dart';
-import 'package:cureta/core/Services/GetItServices.dart';
 import 'package:cureta/features/profile/data/repo/profile_repository.dart';
 import '../data/repo/chat_repository.dart';
 import 'chat_sessions_state.dart';
 
 class ChatSessionsCubit extends Cubit<ChatSessionsState> {
-  ChatSessionsCubit()
-    : _repository = getIt.get<ChatRepository>(),
-      _profileRepository = getIt.get<ProfileRepository>(),
-      super(const ChatSessionsInitial());
+  ChatSessionsCubit(this._repository, this._profileRepository)
+    : super(const ChatSessionsInitial());
 
   final ChatRepository _repository;
   final ProfileRepository _profileRepository;
@@ -22,6 +19,7 @@ class ChatSessionsCubit extends Cubit<ChatSessionsState> {
           : await _profileRepository.getResolvedSelectedProfileId();
 
       if (resolvedProfileId == null) {
+        if (isClosed) return;
         emit(
           ChatSessionsError(AppException.server(msg: 'No profile selected')),
         );
@@ -31,10 +29,13 @@ class ChatSessionsCubit extends Cubit<ChatSessionsState> {
       final sessions = await _repository.fetchSessions(
         profileId: resolvedProfileId,
       );
+      if (isClosed) return;
       emit(ChatSessionsSuccess(sessions));
     } on AppException catch (e) {
+      if (isClosed) return;
       emit(ChatSessionsError(e));
     } catch (_) {
+      if (isClosed) return;
       emit(ChatSessionsError(AppException.server()));
     }
   }

@@ -80,6 +80,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               borderRadius: BorderRadius.circular(radius.md),
               borderSide: BorderSide.none,
             ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.md),
+              borderSide: BorderSide(color: colors.error, width: 1.5),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(radius.md),
+              borderSide: BorderSide(color: colors.error, width: 1.5),
+            ),
             contentPadding: EdgeInsets.symmetric(
               horizontal: spacing.lg,
               vertical: spacing.lg,

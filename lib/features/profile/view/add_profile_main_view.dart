@@ -116,6 +116,11 @@ class _AddProfileMainState extends State<AddProfileMain> {
         isFamilyMember: effectiveFamilyMember,
       ),
       child: BlocBuilder<ProfileCubit, ProfileState>(
+        // The layout (app bar, progress bar, title, button) only depends on the
+        // current page. Without this, typing in any text field (name / "other"
+        // condition) re-emits state and rebuilds the whole ProgressStepLayout
+        // on every keystroke → input lag. Each step manages its own field state.
+        buildWhen: (prev, curr) => prev.currentPage != curr.currentPage,
         builder: (context, state) {
           final cubit = context.read<ProfileCubit>();
 
