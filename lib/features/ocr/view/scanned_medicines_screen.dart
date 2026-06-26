@@ -31,6 +31,12 @@ class ScannedMedicinesScreen extends StatelessWidget {
           listener: (context, state) async {
             if (state is OcrConfirmSuccess) {
               final duplicates = state.response.duplicates;
+              final interactions = state.response.drugInteractions;
+              final hasInteractions = interactions != null &&
+                  interactions.hasInteraction &&
+                  interactions.interactions.isNotEmpty;
+              final hasIssues = duplicates.isNotEmpty || hasInteractions;
+
               if (duplicates.isNotEmpty) {
                 await showDuplicateMedicineDialog(
                   context,
@@ -38,10 +44,7 @@ class ScannedMedicinesScreen extends StatelessWidget {
                 );
               }
 
-              final interactions = state.response.drugInteractions;
-              if (interactions != null &&
-                  interactions.hasInteraction &&
-                  interactions.interactions.isNotEmpty) {
+              if (hasInteractions) {
                 if (!context.mounted) return;
                 await showDrugInteractionDialog(
                   context,
@@ -50,9 +53,12 @@ class ScannedMedicinesScreen extends StatelessWidget {
               }
 
               if (!context.mounted) return;
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.response.message ?? '')),
-              );
+              
+              if (!hasIssues) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.response.message ?? '')),
+                );
+              }
               Nav.pushNamed(context, AppRoutes.medicines);
             } else if (state is OcrFailure) {
               ScaffoldMessenger.of(

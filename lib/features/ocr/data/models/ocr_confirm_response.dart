@@ -22,14 +22,16 @@ class OcrConfirmResponse {
     DrugInteractionModel? parsedInteractions;
 
     // Check root level
-    if (json['drug_interactions'] != null) {
-      parsedInteractions =
-          DrugInteractionModel.fromJson(json['drug_interactions']);
+    final topInteractions = json['drug_interactions'];
+    if (topInteractions is Map<String, dynamic>) {
+      parsedInteractions = DrugInteractionModel.fromJson(topInteractions);
     }
     // Check nested inside 'data'
-    else if (json['data'] is Map && json['data']['drug_interactions'] != null) {
-      parsedInteractions =
-          DrugInteractionModel.fromJson(json['data']['drug_interactions']);
+    else if (json['data'] is Map<String, dynamic>) {
+      final nestedInteractions = json['data']['drug_interactions'];
+      if (nestedInteractions is Map<String, dynamic>) {
+        parsedInteractions = DrugInteractionModel.fromJson(nestedInteractions);
+      }
     }
 
     return OcrConfirmResponse(
