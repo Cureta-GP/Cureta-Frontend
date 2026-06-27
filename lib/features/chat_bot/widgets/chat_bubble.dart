@@ -14,6 +14,29 @@ class ChatBubble extends StatelessWidget {
   final String timestampLabel;
   final bool isUser;
 
+  List<TextSpan> _parseMessage(String text) {
+    final spans = <TextSpan>[];
+    final regex = RegExp(r'\*\*(.*?)\*\*', dotAll: true);
+    int lastMatchEnd = 0;
+
+    for (final match in regex.allMatches(text)) {
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
+      }
+      spans.add(TextSpan(
+        text: match.group(1),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ));
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
+    }
+
+    return spans;
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -54,8 +77,10 @@ class ChatBubble extends StatelessWidget {
                 ? null
                 : Border.all(color: colorScheme.outlineVariant),
           ),
-          child: Text(
-            message,
+          child: Text.rich(
+            TextSpan(
+              children: _parseMessage(message),
+            ),
             style: textTheme.bodyLarge?.copyWith(color: bubbleTextColor),
           ),
         ),
