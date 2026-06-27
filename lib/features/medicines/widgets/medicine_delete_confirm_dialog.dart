@@ -27,7 +27,7 @@ class _MedicineDeleteConfirmDialog extends StatelessWidget {
 
     return Dialog(
       backgroundColor: Colors.transparent,
-      insetPadding: EdgeInsets.symmetric(horizontal: spacing.xl),
+      insetPadding: EdgeInsets.symmetric(horizontal: spacing.lg),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(radius.xl),
         child: Container(
@@ -92,10 +92,10 @@ class _MedicineDeleteConfirmDialog extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.fromLTRB(
-                  spacing.xl,
+                  spacing.lg,
                   spacing.md,
-                  spacing.xl,
-                  spacing.xl,
+                  spacing.lg,
+                  spacing.lg,
                 ),
                 child: Column(
                   children: [
@@ -129,16 +129,20 @@ class _MedicineDeleteConfirmDialog extends StatelessWidget {
                                 width: spacing.hairline,
                               ),
                               padding: EdgeInsets.symmetric(
+                                horizontal: spacing.xs,
                                 vertical: spacing.md,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(radius.lg),
                               ),
                             ),
-                            child: Text(AppLocalizations.medicinesCancel),
+                            child: Text(
+                              AppLocalizations.medicinesCancel,
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
                           ),
                         ),
-                        SizedBox(width: spacing.md),
+                        SizedBox(width: spacing.sm),
                         Expanded(
                           child: DecoratedBox(
                             decoration: BoxDecoration(
@@ -151,12 +155,13 @@ class _MedicineDeleteConfirmDialog extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            child: ElevatedButton.icon(
+                            child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: colors.error,
                                 foregroundColor: colors.background,
                                 elevation: 0,
                                 padding: EdgeInsets.symmetric(
+                                  horizontal: spacing.xs,
                                   vertical: spacing.md,
                                 ),
                                 shape: RoundedRectangleBorder(
@@ -166,12 +171,25 @@ class _MedicineDeleteConfirmDialog extends StatelessWidget {
                               ),
                               onPressed: () =>
                                   Navigator.of(context).pop(true),
-                              icon: Icon(
-                                Icons.delete_forever_rounded,
-                                size: spacing.lg,
-                              ),
-                              label: Text(
-                                AppLocalizations.medicinesDeleteMedicine,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.delete_forever_rounded,
+                                    size: 20,
+                                  ),
+                                  SizedBox(width: spacing.xs),
+                                  Flexible(
+                                    child: FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                        AppLocalizations.medicinesDeleteMedicine,
+                                        style: const TextStyle(fontWeight: FontWeight.bold),
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

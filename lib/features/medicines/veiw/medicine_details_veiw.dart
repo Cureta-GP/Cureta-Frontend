@@ -180,7 +180,7 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
                         onCancel: cubit.cancelEdit,
                       )
                     : SingleChildScrollView(
-                        padding: EdgeInsetsDirectional.only(start: spacing.xl, end: spacing.xl, top: spacing.lg, bottom: spacing.xxl),
+                        padding: EdgeInsetsDirectional.only(start: spacing.md, end: spacing.md, top: spacing.lg, bottom: spacing.xxl),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -196,31 +196,61 @@ class _MedicineDetailsVeiwState extends State<MedicineDetailsVeiw> {
                             Row(
                               children: [
                                 Expanded(
-                                  child: OutlinedButton.icon(
+                                  child: OutlinedButton(
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: colors.primary,
                                       side: BorderSide(color: colors.primary, width: 2),
-                                      padding: EdgeInsets.symmetric(vertical: spacing.md),
+                                      padding: EdgeInsets.symmetric(horizontal: spacing.xs, vertical: spacing.md),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.radius.lg)),
                                     ),
-                                    icon: const Icon(Icons.edit, size: 22),
-                                    label: Text(AppLocalizations.medicinesEditMedicine, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                     onPressed: () => cubit.startEdit(),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.edit, size: 20),
+                                        SizedBox(width: spacing.xs),
+                                        Flexible(
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.medicinesEditMedicine,
+                                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                                SizedBox(width: spacing.md),
+                                SizedBox(width: spacing.sm),
                                 Expanded(
-                                  child: ElevatedButton.icon(
+                                  child: ElevatedButton(
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: colors.error,
                                       foregroundColor: colors.background,
-                                      padding: EdgeInsets.symmetric(vertical: spacing.md),
+                                      padding: EdgeInsets.symmetric(horizontal: spacing.xs, vertical: spacing.md),
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(context.radius.lg)),
                                     ),
-                                    icon: const Icon(Icons.delete_forever_rounded, size: 22),
-                                    label: Text(AppLocalizations.medicinesDeleteMedicine, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                     onPressed: () => _handleDelete(context, cubit),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const Icon(Icons.delete_forever_rounded, size: 20),
+                                        SizedBox(width: spacing.xs),
+                                        Flexible(
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              AppLocalizations.medicinesDeleteMedicine,
+                                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
