@@ -151,21 +151,22 @@ class ChatBody extends StatelessWidget {
         ? colorScheme.primary
         : colorScheme.surfaceContainerHigh;
 
-    Widget messageText = Text(
-      message.text,
+    Widget messageText = Text.rich(
+      TextSpan(children: _parseMessage(message.text)),
       textAlign: TextAlign.start,
       style: messageTextStyle,
       textScaler: TextScaler.noScaling,
     );
 
     if (shouldAnimate) {
+      final cleanText = message.text.replaceAll(RegExp(r'\*\*'), '');
       messageText = AnimatedTextKit(
         key: ValueKey('typewriter_${message.id}_${message.text.hashCode}'),
         isRepeatingAnimation: false,
         totalRepeatCount: 1,
         animatedTexts: [
           TypewriterAnimatedText(
-            message.text,
+            cleanText,
             speed: const Duration(milliseconds: 24),
             textStyle: messageTextStyle,
             textAlign: TextAlign.start,
@@ -235,6 +236,29 @@ class ChatBody extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<TextSpan> _parseMessage(String text) {
+    final spans = <TextSpan>[];
+    final regex = RegExp(r'\*\*(.*?)\*\*', dotAll: true);
+    int lastMatchEnd = 0;
+
+    for (final match in regex.allMatches(text)) {
+      if (match.start > lastMatchEnd) {
+        spans.add(TextSpan(text: text.substring(lastMatchEnd, match.start)));
+      }
+      spans.add(TextSpan(
+        text: match.group(1),
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ));
+      lastMatchEnd = match.end;
+    }
+
+    if (lastMatchEnd < text.length) {
+      spans.add(TextSpan(text: text.substring(lastMatchEnd)));
+    }
+
+    return spans;
   }
 
   TextDirection _resolveTextDirection(BuildContext context, String text) {
