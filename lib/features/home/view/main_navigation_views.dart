@@ -85,18 +85,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     }
   }
 
-  int? _tabFromRoute(BuildContext context) {
-    try {
-      final tab = int.tryParse(
-        GoRouterState.of(context).uri.queryParameters['tab'] ?? '',
-      );
-      if (tab == null) return null;
-      return tab.clamp(0, 3);
-    } catch (_) {
-      return null;
-    }
-  }
-
   @override
   void initState() {
     super.initState();
@@ -130,15 +118,6 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           duration: const Duration(seconds: 10),
         ),
       );
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final routedTab = _tabFromRoute(context);
-    if (routedTab != null) {
-      _selectedIndex = routedTab;
     }
   }
 

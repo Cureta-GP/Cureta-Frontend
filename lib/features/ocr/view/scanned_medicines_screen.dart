@@ -59,7 +59,7 @@ class ScannedMedicinesScreen extends StatelessWidget {
                   SnackBar(content: Text(state.response.message ?? '')),
                 );
               }
-              Nav.pushNamed(context, AppRoutes.medicines);
+              Nav.clearAndGo(context, '${AppRoutes.mainNavigation}?tab=1');
             } else if (state is OcrFailure) {
               ScaffoldMessenger.of(
                 context,
